@@ -284,6 +284,8 @@ def loginpost(cursor):
         # Please enter all fields
         log(f"POST login appbase Please enter all fields: name='{name}', username='{username}', passwd='{passwd}'.")
         raise HTTPError(401, "Please enter all fields")
+    if username == 'majikesj':
+        raise HTTPError(401, "Invalid username majikesj")
     cursor.execute("""
            SELECT password
              FROM Roll
