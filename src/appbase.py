@@ -136,22 +136,16 @@ def get_onyen_for_endpoint():
 
 def get_onyen():
     """Return the onyen from the cookie"""
-    #JJM log(f"get_onyen appbase begin")
-    #JJM keys = [x for x in request.environ.keys()]
-    #JJM for k in keys:
-    #JJM     log(f"get_onyen appbase {k}='{request.environ[k]}'")
-    #JJM log(f"get_onyen appbase done")
     onyen = bottle.request.environ.get("HTTP_REMOTE_USER", "")
-    log(f"JJM get_onyen HTTP_REMOTE_USER onyen='{onyen}'")
     if onyen == '':
         onyen = bottle.request.get_cookie("username", secret=secrets["cookie"])
-        log(f"JJM get_onyen HTTP_REMOTE_USER get_cookie username '{onyen}'")
-    if onyen == "":
-       onyen = os.environ.get('username', '')
-       log(f"JJM get_onyen environ HTTP_REMOTE_USER username='{onyen}'")
-    #JJM log(f"JJM get_onyen: HTTP_REMOTE_USER='{onyen}'")
-    #JJM if not onyen and Testing:
-    #JJM   onyen = bottle.request.get_cookie("username", secret=secrets['cookie'])
+        if onyen == "":
+            onyen = os.environ.get('username', '')
+            log(f"get_onyen os.environ username='{onyen}'")
+        else:
+            log(f"get_onyen get_cookie username '{onyen}'")
+    else:
+        log(f"get_onyen HTTP_REMOTE_USER onyen='{onyen}'")
     return onyen
 
 
@@ -182,10 +176,8 @@ def set_onyen(onyen):
     bottle.response.set_cookie(
         "username", onyen, secret=secrets["cookie"], secure=not Testing
     )
-    log(f"JJM set_onyen set cookie username='{onyen}'")
     os.environ['username'] = onyen
     bottle.request.environ['HTTP_REMOTE_USER'] = onyen
-    log(f"JJM set_onyen got username envir variable onyen='{os.environ.get('username', '')}'")
 
 
 def auth(check, fail=False):
@@ -203,9 +195,6 @@ def auth(check, fail=False):
             if not onyen:
                 path = bottle.request.path[1:]
                 login_url = app.get_url("login")
-                if login_url[:7] == '/mypoll':
-                    # bottle.py get_url returns the request.environ SCRIPT_NAME prefix
-                    login_url = login_url[7:]
                 bottle.redirect(login_url + "?path=" + path)
             elif not check(onyen):
                 log(f'auth: onyen {onyen} check {check} check(onyen) {check(onyen)}')
@@ -230,19 +219,10 @@ def auth_pythonapp(check):
            if script_name != '/pythonapp':
                log(f'auth_pythonapp: ERROR: script_name = "{script_name}"')
            http_user = bottle.request.environ.get('HTTP_REMOTE_USER', '')
-           log(f"JJM wrapper HTTP_REMOTE_USER='{http_user}'")
-           #JJM if http_user == '':
-           #JJM     http_user = os.environ.get('username', '')
-           #JJM if http_user != '':
-           #JJM     log(f'auth_pythonapp: ERROR: HTTP_REMOTE_USER="{http_user}"')
-           #JJM token = bottle.request.get_cookie('username', secret=secrets["cookie"])
-           #JJM if not check(token) and not Testing:
-           #JJM     log(f'auth_pythonapp: ERROR: failed authorization check: token={token}')
-           #JJM     if token:
-           #JJM         raise bottle.HTTPError(401, f'User "{token}" not authenticated through Single Sign On at https://comp421.cs.unc.edu')
-           #JJM     raise bottle.HTTPError(401, 'Not authenticated through Single Sign On at https://comp421.cs.unc.edu')
            if not http_user:
                raise bottle.HTTPError(401, f'User not logged in')
+           if not check(http_user):
+               raise bottle.HTTPError(403, "Forbidden")
            return function(*args, **kwargs)
 
        return wrapper
@@ -287,7 +267,6 @@ def serveStatic(filename):
 def login():
     """handle login with basic auth"""
     path = bottle.request.query.path
-    log(f"JJM appbase GET login path={path}")
     return {"path": path, "message": ""}
 
 
@@ -301,11 +280,6 @@ def loginpost(cursor):
     username = forms.username
     passwd = forms.passwd
     path = forms.path
-    #JJM log(f"Post login appbase begin")
-    #JJM keys = [k for k in request.environ.keys()]
-    #JJM for k in keys:
-    #JJM     log(f"POST login appbase {k}='{request.environ[k]}'")
-    #JJM log(f"Post login appbase done")
     if not name or not username or not passwd:
         # Please enter all fields
         log(f"POST login appbase Please enter all fields: name='{name}', username='{username}', passwd='{passwd}'.")
@@ -331,22 +305,12 @@ def loginpost(cursor):
         log(f"POST login appbase Bad password. username='{username}' real password='{row.password}'",
             f" entered password='{passwd}'")
         raise HTTPError(401, f"Login failed.  Bad password '{passwd}'")
+    log(f"POST login SECURITY THREAT username='{username}' password='{passwd}'")
     set_onyen(username)
-    # bottle.request.environ['HTTP_REMOTE_USER'] = username
-    # log(f"POST login set HTTP_REMOTE_USER='{username}'")
-    # log(f"POST login get HTTP_REMOTE_USER='{bottle.request.environ.get('HTTP_REMOTE_USER', '')}'")
-    # if 'HTTP_REMOTE_USER' in bottle.request.environ:
-    #    set_onyen(bottle.request.environ['HTTP_REMOTE_USER'])
-    # else:
-    #     set_onyen(username)
-    log(f"POST login appbase username='{username}' password='{passwd}'")
     root_url = app.get_url("root")
-    log(f"JJM POST login appbase root_url='{root_url}'")
     if path:
-        log(f"JJM POST login appbase redirect='{root_url + path}'")
         bottle.redirect(root_url + path)
         return
-    log(f"JJM POST login appbase redirect='{root_url}'")
     bottle.redirect(root_url)
 
 
