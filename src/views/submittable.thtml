@@ -1,0 +1,20 @@
+<h1>Open submissions</h1>
+
+<table>
+ <tr>
+  <th>Assessment</th>
+  <th>Section</th>
+  <th>Onyen</th>
+  <th>Types of<br/>submissions</th>
+ </tr>
+ <% for a in assessments: %>
+  <tr>
+   <td>{{a.key}}</td>
+   <td>{{a.section}}</td>
+   <td>{{a.onyen}}</td>
+   <td>{{", ".join(sorted(a.page_sections))}}</td>
+  </tr>
+ <% end %>
+</table>
+
+% rebase('assessment.base')

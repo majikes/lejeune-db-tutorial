@@ -1,0 +1,93 @@
+<%
+import json
+with open('wkst.large.university1.json') as fid:
+      university_data = json.load(fid)
+setInfo(
+        assessment_type='worksheet',
+       )
+dbs = ['wkst.large.university1.sqlite', 'wkst.large.university2.sqlite']
+symbols = ['True', 'False']
+
+%>
+
+# Things to be aware of about SQLite
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+## {{!linkable_header('SQL Tutorial Cheat Sheet')}}
+
+Following are three SQL tutorial cheat sheets available from http://www.sqltutorial.org
+
+<img src="{{static('images/SQLTutorial.1.jpeg')}}" style="width:85%" alt="First of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.2.jpeg')}}" style="width:85%" alt="Second of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.3.jpeg')}}" style="width:85%" alt="Third of three SQL Tutorial cheat sheets"/>
+
+---
+
+### {{!linkable_header('Database used')}}
+
+The schema for the database used in this class is below.
+It is from the database used in chapter 3 of the book 
+that describes a university.
+
+<pre>
+ <code class="sql">
+  % for line in university_data.split('\n'):
+    {{line}}
+  % end
+ </code>
+</pre>
+
+---
+
+## {{!linkable_header('Questions')}}
+
+---
+
+**Executing.Cells.Multiple.Times:** Be careful of executing cells multiple times.  
+The ID in the Student relation is the primary key.
+So if you cut/paste the following code with the first line commented out,
+the second time you enter the Execute button, the command will fail!  
+**Note:** Refreshing your browser, <Cntrl R> will get you a fresh copy of the database.  
+
+% answer = '''-- DELETE FROM Student where ID='doesnotexist';
+INSERT INTO student (ID, name, dept_name, tot_cred)
+               VALUES ('doesnotexist', 'Not really here', 'Comp. Sci.', 36);
+SELECT *
+  FROM Student
+ WHERE ID = 'doesnotexist' '''
+```
+{{!answer}}
+```
+
+{{!sql(answer, dbs=dbs, points=10, name=f'All.Courses.Fall.2010', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Specifying.Extra.Relations:** If you specify extra relations, more than likely you will get a
+red <font color='red'>Error Promise timed out after 2000ms</font> or 
+your computer's fan will turn on and your browser will become unresponsive.
+There's are, effectively in the grader, infinite loops.
+They will be canceled and considered wrong simply because even if they get the correct answer
+they are just too slow.  
+Try the following command with the extra student relation without the limit clause.  
+Remember, a refresh stops the command!  
+% answer = '''SELECT *
+ FROM Teaches, student
+ LIMIT 100 '''
+```
+{{!answer}}
+```
+
+{{!sql(answer, dbs=dbs, points=10, name=f'Specifying.Extra.Relations', sort=True)}}
+% include('viewAnswer')
+
+
+---
+

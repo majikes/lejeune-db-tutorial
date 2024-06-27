@@ -1,0 +1,468 @@
+---
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+
+---
+
+### Chapter 13: Data Storage Structures
+
+- By the end of class you should know
+  - Database Storage Architecture
+  - File Organization
+  - Organization of Records in Files
+  - Data-Dictionary Storage
+  - Database Buffers
+  - Column-Oriented Storage
+  - Main memory storage
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch13.pdf
+
+---
+
+### File Organization
+
+- The database is stored as a collection of _files_.
+  - Each file is a sequence of _records_.
+  - A record is a sequence of fields.
+- One approach
+  - Assume record size is fixed
+  - Each file has records of one particular type only
+  - Different files are used for different relations
+  - Fixed record assumption easiest to implement
+    - Consider variable length records later
+- We assume that records are smaller than a disk block
+
+
+---
+
+### Fixed-Length Records
+
+- Simple approach:
+  - Store record $i$ starting from byte $n * (i – 1)$, where $n$ is the size of each record.
+  - Record access is simple but records may cross blocks
+    - Modification: do not allow records to cross block boundaries
+  <figure>
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Figure.13.1.File.containing.instructor.records.png" style="width:75%"/>
+   <figcaption>Figure 13.1 File containing <i>instructor</i> records</figcap>
+  </figure>
+
+
+---
+
+### Fixed-Length Records
+#### Delete Alternative 1
+
+- Deletion of record $i$:  alternatives:
+  - **move records** $i+1,$ $\dots$, $n$ to $i, \dots n-1$
+  - move record $n$ to $i$
+  - do not move records, but link all free records on a <i>free list</i>
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Figure.13.2.Instructor.with.record.3.deleted.png" style="width:75%"/>
+   <figcaption>Figure 13.2 File of instructor with record 3 deleted</figcap>
+  </figure>
+
+
+---
+
+### Fixed-Length Records
+#### Delete Alternative 2
+
+- Deletion of record $i$:  alternatives:
+  - move records $i+1,$ $\dots$, $n$ to $i, \dots n-1$
+  - **move record $n$ to $i$**
+  - do not move records, but link all free records on a <i>free list</i>
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Figure.13.3.Instructor.with.record.11.replacing.record.3.png" style="width:75%"/>
+   <figcaption>Figure 13.3 File of instructor: record 3 replaced by record 11</figcap>
+  </figure>
+
+
+---
+
+### Fixed-Length Records
+#### Delete Alternative 3
+
+- Deletion of record $i$:  alternatives:
+  - move records $i+1,$ $\dots$, $n$ to $i, \dots n-1$
+  - move record $n$ to $i$
+  - **do not move records; link all free records on a <i>free list</i>**
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Figure.13.4.Instructor.with.free.list.png" style="width:75%"/>
+   <figcaption>Figure 13.4 File of instructor with record 3 replaced by record 11</figcap>
+  </figure>
+
+
+---
+
+### Variable-Length Records
+
+- Variable-length records arise in database systems in several ways:
+  - Storage of multiple record types in a file.
+  - Record types that allow variable lengths for one or more fields such as strings (**varchar**)
+  - Record types that allow repeating fields (used in some older data models)
+- Attributes are stored in order
+- Variable length attributes represented by fixed size (offset, length), with actual data stored after all fixed length attributes
+- Null values represented by null-value bitmap
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Figure.13.5.Variable-length.record-of-instructor.png" style="width:75%"/>
+   <figcaption>Figure 13.5 Variable-length record of instructor</figcap>
+  </figure>
+
+
+---
+
+### Variable-Length Records
+#### Slotted Page Structure
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Figure.13.6.Slotted-page.structure.png" style="width:50%"/>
+   <figcaption>Figure 13.6 slotted-page structure</figcap>
+  </figure>
+
+- Slotted page</b> header contains:
+  - number of record entries
+  - end of free space in the block
+  - location and size of each record
+- Records can be moved around within a page to keep them contiguous with no empty space between them; entry in the header must be updated.
+- Pointers should not point directly to record — instead they should point to the entry for the record in header.
+
+
+---
+
+### Storing Large Objects
+
+- E.g. blob/clob types
+- Records must be smaller than pages
+- Alternatives:
+  - Store as files in file systems
+  - Store as files managed by database
+  - Break into pieces and store in multiple tuples in separate relation
+    - PostgreSQL TOAST
+    - TOAST The Oversized-Attribute Storage Technique
+
+Note:
+
+Postgres stores in 8K max page size.  How to store something 9K?
+
+
+---
+
+### Organization of Records in Files
+
+- **Heap** – record can be placed anywhere in the file where there is space
+- **Sequential** – store records in sequential order, based on the value of the search key of each record
+- In a **multitable clustering file organization** records of several different relations can be stored in the same file
+  - Motivation: store related records on the same block to minimize I/O
+- **B$^+$-tree file organization**
+  - Ordered storage even with inserts/deletes
+  - More on this in Chapter 14
+- **Hashing** – a hash function computed on search key; the result specifies in which block of the file the record should be placed
+  - More on this in Chapter 14
+
+
+---
+
+{{HIDDEN}}
+
+### Heap File Organization
+
+- Records can be placed anywhere in the file where there is free space
+- Records usually do not move once allocated
+- Important to be able to efficiently find free space within file
+- **Free-space map**
+  - Array with 1 entry per block.  Each entry is a few bits to a byte, and records fraction of block that is free
+  - In example below, 3 bits per block, value divided by 8 indicates fraction of block that is free <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Free-space-map.of.16.blocks.png" style="width:50%"/>
+  - Can have second-level free-space map
+  - In example below, each entry stores maximum from 4 entries of first-level free-space map <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Secondary-free-space-map.png" style="width:10%"/>
+- Free space map written to disk periodically, OK to have wrong (old) values for some entries (will be detected and fixed)
+
+
+---
+
+### Sequential File Organization
+
+- Suitable for applications that require sequential processing of the entire file 
+- The records in the file are ordered by a search-key
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Figure.13.7.Sequential.file.instructor.records.png" style="width:75%"/>
+   <figcaption>Figure 13.7 Sequential file <i>instructor</i> records</figcap>
+</figure>
+
+---
+
+### Sequential File Organization (Cont.)
+
+- Deletion – use pointer chains
+- Insertion –locate the position where the record is to be inserted
+  - if there is free space insert there 
+  - if no free space, insert the record in an overflow block
+  - In either case, pointer chain must be updated
+- Need to reorganize the file from time to time to restore sequential order
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Figure.13.8.Sequential.file.after.an.insert.png" style="width:50%" align="right"/>
+   <figcaption><br/>Figure 13.8 Sequential file after an insert</figcap>
+</figure>
+
+---
+
+{{HIDDEN}}
+
+### Multitable Clustering File Organization
+
+<p>Store several relations in one file using a <b>multitable clustering </b></p>
+<p>file organization</p>
+<p><i>department</i></p>
+<p><i>instructor</i></p>
+<p>multitable clustering</p>
+<p>of<i> department </i>and</p>
+<p><i>instructor</i></p>
+
+
+---
+
+{{HIDDEN}}
+
+### Multitable Clustering File Organization (cont.)
+
+- good for queries involving <i>department </i>⨝<i> instructor</i>, and for 
+<p>queries involving one single department and its instructors</p>
+- bad for queries involving only <i>department</i>
+- results in variable size records
+- Can add pointer chains to link records of a particular relation
+
+
+---
+
+{{HIDDEN}}
+
+### Partitioning
+
+- <b>Table partitioning</b>: Records in a relation can be partitioned into 
+<p>smaller relations that are stored separately</p>
+- E.g. <i>transaction </i>relation may be partitioned into 
+<p><i>transaction_2018, transaction_2019, etc.</i></p>
+- Queries written on <i>transaction</i> must access records in all partitions
+  - Unless query has a selection such as <i>year=</i>2019, in which case 
+<p>only one partition in needed</p>
+- Partitioning 
+  - Reduces costs of some operations such as free space 
+<p>management</p>
+  - Allows different partitions to be stored on different storage 
+<p>devices </p>
+- E.g. <i>transaction </i>partition for current year on SSD, for older 
+<p>years on magnetic disk</p>
+
+
+---
+
+### Data Dictionary Storage
+
+The **Data dictionary** (also called **system catalog**) stores **metadata**; that is, data about data, such as
+
+- Information about relations
+  - names of relations
+  - names, types and lengths of attributes of each relation
+  - names and definitions of views
+  - integrity constraints
+- User and accounting information, including passwords
+- Statistical and descriptive data
+  - number of tuples in each relation
+- Physical file organization information
+  - How relation is stored (sequential/hash/…)
+  - Physical location of relation 
+- Information about indices (Chapter 14)
+
+
+---
+
+### Relational Representation of System Metadata
+
+- Relational representation on disk
+- Specialized data structures designed for efficient access, in memory
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.13.Figure.13.12.Relational.schema.of.system.metadata.png" style="width:50%" align="right"/>
+   <figcaption><br/>Figure 13.12 Relational schema of system metadata</figcap>
+</figure>
+
+---
+
+### Storage Access
+
+- Blocks are units of both storage allocation and data transfer.
+- Database system seeks to minimize the number of block transfers between the disk and memory.  We can reduce the number of disk accesses by keeping as many blocks as possible in main memory.
+- **Buffer** – portion of main memory available to store copies of disk blocks.
+- **Buffer manager** – subsystem responsible for allocating buffer space in main memory.
+
+
+---
+
+### Buffer Manager
+
+- Programs call on the buffer manager when they need a block from disk.
+  - If the block is already in the buffer, buffer manager returns the address of the block in main memory
+  - If the block is not in the buffer, the buffer manager
+- Allocates space in the buffer for the block
+  - Replacing (throwing out) some other block, if required, to make space for the new block.
+  - Replaced block written back to disk only if it was modified since the most recent time that it was written to/fetched from the disk.
+- Reads the block from the disk to the buffer, and returns the address of the block in main memory to requester. 
+
+
+---
+
+### Buffer Manager
+
+- **Buffer replacement strategy** (details coming up!)
+- **Pinned block:** memory block that is not allowed to be written back to disk
+  - **Pin** done before reading/writing data from a block
+  - **Unpin** done when read /write is complete
+  - Multiple concurrent pin/unpin operations possible
+    - Keep pin count, buffer block can be evicted iff count=0
+- **Shared and exclusive locks on buffer**
+  - Needed to prevent concurrent operations from reading page contents as they are moved/reorganized, and to ensure only one move/reorganize at a time
+  - Readers get shared lock, updates to a block require exclusive lock
+  - **Locking rules:**
+- Only one process can get exclusive lock at a time
+- Shared lock cannot be concurrently with exclusive lock
+- Multiple processes may be given shared lock concurrently
+
+
+---
+
+### Buffer-Replacement Policies
+
+- Most operating systems replace the block **least recently used** (LRU strategy)
+  - Idea behind LRU – use past pattern of block references as a predictor of future references
+  - LRU can be bad for some queries
+- Queries have well-defined access patterns (such as sequential scans), and a database system can use the information in a user’s query to predict future references
+- Mixed strategy with hints on replacement strategy provided by the query optimizer is preferable
+- Example of bad access pattern for LRU: when computing the join of 2 relations r and s by a nested loops 
+<br/>{{TAB}}for each tuple $tr$ of $r$ do
+<br/>{{TAB}}{{TAB}}for each tuple $ts$ of $s$ do
+<br/>{{TAB}}{{TAB}}{{TAB}}if the tuples $tr$ and $ts$ match $\dots$
+
+
+---
+
+### Buffer-Replacement Policies (Cont.)
+
+- **Toss-immediate** strategy – frees the space occupied by a block as soon as the final tuple of that block has been processed
+- **Most recently used (MRU) strategy** – system must pin the block currently being processed.  After the final tuple of that block has been processed, the block is unpinned, and it becomes the most recently used block.
+- Buffer manager can use statistical information regarding the probability that a request will reference a particular relation
+  - E.g., the data dictionary is frequently accessed.  Heuristic:  keep data-dictionary blocks in main memory buffer
+- Operating system or buffer manager may reorder writes
+  - Can lead to corruption of data structures on disk
+    - E.g. linked list of blocks with missing block on disk
+    - File systems perform consistency check to detect such situations
+  - Careful ordering of writes can avoid many such problems
+
+
+---
+
+### Optimization of Disk Block Access (Cont.)
+
+- Buffer managers support **forced output** of blocks for the purpose of recovery (more in Chapter 19)
+- **Nonvolatile write buffers** speed up disk writes by writing blocks to a non-volatile RAM or flash buffer immediately
+  - <i>Writes can be reordered to minimize disk arm movement</i>
+- **Log disk** – a disk devoted to writing a sequential log of block updates
+  - Used exactly like nonvolatile RAM
+    - Write to log disk is very fast since no seeks are required
+- **Journaling file systems** write data in-order to NV-RAM or log disk
+  - Reordering without journaling: risk of corruption of file system data
+
+
+---
+
+{{HIDDEN}}
+
+### Column-Oriented Storage
+
+- Also known as <b>columnar representation</b>
+- Store each attribute of a relation separately
+<img src=".jpg"/>
+
+
+---
+
+{{HIDDEN}}
+
+### Columnar Representation
+
+- Benefits:
+  - Reduced IO if only some attributes are accessed
+  - Improved CPU cache performance 
+  - Improved compression
+  - <b>Vector processing </b>on modern CPU architectures
+- Drawbacks
+  - Cost of tuple reconstruction from columnar representation
+  - Cost of tuple deletion and update
+  - Cost of decompression
+- Columnar representation found to be more efficient for decision 
+<p>support than row-oriented representation</p>
+- Traditional row-oriented representation preferable for transaction 
+<p>processing</p>
+- Some databases support both representations
+  - Called <b>hybrid row/column stores</b>
+
+
+---
+
+{{HIDDEN}}
+
+
+- Columnar File Representation
+- ORC and Parquet: file 
+<p>formats with columnar </p>
+<p>storage inside file</p>
+- Very popular for big-data 
+<p>applications</p>
+- Orc file format shown on 
+<p>right:</p>
+
+
+---
+
+{{HIDDEN}}
+
+### Storage Organization in 
+
+<img src=".jpg"/>
+<p><b>Main</b></p>
+<img src=".jpg"/>
+<p><b>-</b></p>
+<img src=".jpg"/>
+<p><b>Memory Databases</b></p>
+- Can store records directly in 
+<p>memory without a buffer </p>
+<p>manager</p>
+- Column-oriented storage can be 
+<p>used in-memory for decision </p>
+<p>support applications</p>
+  - Compression reduces 
+<p>memory requirement</p>
+<img src=".jpg"/>
+
+
+
+---
+
+### Chapter 13 Epilogue
+
+- What we learned:
+  - Different ways to store the data
+  - The system catalog
+  - High-level overview buffer manager
+

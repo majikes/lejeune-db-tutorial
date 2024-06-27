@@ -1,0 +1,156 @@
+<%
+setInfo(
+        due='2023-01-12  8:00:00',
+        pages=['questions', 'submit'],
+        assessment_type='worksheet',
+        exception=(dict(leojshe=dict(due='2022-08-18 00:00:00'))),
+        maxpenalty=0.75, penalty=.2,
+        ) 
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# Chapter 1 Worksheet
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+--- 
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}} 
+
+For the following fill-in-the-blank-questions match 
+the letter for the phrase that best answers
+the following questions.
+
+% import string
+% letter_symbols = [x for x in string.ascii_uppercase[:8]]
+% choice_true_false = ['True', 'False']
+Word definitions:
+
+- **A** A software system designed to utilize and maintain collections of data
+- **B** Edgar Codd
+- **C** Fred Brooks
+- **D** A collection of data
+- **E** Handling terabytes of data
+- **F** Handling tight, real-time performance constrains
+- **G** More than just password security is required
+- **H** Multiple users and data consistency is needed
+
+% answer = ['D', 'A', 'B', 'F']
+% answer2=f'''
+{answer[0]} page 4 a database is a collection of data
+{answer[1]} page 4 a DBMS is designed to assist in maintaining and utilizing large collections of data
+{answer[2]} page 6 Edgar Codd proposed relational dbms and got Turing award in 1981
+{answer[3]} page 9 Examples: tight real-time constraints'''
+
+Words.1: Letter representing the best answer:  
+{{!table(inputs=1, headings='Question, Letter of definition', table=f'''
+What is a database?,{answer[0]}
+What is a database management system?,{answer[1]}
+Who proposed and later won a Turing award for the relational database model?,{answer[2]}
+When would you use a file instead of a DBMS?,{answer[3]}''', symbols=letter_symbols, name='Words.1', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+Kind: What kind of database management system is used by most systems today and is what this book focuses on?  
+<%
+answer = 'relational data model'
+answer2 = f'''Page 10 says: that most database management systems today are based
+on the relational data model, which we focus on in this book
+
+Answer {answer}'''
+choices = [answer, 'network data model', 'hierarchical database model',
+          'object-oriented database model', 'entity-relationship model',
+          'document model', 'star schema', 'entity-attribute-value model']
+%>
+{{!select(answer, choices=choices, points=5, name='Kind')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+Levels of abstraction:
+
+- **A** Conceptual logical schema
+- **B** Process abstraction
+- **C** First abstraction
+- **D** External view schema
+- **E** Layered abstraction
+- **F** Physical schema
+- **G** Encapsulation
+- **H** None of these
+
+% answer = ['D', 'A', 'F']
+% answer2=f'''
+Page 13 shows the abstraction as External Schema, Conceptual Schema, and Physical Schema
+
+Answer {answer}'''
+
+Abstraction: Letter representing the best answer:  
+{{!table(inputs=1, headings='Level of abstraction, Letter of definition', table=f'''
+First layer of abstraction,{answer[0]}
+Second layer of abstraction,{answer[1]}
+Third and lowest layer of abstraction,{answer[2]}''', symbols=letter_symbols, name='Abstraction', points=15)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Not.Use:** When might it be good not to use a DBMS?  
+**A:** Never! You should always use a DBMS.   
+**B:** When security is provided by another department.  
+**C:** When your system never crashes.  
+**D:** For a specialized application with time sensitive performance requirements.  
+**E:** When there is only one user.  
+% answer = 'D'
+{{!select(answer, list('ABCDE'), points=25, name='Not.Use')}}
+% include('viewAnswer')
+
+---
+
+**Independence:** There were two types of data independence mentioned in chapter 1,
+what are they?  
+**A:** Time and space independence.  
+**B:** Physical and logical independence.  
+**C:** Byte order and Unicode independence.  
+**D:** External and physical schema independence.  
+**E:** There's only one independence mentioned in chapter 1.  
+% answer = 'B'
+{{!select(answer, list('ABCDE'), points=25, name='Independence')}}
+%include('viewAnswer')
+
+---
+
+**Data.Representation:** Which of the following plays an important role in _representing_&nbsp; information
+about the real world in a database?  
+**A:** The data definition language.  
+**B:** The data manipulation language.  
+**C:** The buffer manager.  
+**D:** The data model.  
+% answer = 'A'
+% answer2 = f'''
+The data definition is the create of the tables and it will describe real world information about the data
+The DML will be using queries.  We didn't talk about the buffer manager nor the data model.
+
+Answer: {answer}'''
+{{!select(answer, list('ABCD'), points=25, name='Data.Representation')}}
+%include('viewAnswer', answer=answer2)
+
+**Upgrade:** Let's assume you upgrade the operating system to use an new file system.
+Which layer(s) of the DBMS would be affected?  
+**A:** The conceptual database design  
+**B:** The logical schema  
+**C:** The physical schema  
+**D:** The external schema  
+**E:** All of the above  
+% answer = 'C'
+{{!select(answer, list('ABCDE'), points=25, name='Upgrade')}}
+%include('viewAnswer')
+% end
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

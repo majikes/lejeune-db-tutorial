@@ -1,0 +1,85 @@
+<%
+setInfo(
+      due="2022-11-03 00:00:00",
+      needsSubmitCode=True,
+        assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      tjkapur=dict(needsSubmitCode=False, due='2022-11-03 00:00:00'),
+                      zhennan=dict(needsSubmitCode=False, due='2022-11-03 00:00:00')),
+)
+%>
+
+# Chapter 13 Sort Review
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+#### Two Way Merge Sort
+
+Assume that two way merge sort is used to sort a 32 page file.
+
+**Two.Way.Merge.Sort:** Complete the following table about two way merge sort of a 32 page file.
+If the pass doesn't get run select `N/A`.  
+<%
+answer = [['1', '64', '1', '32'],
+          ['3', '64', '2', '16'],
+          ['3', '64', '4', '8'],
+          ['3', '64', '8', '4'],
+          ['3', '64', '16', '2'],
+          ['3', '64', '32', '1']]
+choices = [f'{x}' for x in range(100)] + ['N/A']
+%>
+{{!table(inputs=1, headings='Pass,Number of Buffers Used,Number I/Os, Run length, Number of Runs', table=f'''
+Pass 0,{','.join(answer[0])}
+Pass 1,{','.join(answer[1])}
+Pass 2,{','.join(answer[2])}
+Pass 3,{','.join(answer[3])}
+Pass 4,{','.join(answer[4])}
+Pass 5,{','.join(answer[5])}''', symbols=choices, points=50, name='Two.Way.Merge.Sort')}}
+%include('viewAnswer')
+
+---
+
+#### External Merge Sort
+
+Assume that external merge sort is used to sort a 32 page file using 8 buffers.
+
+**External.Merge.Sort:** Complete the following table about external merge sort of a 32 page file using 8 buffers.
+If the pass doesn't get run select `N/A`.  
+<%
+answer = [['8', '64', '8', '4'],
+          ['5', '64', '32', '1'],
+          ['N/A']*4,
+          ['N/A']*4,
+          ['N/A']*4,
+          ['N/A']*4]
+choices = [f'{x}' for x in range(100)] + ['N/A']
+%>
+{{!table(inputs=1, headings='Pass,Number of Buffers Used,Number I/Os, Run length, Number of Runs', table=f'''
+Pass 0,{','.join(answer[0])}
+Pass 1,{','.join(answer[1])}
+Pass 2,{','.join(answer[2])}
+Pass 3,{','.join(answer[3])}
+Pass 4,{','.join(answer[4])}
+Pass 5,{','.join(answer[5])}''', symbols=choices, points=50, name='External.Merge.Sort')}}
+%include('viewAnswer')
+
+---
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

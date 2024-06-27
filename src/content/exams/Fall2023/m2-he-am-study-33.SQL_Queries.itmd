@@ -1,0 +1,16 @@
+## {{!linkable_header('SQL Queries')}} {{points_sql_queries}} points
+
+
+In this section, you will write SQL queries for the university described in the book.
+Your queries will be tested immediately against two different databases.
+If your queries output matches the expected output, the
+displayed answers will be outlined in green.
+Your actual score will be determined when your query is
+tested against a different database but green feedback should mean that you are on track to receive full credit.
+
+---
+
+% include('content/exams/m2-he-am-study-33.SQL_Queries_chapter_2.itmd')
+% include('content/exams/m2-he-am-study-33.SQL_Queries_chapter_3.itmd')
+% include('content/exams/m2-he-am-study-33.SQL_Queries_chapter_4.itmd')
+

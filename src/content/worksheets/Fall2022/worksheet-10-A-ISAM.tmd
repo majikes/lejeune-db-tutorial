@@ -1,0 +1,79 @@
+<%
+setInfo(
+      due="2022-10-12 10:55:00",
+      assessment_type='worksheet',
+      needsSubmitCode=True,
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      ayanam=dict(needsSubmitCode=False, due='2022-10-14 00:00:00')),
+)
+dbs = ['states-A.sqlite']
+%>
+
+# Chapter 10 ISAM
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+Assume there the following static leaf nodes exists for an ISAM file.
+Note that each index page holds only two search keys and three pointers.
+
+
+<img src="{{static('images/worksheet-10-A-ISAM.tree.png')}}" style="width:75%" alt="ISAM tree"/>
+
+**ISAM.Setup:** For each variable ($A, B, \dots, F$) in the ISAM tree above,
+enter the **smallest** key value that can be used for that key in the tree.  
+% answer = ['70', 'Null', '30', '50', '90', '110']
+% symbols = [f'{10*x}' for x in range(14)] + ['Null']
+{{!table(inputs=1, headings='Key variable in image above, Smallest possible key value', table=f'''
+A,{answer[0]}
+B,{answer[1]}
+C,{answer[2]}
+D,{answer[3]}
+E,{answer[4]}
+F,{answer[5]}''', symbols=symbols, name='ISAM.Setup', points=60)}}
+%include('viewAnswer')
+
+---
+
+**ISAM.Search.Cost:** Given this initial ISAM tree,
+what is the search cost in terms of number of pages read to read a leaf node?
+% answer = '3'
+% answer2 = f'''You have to read 2 pages for the index and then one for the data.
+
+Answer: {answer}'''
+{{!expression(answer, dict(n=1), dict(n=2), points=20, name='ISAM.Search.Cost')}}
+%include('viewAnswer')
+
+% end
+% if 'submit' in pages:
+
+---
+
+**ISAM.Delete.Leaf.Node:** Assume a delete is done for 110 and 120 is done,
+what is the value of index leaf variable $F$ above?
+% answer = '110'
+% answer2 = f'''Index leaves are static
+
+Answer: {answer}'''
+{{!expression(answer, dict(Null=1), dict(Null=2), points=20, name='ISAM.Delete.Leaf.Node')}}
+%include('viewAnswer')
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

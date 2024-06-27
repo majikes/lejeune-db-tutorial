@@ -1,0 +1,1036 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+---
+
+- My transformation currently at:
+  - My slide Cardinality Constraints on Ternary Relationship
+  - Slide 31 / 81
+ 
+- PDF currently at
+  - https://www.db-book.com/slides-dir/PDF-dir/ch6.pdf
+  - page 6.33
+
+- PowerPoint currently at
+  - slide 33 / 84
+  - c:\temp\ch6.pptx
+
+---
+
+## Outline
+
+ - Overview of the Design Process
+ - The Entity-Relationship model
+ - Complex Attributes
+ - Mapping Cardinalities
+ - Primary key
+ - Removing Redundant attributes in entity sets
+ - Reducing ER Diagrams in Relational Schemas
+ - Extended ER Features
+ - Entity-Relationship Design Issues
+ - Alternative Notations for Modeling Data
+ - Other Aspects of Database Design
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch6.pdf
+
+
+---
+
+## Design Phases
+
+ - Initial phase -- characterize fully the data needs of the prospective  database users. 
+ - Second phase  -- choosing  a data model
+   - Applying the concepts of the chosen data model
+   - Translating  these requirements into a conceptual schema of the  database.
+   - A fully developed conceptual schema indicates the functional  requirements of the enterprise. 
+     - Describe the kinds of operations (or transactions) that will be  performed on the data.
+
+
+---
+
+## Design Phases (Cont.)
+
+ - Final Phase -- Moving from an abstract data model to the implementation  of the database
+   - Logical Design – Deciding on the database schema. 
+     - Database design requires that we find a “good” collection of  relation schemas.
+     - Business decision – What attributes should we record in the  database?
+     - Computer Science decision – What relation schemas should we  have and how should the attributes be distributed among the  various relation schemas?
+   - Physical Design – Deciding on the physical layout of the database 
+
+
+---
+
+## Design Alternatives
+
+ - In designing a database schema, we must ensure that we avoid two  major pitfalls:
+   - Redundancy:  a bad design  may result in repeat information.  
+     - Redundant representation of information may lead to data  inconsistency among the various copies of information 
+   - Incompleteness: a bad design may make certain aspects of the  enterprise difficult or impossible to model.
+ - Avoiding bad designs is not enough. There may be a  large number  of   good designs from which we must choose.
+
+
+---
+
+## Design Approaches
+
+ - Entity Relationship Model (covered in this chapter)
+   - Models an enterprise as a collection of _entities_ and _relationships_
+     - Entity: a “thing” or “object” in the enterprise that is distinguishable  from other objects
+       -  Described by a set of _attributes_
+     - Relationship: an association among several entities
+   - Represented diagrammatically by an _entity-relationship diagram_:
+ - Normalization Theory (Chapter 7)
+   - Formalize what designs are bad, and test for them
+
+
+---
+
+## Outline of the ER Model
+
+
+
+---
+
+## ER model -- Database Modeling
+
+ - The ER data model was developed to facilitate database design by allowing specification of an **enterprise schema** that represents the overall logical structure of a database.
+ - The ER data model employs three basic concepts:
+   - entity sets
+   - relationship sets
+   - attributes
+ - The ER model also has an associated diagrammatic representation, the **ER diagram**, which can express the overall logical structure of a database graphically
+ 
+
+---
+
+## Entity Sets
+
+ - An **entity** is an object that exists and is distinguishable from other  objects.
+   - Example:  **specific** person, company, event, plant
+ - An **entity set** is a set of entities of the same type that share the same  properties.
+   - Example: **set of** all persons, companies, trees, holidays
+ - An entity is represented by a set of attributes; i.e., descriptive properties  possessed by all members of an entity set.
+   - Example: 
+```
+instructor = (ID, name, salary)
+course = (course_id, title, credits)
+```
+ - A subset of the attributes form a  _primary key_ of the entity set; i.e.,  uniquely identifying each member of the set.
+
+
+---
+
+## Representing Entity sets in ER Diagram
+
+ - Entity sets can be represented graphically as follows:
+   - Rectangles represent entity sets.
+   - Attributes listed inside entity rectangle
+   - Underline indicates primary key attributes
+
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.1.instructor.entity.png" style="width:35%"/>
+    <figcaption>Figure 6.1 Instructor Entity</figcaption>
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.1.student.entity.png" style="width:35%"/>
+    <figcaption>Figure 6.1 Student Entity</figcaption>
+  </figure>
+ </div>
+</div>
+
+---
+
+## Entity Sets -- instructor and student
+
+
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.1.instructor.entity.set.png" style="width:35%"/>
+    <figcaption>Figure 6.1 Instructor Entity Set</figcaption>
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.1.student.entity.set.png" style="width:35%"/>
+    <figcaption>Figure 6.1 Student Entity Set</figcaption>
+  </figure>
+ </div>
+</div>
+
+---
+
+## Relationship Sets
+
+ - A **relationship** is an association among several entities Example:
+
+<div class="row">
+ <div class="threecolumns">
+44553 (Peltier)
+student
+ </div>
+ <div class="threecolumns">
+advisor
+relationship set
+ </div>
+ <div class="threecolumns">
+22222 (Einstein)
+instructor entity
+ </div>
+</div>
+
+ - A **relationship set** is a mathematical relation among $n \ge 2$ entities, each taken from entity sets<br/>$\\{ (e_1, e_2, \dots e_n) | e_1 \in E_1, e_2 \in E2, \dots, e_n \in E_n \\}$ <br/>
+where $(e_1, e_2, \dots, e_n)$ is a relationship</p>
+   - Example: <br/>$ (44553, 22222) \in \mbox{advisor}$
+
+
+---
+
+## Relationship Sets (Cont.)
+
+ - Example: we define the relationship set  _advisor_ to denote the  associations between students and the instructors who act as their  advisors.
+ - Pictorially, we draw a line between related entities.
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.2.relationship.set.png" style="width:50%"/>
+  <figcaption>Figure 6.2 Relationship set</figcaption>
+</figure>
+
+---
+
+## Representing Relationship  Sets via ER Diagrams 
+
+ - Diamonds represent relationship sets.
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.3.ER.diagram.showing.relationship.set.advisor.png" style="width:75%"/>
+ <figcaption>Figure 6.3 E-R diagram showing relationship set _advisor_</figcaption>
+</figure>
+
+
+---
+
+## Relationship Sets (Cont.)
+
+ - An attribute can also be associated with a relationship set.
+ - For instance, the _advisor_ relationship set between entity sets _instructor_ and _student_ may have the attribute _date_ which tracks when the student  started being associated with the advisor
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.2.relationship.set.advisor.date.student.png" style="width:75%"/>
+ <figcaption>Relationship set instructor, date, student</figcaption>
+</figure>
+
+
+---
+
+## Relationship Sets with Attributes
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.2.relationship.set.advisor.date.student.with.attributes.png" style="width:75%"/>
+ <figcaption>Relationship set instructor, date, student with attributes</figcaption>
+</figure>
+
+
+---
+
+## Roles
+
+ - Entity sets of a relationship need not be distinct
+   - Each occurrence of an entity set plays a “role” in the relationship
+   - Useful for clarification when not implicit
+   - When entities appear in pairs within a relationship
+ - The labels “_course_id_” and “_prereq_id_” are called **roles**.
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.4.E-R.diagram.with.role.indicators.png" style="width:75%"/>
+ <figcaption>Figure 6.4 E-R diagram with role indicators</figcaption>
+</figure>
+
+---
+
+## Degree of a Relationship Set
+
+ - Binary relationship
+   - involve two entity sets (or degree two). 
+   - most relationship sets in a database system are binary.
+ - Relationships between more than two entity sets are rare. 
+
+Note:
+
+Next slide shows a ternary relationship
+
+---
+
+## Non-binary Relationship Sets
+
+ - Most relationship sets are binary
+ - There are  occasions when it is more convenient to represent  relationships as non-binary.
+ - E-R Diagram with a Ternary Relationship
+   - _students_ work on research _projects_ under the guidance of an _instructor_. 
+   - relationship `proj_guide` is a ternary relationship between _instructor_, _student_, and _project_
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Ternary.Relationship.instructor.student.project.with.attributes.png" style="width:50%"/>
+ <figcaption>Ternary relationship instructor, student,project with attributes</figcaption>
+</figure>
+
+---
+
+## Complex Attributes
+
+ - Attribute types:
+   - **Simple** and **composite** attributes.
+   - **Single-valued** and **multivalued** attributes
+     - Multivalued example: _phone_numbers_
+   - **Derived** attributes
+     - Can be computed from other attributes
+     - Example: age derive from date_of_birth
+ - **Domain** – the set of permitted values for each attribute 
+
+
+---
+
+## Composite Attributes
+
+ - Composite attributes allow us to divided attributes  into subparts (other  attributes).
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.7.Composite.attributes.instructor.name.address.png" style="width:75%"/>
+ <figcaption>Figure 6.7 Composite attributes: instructor, name, address</figcaption>
+</figure>
+
+
+
+---
+
+## Representing Complex Attributes  in ER Diagram
+
+
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.8.ERdiagram.with.composite.multivalued.attributes.png" style="width:25%"/>
+ <figcaption>Figure 6.8 E-R diagram with composite, multivalued, and derived attributes</figcaption>
+</figure>
+
+
+---
+
+## Mapping Cardinality Constraints
+
+ - Express the number of entities to which another entity can be associated  via a relationship set.
+ - Most useful in describing binary relationship sets.
+ - For a binary relationship set the mapping cardinality must be one of the  following types:
+   - One to one
+   - One to many
+   - Many to one
+   - Many to many 
+
+
+---
+
+## Mapping Cardinalities
+
+
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.9.a.One.To.One.cardinality.png" style="width:25%"/>
+    <figcaption>Figure 6.9 (a) One-to-one cardinality</figcaption>
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.9.b.One.To.Many.cardinality.png" style="width:25%"/>
+    <figcaption>Figure 6.9 (b) One-to-many cardinality</figcaption>
+  </figure>
+ </div>
+</div>
+
+Note that some elements in $A$ and $B$ may not be mapped to any elements in the other set
+
+
+
+---
+
+## Representing Cardinality Constraints in ER Diagram
+
+ - We express cardinality constraints by drawing either a directed line (→),  signifying “one,” or an undirected line (—), signifying “many,” between the  relationship set and the entity set.
+ - One-to-one relationship between _instructor_ and _student_:
+   - A student is associated with at most one _instructor_ via the relationship  _advisor_
+   - Notice the arrow heads
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.11.a.One.to.One.diagram.png" style="width:75%"/>
+  <figcaption>Figure 6.11 (a) One-to-one cardinality diagram</figcaption>
+</figure>
+
+---
+
+## One-to-Many Relationship
+
+ - one-to-many relationship between an _instructor_ and a _student_
+   - an instructor is associated with several (including 0) students via  _advisor_ 
+   - a student is associated with at most one instructor via advisor 
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.11.b.One.to.Many.diagram.png" style="width:75%"/>
+  <figcaption>Figure 6.11 (b) One-to-many cardinality diagram</figcaption>
+</figure>
+
+---
+
+## Many-to-One Relationships
+
+ - In a many-to-one relationship between an _instructor_ and a _student,_ 
+   - an instructor is associated with at most one student via _advisor_, 
+   - and a student is associated with several (including 0) instructors via  _advisor_
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.11.c.Many.to.One.diagram.png" style="width:75%"/>
+  <figcaption>Figure 6.11 (c) Many-to-one cardinality diagram</figcaption>
+</figure>
+
+
+---
+
+## Many-to-Many Relationship
+
+ - An instructor is associated with several (possibly 0) students via _advisor_
+ - A student is associated with several (possibly 0) instructors via _advisor_
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.11.d.Many.to.Many.diagram.png" style="width:75%"/>
+  <figcaption>Figure 6.11 (d) Many-to-Many cardinality diagram</figcaption>
+</figure>
+
+
+---
+
+## Total and Partial Participation
+
+ - **Total participation** (double/bold line):  every entity in the entity set participates in at least one relationship in the relationship set participation of _student_ in _advisor_ relation is total
+ - every _student_ must have an associated instructor
+ - **Partial participation**:  some entities may not participate in any relationship in the relationship set
+   - Example: previous _instructor_ in _advisor_ relationship
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.12.Total.Participation.diagram.png" style="width:75%"/>
+  <figcaption>Figure 6.12 Diagram showing total participation</figcaption>
+</figure>
+
+---
+
+## Notation for Expressing More Complex Constraints
+
+ - A relationship may have an associated minimum and maximum cardinality
+   - Shown with $l..h$ cardinality
+   - A minimum value of $l=1 \rightarrow$ total participation.
+   - A maximum value of $h=1 \rightarrow$ an entity participates in at most one relationship
+   - A maximum value of * indicates no limit.
+ - Example
+   - Instructor can advise 0 or more students.  A student must have 1  advisor; cannot have multiple advisors
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.13.Diagram.with.cardinality.limits.png" style="width:50%"/>
+  <figcaption>Figure 6.13 Diagram with cardinality limits</figcaption>
+</figure>
+
+---
+
+## Cardinality Constraints on Ternary Relationship
+
+ - We allow at most one arrow out of a ternary (or greater degree)  relationship to indicate a cardinality constraint
+ - For example, an arrow from <i>proj_guide</i> to _instructor_ indicates each  student has at most one guide for a project
+ - If there is more than one arrow, there are two ways of defining the  meaning.  
+   - For example, a ternary relationship _R_ between $A$,<i> B </i>and _C_ with  arrows to _B_ and _C_ could mean 1.      Each _A_ entity is associated with a unique entity from B and _C_ or  2.     Each pair of entities from (<i>A, B</i>) is associated with a    unique  _C_ entity, and each pair (<i>A, C</i>) is associated  with a unique $B$
+     - Each alternative has been used in different formalisms
+     - To avoid confusion we outlaw more than one arrow
+
+
+---
+
+## Primary Key
+
+ - Primary keys provide a way to specify how entities and  relations are  distinguished.  We will consider:
+   - Entity sets
+   - Relationship sets.
+   - Weak entity sets
+
+
+---
+
+## Primary key for Entity Sets
+
+ - By definition, individual entities are distinct.
+ - From database perspective, the differences among them must be  expressed in terms of their attributes.
+ - The values of the attribute values of an entity must be such that they can  uniquely identify the entity.
+   - No two entities in an entity set are allowed to have exactly the same  value for all attributes.
+ - A key for an entity is a set of attributes that suffice to distinguish entities  from each other
+
+
+---
+
+## Primary Key for Relationship Sets
+
+ - To distinguish among the various relationships of a relationship set we use  the individual  primary keys of the entities in the relationship set.
+   - Let $R$ be a relationship set involving entity sets E1, E2, .. En
+   - The primary key for R is consists of the  union of the primary keys of  entity sets E1, E2, ..En
+   - If the relationship set $R$ has attributes  a1, a2, .., am associated with it,  then the  primary key of $R$ also includes the attributes  a1, a2, .., am 
+ - Example: relationship set “advisor”.
+   - The primary key consists of _instructor.ID_  and _student.ID_
+ - The choice of the primary key for a relationship set depends on  the  mapping cardinality of the relationship set.
+
+
+---
+
+## Choice of Primary key for Binary Relationship
+
+ - Many-to-Many relationships.   The preceding union of the primary keys is a  minimal superkey and is chosen  as the primary key.
+ - One-to-Many relationships . The primary key of the “Many” side is a  minimal superkey and is used as the primary key.
+ - Many-to-one relationships. The primary key of the “Many” side is a minimal  superkey and is used as the primary key.
+ - One-to-one relationships. The primary key of either one of the participating  entity sets forms a minimal superkey, and either one can be chosen as the  primary key.
+
+
+---
+
+## Weak Entity Sets
+
+ - Consider a _section_ entity, which is uniquely identified by a _course_id_, _semester_, _year_, and _sec_id_.
+ - Clearly, section entities are related to course entities. Suppose we create  a relationship set _sec_course_ between entity sets _section_ and _course_.
+ - Note that the information in <i>sec_course</i> is redundant, since _section_ already has an attribute <i>course_id</i>, which identifies the course with which the section is related. 
+ - One option to deal with this redundancy is to get rid of the relationship  s<i>ec_course</i>;  however, by doing so the relationship between _section_ and _course_ becomes implicit in an attribute, which is not desirable.
+
+
+---
+
+## Weak Entity Sets (Cont.)
+
+ - An alternative way to deal with this redundancy is to not store the attribute  <i>course_id</i> in the _section_ entity and to only store the remaining attributes  <i>section_id</i>, _year_, and _semester._ 
+   - However, the entity set _section_ then does not have enough attributes to identify a particular _section_ entity uniquely
+ - To deal with this problem, we treat the relationship <i>sec_course</i> as a  special relationship that provides extra information, in this case, the  <i>course_id</i>, required to identify _section_ entities uniquely.
+ - A **weak entity set** is one whose existence is dependent on another entity,  called its _identifying entity_
+ - Instead of associating a primary key with a weak entity, we use the  identifying entity, along with extra attributes called **discriminator** to  uniquely identify a weak entity. 
+
+
+---
+
+## Weak Entity Sets (Cont.)
+
+ - Entity sets that are not a weak are termed a _strong entity set_.
+ - Every weak entity must be associated with an identifying entity; that is, the weak entity set is said to be _existence dependent_ on the identifying entity set. 
+ - The identifying entity set is said to **own** the weak entity set that it  identifies. 
+ - The relationship associating the weak entity set with the identifying entity  set is called the _identifying relationship_.
+ - Note that the relational schema we eventually create from the entity set  _section_ does have the attribute <i>course_id</i>, for reasons that will become  clear later, even though we have dropped the attribute <i>course_id</i> from  the entity set _section_.
+
+
+---
+
+## Expressing Weak Entity Sets
+
+ - In E-R diagrams, a weak entity set is depicted via a double rectangle.
+ - We underline the discriminator of a weak entity set  with a dashed line.
+ - The relationship set connecting the  weak entity set to the identifying  strong entity set is depicted by a double diamond. 
+ - Primary key for _section_ – (<i>course_id, sec_id, semester, year</i>)
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.14.ERDiagram.with.weak.entity.set.png" style="width:75%"/>
+  <figcaption>Figure 6.14 E-R diagram with week entity set</figcaption>
+</figure>
+
+---
+
+## Redundant Attributes
+
+ - Suppose we have entity sets:
+   - _student_, with attributes: _ID_, <i>name, tot_cred</i>, <i>dept_name</i>
+   - _department,_ with attributes: <i>dept_name, building, budget</i>
+ - We model the fact that each student has an associated department using  a relationship set <i>stud_dept</i>
+ - The attribute _dept_name_ in _student_ below replicates information present  in the relationship and is therefore  redundant **and needs to be removed**.
+ - But when converting back to tables, in some cases the attribute gets  reintroduced, as we will see later.
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Redundant.attribute.png" style="width:50%"/>
+  <figcaption>Chapter 6.6 removing redundant attributes</figcaption>
+</figure>
+
+---
+
+## E-R Diagram for a University Enterprise
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.15.ERdiagram.University.enterprise.png" style="width:50%"/>
+  <figcaption>Figure 6.15 E-R diagram for a university enterprise</figcaption>
+</figure>
+
+
+---
+
+## Reduction to Relation Schemas
+
+
+
+---
+
+## Reduction to Relation Schemas
+
+ - Entity sets and relationship sets can be expressed uniformly as _relation_  _schemas_ that represent the contents of the database.
+ - A database which conforms to an E-R diagram can be represented by a  collection of schemas.
+ - For each entity set and relationship set there is a unique schema that is  assigned the name of the corresponding entity set or relationship set.
+ - Each schema has a number of columns (generally corresponding to  attributes), which have unique names.
+
+
+---
+
+## Representing Entity Sets
+
+ - A strong entity set reduces to a schema with the same attributes <i>student(ID, name, tot_cred)</i>
+ - A weak entity set becomes a table that includes a column for the primary  key of the identifying strong entity set  <i>section ( course_id, sec_id, sem, year )</i>
+ - Example
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.14.ERDiagram.with.weak.entity.set.png" style="width:75%"/>
+  <figcaption>Figure 6.14 E-R diagram with week entity set</figcaption>
+</figure>
+
+
+---
+
+## Entity Sets Representation w/ Composite Attributes
+
+<div class="row">
+ <div class="fourcolumns">
+ <figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.8.ERdiagram.with.composite.multivalued.attributes.png" style="width:100%"/>
+  <figcaption>Figure 6.8</figcaption>
+ </figure>
+ </div>
+ <div class="threefourthcolumns">
+  <small>
+  <ul>
+   <li> Composite attr flattened out: create separate attr for each component attr
+     <ul>
+      <li> Example: given entity set _instructor_ with composite  attribute _name_ with component attributes <i>first_name</i> and <i>last_name</i> the schema corresponding to the  entity set has two attributes <i>name_first_name</i> and  <i>name_last_name</i>
+       <ul>
+        <li> Prefix omitted if there is no ambiguity  (<i>name_first_name</i> could be <i>first_name)</i></li>
+       </ul> </li>
+   <li> Ignoring multivalued attributes, extended instructor schema is
+    <ul>
+     <li> instructor(ID, 
+<i>first_name, middle_initial,  last_name,</i>
+<i>street_number, street_name,  </i>
+<i>apt_number, city, state, zip_code,  </i>
+<i>date_of_birth)</i></li>
+    </ul>
+   </ul>
+   </small>
+ </div>
+</div>
+
+---
+
+## Representation of Entity Sets with Multivalued Attributes
+
+ - Multivalued attribute $M$ of an entity $E$ is represented by a separate  schema _EM_
+ - Schema _EM_ has attributes corresponding to the primary key of $E$ and an  attribute corresponding to multivalued attribute $M$
+ - Example: Multivalued attribute <i>phone_number</i> of _instructor_ is  represented by a schema:
+<br/>`inst_phone = (ID, phone_number)`
+ - Each value of the multivalued attribute maps to a separate tuple of the  relation on schema _EM_
+   - For example, an _instructor_ entity with primary key 22222 and phone numbers 456-7890 and 123-4567 maps to two tuples:
+`(22222, 456-7890)` and `(22222, 123-4567)`
+
+
+---
+
+## Representing Relationship Sets
+
+ - A many-to-many relationship set is represented as a schema with  attributes for the primary keys of the two participating entity sets, and  any descriptive attributes of the relationship set. 
+ - Example: schema for relationship set _advisor_
+<br/>`advisor = (s_id, i_id)`
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.12.Total.Participation.diagram.png" style="width:75%"/>
+  <figcaption>Figure 6.12</figcaption>
+</figure>
+
+---
+
+## Redundancy of Schemas
+
+ - Many-to-one and one-to-many relationship sets that are total on the many- side can be represented by adding an extra attribute to the “many” side,  containing the primary key of the “one” side
+ - Example: Instead of creating a schema for relationship set <i>inst_dept</i>, add  an attribute <i>dept_name</i> to the schema arising from entity set _instructor_
+ - Example
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.RedundancyOfSchemas.png" style="width:75%"/>
+  <figcaption>Redundancy of schemas</figcaption>
+</figure>
+
+---
+
+## Redundancy of Schemas (Cont.)
+
+ - For one-to-one relationship sets, either side can be chosen to act as the  “many” side
+   - That is, an extra attribute can be added to either of the tables  corresponding to the two entity sets 
+ - If participation is _partial_ on the “many” side, replacing a schema by an  extra attribute in the schema corresponding to the “many” side could  result in null values
+
+
+---
+
+## Redundancy of Schemas (Cont.)
+
+ - The schema corresponding to a relationship set linking a weak entity set  to its identifying strong entity set is redundant.
+ - Example: The _section_ schema already contains the attributes that would  appear in the <i>sec_course</i> schema
+
+
+---
+
+## Extended E-R Features
+
+
+---
+
+## Specialization
+
+ - Top-down design process; we designate sub-groupings within an entity set  that are distinctive from other entities in the set.
+ - These sub-groupings become lower-level entity sets that have attributes or  participate in relationships that do not apply to the higher-level entity set.
+ - Depicted by a _triangle_ component labeled ISA (e.g., _instructor_ “is a”  _person_).
+ - **Attribute inheritance** – a lower-level entity set inherits all the attributes  and relationship participation of the higher-level entity set to which it is  linked.
+
+
+---
+
+## Specialization Example
+
+ - **Overlapping** – _employee_ and _student_
+ - **Disjoint** – _instructor_ and _secretary_
+ - Total and partial
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.18.Specialization.and.Generalization.png" style="width:45%"/>
+  <figcaption>Figure 6.18 Specialization and generalization</figcaption>
+</figure>
+
+---
+
+## Representing Specialization via Schemas
+
+ - Method 1: 
+   - Form a schema for the higher-level entity 
+   - Form a schema for each lower-level entity set, include primary key  of higher-level entity set and local attributes <figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Specialization.schema.png" style="width:35%"/>
+</figure>
+   - Drawback:  getting information about, an _employee_ requires  accessing two relations, the one corresponding to the low-level  schema and the one corresponding to the high-level schema
+
+
+---
+
+## Representing Specialization as Schemas (Cont.)
+
+ - Method 2:  
+   - Form a schema for each entity set with all local and inherited  attributes <figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Specialization.schema.copy.png" style="width:35%"/>
+</figure>
+   - Drawback: _name_, _street_, and _city_ may be stored redundantly for  people who are both students and employees
+
+
+---
+
+## Generalization
+
+ - **A bottom-up design process** – combine a number of entity sets that  share the same features into a higher-level entity set.
+ - Specialization and generalization are simple inversions of each other;  they are represented in an E-R diagram in the same way.
+ - The terms specialization and generalization are used interchangeably.
+
+
+---
+
+## Completeness constraint
+
+ - **Completeness constraint** -- specifies whether or not an entity in the  higher-level entity set must belong to at least one of the lower-level  entity sets within a generalization.
+   - **total**: an entity must belong to one of the lower-level entity sets
+   - **partial**: an entity need not belong to one of the lower-level entity  sets
+
+
+---
+
+## Completeness constraint (Cont.)
+
+ - Partial generalization is the default.  
+ - We can specify total generalization in an ER diagram by adding the  keyword **total** in the diagram and drawing a dashed line from the  keyword to the corresponding hollow arrow-head to which it applies (for  a total generalization), or to the set of hollow arrow-heads to which it  applies (for an overlapping generalization).
+ - The _student_ generalization is total: All student entities must be either  graduate or undergraduate. Because the higher-level entity set arrived  at through generalization is generally composed of only those entities  in the lower-level entity sets, the completeness constraint for a  generalized higher-level entity set is usually total
+
+
+---
+
+## Aggregation
+
+ - Consider the ternary relationship <i>proj_guide</i>, which we saw earlier
+ - Suppose we want to record evaluations of a student by a guide on a  project
+<figure style="border:0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.19.ER.diagram.with.redundant.relationships.png" style="width:45%"/>
+</figure>
+
+---
+
+## Aggregation (Cont.)
+
+ - Relationship sets <i>eval_for</i> and <i>proj_guide</i> represent overlapping  information
+   - Every <i>eval_for</i> relationship corresponds to a <i>proj_guide</i> relationship
+   - However, some <i>proj_guide</i> relationships may not correspond to any  <i>eval_for</i> relationships 
+     - So we can’t discard the <i>proj_guide</i> relationship
+ - Eliminate this redundancy via _aggregation_
+   - Treat relationship as an abstract entity
+   - Allows relationships between relationships 
+   - Abstraction of relationship into new entity
+
+
+---
+
+## Aggregation (Cont.)
+
+ - Eliminate this redundancy via _aggregation_ without introducing  redundancy, the following diagram represents:
+   - A student is guided by a particular instructor on a particular project 
+   - A student, instructor, project combination may have an associated  evaluation
+<figure style="border:0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.20.ER.diagram.with.aggregation.png" style="width:45%"/>
+</figure>
+
+
+---
+
+## Reduction to Relational Schemas
+
+ - To represent aggregation, create a schema containing
+   - Primary key of the aggregated relationship,
+   - The primary key of the associated entity set
+   - Any descriptive attributes
+ - In our example:
+   - The schema <i>eval_for</i> is:<br/>`eval_for(s_ID, project_id, i_ID, evaluation_id)`
+   - The schema <i>proj_guide</i> is redundant.
+
+
+---
+
+## Design Issues
+
+
+
+---
+
+## Common Mistakes in E-R Diagrams
+
+ - Example of erroneous E-R diagrams 
+
+<figure style="border:0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.21.a.Dept_name.duplicate.png" style="width:35%"/>
+  <figcaption>Figure 6.21 (a) Incorrect use of attribute dept_name</figcaption>
+</figure>
+
+<figure style="border:0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.21.b.Only.one.assignment.per.student.per.section.png" style="width:35%"/>
+  <figcaption>Figure 6.21 (b) Erroneous relationship attributes</figcaption>
+</figure>
+
+Note:
+
+Figure 6.21.a Duplicate dept_name.   Duplicate data problematic
+
+Figure 6.21.b There can only be one assignment, mark for each student in each section.
+
+---
+
+## Common Mistakes in E-R Diagrams (Cont.)
+
+
+<figure style="border:0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.21.b.Only.one.assignment.per.student.per.section.png" style="width:35%"/>
+  <figcaption>Figure 6.21 (b) Erroneous relationship attributes</figcaption>
+</figure>
+
+<figure style="border:0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.22.c.Correction.Erroneous.b.png" style="width:35%"/>
+  <figcaption>Figure 6.22 (c) Correct alternative to erroneous 6.21 (b)</figcaption>
+</figure>
+
+<figure style="border:0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.22.d.Correction.to.erroneous.6.21.b.png" style="width:35%"/>
+  <figcaption>Figure 6.22 (d) Correct alternative to erroneous 6.21 (b)</figcaption>
+</figure>
+
+---
+
+## Entities vs. Attributes
+
+ - Use of entity sets vs. attributes
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.23.a.instructor.png" style="width:25%"/>
+    <figcaption>Figure 6.23 (a) Instructor with only one phone number</figcaption>
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.23.b.inst_phone.png" style="width:25%"/>
+    <figcaption>Figure 6.23 (b) Instructor with more than one phone number</figcaption>
+  </figure>
+ </div>
+</div>
+ - Use of phone as an entity allows extra information about phone numbers  (plus multiple phone numbers)
+
+
+---
+
+## Entities vs. Relationship sets
+
+ - **Use of entity sets vs. relationship sets** Possible guideline is to designate a relationship set to describe an action that occurs between entities
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.24.Replacement.takes.by.registration.and.two.relationship.sets.png" style="width:75%"/>
+  <figcaption>Figure 6.24 Replacement of takes by registration with two relationship sets</figcaption>
+</figure>
+ - <b>Placement of relationship attributes</b> For example, attribute date as attribute of advisor or as attribute  of student
+
+
+---
+
+## Binary Vs. Non-Binary Relationships
+
+ - Although it is possible to replace any non-binary ($n$-ary, for $n > 2$)  relationship set by a number of distinct binary relationship sets, a $n$-ary relationship set shows more clearly that several entities participate in a  single relationship.
+ - Some relationships that appear to be non-binary may be better  represented using binary relationships
+   - For example,  a ternary relationship _parents_, relating a child to  his/her father and mother, is best replaced by two binary  relationships,  _father_ and _mother_
+     - Using two binary relationships allows partial information (e.g.,  only mother being known)
+   - But there are some relationships that are naturally non-binary
+     - Example: <i>proj_guide</i>
+
+
+---
+
+## Converting Non-Binary Relationships to Binary Form
+
+ - In general, any non-binary relationship can be represented using binary  relationships by creating an artificial entity set.
+   - Replace _R_ between entity sets A, B and C by an entity set $E$, and three  relationship sets: <br />1. $R_A$ relating E and A &nbsp;&nbsp;&nbsp;2. $R_B$ relating E and B<br />3. $R_C$ relating E and C
+
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.25.a.ternary.relationship.png" style="width:25%"/>
+    <figcaption>Figure 6.25 (a)<br />Ternary relationship</figcaption>
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+    <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.25.b.three.binary.relationships.png" style="width:25%"/>
+    <figcaption>Figure 6.23 (b)<br />Three binary relationships</figcaption>
+  </figure>
+ </div>
+</div>
+
+---
+
+## Converting Non-Binary Relationships (Cont.)
+
+ - Also need to translate constraints
+   - Translating all constraints may not be possible
+   - There may be instances in the translated schema that cannot correspond to any instance of $R$
+     - Exercise:<i> add constraints to the relationships $R_A$, $R_b$, and $R_c$ to  ensure that a newly created entity corresponds to exactly one  entity in each of entity sets <i>A, B</i> and $C$
+   - We can avoid creating an identifying attribute by making E a weak  entity set (described shortly) identified by the three relationship sets 
+
+
+---
+
+## E-R Design Decisions
+
+ - The use of an attribute or entity set to represent an object.
+ - Whether a real-world concept is best expressed by an entity set or a  relationship set.
+ - The use of a ternary relationship versus a pair of binary relationships.
+ - The use of a strong or weak entity set.
+ - The use of specialization/generalization – contributes to modularity in the  design.
+ - The use of aggregation – can treat the aggregate entity set as a single  unit without concern for the details of its internal structure.
+
+
+---
+
+## Summary of Symbols Used in E-R Notation
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.26.a.ERSymbols.png" style="width:75%"/>
+  <figcaption>Figure 6.26 a Symbols used in E-R notation</figcaption>
+</figure>
+
+
+---
+
+## Symbols Used in E-R Notation (Cont.)
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.06.Figure.6.26.b.ERSymbols.png" style="width:75%"/>
+  <figcaption>Figure 6.26 b Symbols used in E-R notation</figcaption>
+</figure>
+
+
+
+Note:
+## Alternative ER Notations
+
+ - Chen, IDE1FX, …
+
+
+
+## Alternative ER Notations
+
+<p><b>Chen                        IDE1FX (Crows feet notation)</b></p>
+
+
+
+## UML
+
+ - **UML**: Unified Modeling Language
+ - UML has many components to graphically model different aspects of an  entire software system
+ - UML Class Diagrams correspond to E-R Diagram, but several  differences.
+
+
+
+## ER vs. UML Class Diagrams
+
+<p><b>* </b>Note reversal of position in cardinality constraint depiction</p>
+
+
+
+## ER vs. UML Class Diagrams
+
+<p><b>ER Diagram Notation</b></p>
+<p><b>Equivalent in UML</b></p> ***** Generalization can use merged or separate arrows independent of disjoint/overlapping
+
+
+
+## UML Class Diagrams (Cont.)
+
+ - Binary relationship sets are represented in UML by just drawing a line  connecting the entity sets. The relationship set name is written adjacent  to the line.  
+ - The role played by an entity set in a relationship set may also be  specified by writing the role name on the line, adjacent to the entity set. 
+ - The relationship set name may alternatively be written in a box, along  with attributes of the relationship set, and the box is connected, using a  dotted line, to the line depicting the  relationship set.
+
+
+
+## ER vs. UML Class Diagrams
+
+
+
+
+## Other Aspects of Database Design
+
+ - Functional Requirements
+ - Data Flow, Workflow
+ - Schema Evolution
+

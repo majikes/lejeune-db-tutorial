@@ -1,0 +1,118 @@
+#### {{!linkable_header(name_index_nested_loop)}} {{points_index_nested_loop}} out of {{points_evaluation}} {{name_evaluation.lower()}} points out of {{points_limit}} total points
+
+In this question and since selection has all integers, 
+this question has a hash that requires **<font color='red'>2</font>** I/Os.
+
+<%
+INL_PAGES = namedtuple('PAGES_BNL', 'sailors reserves')
+inl_pages = [INL_PAGES(sailors=20, reserves=50),
+             INL_PAGES(sailors=30, reserves=40),
+             INL_PAGES(sailors=40, reserves=30),
+             INL_PAGES(sailors=50, reserves=20),
+             ]
+%>
+
+Assume the schema is:
+% import json
+% schema = json.load(open('./fe_sailors1.json'))
+```sql
+{{schema}}
+```
+
+Further assume you have to join the following:
+
+```sql
+SELECT *
+  FROM Reserves R, Sailors S
+ WHERE R.sid = S.sid
+```
+
+**Calculator:** You may use this box as a calculator.
+Just type in any expression that can be evaluated by a JavaScript eval.
+For example, `2 ** 0.5` will show you the result of the square root of 2
+in the red box to the right.
+Leaving the box empty or filled in will **NOT** affect your grade.
+{{!calculator(name=f'_calculator.inl')}}
+
+---
+
+<%
+for index in range(number_index_nested_loop):
+  if (section == '003') or (conflict_exam and index == number_index_nested_loop-1) or (not conflict_exam and ((member_number%(number_index_nested_loop-1) == index))):
+      if index == number_index_nested_loop -1:
+        include('viewAnswer', answer=f' Only seen by students at the conflict exam')
+      else:
+        include('viewAnswer', answer=f' Only seen by member number % {number_index_nested_loop-1} == {index}')
+      end
+%>
+
+Assume that Sailors is a file of {{inl_pages[index].sailors}} pages,
+each page contains 80 tuples,
+Sailors has a hash index on `sid` that requires **<font color='red'>2</font>** I/Os to retrieve the data,
+and the data entries are stored using Alternative (2).
+You may assume that each sailor has reserved less than 100 boats.
+
+Reserves is a file of {{inl_pages[index].reserves}} pages,
+each page contains 100 tuples,
+Reserves has a B+ tree index that requires 4 I/Os to retrieve the clustered data.
+To facilitate the math:  
+- The B+ tree is not buffered  
+- Each access of a data leaf through the index requires 4 I/Os.  
+- No sailor has reserved more than 50 boats.  
+
+
+<%
+answer = [f'{inl_pages[index].sailors}',
+          f'{inl_pages[index].sailors*80}', '4',
+          f'{inl_pages[index].sailors + inl_pages[index].sailors*80*4}',
+          ]
+answer2 = f'''The scan of sailors takes {inl_pages[index].sailors} because that's how many pages there are.
+
+There are 80 Sailor tuples per page so there are {answer[1]} tuples.
+
+Since no sailor can reserve more than one page of reserves, it takes {answer[2]} I/Os to retrieve each sailor's reserve.
+
+So there are {answer[0]} Sailor I/Os plus {answer[2]} I/Os for each of {answer[1]} Sailor  tuples or {answer[3]}
+
+Answer: {answer}'''
+choices = [f'{x}' for x in range(503)] + [f'{x*25}' for x in range(2000)] + [f'{x*100}' for x in range(400)] + [f'{x*500}' for x in range(400)]
+choices = [f'{x}' for x in range(100)] + [f'{x*5}' for x in range(2000)] + [f'{x*10}' for x in range(4000)]
+%>
+**Index.Nested.Loop.Join.Sailor.Outer.{{index+1}}:** Answer the following questions about an index nested loop join with **Sailors** as the outside loop.  
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+How many I/Os to scan Sailors?,{answer[0]}
+How many Sailors tuples will be tested to match for a Reserve?,{answer[1]}
+How many I/Os to retrieve all the reserves by a single sailor?,{answer[2]}
+How many I/Os to complete the index nested loop join?,{answer[3]}''', symbols=choices, points=5, name=f'Index.Nested.Loop.Join.Sailor.Outer.{index+1}')}}
+%include('viewAnswer')
+
+<%
+answer = [f'{inl_pages[index].reserves}',
+          f'{inl_pages[index].reserves*100}', '2',
+          f'{inl_pages[index].reserves + inl_pages[index].reserves*100*2}',
+          ]
+answer2 = f'''The scan of reserves takes {inl_pages[index].sailors} because that's how many pages there are.
+
+There are 100 Reserves tuples per page so there are {answer[1]} tuples.
+
+Since no sailor can reserve more than one page of reserves, it takes {answer[2]} I/Os to retrieve each sailor's reserve.
+
+So there are {answer[0]} Reserves I/Os plus {answer[2]} I/Os for each of {answer[1]} Reserves  tuples or {answer[3]}
+
+Answer: {answer}'''
+choices = [f'{x}' for x in range(503)] + [f'{x*25}' for x in range(2000)] + [f'{x*100}' for x in range(400)] + [f'{x*500}' for x in range(400)]
+choices = [f'{x}' for x in range(100)] + [f'{x*5}' for x in range(2000)] + [f'{x*10}' for x in range(4000)]
+choices = [f'{x*10**j}' for x in range(10) for j in range(3)] + [f'{x+eval(y)}' for x in [-10, -20, 0, 10, 20] for y in answer]
+%>
+**Index.Nested.Loop.Join.Reserves.Outer.{{index+1}}:** Answer the following questions about an index nested loop join with **Reserves** as the outside loop.  
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+How many I/Os to scan Reserves?,{answer[0]}
+How many Reserves tuples will be tested to match for a Sailors?,{answer[1]}
+How many I/Os to retrieve a single reserve's sailor?,{answer[2]}
+How many I/Os to complete the index nested loop join?,{answer[3]}''', symbols=choices, points=5, name=f'Index.Nested.Loop.Join.Reserves.Outer.{index+1}')}}
+%include('viewAnswer')
+
+---
+
+  % end  # section == 003 or member_number%number_index_nested_loop == index
+% end  # for index in range(number_index_nested_loop)

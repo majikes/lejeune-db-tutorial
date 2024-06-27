@@ -1,0 +1,4 @@
+## {{!linkable_header('Chapter Reading Review')}} {{points_chapter_review}} points
+
+% include('content/exams/m1-just-material-might-50.chapter_review_chapter_1.itmd')
+% include('content/exams/m1-just-material-might-50.chapter_review_chapter_2.itmd')

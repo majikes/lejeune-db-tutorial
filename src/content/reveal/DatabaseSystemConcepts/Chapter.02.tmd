@@ -1,0 +1,346 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+
+---
+
+# Chapter 2: Intro to Relational Model
+
+Notes:
+## Outline
+ - Structure of Relational Databases
+ - Database Schema  
+ - Keys  
+ - Schema Diagrams  
+ - Relational Query Languages  
+ - The Relational Algebra  
+
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch2.pdf
+
+---
+
+# Example of a **_Instructor_**  Relation
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.1.Instructor.Relation.png" style="width:50%"/>
+ <figcaption>Figure 2.1 The <i>instructor</i> relation.</figcaption> 
+</figure>
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.1.Instructor.Relation
+
+
+---
+
+# Relation Schema and Instance
+ - $A_1 A_2, \dots, A_n$ are _attributes_  
+ - $R = (A_1, A_2, \dots, A_n )$ is a _relation schema_ 
+    - Example:<br/> _instructor_ = (ID,  name, dept_name, salary)  
+ - A relation instance _r_ defined over schema _R_ is denoted by $r (R)$.  
+ - The current values a relation are specified by a table  
+ - An element **_t_** of relation **_r_** is called a  _tuple_ and is represented by a _row_ in a table
+
+
+---
+
+# Attributes
+ - The set of allowed values for each attribute is called the **domain** of the attribute 
+ - Attribute values are (normally) required to be **atomic**; that is, indivisible  
+ - The special value **_null_**  is a member of every domain. Indicated that the value is “unknown”
+ - The null value causes complications in the definition of many operations  
+
+
+---
+
+# Relations are Unordered
+ - Order of tuples is irrelevant (tuples may be stored in an arbitrary order)  
+ - Example: _instructor_  relation with unordered tuples  
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.4.Unsorted.Instructor.Relation.png" style="width:50%"/>
+ <figcaption>Figure 2.4 Unsorted display of <i>instructor</i> relation.</figcaption> 
+</figure>
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.1.Instructor.Relation
+
+
+---
+
+# Database Schema
+ - Database schema is the logical structure of the database.  
+ - Database instance is a snapshot of the data in the database at a given instant.  
+ - Example:
+   - schema:   _instructor_ (ID, name, dept_name, salary)</p>
+   - Instance: <figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.4.Unsorted.Instructor.Relation.png" style="width:50%"/>
+</figure>
+
+
+---
+
+# Keys
+ - Let $K \subseteq R$  
+ - _K_ is a **superkey** of _R_ if values for _K_ are sufficient to identify a unique tuple of each possible relation _r(R)_  
+   -  Example:  {_ID_} and {ID,name} are both superkeys of _instructor._
+  - Superkey _K_ is a **candidate key** if _K_ is minimal  
+   - Example: {_ID_} is a candidate key for _Instructor_
+ - One of the candidate keys is selected to be the **primary key**.<br/> Which one?
+ - **Foreign key** constraint: Value in one relation must appear in another  
+     - **Referencing** relation
+     - **Referenced** relation
+     - Example: _dept_name_ in _instructor_  is a foreign key from _instructor_ referencing _department_  
+
+Note:
+
+You want to pick the primary key that the smallest number of fields
+
+---
+
+# Schema Diagram for University Database
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.9.Schema.University.Database.png" style="width:50%"/>
+ <figcaption>Figure 2.9 Schema diagram for the university database</figcaption> 
+</figure>
+
+
+---
+
+# Relational Query Languages
+ - Procedural versus non-procedural, or declarative  
+ - “Pure” languages:  
+   - Relational algebra
+   - Tuple relational calculus
+   - Domain relational calculus
+ - The above 3 pure languages are equivalent in computing power  
+ - We will concentrate in this chapter on relational algebra  
+   - Not Turing-machine equivalent
+   - Consists of 6 basic operations
+
+
+---
+
+# Relational Algebra
+ - A  procedural language consisting  of a set of operations that take one or   
+<p>two relations as input and produce a new relation as their result. </p>
+ - Six basic operators  
+   - select: $\sigma$
+   - project: $\Pi$
+   - union: $\cup$
+   - set difference: _–_ 
+   - Cartesian product: $\times$
+   - rename: _$\rho$_
+
+
+---
+
+# Select Operation
+ - The  **select** operation selects tuples that satisfy a given predicate.  
+ - Notation:  $\sigma_p (r)$  
+ - $p$ is called the **selection predicate**  
+ - Example: select those tuples of the _instructor_ relation where the instructor is in the 'Physics' department.
+   - Query<br/> $\sigma_{_\mbox{dept_name='Physics'}} (instructor)$  
+   - Result
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.10.Result.Of.Query.png" style="width:50%"/>
+ <figcaption>Figure 2.10</figcaption> 
+</figure>
+
+
+---
+
+# Select Operation (Cont.)
+ - We allow comparisons using  $= \ne, \gt, \ge, \lt, \le$ in the selection predicate. </p>
+ - We can combine several predicates into a larger predicate by using the connectives: $\land \mbox{(and)}, \lor \mbox{(or)}, \neg \mbox{(not)}$
+ - Example: Find the instructors in Physics with a salary greater 90,000, we write:<br/> $\sigma_{_{\mbox{dept_name='Physics'} \land \mbox{salary} \gt \mbox{90000}}} (instructor)$ 
+ - The select predicate may include comparisons between two attributes.   
+   - Example, find all departments whose name is the same as their building name:<br />$\sigma_{_\mbox{dept_name=building}} (department)$  
+
+
+---
+
+# Project Operation
+ - A unary operation that returns its argument relation, with certain attributes left out.  
+ - Notation:<br /> $\Pi_{_{A_1, A_2, \dots, A_k}} (r)$   
+<p>where $A_1, A_2, \dots, A_k$ are attribute names and $r$ is a relation name. 
+ - The result is defined as the relation of _k_ columns obtained by erasing the columns that are not listed 
+ - Duplicate rows removed from result, since relations are sets  
+
+
+---
+
+# Projection Operation Example
+ - Example: eliminate the _dept_name_ attribute of _instructor_  
+ - Query: $\Pi_{_\mbox{ID, name, salary}} (instructor)$
+ - Result:<br/> <figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.11.Projection.Name.Salary.png" style="width:35%"/>
+ <figcaption>Figure 2.11</figcaption> 
+</figure>
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.11.Projection.ID.Name.Salary
+
+
+
+---
+
+# Composition of Relational Operations
+ - The result of a relational-algebra operation is relation  and therefore of  relational-algebra operations can be composed together into a **relational-algebra expression**.
+ - Consider  the query -- Find the names of all instructors in the Physics department.<br/>   $\Pi_{\mbox{name}} (\sigma_{\mbox{dept_name}='Physics'} (instructor))$  
+ - Instead of giving the name of a relation as the argument of the projection operation, we give an expression that evaluates to a relation.
+
+Note:
+
+Remember, each operation returns a relation!
+
+
+---
+
+# Cartesian-Product Operation
+ - The Cartesian-product operation (denoted by $\times$)  allows us to combine information from any two relations.  
+ - Example: the Cartesian product of the relations instructor and teaches is written as: $ \mbox{instructor} \times \mbox{teaches}$   
+ - We construct a tuple of the result out of each possible pair of tuples: one from the _instructor_ relation and one from the _teaches_ relation (see next slide) 
+ - Since the instructor<i> ID </i>appears in both relations we distinguish between these attribute by attaching to the attribute the name of the relation from which the attribute originally came.  
+   - instructor.ID  
+   - teaches.ID
+
+
+---
+
+# The instructor **X** teaches table
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.12.Cartesian.Product.png" style="width:50%"/>
+ <figcaption>Figure 2.12</figcaption> 
+</figure>
+
+
+---
+
+# Join Operation
+ - The Cartesian-Product <br />$ instructor \times teaches$  associates every  tuple of  instructor with every tuple of teaches.
+   - Most of the resulting rows have information about instructors who did NOT teach a particular course. 
+ - To get only those tuples of  $instructor \times teaches$ that pertain to instructors and the courses that they taught, we write: <br />$\sigma_{_{instructor.id =  teaches.id}}  (instructor) \times teaches )$  
+   - We get only those tuples of $instructor \times teaches$ that pertain to instructors and the courses that they taught.
+ - The result of this expression, shown in the next slide  
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.13.Join.Instructor.Teaches
+
+---
+
+# Join Operation (Cont.)
+ - The  table corresponding to $\sigma_{_\mbox{instructor.id =  teaches.id}} (instructor  \times teaches)$  
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.13.Join.Instructor.Teachers.png" style="width:50%"/>
+ <figcaption>Figure 2.13</figcaption> 
+</figure>
+
+
+---
+
+# Join Operation (Cont.)
+ - The **join** operation allows us to combine a select operation and a Cartesian-Product operation into a single operation.
+ - Consider relations $r(R)$ and $s(S)$
+ - Let "theta" be a predicate on attributes in the schema $R$ "union" $S$. The join operation $r \bowtie s$ = $\sigma_{_\theta} (r \times s)$
+ - Thus $\sigma_{_{instructor.id =  teaches.id}} (instructor \times teaches)$ can be written as $instructor \bowtie_\mbox{instructor.id = teaches.id} teaches$
+
+
+---
+
+# Union Operation
+ - The union operation $r \cup s$ allows us to combine two relations   
+ - For _r_ $\cup$ _s_ to be valid.  
+     1. $r$, $s$ must have the same **arity** (number of attributes)
+     2. The attribute domains must be **compatible** (convertible to same type)
+ - Example: to find all courses taught in the Fall 2017 semester, in the Spring 2018 semester, or in both  $\Pi_\mbox{course_id} (\sigma_{semester='Fall' \land year=2017} (section))$ $\cup$ $\Pi_\mbox{course_id} (\sigma_{semester='Spring' \land year=2018} (section))$ 
+
+
+---
+
+# Union Operation (Cont.)
+ - Result of: $\Pi_\mbox{course_id} (\sigma_{semester='Fall' \land year=2017} (section))$ $\cup$ $\Pi_\mbox{course_id} (\sigma_{semester='Spring' \land year=2018} (section))$ 
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.14.Union.Fall.2017.Spring.2018.png" style="width:20%"/>
+ <figcaption>Figure 2.14</figcaption> 
+</figure>
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.14.Union.Fall.2017.Spring.2018
+
+
+---
+
+# Set-Intersection Operation
+ - The  set-intersection  operation  allows us to find tuples that are in both the input relations.
+ - Notation: $r \cap s$ assuming $r$ and $s$ have the same arity and attributes are compatible
+ - Example: Find the set of all courses taught in both the Fall 2017 and the Spring 2018 semesters.<br /> $\Pi_\mbox{course_id} (\sigma_{semester='Fall' \land year=2017} (section))$ $\cap$    $\Pi_\mbox{course_id} (\sigma_{semester='Spring' \land year=2018} (section))$
+   - Result
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.15.Intersection.Fall.2017.Spring.2018.png" style="width:25%"/>
+ <figcaption>Figure 2.15</figcaption> 
+</figure>
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.15.Intersection.Fall.2017.Spring.2018
+
+---
+
+# Set Difference Operation
+ - The set-difference operation allows us to find tuples that are in one relation but are not in another.
+ - Notation $r – s$. Differences must be taken between **compatible** relations (same arity and compatible).
+ - Example: to find all courses taught in the Fall 2017 semester, but not in the Spring 2018 semester $\Pi_\mbox{course_id} (\sigma_{semester='Fall' \land year=2017} (section))$ $−$   $\Pi_\mbox{course_id} (\sigma_{semester='Spring' \land year=2018} (section))$
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.16.Fall.2017.Except.Spring.2018.png" style="width:20%"/>
+ <figcaption>Figure 2.16</figcaption> 
+</figure>
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.16.Fall.2017.Except.Spring.2018
+
+
+
+---
+
+# The Assignment  Operation 
+ - It is convenient at times to write a relational-algebra expression by assigning parts of it to temporary relation variables.  
+ - The assignment  operation is  denoted by $\leftarrow$ and works like assignment in a programming language.
+ - Example: Find all instructor in the 'Physics' and 'Music' department.
+     <br/>$Physics \leftarrow$ $\sigma_{dept_name='Physics'} (instructor)$
+     <br/>$Music \leftarrow$ $\sigma_{dept_name='Music'} (instructor)$
+     <br/>$Music \cup Music$ 
+ - With the assignment operation, a query can be written as a sequential program consisting of a series of assignments followed by an expression whose value is displayed as the result of the query. 
+
+
+---
+
+# The Rename Operation 
+ - The results of relational-algebra expressions do not have a name that we can use to refer to them.  The rename operator, $\rho$, is provided for that purpose
+ - The expression $\rho_x (E)$ returns the result of expression $E$ under the name $x$
+ - Another form of the rename operation $\rho_{x(A_1,A_2, \dots, A_n)} (E)$
+
+
+---
+
+# Equivalent Queries
+ - There is more than one way to write a query in relational algebra.   
+ - Example:  Find information about courses taught by instructors in the  Physics department with salary greater than 90,000
+ - Query 1
+  <br />$\sigma_{\mbox{dept_name} = 'Physics' \land salary \gt 90,000} (instructor)$
+ - Query 2  
+  <br />$\sigma_{\mbox{dept_name} = 'Physics'}$ $(\sigma_{salary \gt 90.000} (instructor))$ 
+ - The two queries are not identical; they are, however, equivalent -- they give the same result on any database.</p>
+

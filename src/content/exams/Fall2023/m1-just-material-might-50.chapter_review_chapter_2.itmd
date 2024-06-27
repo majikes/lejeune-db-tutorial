@@ -1,0 +1,107 @@
+<%
+  import string
+  from collections import namedtuple
+
+  Teachers_teach_true = [r'$\Pi_{\text{course\textunderscore{}id}, ~\text{title}} \text(Teaches \bowtie \text{Course})$',
+                         r'$\Pi_{\text{course\textunderscore{}id}, ~\text{title}} \text(Teaches \bowtie_{\text{Teaches.course\textunderscore{}id} = \text{Course.course\textunderscore{}id}} \text{Course})$',
+                         r'$\Pi_{\text{course\textunderscore{}id}, ~\text{title}} \text((\Pi_{\text{course\textunderscore{}id}, \text{year}}Teaches) \bowtie_{\text{Teaches.course\textunderscore{}id} = \text{Course.course\textunderscore{}id}} \text{Course})$',
+                         r'$\Pi_{\text{course\textunderscore{}id}, ~\text{title}} \text(Teaches \bowtie_{\text{Teaches.course\textunderscore{}id} = \text{Course.course\textunderscore{}id}} (\Pi_{\text{coures\textunderscore{}id}, \text{title}} \text{Course}))$'
+                         ]
+  Teachers_teach_false = [r'$\text(\Pi_{\text{course\textunderscore{}id}, ~\text{title}} Teaches) \bowtie (\Pi_{\text{dept\textunderscore{}name}, ~\text{title}} \text{Course})$']
+
+  CLAUSE = namedtuple('CLAUSE', 'operation greek latex')
+  clauses = [CLAUSE(greek='Greek letter sigma', latex=r'\sigma', operation='select'),
+             CLAUSE(greek='Greek letter pi', latex=r'\Pi', operation='project'),
+             CLAUSE(greek='cross', latex=r'\times', operation='Cartesian-product'),
+             CLAUSE(greek='bowtie', latex=r'\bowtie_\theta', operation='join'),
+             ]
+
+  PRIMARY_KEY = namedtuple('PRIMARY_KEY', 'question explain answer')
+  primary_keys = [PRIMARY_KEY(question='can a department be in two different buildings?',
+                              explain='No, because the depart_name is the primary key. For each department it must identify a single tuple with a building in it',
+                              answer='No'),
+                  PRIMARY_KEY(question='can two instructors have the same name?',
+                              explain='Yes, because the ID is the primary key.  As long as each instructor has a unique id, the names can be the same',
+                              answer='Yes'),
+                  PRIMARY_KEY(question='can a student have two different advisors?',
+                              explain='No, because student id is the primary key, for any given student it must identify a unique advisor tuple',
+                              answer='No'),
+                  PRIMARY_KEY(question='can a course have two different prerequisites?',
+                              explain='Yes, because the key is the course and the prereq',
+                              answer='Yes'),
+                  ]
+
+  alphabet = list(string.ascii_uppercase)
+%>
+
+  <img src="{{static('images/Chapter.02.Figure.2.9.Schema.University.Database.png')}}" style="width:75%">
+
+% for index in range(number_chapter_review):
+  % if section == '003' or (team_member_number % number_chapter_review) == index:
+
+   Following are relational algebra statements:  
+   <font color='red'>Note:</font> During the test, this question incorrectly had $\sigma$ where it should have had $\Pi$.  
+   % incorrect_index = (index * 3 + 1) % (len(Teachers_teach_true)+1)
+   % for answer_index in range(len(Teachers_teach_true)+1):
+       % if answer_index < incorrect_index:
+          **{{alphabet[answer_index]}}** {{Teachers_teach_true[(index*2 + answer_index) % len(Teachers_teach_true)]}}  
+       % elif answer_index == incorrect_index:
+          **{{alphabet[answer_index]}}** {{Teachers_teach_false[index % len(Teachers_teach_false)]}}  
+       % else:
+          **{{alphabet[answer_index]}}** {{Teachers_teach_true[(index*2 + answer_index-1) % len(Teachers_teach_true)]}}  
+       % end
+   % end
+   **F** All of the above relational algebra produces the same results  
+   **G** There are more than two different results  
+<%
+answer = alphabet[incorrect_index]
+answer2 = f''' They all produce
+
+SELECT DISTINCT T.course_id, C.title
+  FROM Teaches T, Course C
+ WHERE T.course_id = C.course_id
+
+ Except for: Answer: {answer}'''
+%>
+    **Teachers.Teach.{{index+1}}:** Which of the above relational algebra statements produce different results than all the others?  
+    Select **F** or **G**, respectively, if they all produce the same results or more than two different results.   
+   {{!select(answer, alphabet[:7], points=3, name=f' Teachers.Teach.{index+1}')}}
+   % include('viewAnswer', answer=answer2)
+
+  % end  # section == 003 or team_member_number%number_chapter_review == index
+% end  # for index in range(number_chapter_review)
+
+---
+
+% choices = [x.operation for x in clauses] + ['select', 'project', 'Cartesian-product', 'join', 'set-difference', 'intersection', 'rename']
+% for index in range(number_chapter_review):
+  % if section == '003' or (team_member_number % number_chapter_review) == index:
+
+   % q = clauses[index]
+   **Relational.Algebra.Operation.{{index+1}}:** What relational algebra operation is 
+   represented by the {{q.greek}}, ${{q.latex}}$?  
+   {{!select(q.operation, choices, points=1, name=f' Relational.Algebra.Operation.{index+1}')}}
+   % include('viewAnswer', answer=q.operation)
+
+  % end  # section == 003 or team_member_number%number_chapter_review == index
+% end  # for index in range(number_chapter_review)
+
+---
+
+  <img src="{{static('images/Chapter.02.Figure.2.9.Schema.University.Database.png')}}" style="width:75%">
+% choices = ['Yes', 'No']
+% for index in range(number_chapter_review):
+  % if section == '003' or (team_member_number % number_chapter_review) == index:
+
+   % q = primary_keys[index]
+   % answer2 = f'''
+{q.explain}
+
+Answer: {q.answer}'''
+   **Reading.Schema.{{index+1}}:** Given the schema diagram above, {{q.question}}  
+   {{!select(q.answer, choices, points=1, name=f' Reading.Schema.{index+1}')}}
+   % include('viewAnswer', answer=answer2)
+
+  % end  # section == 003 or team_member_number%number_chapter_review == index
+% end  # for index in range(number_chapter_review)
+

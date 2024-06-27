@@ -1,0 +1,108 @@
+# SQL Queries and Operators
+
+#
+
+<%
+setInfo(
+due="2020-08-27 17:00:00",
+penalty=1,
+maxpenalty=1
+)
+%>
+
+% dbs=['THRa.sqlite', 'THRb.sqlite']
+
+### A quick, possibly useful sqlite technique
+
+If you ever need to find the structure of a database you are working on,
+you can query the 'sqlite_master' table.
+Run the query 'select sql from sqlite_master' below.
+**Note:** While most DBMS provide some similar functionality,
+the specifics will vary between programs.
+
+{{!sql('''select sql from sqlite_master''', dbs=dbs, points=0, name="schema")}}
+
+From the output above you can see the database has the following schema. I simply
+reformatted the output to make it easier to read.
+
+```sql
+CREATE TABLE Books (
+  id integer primary key,
+  slug text, title text,
+  author integer references Authors(id),
+  pseudonym text,
+  audience text, -- C|E|U
+  reviewed integer, -- 1 == reviewed, 0 == not
+  rating_avg float,
+  rating_count integer,
+  cover integer references Pictures(id),
+  language text, -- iso-code
+  created timestamp,
+  modified timestamp )
+
+CREATE TABLE Authors (
+  id integer primary key,
+  login text,
+  password text,
+  lastname text,
+  firstname text,
+  email text )
+
+CREATE TABLE Pictures (
+  id integer primary key,
+  url text,
+  width integer,
+  height integer )
+
+CREATE TABLE Pages (
+  book integer references Books(id),
+  page integer,
+  caption text,
+  picture integer references Pictures(id) )
+
+CREATE TABLE Words (
+  word text,
+  book integer references Books(id),
+  count integer )
+```
+
+### {{!next()}}. Which authors have written a book with an average rating greater than 2.8?
+
+List the first name and last name of all authors who have written a book with an
+average rating greater than 2.8.
+
+**Note:** Some authors may have written multiple highly rated books, they
+should be listed only once.
+
+{{!sql('''select distinct A.firstname, A.lastname from Authors A, Books B where A.id = B.author and B.rating_avg > 2.8''', dbs=dbs, points=20)}}
+
+### {{!next()}}. Which Authors with insecure passwords have written books intended for everyone?
+
+List the Author ids of authors who have written a Book rated 'E' for everyone,
+and whose password has a length less than 7 characters.
+
+**Note:** You can use the function length(field) to find the length of a string field.
+
+{{!sql('''select distinct A.id from Authors A, Books B where (A.id = B.author and B.audience = 'E') and length(A.password) < 7''', dbs=dbs, points=20)}}
+
+### {{!next()}}. Which books have highly repeated words?
+
+List the Title for all books which have a Word with count greater than 15
+
+{{!sql('''select distinct B.title from Books B, Words W where B.id = W.book and W.count > 15''', dbs=dbs, points=20)}}
+
+### {{!next()}}. Which books were written more recently than Jan. 1 2017?
+
+List the Book title for books with a created date after January 1, 2017 at midnight.
+
+**Note:** Timestamp comparisons take a value in the form 'YYYY-MM-DD HH:MM:SS'
+
+{{!sql('''select B.title from Books B where B.created > "2017-01-01 00:00:00"''', dbs=dbs, points=20)}}
+
+### {{!next()}}. Which authors wrote books with "cat" in the title?
+
+List author ids for books that include the letters cat anywhere in the title.
+
+Use the `like` operator and a percent sign as a wildcard.
+
+{{!sql('''select distinct B.author from Books B where B.title like '%cat%' ''', dbs=dbs, points=20)}}

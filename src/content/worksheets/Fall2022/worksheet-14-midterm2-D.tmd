@@ -1,0 +1,83 @@
+<%
+setInfo(
+        due='2021-11-05 00:00:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False, duration=999)),
+        pages=['questions', 'submit'],
+        maxpenalty=0.75, penalty=.2,
+        )
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+# Mock Midterm 2 D
+
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+--- 
+
+## Questions
+
+% if 'questions' in pages:
+
+For the following questions, assume that each tuple of Sailors is
+30 bytes long,
+that a page can hold 125 Sailor tuples, and there are 100 pages.
+
+Assume that Sailors has a B$^+$ clustered index
+on search key $\langle$ Sailors.sid $\rangle$ that takes 50 pages in two levels.
+Further assume that the Sailors.sid is uniformly distributed between
+0 and 12,499, inclusive.
+
+**Equi.Sailor:** Estimate the number of pages retrieved for $\sigma_{Sailors.sid = 1}( Sailors) $?
+% answer = '3'
+% answer2 =f'''So you have to read through the two levels then one I/O for the data.
+Answer: {answer}'''
+{{!expression(answer, dict(l=1), points=10, name='Equi.Sailor')}}
+%include('viewAnswer', answer=answer2)
+
+**Great.Sailor:** Estimate the number of pages retrieved for $\sigma_{Sailors.sid > 6,250}( Sailors) $?
+% answer = '2 + 0.5 * 100'
+% answer2 =f'''So you have to read through the two levels then
+assume that you have to read half the pages.
+Answer: {answer}'''
+{{!expression(answer, dict(l=1), points=10, name='Great.Sailor')}}
+%include('viewAnswer', answer=answer2)
+
+**Unclustered.Sailor:** Assuming the index was unclustered, the number 
+of pages read would increase dramatically.
+What is the worse case number of pages read using an unclustered index for
+$\sigma_{Sailors.sid > 6,250}( Sailors) $?
+% answer = '2 + 6250'
+% answer2 =f'''So you have to read through the two levels then
+the worse case is that each tuple causes a page read.
+Answer: {answer}'''
+{{!expression(answer, dict(l=1), points=10, name='Unclustered.Sailor')}}
+%include('viewAnswer', answer=answer2)
+
+**Unclustered.Alternative:** Clearly the number of pages read increases
+with an unclustered index.
+What are some ways of dealing with this problem?  
+**A** Create a hash index  
+**B** Create a unclustered B-tree index  
+**C** Read half the index leaves and create a set of rids  
+**D** Use more buffers  
+**E** None of these  
+% answer = 'C'
+% answer2 =f'''Create a set of the rids that match so that 
+pages don't have to be read multiple times.
+Answer: {answer}'''
+% choices = ['A', 'B', 'C', 'D', 'E', 'A and C', 'B and C', 'A and D', 'B and D', 'A, B, C, and D']
+{{!select(answer, choices, points=10, name='Unclustered.Alternative')}}
+%include('viewAnswer', answer=answer2)
+
+% end
+
+---
+
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

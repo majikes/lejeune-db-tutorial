@@ -1,0 +1,57 @@
+<%
+setInfo(
+      assessment_type='worksheet',
+)
+symbols = ['True', 'False']
+%>
+
+# Worksheet-06 01 Entities
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+
+## {{!linkable_header('Questions')}}
+
+<!-- https://github.com/noahabe/database_system_concepts_answers/blob/main/Ch06_Database_Design_Using_the_ER_Model/6.1.md  -->
+
+Assume for this worksheet there is a E-R diagram for a car insurance company that
+
+1. Each customer own one or more cars each.  
+2. Each car is associated by at most one owner (no two people share ownership of a car).  
+3. A car could be abandoned, junked, or destroyed so may have zero owners.  
+4. A car could have multiple policies.  For example, liability, umbrella, and collision policies can be a car.
+5. There a single accident report for all cars in an accident.  
+6. Insurance policies can be paid in full, paid monthly, or payments can be applied to multiple policies.  
+
+
+<img src="{{static('slides/chapter-6-car-insurance-company.png')}}" style="width:85%" alt="Car insurance E-R diagram"/>
+
+---
+
+**Weak.Entities:** Which of the entities are weak entities.  
+<%
+answer = ['Strong', 'Strong', 'Weak', 'Strong', 'Strong']
+answer2 = f'''
+{answer[0]}: Since a customer is unique and standalone, it is a strong entity
+{answer[1]}: Since a car is unique and doesn't necessarily need a customer, it is a strong entity
+{answer[2]}: Since policy is not standalone, it is a weak entity because it needs a foreign key 
+           specifically the car foreign key to uniquely identify the policy
+{answer[3]}: Since accident reports are unique. It doesn't need a foreign key to identify itself.  It is strong.  
+{answer[4]}: Since payment is not many-to-one on policy, it is unique not requiring a foreign key to identify it.  
+
+Also see: https://github.com/noahabe/database_system_concepts_answers/blob/main/Ch06_Database_Design_Using_the_ER_Model/6.1.md
+'''
+%>
+{{!table(inputs=1, headings='Entity,  Weak or Strong', table=f'''
+customer,{answer[0]}
+car,{answer[1]}
+policy,{answer[2]}
+accident,{answer[3]}
+premium_payment,{answer[4]}
+''', symbols=answer, name='Weak.Entities', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+% include('worksheet-submit.md')

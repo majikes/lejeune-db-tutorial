@@ -1,0 +1,525 @@
+<%
+points_limit = 100
+points_total = 120
+
+setInfo(
+duration=185,
+points_total=points_total,
+points_limit=points_limit,
+pages=['questions', 'submit'],
+exceptions=dict(),
+exam=0)
+%>
+#Comp 521 Final Exam {{points_limit}} out of a possible {{points_total}}
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% if 'questions' in pages:
+% dbs=['THRa.sqlite', 'THRb.sqlite']
+
+8 December 2018
+
+## Instructions
+
+**Don't PANIC!**
+
+We will **not** answer questions about course content, SQL syntax, etc. We will
+only deal with issues related to the exam implementation.
+
+You should use the latest **Google Chrome** browser to take this exam; it may
+work in other browsers but I can't help you if it doesn't.
+
+If your browser hangs, for example because of a bad SQL query, simply kill the
+page and refresh. It should restore all of your work.
+
+You may use **only** four 8.5 by 11 sheets of paper, possibly double sided, as a
+cheatsheet.
+
+You **must expand your web browser window to cover the full screen** and keep
+it that way for the duration of the exam. You must **not** access anything
+besides this page before you submit the exam. I will know if you use other
+browser pages or programs.
+
+You may **NOT** leave before you submit your exam. When you submit you must
+enter the code displayed on the screen at the front of the class or given to
+you by ARS. Only your **first** submission with a correct submit code will be
+graded.
+
+After you submit you must leave the room. Do not use your phone or computer
+until after you leave the room.
+
+**No submissions will be accepted after the allotted time.**
+
+## Database Schema
+
+Here are the tables you'll find in the database.
+
+    create table if not exists Books (
+        id integer primary key,
+        slug text,
+        title text,
+        author integer references Authors(id),
+        pseudonym text,
+        audience text, -- C|E|U C==Caution E==Everybody U==Not rated
+        reviewed integer, -- 1 == reviewed, 0 == not
+        rating_avg float,
+        rating_count integer,
+        cover integer references Pictures(id),
+        language text, -- iso-code
+        created timestamp,
+        modified timestamp
+    )
+
+    create table if not exists Authors (
+        id integer primary key,
+        login text,
+        password text,
+        lastname text,
+        firstname text,
+        email text
+    )
+
+    create table if not exists Pictures (
+        id integer primary key,
+        url text,
+        width integer,
+        height integer
+    )
+
+    create table if not exists Pages (
+        book integer references Books(id),
+        page integer,
+        caption text,
+        picture integer references Pictures(id)
+    )
+
+    create table if not exists Words (
+        word text,
+        book integer references Books(id),
+        count integer -- how many times the word occurs in the book
+    )
+
+## Section 1
+
+In this section there are questions worth 80 points total. The maximum
+score for this section is 60 points. Excess points will **not** carry
+over to section 2.
+
+You will write SQL queries. They will be tested against two databases.
+The small db has about 0.1% of the books in Tar Heel Reader,
+the larger db has about 1%.
+
+I'll scatter several of these SQL input fields through the exam for you to
+use for experiments and scratch space. They will **NOT** contribute in any way
+to your grade.
+
+### Scratch space
+
+{{!sql(''' select 1 ''', name='_scratch2', dbs=dbs)}}
+
+### {{next()}}. How many reviewed, English-language books are in the db?
+
+The iso-code for English is `'en'`. Your query should produce an integer.
+
+Your result should resemble this:
+
+<table class="datatable exampletable"><thead><tr><td>count</td></tr></thead><col class="count(*)"><tbody><tr><td>24</td></tr></tbody></table>
+
+% answer = ''' select count(*) from Books
+  where language = 'en' and reviewed = 1'''
+{{!sql(answer, dbs=dbs, points=4)}}
+% include('viewAnswer')
+
+### {{next()}}. Who are the most prolific authors?
+
+List the Author's last name, first name and the number of books they wrote for
+all authors who have written **more than 2 books**. Order the results first by
+the number of books descending, then by the last name in ascending order and
+finally by the first name in ascending order.
+
+Your result should resemble this:
+
+<table class="datatable exampletable"><thead><tr><td>lastname</td><td>firstname</td><td>C</td></tr></thead><col class="lastname"><col class="firstname"><col class="C"><tbody><tr><td>Fenne</td><td>Emmaline</td><td>3</td></tr></tbody></table>
+
+% answer = ''' select A.lastname, A.firstname, count(B.id) as C
+    from Books B, Authors A
+    where B.author = A.id
+    group by A.id
+    having C > 2
+    order by C desc, A.lastname asc, A.firstname asc'''
+{{!sql(answer, dbs=dbs, points=8)}}
+% include('viewAnswer')
+
+### Scratch space
+
+{{!sql(''' select 1 ''', name='_scratch3', dbs=dbs)}}
+
+### {{next()}}. Which reviewed English-language books use a repeated refrain?
+
+List the book id, title and author last name for books that have the same
+caption text on at least 3 different pages. List the books in alphabetical
+order first by book title and then by authors last name. The iso-code for
+English is 'en'.
+
+Your result should resemble this:
+
+<table class="datatable exampletable"><thead><tr><td>id</td><td>title</td><td>lastname</td></tr></thead><col class="id"><col class="title"><col class="lastname"><tbody><tr><td>74335</td><td>Devin, What Are You Doing?</td><td>Depper</td></tr><tr><td>128828</td><td>Where's Elmo?</td><td>Fenne</td></tr></tbody></table>
+
+% answer = ''' select distinct(B.id), B.title, A.lastname
+    from Authors A, Books B, Pages P
+    where A.id = B.author and B.id = P.book and B.language = 'en' and
+          B.reviewed = 1
+    group by B.id, P.caption
+    having count(*) >= 3
+    order by B.title asc, A.lastname'''
+{{!sql(answer, dbs=dbs, points=8)}}
+% include('viewAnswer')
+
+### {{next()}}. Which books use the word "new" at least 2 times?
+
+Your query should return the book id, book title, and number of pages in the
+book. I expect you to use the Words table here, **not** a _like_ query on the
+caption.
+
+Return them in ascending order by the book id.
+
+Your result should resemble this:
+
+<table class="datatable"><thead><tr><td>id</td><td>title</td><td>pages</td></tr></thead><col class="id"><col class="title"><col class="count(*)"><tbody><tr><td>74345</td><td>ocean city new jersey</td><td>4</td></tr></tbody></table>
+
+% answer = ''' select B.id, B.title, max(P.page)
+    from Books B, Pages P, Words W
+    where B.id = P.book and B.id = W.book and W.word = 'new' and W.count >= 2
+    group by B.id
+    order by B.id'''
+{{!sql(answer, dbs=dbs, points=6)}}
+% include('viewAnswer')
+
+### Scratch space
+
+{{!sql(''' select 1 ''', name='_scratch4', dbs=dbs)}}
+
+### {{next()}}. Which books include both the words "see" and "you"?
+
+I'm talking about words from the Words table not a _like_ query.
+
+List the book title, pseudonym and author login for each book. List each book
+only once. Order the results in alphabetical order by title and then by book
+id.
+
+Your result should resemble this:
+
+<table class="datatable exampletable"><thead><tr><td>title</td><td>pseudonym</td><td>login</td></tr></thead><col class="title"><col class="pseudonym"><col class="login"><tbody><tr><td>Rudimenta Grammaticae 2 - Basics of Grammar 2</td><td>Evan Millner</td><td>kborthramcv</td></tr><tr><td>What Do You See?</td><td>73imagine</td><td>wickovitzcz</td></tr><tr><td>Yukon, Yukon, What Do You See?</td><td>Alison</td><td>ghamleyd8</td></tr></tbody></table>
+
+% answer = '''select B.title, B.pseudonym, A.login
+    from Authors A, Books B, Words W
+    where B.author = A.id and B.id = W.book and (W.word = 'see' or W.word = 'you')
+    group by B.id
+    having count(*) == 2
+    order by B.title asc, B.id asc'''
+{{!sql(answer, dbs=dbs, points=8)}}
+% include('viewAnswer')
+
+### {{next()}}. Which books have missing pages?
+
+Imagine that we have discovered that a program bug has caused some pages
+to be deleted from books. The pages of every book should be numbered
+sequentially. Consider a book with pages numbered 1, 2, 4. This book appears
+to be missing page 3.
+
+List the title and book id for each book that appears to have a page missing.
+List them in order by id.
+
+Of course, if the last page was missing you couldn't
+detect it, don't worry about that case.
+
+Example result:
+
+<table class="datatable exampletable"><thead><tr><td>title</td><td>id</td></tr></thead><col class="title"><col class="id"><tbody><tr><td>Nick, Marielaina and Aimen's Book About Animals</td><td>18502</td></tr><tr><td>I Like...</td><td>38168</td></tr><tr><td>Para mantener la salud</td><td>62976</td></tr><tr><td>Soup Is The Best!</td><td>173034</td></tr></tbody></table>
+
+% answer = '''select B.title, B.id from
+    Books B, Pages P
+    where B.id == P.book
+    group by B.id
+    having count(distinct P.page) != max(P.page)
+    order by B.id'''
+{{!sql(answer, dbs=dbs, points=8)}}
+% include('viewAnswer')
+
+### Scratch space
+
+{{!sql(''' select 1 ''', name='_scratch5', dbs=dbs)}}
+
+### {{next()}}. Which pairs of books have at least 3 different pictures in common?
+
+Your query should produce pairs of book titles.
+List each pair of books only once.
+List each pair with the lower numbered book id first.
+List the pairs in ascending order by their book ids.
+
+Your result should resemble this:
+
+<table class="datatable exampletable"><thead><tr><td>title</td><td>title</td></tr></thead><col class="title"><col class="title"><tbody><tr><td>Max the Cat</td><td>This Cat Is...</td></tr></tbody></table>
+
+% answer = '''select B1.title, B2.title
+    from Books B1, Books B2, Pages P1, Pages P2
+    where B1.id < B2.id and B1.id = P1.book and B2.id = P2.book and
+          P1.picture = P2.picture
+    group by B1.id, B2.id
+    having count(distinct P1.picture) >= 3
+    order by B1.id, B2.id'''
+{{!sql(answer, dbs=dbs, points=8)}}
+% include('viewAnswer')
+
+### {{next()}}. Which books, longer than 10 pages, were written by authors from universities?
+
+Assume an author is from a university if their email address ends with '.edu'.
+
+Only include books with more than 10 pages.
+
+For each book, your query should return 3 values: book title, author lastname,
+author email. Your results should be ordered by increasing book id.
+
+Your result should resemble this:
+
+<table class="datatable exampletable"><thead><tr><td>title</td><td>lastname</td><td>email</td></tr></thead><col class="title"><col class="lastname"><col class="email"><tbody><tr><td>The Guatamalan Adventure!</td><td>Guittet</td><td>vguittetd4@msu.edu</td></tr><tr><td>Gatsby and Daisy Drink Tea</td><td>Humphrey</td><td>hhumphreyd5@umn.edu</td></tr><tr><td>Melly and I are going to Jamaica</td><td>Heinl</td><td>nheinldw@uiuc.edu</td></tr></tbody></table>
+
+% answer = '''select B.title, A.lastname, A.email
+    from Books B, Authors A, Pages P
+    where B.author = A.id and B.id = P.book and A.email like '%.edu'
+    group by B.id
+    having max(page) > 10
+    order by B.id'''
+{{!sql(answer, dbs=dbs, points=8)}}
+% include('viewAnswer')
+
+### Scratch space
+
+{{!sql(''' select 1 ''', name='_scratch1', dbs=dbs)}}
+
+### {{next()}}. Which books have the most words per page?
+
+List the book title, author last name, word count, page count, and average
+number of words per page. Order your results by average words per page in
+descending order and author last name in ascending order.
+
+Limit your answer to the top 5.
+
+**Hints:** Use the Words table to get the number of words in a book. Remember
+you can do simple arithmetic in a select, so get the number of words and the
+number of pages and simply divide to get the number of words per page. Use
+integer division so we don't get into precision problems.
+
+Your result should resemble this:
+
+<table class="datatable exampletable"><thead><tr><td>title</td><td>lastname</td><td>words</td><td>pages</td><td>wordsperpage</td></tr></thead><col class="title"><col class="lastname"><col class="count"><col class="count"><col class="wordy"><tbody><tr><td>Animal Dads</td><td>Apps</td><td>66</td><td>6</td><td>11</td></tr><tr><td>What Do You See?</td><td>Ickovitz</td><td>112</td><td>11</td><td>10</td></tr><tr><td>Yukon, Yukon, What Do You See?</td><td>Hamley</td><td>98</td><td>10</td><td>9</td></tr><tr><td>Orientation  and mobility</td><td>Upjohn</td><td>77</td><td>9</td><td>8</td></tr><tr><td>Who's in Love with Arthur?  Chapter 4</td><td>Dome</td><td>47</td><td>6</td><td>7</td></tr></tbody></table>
+
+% answer = '''with pc as (select book, max(page) as count from Pages group by book),
+     wc as (select book, sum(count) as count from Words group by book)
+select B.title, A.lastname, wc.count as words, pc.count as pages, wc.count / pc.count as wordsperpage
+from Books B, Authors A, pc, wc
+where B.author = A.id and B.id = wc.book and B.id = pc.book
+order by wordsperpage desc, A.lastname
+limit 5'''
+{{!sql(answer, dbs=dbs, points=10)}}
+% include('viewAnswer')
+
+### {{next()}}. What SQL query corresponds to this relational algebra expression?
+
+\(\pi*{pseudonym} \sigma*{rating_count > 200} Books \)
+
+Write the SQL query that produces the same result.
+
+Your result should resemble this:
+
+<table class="datatable exampletable"><thead><tr><td>pseudonym</td></tr></thead><col class="pseudonym"><tbody><tr><td>Melba Jane Fitzwater</td></tr></tbody></table>
+
+% answer = '''select distinct B.pseudonym
+    from Books B
+    where B.rating_count > 200'''
+{{!sql(answer, dbs=dbs, points=4, sort=1)}}
+% include('viewAnswer')
+
+### {{next()}}. What is the average rotational delay of a disk that spins at \(R\) RPM?
+
+Write a single arithmetic expression. Express your result in seconds. RPM means
+Revolutions Per Minute. You answer should involve only constants, the variable
+R, and operators such as +, -, \*, and /.
+
+% answer = '0.5 * 60 / R'
+{{!expression(answer, dict(R=3600), dict(R=7200), points=4)}}
+% include('viewAnswer')
+
+### {{next()}}. How long will this external merge sort take?
+
+Make the following assumptions:
+
+- You have \(2^{20}\) bytes of RAM available for buffers.
+- Your disk block and internal buffer size is \(2^{13}\) bytes.
+- Your disk can read or write \(2^{29}\) bytes per second.
+- The table to be sorted is \(T\) MB where \(4 \le T \le 32\).
+- One MB = \(2^{20}\) bytes.
+
+Write a forumla using the variable \(T\) that will produce the estimated
+time in seconds.
+
+% answer = '2 * 2 * T / 512'
+{{!expression(answer, dict(T=8), dict(T=16), dict(T=20), points=4)}}
+% include('viewAnswer')
+
+**Hint:** This problem does not require a fancy formula or functions like floor
+or ceiling; only simple arithmetic is required. If you insist on using them,
+the avaliable functions include: `Math.log`, `Math.floor`, `Math.ceil`,
+`Math.sqrt`. But I repeat **You do not need these functions.** Recall that the
+exponentiation operator (which you do not need) is \*\*.
+
+## Section 2
+
+There are questions totaling 40 points in this section. Points from section 1
+do **not** carryover into this section.
+
+### {{!next()}}. Of the following, which best characterizes the objective of database table normalization?
+
+A) Evaluating queries more efficiently  
+B) Efficient testing of functional dependencies  
+C) Creating more independent relations  
+D) Minimizing redundancy
+
+% answer = 'D'
+{{!select(answer, list('ABCD'), points=4)}}
+% include('viewAnswer')
+
+### {{!next()}}. What is the primary technique used to normalize tables?
+
+A) Vertical decomposition  
+B) Horizontal decomposition  
+C) Table Merging  
+D) SQL Assertions
+
+% answer = 'A'
+{{!select(answer, list('ABCD'), points=4)}}
+% include('viewAnswer')
+
+### {{!next()}}. How does concurrency improve database performance?
+
+A) By making transactions durable  
+B) By making transactions atomic  
+C) By isolating transactions  
+D) By allowing aborts of unnecessary transactions  
+E) By scheduling CPU and disk resources for maximum utilization
+
+% answer = 'E'
+{{!select(answer, list('ABCDE'), points=4)}}
+% include('viewAnswer')
+
+### {{!next()}}. When a transaction is aborted, which of the following may be performed by the DBMS?
+
+A) Changes to pages are undone  
+B) Its locks are freed  
+C) It may be rescheduled  
+D) Other transactions may be aborted  
+E) All of the above
+
+% answer = 'E'
+{{!select(answer, list('ABCDE'), points=4)}}
+% include('viewAnswer')
+
+### {{!next()}}. Which of the following database properties states that, once committed, data should persist in the database, even if the system crashes?
+
+A) Atomicity  
+B) Buffer Writes  
+C) Consistency  
+D) Durability  
+E) Equality
+
+% answer = 'D'
+{{!select(answer, list('ABCDE'), points=4)}}
+% include('viewAnswer')
+
+### {{!next()}}. Which of the following database enhancements created the possibility of deadlock?
+
+A) Error recovery  
+B) Locks  
+C) Aborting transactions  
+D) Committing transactions  
+E) All of the above
+
+% answer = 'B'
+{{!select(answer, list('ABCDE'), points=4)}}
+% include('viewAnswer')
+
+### {{!next()}}. Which of the following are not consequences of database redundancy?
+
+A) Redundant storage  
+B) Update anomalies  
+C) Insertion anomalies  
+D) Deletion anomalies  
+E) Lossless-Join Decompositions
+
+% answer = 'E'
+{{!select(answer, list('ABCDE'), points=4)}}
+% include('viewAnswer')
+
+### {{!next()}}. Which is not a candidate key based on this instance?
+
+Consider the following valid instance of a relation:
+
+    sid    name    userid        age  gpa
+    50000  Dave    dave@cs        19  3.3
+    53666  Jones   jones@cs       18  3.4
+    53688  Smith   smith@ee       18  3.2
+    53650  Smith   smith@math     19  3.8
+    53831  Madayan mada@music     19  1.8
+    53832  Guldu   guldu@music    22  2.0
+
+Which of the following can you infer is not a candidate key based on this
+instance?
+
+A) sid  
+B) name  
+C) userid  
+D) name, age
+
+% answer = 'B'
+{{!select(answer, list('ABCD'), points=4)}}
+% include('viewAnswer')
+
+### {{!next()}}. What is the result of this change to Strict Two-Phase locking?
+
+Suppose that the Strict Two-Phase locking scheme is modified to use only
+exclusive locks, which are requested before both reads and writes and released
+on commit.
+
+What is the result?
+
+A) Concurrent transactions always deadlock.  
+B) The system functions correctly, but with lower performance.  
+C) The resulting schedules are not serialized.  
+D) It behaves identically to Strict Two-Phase locking.
+
+% answer = 'B'
+{{!select(answer, list('ABCD'), points=4)}}
+% include('viewAnswer')
+
+### {{!next()}}. How can we prevent users from creating multiple logins with the same email address?
+
+How could we change the DB schema used in section 1 to prevent a user from
+signing up for multiple logins with the same email address?
+
+A) It can't be done.  
+B) Add the `unique` constraint to the login field in the Authors table.  
+C) Add the `unique` constraint to the email field in the Authors table.  
+D) Add the `unique` constraint to the password field in the Authors table.
+
+% answer = 'C'
+{{!select(answer, list('ABCD'), points=4)}}
+% include('viewAnswer')
+
+%end 
+
+---
+
+% if 'submit' in pages:
+% include('exams-pledge.md')
+% include('submit.md')
+%end

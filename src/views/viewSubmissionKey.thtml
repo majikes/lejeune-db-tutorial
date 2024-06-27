@@ -1,0 +1,97 @@
+% from config import assessment_folder_dict
+<h1>Submissions for <a href="{{get_url(assessment_folder_dict[assessment_info.assessment_type], key=assessment_info.key, onyen=assessment_info.onyen)}}" _target="blank">{{assessment_info.key}}</a></h1>
+
+<h2>Overall percentage {{round(assessment_info.overall_percentage, 2)}} on
+  {{assessment_info.number_graded}} graded submissions of
+  {{assessment_info.number_submissions}} total submissions</h2>
+
+<style>
+table {
+    font-family: arial, sans-serif;
+      border-collapse: collapse;
+        width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+      text-align: left;
+        padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+
+Per the <a href="{{get_url('syllabi', page_name='syllabus')}}#subsequent-submissions">syllabus subsequent submission explaination</a> the overall score calculation is:
+
+<p>Overall_score = <span class="math"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo>[</mo><mn>0</mn><mo>]</mo><mo>+</mo></mrow><annotation encoding="application/x-tex">P[0] +</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 1em; vertical-align: -0.25em;"></span><span class="mord mathdefault" style="margin-right: 0.13889em;">P</span><span class="mopen">[</span><span class="mord">0</span><span class="mclose">]</span><span class="mord">+</span></span></span></span></span>
+<span class="math"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mo>(</mo><mn>0</mn><mo separator="true">,</mo><mi>P</mi><mo>[</mo><mn>1</mn><mo>]</mo><mo>−</mo><mi>m</mi><mi>a</mi><mi>x</mi><mo>(</mo><mi>P</mi><mo>[</mo><mo>:</mo><mn>1</mn><mo>]</mo><mo>)</mo><mo>)</mo></mrow><mn>2</mn></mfrac><mo>+</mo></mrow><annotation encoding="application/x-tex">\frac{max(0, P[1] - max(P[:1]))}{2} +</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 1.355em; vertical-align: -0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 1.01em;"><span class="" style="top: -2.655em;"><span class="pstrut" style="height: 3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span class="" style="top: -3.23em;"><span class="pstrut" style="height: 3em;"></span><span class="frac-line" style="border-bottom-width: 0.04em;"></span></span><span class="" style="top: -3.485em;"><span class="pstrut" style="height: 3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight">x</span><span class="mopen mtight">(</span><span class="mord mtight">0</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight" style="margin-right: 0.13889em;">P</span><span class="mopen mtight">[</span><span class="mord mtight">1</span><span class="mclose mtight">]</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight">x</span><span class="mopen mtight">(</span><span class="mord mathdefault mtight" style="margin-right: 0.13889em;">P</span><span class="mopen mtight">[</span><span class="mrel mtight">:</span><span class="mord mtight">1</span><span class="mclose mtight">]</span><span class="mclose mtight">)</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">&ZeroWidthSpace;</span></span><span class="vlist-r"><span class="vlist" style="height: 0.345em;"><span class=""></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord">+</span></span></span></span></span>
+<span class="math"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mo>(</mo><mn>0</mn><mo separator="true">,</mo><mi>P</mi><mo>[</mo><mn>2</mn><mo>]</mo><mo>−</mo><mi>m</mi><mi>a</mi><mi>x</mi><mo>(</mo><mi>P</mi><mo>[</mo><mo>:</mo><mn>2</mn><mo>]</mo><mo>)</mo><mo>)</mo></mrow><mn>3</mn></mfrac><mo>+</mo></mrow><annotation encoding="application/x-tex">\frac{max(0, P[2] - max(P[:2]))}{3} +</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 1.355em; vertical-align: -0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 1.01em;"><span class="" style="top: -2.655em;"><span class="pstrut" style="height: 3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span class="" style="top: -3.23em;"><span class="pstrut" style="height: 3em;"></span><span class="frac-line" style="border-bottom-width: 0.04em;"></span></span><span class="" style="top: -3.485em;"><span class="pstrut" style="height: 3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight">x</span><span class="mopen mtight">(</span><span class="mord mtight">0</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight" style="margin-right: 0.13889em;">P</span><span class="mopen mtight">[</span><span class="mord mtight">2</span><span class="mclose mtight">]</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight">x</span><span class="mopen mtight">(</span><span class="mord mathdefault mtight" style="margin-right: 0.13889em;">P</span><span class="mopen mtight">[</span><span class="mrel mtight">:</span><span class="mord mtight">2</span><span class="mclose mtight">]</span><span class="mclose mtight">)</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">&ZeroWidthSpace;</span></span><span class="vlist-r"><span class="vlist" style="height: 0.345em;"><span class=""></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord">+</span></span></span></span></span>
+<span class="math"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>⋯</mo><mo>+</mo></mrow><annotation encoding="application/x-tex">\dots +</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.66666em; vertical-align: -0.08333em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right: 0.166667em;"></span><span class="mord">+</span></span></span></span></span>
+<span class="math"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mo>(</mo><mn>0</mn><mo separator="true">,</mo><mi>P</mi><mo>[</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo>]</mo><mo>−</mo><mi>m</mi><mi>a</mi><mi>x</mi><mo>(</mo><mi>P</mi><mo>[</mo><mo>:</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo>]</mo><mo>)</mo><mo>)</mo></mrow><mi>n</mi></mfrac></mrow><annotation encoding="application/x-tex">\frac{max(0, P[n-1] - max(P[:n-1]))}{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 1.355em; vertical-align: -0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 1.01em;"><span class="" style="top: -2.655em;"><span class="pstrut" style="height: 3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="" style="top: -3.23em;"><span class="pstrut" style="height: 3em;"></span><span class="frac-line" style="border-bottom-width: 0.04em;"></span></span><span class="" style="top: -3.485em;"><span class="pstrut" style="height: 3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight">x</span><span class="mopen mtight">(</span><span class="mord mtight">0</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight" style="margin-right: 0.13889em;">P</span><span class="mopen mtight">[</span><span class="mord mathdefault mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span><span class="mclose mtight">]</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight">x</span><span class="mopen mtight">(</span><span class="mord mathdefault mtight" style="margin-right: 0.13889em;">P</span><span class="mopen mtight">[</span><span class="mrel mtight">:</span><span class="mord mathdefault mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span><span class="mclose mtight">]</span><span class="mclose mtight">)</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">&ZeroWidthSpace;</span></span><span class="vlist-r"><span class="vlist" style="height: 0.345em;"><span class=""></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+
+<%
+max_score = 0
+scores = []
+point_totals = []
+percentages = []
+values = []
+for index, a in enumerate(assessments):
+   if a.points_total is None or a.points_total == 0:
+      scores.append(0)
+      point_totals.append(0)
+      percentages.append(0.0)
+      values.append(0)
+   else:
+      scores.append(a.score)
+      point_totals.append(a.points_total)
+      percentages.append(round(a.score * 100.0 / a.points_total, 2))
+      values.append(max(a.score - max_score, 0) * 100.0 / (a.points_total * (index + 1)))
+   end
+   max_score = max(scores[index], max_score)
+end
+%> 
+
+In this case <span>P = [{{', '.join(f'{x}' for x in percentages)}}]</span>
+and <span>n = {{len(percentages)}}</span>.
+
+        {{assessment_info.key}}
+
+% if len(assessments) > 0:
+  <table>
+    <tr>
+      <th>Submission <br/>Number</th>
+      <th>Post id</th>
+      <th>Score / Total, Percent</th>
+      <th>Calculation</th>
+      <th>Value to <br/>overall score</th>
+      % if assessment_info.assessment_type != 'homework':
+        <th>Grader output</th>
+      % end
+    </tr>
+    % for index, a in enumerate(assessments):
+      <tr>
+        <th>{{index+1}}</th>
+        % if assessment_info.assessment_type == 'homework':
+           <th><a href="{{a.msg}}" _target="blank">{{a.post_id}}</a></th>
+        % else:
+        <th><a href="{{get_url('viewSubmission', key=assessment_info.key, post_id=a.post_id)}}?onyen={{onyen}}"
+               _target="blank">{{a.post_id}}</a></th>
+        % end
+        <th>{{scores[index]}} / {{point_totals[index]}}, {{percentages[index]}}</th>
+        % if index == 0:
+          <th>{{percentages[index]}}</th>
+        % else:
+          <th>({{percentages[index]}} - max(0, max({{percentages[:index]}}))/{{index+1}}</th>
+        % end
+        <th>{{round(values[index], 3)}}</th>
+        % if assessment_info.assessment_type != 'homework':
+           <th>{{a.msg}}</th>
+        % end
+      </tr>
+    % end
+  </table>
+% end
+
+% rebase('assessment.base')

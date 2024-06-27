@@ -1,0 +1,82 @@
+digraph G { 
+    label = "Car Insurance Company"
+    labelloc = top;
+ 
+    node [shape=record];
+ 
+    subgraph cluster_0 {
+      label = ""
+      color=transparent;
+      customer [label=<
+             <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                 <tr><td bgcolor="lightblue"><b>customer</b></td></tr>
+                 <tr><td align="left"><u>customer_id</u></td></tr>
+                 <tr><td align="left">name</td></tr>
+                 <tr><td align="left">address</td></tr>
+             </table>
+         > shape=box];
+
+      owns [fillcolor=lightblue style=filled shape=diamond label="owns"];
+ 
+      car [label=<
+             <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                 <tr><td bgcolor="lightblue"><b>car</b></td></tr>
+                 <tr><td align="left"><u>license_no</u></td></tr>
+                 <tr><td align="left">make</td></tr>
+                 <tr><td align="left">model</td></tr>
+             </table>
+        > shape=box];
+
+      covers [fillcolor=lightblue style=filled shape=diamond label="covers",
+              peripheries=2];
+ 
+      policy [label=<
+             <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                 <tr><td bgcolor="lightblue"><b>policy</b></td></tr>
+                 <tr><td align="left"><u>policy_id</u></td></tr>
+                 <tr><td align="left">policy_type</td></tr>
+                 <tr><td align="left">annual_premium</td></tr>
+             </table>
+        > shape=box peripheries=2 ];
+
+      participated [fillcolor=lightblue style=filled shape=diamond label="participated"];
+      
+      payment [fillcolor=lightblue style=filled shape=diamond label="payment"];
+
+      accident [label=<
+             <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                 <tr><td bgcolor="lightblue"><b>accident</b></td></tr>
+                 <tr><td align="left"><u>report_id</u></td></tr>
+                 <tr><td align="left">date</td></tr>
+                 <tr><td align="left">place</td></tr>
+             </table>
+        > shape=box];
+
+      premium_payment [label=<
+             <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                 <tr><td bgcolor="lightblue"><b>premium_payment</b></td></tr>
+                 <tr><td align="left"><u>payment_id</u></td></tr>
+                 <tr><td align="left">due_date</td></tr>
+                 <tr><td align="left">amount</td></tr>
+                 <tr><td align="left">received_on</td></tr>
+             </table>
+        > shape=box];
+
+    }
+    newrank=true; // Needed to allow clusters on same level
+    {rank=same; customer; owns; car; covers; policy}
+    {rank=same; participated; payment}
+    {rank=same; accident}
+      customer -> owns[dir=back style=""]
+      owns:e -> car:w  [arrowhead=none style=""]
+      car -> covers [dir=back style=""]
+      covers -> policy [style="" color="black:black" arrowhead=none]
+ 
+      car:s -> participated:n [style="" arrowhead=none]
+      policy:s -> payment:n [style="" color="black:black" arrowhead=none]
+
+      participated:s -> accident:n [style="" arrowhead=none]
+
+      payment:s -> premium_payment:n [style="" arrowhead=none color="black:black"]
+}
+

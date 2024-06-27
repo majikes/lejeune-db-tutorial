@@ -1,0 +1,90 @@
+<%
+setInfo(
+      due="2021-10-26 15:05:00",
+      needsSubmitCode=True,
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      xxxxxxxx=dict(needsSubmitCode=False, due='2021-10-26 15:15:00')),
+)
+%>
+
+# Chapter 13 External Sort
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**N.Way.Pass.Zero.Length:** Assuming there are 150 pages to sort and
+there are six buffers,
+how many pages are in each run of pass 0 of an n-way external sort?
+% answer = '6'
+% answer2 = f'''People may think its &lceil;150/6&rceil; but
+there are six pages.
+Answer: {answer}'''
+{{!expression(answer, dict(n=1), points=20, name='N.Way.Pass.Zero.Length')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**N.Way.Pass.Zero.Runs:** Assuming there are 150 pages to sort and
+there are six buffers,
+how many runs are there after pass 0 of an n-way external sort?
+% answer = '150/6'
+% answer2 = f'''{answer} = {eval(answer)}'''
+{{!expression(answer, dict(n=1), points=20, name='N.Way.Pass.Zero.Runs')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**N.Way.Passes:** Assuming there are 150 pages to sort and
+there are six buffers,
+how many n-way external sort passes are required to sort the relation?  
+% answer = '1 + 2'
+% answer2 = f'''1 + ceil(log(150/6)/log(5))
+Answer: {answer} = {eval(answer)}'''
+{{!expression(answer, dict(n=1), points=20, name='N.Way.Passes')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**N.Way.Pass.One.Runs:** Assuming there are 150 pages to sort and
+there are six buffers,
+how many runs are there after pass 1 of an n-way external sort?
+% answer = '(150/6)/5'
+% answer2 = f'''{answer} = {eval(answer)}'''
+{{!expression(answer, dict(n=1), points=20, name='N.Way.Pass.One.Runs')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**N.Way.IOs:** Assuming there are 150 pages to sort and
+there are six buffers,
+how many I/Os does it take to sort the relation using an n-way external sort?  
+% answer = '2 * 150 *(1 + 2)'
+% answer2 = f'''There are two I/Os (input and output) for each 150 pages per pass.
+There are three passes.
+Pass 0: 50 runs of length 6
+Pass 1: 5 runs of length 30
+Pass 2: 1 run of length 150
+
+Answer: {answer} = {eval(answer)}'''
+{{!expression(answer, dict(n=1), points=20, name='N.Way.IOs')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

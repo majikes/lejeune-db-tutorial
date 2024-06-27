@@ -1,0 +1,83 @@
+<h1>Upload a Jupyter Notebook Assignment</h1>
+
+
+<form id="submit_form" method="post" enctype="multipart/form-data">
+  <label>Homework assignment name:</label> 
+    <select id='key' required>
+       <option value="">None</option>
+       % for key in valid_notebook_keys:
+          <option value="{{key}}">{{key}}</option>
+       % end
+    </select>   
+  <p/>
+
+  <input id='fileObj' type="file" name="notebook" accept=".ipynb"/>
+  <p/>
+
+  <div id="needSubmitCode">
+     <label>Enter submit code from front of classroom</label>
+     <input id="submitCodeInput" type="text" name="submitCodeInput">
+     <p/>
+  </div>
+
+  <input id="submit_button" type="button" value="Submit worksheet or homework assignment" onclick="formsubmit()"> 
+  </p>
+</form>
+
+<script>
+
+// Get the notebooks needing a submit code
+notebooks_needing_submit_codes = (() => {
+    var a = Array();
+    % for key in notebooks_needing_submit_codes:
+      a.push('{{key}}');
+    % end
+    return a;  
+})();
+
+const needSubmitCode = document.getElementById("needSubmitCode");
+needSubmitCode.style.visibility = "hidden";
+
+const selectKey = document.getElementById('key');
+selectKey.addEventListener('change', async (e) => {
+   const key = e.target.value.trim();
+   if (notebooks_needing_submit_codes.includes(key)) {
+       needSubmitCode.style.visibility = 'visible';
+   } else {
+       needSubmitCode.style.visibility = 'hidden';
+   }      
+});
+
+function formsubmit() {
+   var key = document.getElementById("key").value.trim();
+   var file = document.getElementById("fileObj");
+   var submitCode = document.getElementById("submitCodeInput").value.trim();
+   var base = file.value.split(/[\\/]/).pop();
+      
+   if (!base.endsWith('.ipynb')) {
+      document.getElementById("submit_form").reset;
+      alert("You must specify a filename ending in .ipynb");
+   } else if (key == "") {
+      document.getElementById("submit_form").reset;
+      alert("An assignment must be selected");
+   } else if (!base.startsWith(key)) {
+      document.getElementById("submit_form").reset;
+      alert("The filename must start with the selected assignment name");
+   } else if ((needSubmitCode.style.visibility == "visible") &&
+              (submitCode == '')) {
+      document.getElementById("submit_form").reset;
+      alert("A submit code is required");
+   } else {
+      // Get select value and submit it on the form
+      if (needSubmitCode.style.visibility == "hidden") {   
+         submit_form.action = '{{get_url("root")}}notebook_upload/' + key;
+      } else {
+         submit_form.action = '{{get_url("root")}}notebook_upload/' + key + '/' + submitCode;
+      }         
+      submit_form.submit();
+      document.getElementById("submit_form").reset;
+   }
+}
+</script>
+
+% rebase('assessment.base')

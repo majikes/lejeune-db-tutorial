@@ -1,0 +1,150 @@
+---
+
+### {{!linkable_header('Schema')}}
+
+---
+
+<div class="row">
+ <div class="twocolumns">
+   <br/><b>A</b> delete
+   <br/><b>B</b> insert
+   <br/><b>C</b> select
+   <br/><b>D</b> A, B, and C
+   <br/><b>E</b> None of them
+ </div>  
+ <div class="twocolumns">
+ % if even_questions == 0 or section == '003':
+   %include('viewAnswer', answer='Only seen by LA/TAs and students with even number PIDs')
+   % answer = 'E'
+   % answer2 = f'''
+All of these update the data not the schema
+
+Answer: {answer}'''
+   Schema.1: Select the letters to the left that best represents the SQL operation used 
+   in normal ways we discussed in class that will change the schema.</br/>
+   {{!inp.select(answer, 'ABCDE', points=6, name='Schema.1')}}<br />
+   %include('viewAnswer', answer=answer2)
+ % end
+ % if even_questions == 1 or section == '003':
+   %include('viewAnswer', answer='Only seen by LA/TAs and students with odd number PIDs')
+   % answer = 'D'
+   % answer2 = f'''
+All of these update the data not the schema
+
+Answer: {answer}'''
+   Schema.2: Select the letters to the left that best represents the SQL operation used
+   in normal ways we discussed in class that will not change the schema.<br />
+   {{!inp.select(answer, 'ABCDE', points=6, name='Schema.2')}}<br />
+   %include('viewAnswer', answer=answer2)
+   % end
+ </div>
+</div>
+<p> </p>
+
+---
+
+<div class="row">
+ <div class="twocolumns">
+   <br/><b>A</b> When logical independence is not critical
+   <br/><b>B</b> When performance requires it
+   <br/><b>C</b> When space is not a consideration
+   <br/><b>D</b> A, and C
+   <br/><b>E</b> None of them
+ </div>
+ <div class="twocolumns">
+ % if even_questions == 0 or section == '003':
+   %include('viewAnswer', answer='Only seen by LA/TAs and students with even number PIDs')
+   % answer = 'B'
+   % answer2 = f'''
+From worksheet-chapter-01, for a specialized application with time sensitive performance requirements
+is when you should not use a database.
+
+Answer: {answer}'''
+   Needed.1: Given what was discussed in class, 
+   what letter best represents a reason to not use a database system?<br />
+   {{!inp.select(answer, 'ABCDE', points=6, name='Needed.1')}}
+   %include('viewAnswer', answer=answer2)
+ % end
+ % if even_questions == 1 or section == '003':
+   %include('viewAnswer', answer='Only seen by LA/TAs and students with odd number PIDs')
+   % answer = 'D'
+   % answer2 = f'''
+From worksheet-chapter-01, for a specialized application with time sensitive performance requirements
+is when you should not use a database.
+
+Answer: {answer}'''
+   Needed.2: Given what was discussed in class,
+   what letter best represents an invalid reason to use a database system?<br />
+   {{!inp.select(answer, 'ABCDE', points=6, name='Needed.2')}}
+   %include('viewAnswer', answer=answer2)
+  % end
+ </div>
+</div>
+<p> </p>
+
+---
+
+
+% symbols = [x for x in 'ABCDEFG']
+% if even_questions == 0 or section == '003':
+True.False.1 Select the letters on the left that are false.  
+<div class="row">
+ <div class="threecolumns">
+  <br/><b>A</b> A database can have only one view defined
+  <br/><b>B</b> A database can have only one conceptual schema
+  <br/><b>C</b> A database can have only one physical schema
+  <br/><b>D</b> DMLs are used to define the schema
+  <br/><b>E</b> DDLs define the logical structure of a database
+   <br/><b>F</b> Data independence isolates applications data changes
+   <br/><b>G</b> Statements A-F have three false statements
+ </div>
+ <div class="twocolumns">
+   %include('viewAnswer', answer='Only seen by LA/TAs and students with even number PIDs')
+   % answer = 'B'
+   % answer = ['A', 'D', 'G']
+   % answer2 = f'''
+A: databases can have multiple views defined
+D: Data definition languages define the schema
+G: There are only two false statements
+
+Answer: {answer}'''
+   {{!table(inputs=1, headings="Question, Answer", table=f'''
+The alphabetically first letter of a false statement,{answer[0]}
+The alphabetically second letter of a false statement,{answer[1]}
+The alphabetically third letter of a false statement,{answer[2]}''', symbols=symbols, points=6, name='True.False.1')}}
+   %include('viewAnswer', answer=answer2)
+ </div>
+</div>
+% end
+% if even_questions == 1 or section == '003':
+True.False.2 Select the letters on the left that are false:  
+<div class="row">
+ <div class="threecolumns">
+  <br/><b>A</b> A database can have multiple views defined
+  <br/><b>B</b> A database can have multiple conceptual schemas
+  <br/><b>C</b> A database can have only one physical schema
+  <br/><b>D</b> DMLs are used to define the schema
+  <br/><b>E</b> DMLs define the logical structure of a database
+  <br/><b>F</b> Data independence keep applications isolated
+  <br/><b>G</b> Statements A-F have three false statements
+ </div>
+ <div class="twocolumns">
+   %include('viewAnswer', answer='Only seen by LA/TAs and students with even number PIDs')
+   % answer = 'B'
+   % answer = ['B', 'E', 'F']
+   % answer2 = f'''
+B: databases can have only one conceptual schema
+D: Data definition languages define the schema
+F: Data independence isolate applications from physical changes in the schema
+
+Answer: {answer}'''
+   {{!table(inputs=1, headings="Question, Answer", table=f'''
+The alphabetically first letter of a false statement,{answer[0]}
+The alphabetically second letter of a false statement,{answer[1]}
+The alphabetically third letter of a false statement,{answer[2]}''', symbols=symbols, points=6, name='True.False.2')}}
+   %include('viewAnswer', answer=answer2)
+ </div>
+</div>
+% end
+<p> </p>
+

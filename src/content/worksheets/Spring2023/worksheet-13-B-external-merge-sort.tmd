@@ -1,0 +1,68 @@
+<%
+setInfo(
+      due="2023-03-31 10:55:00",
+      needsSubmitCode=True,
+        assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      tjkapur=dict(needsSubmitCode=False, due='2022-11-01 00:00:00'),
+                      zhennan=dict(needsSubmitCode=False, due='2022-11-01 00:00:00')),
+)
+%>
+
+# Chapter 13 External Merge Sort
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**True.False:** Answer these true false questions.  
+% answer = ['False', 'True', 'True', 'False']
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+External merge sort decreases the number of pages read and written **per pass**,{answer[0]}
+External merge sort decreases the number of **passes**,{answer[1]}
+External merge sort's first pass merges **in place**,{answer[2]}
+External merge sort's subsequent passes merge **inplace**,{answer[3]}''', symbols=answer, points=20, name='True.False')}}
+%include('viewAnswer')
+
+---
+
+**External.Merge.Sort:** Assume you have a $n$-page file and $B$ buffers, answer the following questions about using an external merge sort against the file.  
+% answer = ['B', 'ceiling(n/B)']
+% choices = ['n/B', 'B/n', 'n'] + answer + [f'{x}' for x in range(10)]
+% answer2 = f'''Answers are on page 426.
+Answer: {answer}'''
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+Pass-zero produces sorted runs of **how many pages**?,{answer[0]}
+Pass-zero produces **how many runs**?,{answer[1]}''', points=40, symbols=choices, name='External.Merge.Sort')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**External.Merge.Sort.Example:** Assume that there are 7 pages of data to sort and you have 4 buffers.  
+% answer = ['4', '3', '14', '7']
+% choices = [f'{x}' for x in range(20) ]
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+Pass-zero will produce two runs&#44; how many pages are in the **first** run?,{answer[0]}
+Pass-zero will produce two runs&#44; how many pages are in the **second** run?,{answer[1]}
+**How many I/Os** were required to complete the first pass?,{answer[2]}
+What is the number of pages in the **longest run** after pass-one?,{answer[3]}''', points=40, symbols=choices, name='External.Merge.Sort.Example')}}
+%include('viewAnswer')
+
+---
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

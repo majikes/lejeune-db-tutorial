@@ -1,0 +1,16 @@
+<html>
+<script>
+  document.title = 'COMP 421 SSO';
+  function sendMessage() {
+     console.log('In sendMessage');
+     let msg = {ip: "{{ip}}", token: "{{token}}", onyen: "{{onyen}}", sso_token: "{{sso_token}}", notebooks: "{{notebooks}}"};
+     window.opener.parent.postMessage(msg, "*");
+     console.log('Parent posted');
+  }
+  window.addEventListener("load", () => {  
+     console.log('In load event listener');
+     sendMessage();
+  }); 
+</script>
+
+</html>

@@ -1,0 +1,83 @@
+<%
+setInfo(
+        due="2022-08-22 10:45:00",
+        pages=['questions', 'submit'],
+        assessment_type='worksheet',
+        penalty=.2,
+        maxpenalty=0.75,
+        exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+       )
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+
+# Chapter 2 review
+## These questions are taken, somewhat, from the end of the chapter
+
+% if 'questions' in pages:
+
+---
+
+
+**Entity.Attribute:** What is the difference between an entity and an attribute?  
+  **A** There is no difference  
+  **B** An entity is made up of attributes  
+  **C** Attributes are made of many entities  
+  **D** None of the above  
+% answer = 'B'
+{{!select(answer, 'ABCD', points=25, name='Entity.Attribute')}}
+% include('viewAnswer')
+
+---
+
+**Relationship.Set:** What is the difference between a relationship and a relationship set?   
+ **A** There is no difference  
+ **B** A relationship is an association among two or more entities  
+ **C** A relationship set is a set of relationships  
+ **D** Both B and C  
+  % answer = 'B'
+  {{!select(answer, 'ABCD', points=25, name='Relationship.Set')}}
+  % include('viewAnswer')
+<font color="red"> This question is wrong and poorly worded</font> 
+A relationship set can be thought of as a set of n-tuples from a set of similar relationships.
+The grader will give you credit for any answer you select for this question.
+<%
+from datetime import datetime, date
+assert datetime.now().date() < date(2022, 12, 15), f' Delete this question'
+%>
+
+---
+
+**Many.Relationships:** Which of the following is **<font color='red'>NOT</font>** a type of relationship.   
+ **A** A one-relationship  
+ **B** A one-to-many relationship  
+ **C** A many-to-many relationship  
+ **D** They're all DBMS relationship  
+ % answer = 'A'
+  {{!select(answer, 'ABCD', points=25, name='Man y.Relationships')}}
+  % include('viewAnswer')
+
+---
+
+**Aggregation:** What is aggregation?  
+ **A** The process of planting small objects in a database farm  
+ **B** A Relationship set  
+ **C** A entity relationship model feature that allows a relationship set to be a part of another relationship set  
+ **D** None of the above  
+ **E** B and C  
+ % answer = 'C'
+  {{!select(answer, 'ABCDE', points=25, name='Aggregation')}}
+  % include('viewAnswer')
+
+---
+
+% end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end
+

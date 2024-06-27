@@ -1,0 +1,19 @@
+https://uncch.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=64f34689-dec2-4f8d-b5fa-ad780101b4ed
+
+Hi, well, welcome to Camp 421 databases and files. In this class, you'll be learning databases,
+file storage, system structures and in their design. This is the first time teaching COMP421.
+
+It used to be COMP521 and the plan is that it should be very, very similar to COMP521.
+We will be coding in Python, which was the process, I think, in the last two semesters.
+The programs are going to be very small and the syllabus has a recommendation for downloading Python and learning how to code in it.  But hopefully that will be very trivial for you.
+
+So a little bit about myself, I am one of the newer faculty here at UNC Computer Science.
+
+I've spent about 35 years in industry and worked for large corporations and startups.
+I've been responsible for hundreds of millions of dollars of annual revenue.
+And I've had 100+ developers reporting to me and I'd be responsible for tens of thousands of lines of code.
+
+Late in my career, I decided to go back and get my Ph.D. and now I have my dream job.
+
+So stop by my office sometime, introduce yourself and we'll talk about databases or whatever.
+But welcome to databases!

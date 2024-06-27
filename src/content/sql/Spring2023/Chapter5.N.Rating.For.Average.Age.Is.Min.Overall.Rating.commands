@@ -1,0 +1,43 @@
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('29', 'Brutus',  1, 33.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('32', 'Andy',    8, 25.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+INSERT INTO Sailors values ('64', 'Horatio', 7, 35.0);
+INSERT INTO Sailors values ('71', 'Zorba',  10, 16.0);
+INSERT INTO Sailors values ('74', 'Horatio', 9, 35.0);
+INSERT INTO Sailors values ('85', 'Art',     3, 25.5);
+INSERT INTO Sailors values ('95', 'Bob',     3, 63.5);
+
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('29', 'Brutus',  1, 33.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('32', 'Andy',    8, 25.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+INSERT INTO Sailors values ('64', 'Horatio', 7, 35.0);
+INSERT INTO Sailors values ('71', 'Zorba',  10, 16.0);
+INSERT INTO Sailors values ('74', 'Horatio', 9, 35.0);
+INSERT INTO Sailors values ('85', 'Art',     3, 25.5);
+INSERT INTO Sailors values ('95', 'Bob',     3, 63.5);
+
+SELECT 'Sailors table:' as '';
+SELECT * FROM Sailors;
+
+SELECT 'Find the rating for which the average age of sailors is the minimum overall rating' AS '';
+-- Temp is a relation with two fields: a rating and the average age of sailors with that rating
+WITH Temp AS (SELECT S.rating, AVG (S.age) AS avgage
+                FROM Sailors S
+               GROUP BY S.rating)
+
+SELECT rating, avgage
+  FROM Temp
+ WHERE avgage = (SELECT MIN(T1.avgage) -- Only select tuple where the average age is the min
+                   FROM Temp as T1)

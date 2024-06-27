@@ -1,0 +1,842 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+---
+
+## Chapter 4:  Intermediate SQL
+
+ - Join  Expressions
+ - Views
+ - Transactions
+ - Integrity Constraints
+ - SQL Data Types and Schemas
+ - Index Definition in SQL
+ - Authorization
+
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch4.pdf
+
+
+---
+
+## Joined Relations
+
+ - **Join operations** take two relations and return as a result another relation.
+ - A join operation is a Cartesian product which requires that tuples in the two relations match (under some condition).  It also specifies the attributes that are present in the result of the join
+ - The join operations are typically used as subquery expressions in the **from** clause
+ - Three types of joins:
+   - Natural join
+   - Inner join
+   - Outer join
+
+---
+
+## Natural Join in SQL
+
+ - Natural join matches tuples with the same values for all common attributes, and retains only one copy of each common column.
+ - List the names of instructors along with the course ID of the courses that they taught
+```
+select name, course_id
+  from students, takes
+ where student.ID = takes.ID
+```
+ - Same query in SQL with “natural join” construct
+```
+select name, course_id
+  from student natural join takes
+```
+
+---
+
+## Natural Join student takes (continue)
+
+<div class="row">
+   <div class="twocolumns">
+    <figure style="border: 0">
+      <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.Figure.4.1.student.relation.png"        style="width:100%"/>
+         <figcaption>Figure 4.1</figcaption>
+    </figure>
+   </div>
+   <div class="twocolumns">
+    <figure style="border: 0">
+      <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.Figure.4.2.takes.relation.png"        style="width:100%"/>
+         <figcaption>Figure 4.2</figcaption>
+    </figure>
+  </div>
+</div>
+
+---
+
+## Natural Join student takes (continue)
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.Figure.4.3.Nature.join.student.takes.png" style="width:75%"/>
+     <figcaption>Figure 4.3</figcaption>
+</figure>
+
+---
+
+## Natural Join in SQL (Cont.)
+
+ - The **from** clause in can have multiple relations combined using natural join:
+```
+select A1, A2, ... An
+  from r1 natural join r2, ... natural join rn
+ where P
+```
+
+
+---
+
+## Dangerous in Natural Join
+
+ - Beware of unrelated attributes with same name which get equated incorrectly
+ - Example -- List the names of students instructors along with the titles of courses that they have taken
+   - Correct version
+```
+select name, title 
+  from student natural join takes, course
+ where takes.course_id = course.course_id
+```
+   - Incorrect version
+```
+select name, title
+  from student natural join takes natural join course
+```
+   - This query omits all (student name, course title) pairs where the student takes a course in a department other than the student's own department. 
+
+
+---
+
+## Outer Join
+
+ - An extension of the join operation that avoids loss of information.
+ - Computes the join and then adds tuples form one relation that does not match tuples in the other relation to the result of the join. 
+ - Uses <i>null</i> values.
+ - Three forms of outer join:
+   - left outer join
+   - right outer join
+   - full outer join
+
+
+---
+
+## Outer Join 
+
+<p><b>Examples</b></p>
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.course.relation.jpg" style="width:100%"/>
+   <figcaption>Course relation</figcaption>
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.course.relation.jpg" style="width:100%"/>
+   <figcaption>Prereq relation</figcaption>
+  </figure>
+ </div>
+</div>
+
+ - Observe that _course_ information is missing  for  CS-437 and _prereq_ information is missing for CS-315
+ - Left Outer Join
+```
+select *
+  from course natural left outer join prereq
+```
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.left.outer.join.jpg" style="width:75%"/>
+ <figcaption>Left outer join</figcaption>
+</figure>
+
+
+---
+
+## Right Outer Join
+
+ - Not supported in SQLite
+   - Emulated by reordering relations and doing left join
+
+```
+-- select *
+--   from course natural right outer join prereq
+select course.*, prereq.*
+  from prereq natural right outer join course
+
+```
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.right.outer.join.jpg" style="width:75%"/>
+ <figcaption>Right outer join</figcaption>
+</figure>
+
+
+---
+
+## Full Outer Join
+
+ - Not supported in SQLite
+   - Emulated by union of a left and right join
+
+```
+-- select * 
+--   from course natural full outer join prereq
+select course.*, prereq.*
+  from course natural left outer join prereq
+select course.*, prereq.*
+  from prereq natural right outer join course
+```
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.full.outer.join.jpg" style="width:75%"/>
+ <figcaption>Right outer join</figcaption>
+</figure>
+
+
+---
+
+## Joined Types and Conditions
+
+ - **Join operations** take two relations and return as a result another relation.
+ - These additional operations are typically used as subquery expressions in the **from** clause
+ - **Join condition** – defines which tuples in the two relations match, and what attributes are present in the result of the join.
+ - **Join type** – defines how tuples in each relation that do not match any tuple in the other relation (based on the join condition) are treated.
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.join.types.png" style="width:75%"/>
+   <figcaption>Join types</figcaption>
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.join.conditions.png" style="width:100%"/>
+   <figcaption>Join conditions</figcaption>
+  </figure>
+ </div>
+</div>
+
+
+---
+
+## Joined Relations 
+
+<p><b>Examples </b></p>
+
+```
+select *
+  from course inner join prereq on
+       course.course_id = prereq.course_id
+```
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.inner.join.on.course_id.jpg" style="width:100%"/>
+ <figcaption>Join conditions</figcaption>
+</figure>
+ 
+ - What is the difference between the above, and a natural join?
+
+Note:
+
+An inner join with condition shows both course_id
+
+A natural join only shows one course_id
+
+---
+
+## Views
+
+ - In some cases, it is not desirable for all users to see the entire logical model (that is, all the actual relations stored in the database.)
+ - Consider a person who needs to know an instructors name and department, but not the salary.  This person should see a relation described, in SQL, by 
+```
+select ID, name, dept_name
+  from instructor
+```
+ - A **view** provides a mechanism to hide certain data from the view of certain users. 
+ - Any relation that is not of the conceptual model but is made visible to a user as a “virtual relation” is called a **view**.
+
+
+---
+
+## View Definition
+
+ - A view is defined using the **create view** statement which has the form <br/>**create view** $v$ as &lt;query expression&gt;<br/>where &lt;query expression&gt; is any legal SQL expression.<br/>The view name is represented by $v$.
+ - Once a view is defined, the view name can be used to refer to the virtual relation that the view generates.
+ - View definition is not the same as creating a new relation by evaluating the query expression
+   - Rather, a view definition causes the saving of an expression; the expression is substituted into queries using the view.
+
+
+---
+
+## View Definition and Use
+
+ - A view of instructors without their salary
+```
+create view faculty as
+ select ID, name, dept_name
+   from instructor
+```
+ - Find all instructors in the Biology department
+```
+select name
+  from faculty
+ where dept_name = 'Biology'
+```
+ - Create a view of department salary totals
+
+```
+create view departments_total_salary(dept_name, total_salary) as
+ select dept_name, sum(salary)
+   from instructor
+  group by dept_name
+```
+
+
+---
+
+## Views Defined Using Other Views
+
+ - One view may be used in the expression defining another view 
+ - A view relation $v_1$ is said to _depend directly_ on a view relation $v_2$ if $v_2$ is used in the expression defining $v_1$
+ - A view relation $v_1$ is said to _depend on_ view relation $v_2$ if either $v_1$ depends directly to $v_2$ or there is a path of dependencies from $v_1$ to $v_2$
+ - A view relation $v$ is said to be _recursive_ if it depends on itself.
+
+
+---
+
+## Views Defined Using Other Views
+
+```
+create view physics_fall_2017 as
+select course.course_id, sec_id, building, room_number
+  from course, section
+ where course.course_id = section.course_id and
+       course.dept_name = 'Physics' and
+       section.semester = 'Fall' and
+       section.year = '2017'
+```
+
+```
+create view physics_fall_2017_watson as
+select course_id, room_number
+  from pysics_fall_2017
+ where build = 'Watson'
+```
+
+
+---
+
+## View Expansion
+
+ - Expand  the view 
+```
+create view physica_fall_2017_watson as
+select course_id, room_number
+  from pysics_fall_2017
+ where build = 'Watson'
+```
+ - To:
+
+```
+create view physics_fall_2017_watson as
+select course_id, room_number
+  from (select course.course_id, building, room_number
+          from course.course_id = section.course_id and
+               course.dept_name = 'Physics' and
+               section.semester = 'Fall' and
+               section.year = '2017')
+         where building = 'Watson'
+```
+
+
+---
+
+## View Expansion (Cont.)
+
+ - A way to define the meaning of views defined in terms of other views.
+ - Let view $v_1$ be defined by an expression $e_1$ that may itself contain uses of view relations.
+ - View expansion of an expression repeats the following replacement step:<br/>**repeat**<br/>&nbsp;&nbsp;&nbsp;&nbsp;Find any view $v_i$ in $e_i$<br/>&nbsp;&nbsp;&nbsp;&nbsp;Replace the view $v_i$ by the expression defining $v_i$<br/>**until** no more view relations are present in $e_1$.
+ - As long as the view definitions are not recursive, this loop will terminate
+
+
+
+Note:
+
+Do not discuss 
+## Materialized Views
+
+
+
+ - Certain database systems allow view relations to be physically stored.
+   - Physical copy created when the view is defined.
+   - Such views are called **Materialized view**
+ - If relations used in the query are updated, the materialized view result becomes out of date
+   - Need to **maintain** the view, by updating the view whenever the underlying relations are updated.
+
+
+---
+
+## Update of a View
+
+ - Not allowed by SQLite and many others
+ - Add a new tuple to $faculty$ view which we defined earlier
+```
+insert into faculty 
+    values ('30765', 'Green', 'Music')
+```
+ - This insertion must be represented by the insertion into the $instructor$ relation
+   - Must have a  value for salary.
+ - Two approaches
+   - Reject the insert
+   - Inset the tuple `('30765', 'Green', 'Music', null)` into the $instructor$ relation
+
+Note:
+
+Do not discuss
+
+## Some Updates Cannot be Translated Uniquely
+
+ - <b>create view </b><i>instructor_info</i><b> as</b>
+<p><b>select </b><i>ID</i>, <i>name</i>, <i>building</i></p>
+<p><b>from </b><i>instructor</i>, <i>department</i></p>
+<p><b>where </b><i>instructor</i>.<i>dept_name</i>= <i>department</i>.<i>dept_name</i>;</p>
+ - <b>insert into </b><i>instructor_info</i>
+<p><b>values </b>('69987', 'White', 'Taylor');</p>
+ - Issues
+   - Which department, if multiple departments in Taylor?
+   - What if no department is in Taylor?
+
+
+
+## And Some Not at All
+
+ - <b>create view </b><i>history_instructors</i><b> as</b>
+<p><b>select </b>*</p>
+<p><b>from </b><i>instructor</i></p>
+<p><b>where </b><i>dept_name</i>= 'History';</p>
+ - What happens if we insert
+<p>('25566', 'Brown', 'Biology', 100000)</p>
+<p>into <i>history_instructors?</i></p>
+
+
+
+## View Updates in SQL 
+
+ - Most SQL implementations allow updates only on simple 
+<p>views</p>
+   - The <b>from </b>clause has only one database relation.
+   - The <b>select </b>clause contains only attribute names of the 
+<p>relation, and does not have any expressions, aggregates, </p>
+<p>or <b>distinct </b>specification.</p>
+   - Any attribute not listed in the <b>select </b>clause can be set to 
+<p>null</p>
+   - The query does not have a <b>group </b>by or <b>having </b>clause.
+
+
+---
+
+## Transactions
+
+ - A **transaction** consists of a sequence of query and/or update statements and is a “unit” of work
+ - The SQL standard specifies that a transaction begins implicitly when an SQL statement is executed.
+ - The transaction must end with one of the following statements:
+   - **Commit work** The updates performed by the transaction become permanent in the database
+   - **Rollback work** All the updates in the transaction are undone
+ - Atomic transaction
+   - Either fully executed or rolled back as if it never occurred
+ - Isolation from concurrent transactions
+
+
+---
+
+## Integrity Constraints
+
+ - Integrity constraints guard against accidental damage to the database, by ensuring that authorized changes to the database do not result in a loss of data consistency. 
+   - A checking account must have a balance greater than $10,000.00
+   - A salary of a bank employee must be at least $4.00 an hour
+   - A customer must have a (non-null) phone number
+
+
+---
+
+## Constraints on a Single Relation
+
+ - **not null** 
+ - **primary key**
+ - **unique**
+ - **check**(P), where P is a predicate
+
+
+---
+
+## Not Null Constraints 
+
+ - <b>not null</b>
+   - Declare $name$ and $budget$ to be **not null**
+
+```
+name varchar(20) not null
+budget numeric(12,2) not null
+```
+
+
+---
+
+## Unique Constraints 
+
+ - **unique**($A_1, A_2, \dots A_m$)
+   - The unique specification states that the attributes $A_1$, $A_2$, $\dots$ $A_m$ form a candidate key.
+   - Candidate keys are permitted to be null (in contrast to primary keys).
+
+
+---
+
+## The check clause
+
+ - The **check**(P) clause specifies a predicate P that must be satisfied by every tuple in a relation.
+ - Example:  ensure that semester is one of fall, winter, spring or summe
+```
+create table section
+(course_id varchar (8),
+sec_id varchar (8),
+semester varchar (6),
+year numeric (4,0),
+building varchar (15),
+room_number varchar (7),
+time slot id varchar (4), 
+primary key (course_id, sec_id, semester, year),
+check (semester in ('Fall', 'Winter', 'Spring', 'Summer')))
+```
+
+
+---
+
+## Referential Integrity
+
+ - Ensures that a value that appears in one relation for a given set of attributes also appears for a certain set of attributes in another relation.
+   - Example:  If “Biology” is a department name appearing in one of the tuples in the $instructor$ relation, then there exists a tuple in the $department$ relation for “Biology”.
+ - Let A be a set of attributes.  Let R and S be two relations that contain attributes A and where A is the primary key of S. A is said to be a **foreign key** of R if for any values of A appearing in R these values also appear in S.
+
+
+---
+
+## Referential Integrity (Cont.)
+
+ - Foreign _keys can be_ specified as part of the SQL **create table** statement 
+```
+foreign key (dept_name) references department
+```
+ - By default, a foreign key references the primary-key attributes of the referenced table.
+ - SQL allows  a list of attributes of the referenced relation to be specified explicitly.
+
+```
+foreign key (dept_name) references department(dept_name)
+```
+
+
+---
+
+## Cascading Actions in Referential Integrity
+
+ - When a referential-integrity constraint is violated, the normal procedure is to reject the action that caused the violation.
+ - An alternative, in case of delete or update is to cascade
+```
+create table course (
+(…
+dept_name varchar(20),
+foreign key (dept_name) references department
+ on delete cascade
+ on update cascade,
+. . .) 
+```
+ - Instead of cascade we can use :  
+   - **set null**
+   - **set default**
+
+
+---
+
+## Integrity Constraint Violation During Transactions
+
+ - Consider:
+```
+create table person(
+   ID char(10),
+   name char(40),
+   mother char(10),
+   father car(10),
+   primary key ID,
+   foreign key father references person,
+   foreigh key mother references person)
+```
+ - How to insert a tuple without causing constraint violation?
+   - Insert father and mother of a person before inserting person
+   - OR, set father and mother to null initially, update after inserting all persons (not possible if father and mother attributes declared to be **not null**) 
+   - OR defer constraint checking
+
+
+---
+
+## Complex Check Conditions
+
+ - The predicate in the check clause can be an arbitrary predicate that can include a subquery.
+```
+check (time_slot_id in (select time_slot_id from time_slot))
+```
+   - The check condition states that the time_slot_id in each tuple in the section relation is actually the identifier of a time slot in the time_slot relation.
+   - The condition has to be checked not only when a tuple is inserted or modified in section, but also when the relation time_slot changes
+
+
+---
+
+## Assertions
+
+ - An **assertion** is a predicate expressing a condition that we wish the database always to satisfy
+ - The following constraints, can be expressed using assertions:
+ - For each tuple in the $student$ relation, the value of the attribute $tot_cred$ must equal the sum of credits of courses that the student has completed successfully.
+ - An instructor cannot teach in two different classrooms in a semester in the same time slot
+ - An assertion in SQL takes the form:
+
+```
+create assertion <assertion-name> check(<predicate>)
+```
+
+
+---
+
+## Built-in Data Types in SQL
+
+ - **date:**  Dates, containing a (4 digit) year, month and date
+   - Example:  date '2005-7-27'
+ - **time:** Time of day, in hours, minutes and seconds.
+   - Example: **time* '09:00:30'   **time** '09:00:30.75'
+ - **timestamp:** date plus time of day
+   - Example:  **timestamp** '2005-7-27 09:00:30.75'
+ - **interval:** period of time
+   - Example: **interval** '1' day
+   - Subtracting a date/time/timestamp value from another gives an interval value
+   - Interval values can be added to date/time/timestamp values
+
+
+---
+
+## Large-Object Types
+
+ - Large objects (photos, videos, CAD files, etc.) are stored as a _large object_:
+   - **blob**: binary large object -- object is a large collection of uninterpreted binary data (whose interpretation is left to an application outside of the database system)
+   - **clob**: character large object -- object is a large collection of character data
+ - When a query returns a large object, a pointer is returned rather than the large object itself.
+
+
+Note:
+
+Do not used
+
+## User-Defined Types
+
+ - **create type** construct in SQL creates user-defined type
+ - Not supported in SQLite
+```
+create type Dollars as numeric (12,2) final
+```
+ - Example:
+```
+create table department
+   (dept_name varchar(20),
+    building varchar(15),
+    budget Dollars)
+```
+
+
+## Domains
+
+ - **create domain** construct in SQL-92 creates user-defined domain types
+<p><b>create domain </b><i>person_name</i><b> char</b>(20) <b>not null</b></p>
+ - Types and domains are similar.  Domains can have 
+<p>constraints, such as <b>not null</b>, specified on them.</p>
+ - Example:
+<p><b>create domain </b><i>degree_level</i><b> varchar</b>(10)</p>
+<p><b>constraint </b><i>degree_level_test</i></p>
+<p><b>check </b>(<b>value in </b>('Bachelors', 'Masters', 'Doctorate'));</p>
+
+
+---
+
+## Index Creation
+
+ - Many queries reference only a small proportion of the records in a table.
+ - It is inefficient for the system to read every record to find  a record with  particular value
+ - An **index** on an attribute of a relation is a data structure that allows the database system to find those tuples in the relation that have a specified value for that attribute efficiently, without scanning through all the tuples of the relation.
+ - We create an index with the **create index** command
+```
+create index <name> on <relation-name> (attribute)
+```
+
+
+---
+
+## Index Creation Example
+
+```
+create table student
+	(ID			varchar(5), 
+	 name			varchar(20) not null, 
+	 dept_name		varchar(20), 
+	 tot_cred		numeric(3,0) check (tot_cred >= 0),
+	 primary key (ID),
+	);
+```
+
+```
+create index studentID_index on student(ID)
+```
+
+ - The following query can be executed by using the index to find the required record,  without looking at all records of _student_
+
+```
+select *
+  from student
+ where ID = '12345'
+```
+
+
+---
+
+## Authorization
+
+ - We may assign a user several forms of authorizations on parts of the database.
+   - **Read** - allows reading, but not modification of data.
+   - **Insert** - allows insertion of new data, but not modification of existing data.
+   - **Update** - allows modification, but not deletion of data.
+   - **Delete** - allows deletion of data.
+ - Each of these types of authorizations is called a **privilege**.<br/>We may authorize the user all, none, or a combination of these types of privileges on specified parts of a database, such as a relation or a view.
+
+
+---
+
+## Authorization (Cont.)
+
+ - Forms of authorization to modify the database schema
+   - **Index** - allows creation and deletion of indices.
+   - **Resources** - allows creation of new relations.
+   - **Alteration** - allows addition or deletion of attributes in a relation.
+   - **Drop** - allows deletion of relations.
+
+---
+
+## Authorization Specification in SQL
+
+ - The **grant** statement is used to confer authorization<br/>**grant** &lt;privilege list&gt; **on** &lt;relation or view&gt; **to** &lt;user list&gt;
+ - &lt;user list&gt; is:
+   - a user-id
+   - **public**, which allows all valid users the privilege granted
+   - A role (more on this later)
+ - Example:
+```
+grant select on department to Amit, Satoshi
+```
+ - Granting a privilege on a view does not imply granting any privileges on the underlying relations.
+ - The grantor of the privilege must already hold the privilege on the specified item (or be the database administrator).
+
+
+---
+
+## Privileges in SQL
+
+ - **select**: allows read access to relation, or the ability to query using the view
+   - Example: grant users <i>U</i>1, <i>U</i>2, and <i>U</i>3<b> select</b> authorization on the<i> instructor</i> relation:
+<p><b>grant select on </b><i>instructor </i><b>to </b><i>U</i>1<i>, U</i>2<i>, U</i>3</p>
+ - **insert**: the ability to insert tuples
+ - **update**: the ability  to update using the SQL update statement
+ - **delete**: the ability to delete tuples.
+ - **all privileges**: used as a short form for all the allowable privileges
+
+
+---
+
+## Revoking Authorization in SQL
+
+ - The **revoke** statement is used to revoke authorization.<br/>**revoke** &lt;privilege list&gt; **on** &lt;relation or view&gt; **from** &lt;user list&gt;
+ - Example:
+```
+revoke select on student from U1, U2, U3
+```
+ - &lt;privilege-list&gt; may be **all** to revoke all privileges the revokee may hold.
+ - If &lt;revokee-list&gt; includes **public**, all users lose the privilege except those granted it explicitly.
+ - If the same privilege was granted twice to the same user by different grantees, the user may retain the privilege after the revocation.
+ - All privileges that depend on the privilege being revoked are also revoked.
+
+
+Note:
+
+No available in SQLite
+
+## Roles
+
+ - Not available in SQLite
+ - A **role** is a way to distinguish among various users as far as what  these users can access/update in the database.
+ - To create a role we use:<br/> **create a role** &lt;name&gt;
+ - Example:
+```
+create role instructor
+```
+ - Once a role is created we can assign “users” to the role using:<br/>**grant** &lt;role&gt; **to** &lt;users&gt;
+
+
+
+## Roles Example
+
+ - <b>create role</b> instructor;
+ - <b>grant</b><i> instructor</i><b> to </b>Amit<b>;</b>
+ - Privileges can be granted to roles:
+<p>•<b> grant select on</b><i> takes</i><b> to</b><i> instructor</i>;</p>
+ - Roles can be granted to users, as well as to other roles
+<p>•<b> create role</b><i> teaching_assistant</i></p>
+<p>•<b> grant</b><i> teaching_assistant</i><b> to</b><i> instructor</i>;</p>
+<p><i> Instructor</i> inherits all privileges of <i>teaching_assistant</i></p>
+ - Chain of roles
+<p>•<b> create role</b><i> dean</i>;</p>
+<p>•<b> grant</b><i> instructor</i><b> to</b><i> dean</i>;</p>
+<p>•<b> grant</b><i> dean</i><b> to</b> Satoshi;</p>
+
+
+
+## Authorization on Views
+
+ - <b>create view </b><i>geo_instructor</i><b> as</b>
+<p>(<b>select </b>*</p>
+<p><b>from </b><i>instructor</i></p>
+<p><b>where </b><i>dept_name </i>= 'Geology');</p>
+ - <b>grant select on </b><i>geo_instructor</i><b> to </b><i>geo_staff</i>
+ - Suppose that a  <i>geo_staff</i> member issues
+<p>•<b> select </b>*</p>
+<p><b>from </b><i>geo_instructor</i>;</p>
+ - What if 
+<p>•<i> geo_staff</i> does not have permissions on <i>instructor?</i></p>
+   - creator of view did not have some permissions on 
+<p><i>instructor?</i></p>
+
+
+
+## Other Authorization Features
+
+ - <b>references</b> privilege to create foreign key
+<p>•<b> grant reference </b>(<i>dept_name</i>) <b>on </b><i>department </i><b>to </b>Mariano;</p>
+   - why is this required?
+ - transfer of privileges
+<p>•<b> grant select on </b><i>department </i><b>to </b>Amit<b> with grant option</b>;</p>
+<p>•<b> revoke select on </b><i>department </i><b>from </b>Amit, Satoshi <b>cascade</b>;</p>
+<p>•<b> revoke select on </b><i>department </i><b>from </b>Amit, Satoshi <b>restrict</b>;</p>
+   - And more!
+
+

@@ -1,0 +1,37 @@
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+
+SELECT 'The Sailors Sailors table:' as '';
+SELECT * FROM Sailors;
+
+DROP TABLE IF EXISTS Boats;
+CREATE TABLE Boats (bid INTEGER PRIMARY KEY, bname char(20), color char(20));
+INSERT INTO Boats values ('101', 'Interlake', 'blue');
+INSERT INTO Boats values ('102', 'Interlake', 'red');
+INSERT INTO Boats values ('103', 'Clipper', 'green');
+
+SELECT 'The Boats Boats table:' as '';
+SELECT * FROM Boats;
+
+DROP TABLE IF EXISTS Reserves;
+CREATE TABLE Reserves (sid INTEGER, bid INTEGER, day date,
+                       FOREIGN KEY(sid) REFERENCES Sailors(sid),
+                       FOREIGN KEY(bid) REFERENCES Boats(bid));
+INSERT INTO Reserves VALUES ('22', '101', '10/10/98');
+INSERT INTO Reserves VALUES ('31', '103', '11/6/98' );
+
+SELECT 'Implied join sailors and reserves:' as '';
+SELECT S.sname, R.day
+  FROM Sailors S, Reserves R
+ WHERE S.sid=R.sid;
+
+SELECT 'Left join sailors and reserves:' as '';
+SELECT S.sname, R.day
+  FROM Sailors S
+  LEFT JOIN Reserves R
+    ON S.sid=R.sid;

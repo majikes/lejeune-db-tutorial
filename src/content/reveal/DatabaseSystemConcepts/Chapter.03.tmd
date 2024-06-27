@@ -1,0 +1,1040 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+
+---
+
+# Chapter 3: Introduction to SQL
+
+Notes:
+## Outline
+ - Overview of The SQL Query Language
+ - SQL Data Definition
+ - Basic Query Structure of SQL Queries
+ - Additional Basic Operations
+ - Set Operations
+ - Null Values
+ - Aggregate Functions
+ - Nested Subqueries
+ - Modification of the Database
+
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch3.pdf
+
+---
+
+# History
+ - IBM Sequel language developed as part of System R project at the IBM San Jose Research Laboratory
+ - Renamed Structured Query Language (SQL)
+ - ANSI and ISO standard SQL:
+   - SQL-86
+   - SQL-89
+   - SQL-92 
+   - SQL:1999 (language name became Y2K compliant!)
+   - SQL:2003
+ - Commercial systems offer most, if not all, SQL-92 features, plus varying feature sets from later standards and special proprietary features. 
+   - Not all examples here may work on your particular system.
+
+
+---
+
+# SQL Parts
+ - DML -- provides the ability to query information from the database and to insert tuples into, delete tuples from, and modify tuples in the database.
+ - integrity – the  DDL includes commands for specifying integrity constraints.
+ - View definition -- The DDL  includes commands for defining views.
+ - Transaction control –includes commands for specifying the beginning and ending of transactions.
+ - Embedded  SQL  and dynamic SQL -- define how SQL statements can be embedded within general-purpose programming languages.
+ - Authorization – includes commands for specifying access rights to relations and views.
+
+
+---
+
+# Data Definition Language
+The SQL data-definition language (DDL) allows the specification of information about relations, including:
+
+ - The schema for each relation.
+ - The type of values associated with each attribute.
+ - The Integrity constraints
+ - The set of indices to be maintained for each relation.
+ - Security and authorization information for each relation.
+ - The physical storage structure of each relation on disk.
+
+
+---
+
+# Domain Types in SQL
+ - **char(n).** Fixed length character string, with user-specified length $n$
+ - **varchar(n).** Variable length character strings, with user-specified maximum length $n$
+ - **int.** Integer (machine-dependent finite subset of the integers).
+ - **smallint.** Small integer (machine-dependent subset of the integer domain type).
+ - **numeric(p,d).** Fixed point number, with user-specified precision of $p$ digits, with $d$ digits to the right of decimal point.  (ex., **numeric**(3,1), allows 44.5 to be stores exactly, but not 444.5 or 0.32)
+ - **real, double precision.** Floating point and double-precision floating point numbers, with machine-dependent precision.
+ - **float(n).** Floating point number, with user-specified precision of at least $n$ digits.
+ - More are covered in Chapter 4.
+
+
+---
+
+# Create Table Construct
+ - An SQL relation is defined using the **create table** command: <br/>create table $r (A_1 D_1, A_2, D_2, \dots, A_n D_n,$<br />(integrity-constraint$_1$), $\dots)$
+   - $r$ is the name of the relation
+   - each $A_i$ is an attribute name in the schema of relation $r$
+   - $D_i$ is the data type of values in the domain of attribute $A_i$
+ - Example:
+```
+create table instructor (
+      ID char(5),
+      name varchar(20),
+      dept_name varchar(20),
+      salary numeric(8,2))
+```
+
+---
+
+# And a Few More Relation Definitions
+
+```
+create table if not exists student (
+    ID char(5),
+    name varchar(20),
+    dept_name varchar(20),
+    tot_cred numeric(3,0),
+    primary key (ID),
+    foreign key (dept_name) references department)
+```
+
+```
+create table takes (
+    ID varchar(5),
+    course_id varchar(8),
+    sec_id varchar(8),
+    semester varchar(6),
+    year numeric(4,0),
+    grade varchar(2),
+    primary key (ID, course_id, sec_id, semester, year),
+    foreign key (ID) references student,
+    foreign key (course_id, sec_id, semester, year) references section)
+```
+
+---
+
+# And a Few More Relation Definitions
+```
+create table student (
+      ID char(5),
+      name varchar(20),
+      dept_name varchar(20),
+      tot_cred numeric(3,0),
+      primary key (ID),
+      foreign key (dept_name) references department)
+```
+
+```
+create table takes (
+      ID varchar(5),
+      course_id varchar(8),
+      sec_id varchar(8),
+      semester varchar(6),
+      year numeric(4,0),
+      grade varchar(2),
+      primary key (ID, course_id, sec_id, semester, year),
+      foreign key (ID) references student,
+      foreign key (course_id, sec_id, semester, year) references section)
+```
+
+---
+
+# And more still
+
+```
+create table course (
+     course_id varchar(8),
+     title varchar(50),
+     dept_name varchar(20),
+     credits numeric(2,0),
+     primary key (course_id), foreign key (dept_name) references department)
+```
+
+
+---
+
+# Updates to tables
+
+ - **Insert** 
+```
+insert into instructor (ID, name, dept_name, salary)
+      values ('10211', 'Smith', 'Biology', 66000)
+```
+ - **Delete** Remove all tuples from the $student$ relation
+```
+delete from student
+```
+ - **Drop Table**
+```
+drop table r
+```
+
+
+---
+
+# Updates to tables II
+
+ - **Alter** adding an attribute
+```
+alter table r add A D
+```
+     - where $A$ is the name of the attribute to be added to relation $r$ and $D$ is the domain of $A$.
+     - All exiting tuples in the relation are assigned <i>null</i> as the value for the new attribute.
+
+ - **Alter** dropping an attribute
+```
+alter table r drop A
+```
+     - where $A$ is the name of an attribute of relation $r$
+     - Dropping of attributes not supported by many databases.
+
+
+---
+
+# Basic Query Structure 
+ - A typical SQL query has the form:
+```
+select A1, A2, ..., An
+  from R1, R2, ..., Rm
+ where P
+```
+   - $A_i$ represents an attribute
+   - $R_i$ represents a relation
+   - $P$ is a predicate.
+ - The result of an SQL query is a relation.
+
+
+---
+
+# The select Clause
+ - The **select** clause lists the attributes desired in the result of a query
+   - corresponds to the projection operation of the relational algebra
+ - Example: find the names of all instructors:
+
+```
+select name
+  from instructor
+```
+
+ - SQL names are case insensitive
+   - You may use upper- or lower-case letters
+   - $Name \equiv NAME \equiv name$
+   - Some people use upper case
+   - Some people use UpperCamelCase
+
+---
+
+# The select Clause (Cont.)
+ - SQL allows duplicates in relations / query results.
+ - Force the elimination of duplicates, use keyword **distinct**
+ - Find the department names of all instructors, and remove duplicates
+```
+select distinct dept_name
+  from instructor
+```
+ - The keyword **all** specifies duplicates should not be removed.
+```
+select all dept_name
+  from instructor
+```
+
+---
+
+# The select Clause (Cont.)
+ - An asterisk in the select clause denotes 'all attributes' 
+```
+select * from instructor
+```
+ - An attribute can be a literal with no **from** clause
+```
+select '437'
+```
+   - Results is a table with one column and a single row with value “437”
+   - Can give the column a name using:
+```
+select '437' as FOO
+```
+ - An attribute can be a literal with **from** clause
+```
+select 'A' from instructor
+```
+   - One column table of $N$ rows each row with value <quote>A</quote>
+   - $N$ number of tuples in instructor table
+
+
+---
+
+# The select Clause (Cont.)
+ - The **select** clause can contain arithmetic expressions involving the operation, +, –, ∗, and /, and operating on constants or attributes of tuples.
+   - The query: 
+```
+select ID, name, salary/12
+  from instructor
+```
+would return a relation that is the similar to instructor relation, except that the value of the attribute salary is divided by integer 12.
+   - Can rename `salary/12` using the AS clause:
+```
+select ID, name, salary/12.0 as monthly_salary
+  from instructor
+```
+
+---
+
+# The where Clause
+ - **where** clause specifies conditions to be satisfied
+   - Corresponds to relational algebra selection predicate
+ - To find all instructors in Comp. Sci. dept
+```
+select name
+  from instructor
+ where dept_name = 'Comp. Sci.'
+```
+ - SQL allows logical connectives **and**, **or**, and **not**
+ - The operands of the logical connectives can be expressions involving the comparison operators $\lt, \le, \ge, =$ and $\gt$
+ - Comparisons can be applied to results of arithmetic expressions
+ - Find instructors in Comp. Sci. department with salary $\gt 80000$
+```
+select name
+  from instructor
+ where dept_name = 'Comp. Sci.' and
+       salary > 80000
+```
+
+
+---
+
+# The from Clause
+ - The **from** clause lists the relations involved in the query
+   - Corresponds to relational algebra Cartesian product
+ - Find the Cartesian product instructor $\times$ teaches
+```
+select *
+  from instructor, teaches
+```
+   - generates every possible instructor – teaches pair, with all attributes
+   _ Common attributes (e.g. ID) are prefixed with their relation name 
+ - Cartesian product not very useful directly, but useful combined with where-clause condition (selection operation in relational algebra).
+
+
+---
+
+# Examples
+ - Find the names of all instructors who have taught some course and the course_id
+```
+select name, course_id
+  from instructor, teaches
+ where instructor.ID = teaches.ID
+```
+ - Find the names of all instructors in the Art  department who have taught some course and the course_id
+```
+select name, course_id
+  from instructor, teaches
+ where instructor.ID = teaches.ID and
+       instructor.dept_name = 'Comp. Sci.'
+```
+
+
+---
+
+# The Rename Operation
+ - The SQL allows renaming relations and attributes using the **as** clause
+ - Find the names of all instructors who have a higher salary than some instructor in 'Comp. Sci'.
+```
+select distinct T.name
+  from instructor as T, instructor as S
+ where T.salary > S.salary and
+       S.dept_name = 'Comp. Sci.' 
+```
+ - Keyword **as** is optional and may be omitted<br />instructor as T $\equiv$ instructor  T
+ - Joining a table to itself is a self-join operation
+
+---
+
+# String Operations
+ - SQL includes a string-matching operator for comparisons on character strings.  The operator **like** uses patterns that are described using two special characters:
+   - percent ( % ).  Matches any **substring**.
+   - underscore ( _ ).  Matches any **character**.
+ - Find the names of all instructors whose name includes the substring “dar”.
+```
+select name
+  from instructor
+ where name like '%dar%'
+```
+ - To match special character, escape it with a backslash.<br/>Find instructors with underscored names:
+```
+select name
+  from instructor
+ where name like '%\_%'
+```
+
+
+---
+
+# String Operations (Cont.)
+ - Patterns are case sensitive. 
+ - Pattern matching examples:
+   - 'Intro%' matches any string beginning with “Intro”.
+   - '%Comp%' matches any string containing “Comp” as a substring.
+   - '_ _ _' matches any string of exactly three characters.
+   - '_ _ _ %' matches any string of at least three characters.
+ - SQL supports a variety of string operations such as
+   - concatenation (using “||”)
+   - converting from upper to lower case (and vice versa)
+   - finding string length, extracting substrings, etc.
+
+
+---
+
+# Ordering the Display of Tuples
+ - List in alphabetic order the names of all instructors
+```
+select distinct name
+  from instructor
+ order by name
+```
+ - We may specify **desc** for descending order or **asc** for ascending order, for each attribute; ascending order is the default.
+   - Example: `order by name desc`
+ - Can sort on multiple attributes
+   - Example: `order by dept_name, name`
+
+---
+
+# Where Clause Predicates
+ - SQL includes a **between** comparison operator
+ - Example:  Find the names of all instructors with salary between $90,000  and $100,000 (that is, ≥ $90,000 and ≤ $100,000)
+```
+select name
+  from instructor 
+ where salary between 90000 and 100000
+```
+ - Tuple comparison
+```
+select name, course_id
+  from instructor I, teaches T
+ where (I.ID, dept_name) = (T.ID, 'Biology')
+```
+
+
+---
+
+# Set Operations
+ - Find courses that ran in Fall 2017 or in Spring 2018
+```
+select course_id
+  from section
+ where sem = 'Fall' and year = 2017
+union
+select course_id
+  from section
+ where sem = 'Spring' and year = 2018
+```
+ - Find courses that ran in Fall 2017 and in Spring 2018
+```
+select course_id
+  from section
+ where sem = 'Fall' and year = 2017
+intersect
+select course_id
+  from section
+ where sem = 'Spring' and year = 2018
+```
+ - Find courses that ran in Fall 2017 and in Spring 2018
+```
+select course_id
+  from section
+ where sem = 'Fall' and year = 2017
+except
+select course_id
+  from section
+ where sem = 'Spring' and year = 2018
+```
+
+---
+
+# Set Operations (Cont.)
+ - Set operations **union**, **intersect**, and **except**
+   - Each of the above operations automatically eliminates duplicates
+ - To retain all duplicates use the
+   - **union all**,
+   - **intersect all**,
+   - **except all**.
+
+
+---
+
+# Null Values
+ - It is possible for attributes to have a null value, denoted by **null**
+ - **null** signifies unknown value or value does not exist.
+ - Result of any arithmetic expression involving **null** is **null**
+   - Example:  5 + <b>null</b> returns <b>null</b>
+ - The predicate  <b>is null</b> can be used to check for null values.
+   - Example: Find all instructors whose salary is null<i>.</i>
+```
+select name
+  from instructor
+ where salary is null
+```
+ - The predicate **is not null** succeeds if the value on which it is applied is  not null.
+
+
+---
+
+# Null Values (Cont.)
+ - SQL treats as **unknown** the result of any comparison involving a null value
+   - Excludes comparison of **is null** and **is not null*
+   - Example: `5 < null` or ` null != null~ or `null = null`
+ - The predicate in a **where** clause can involve Boolean operations
+   - **and**:
+     - `true and unknown` = `unknonwn`
+     - `false and unknown` = `false`
+     - `unknown and unknown` = `unknown`
+   - **or**:
+     - `unknown or true` = `true`
+     - `unknown or false` = `unknown`
+     - `unknown or unknown` = `unknown`
+ - Result of **where** clause predicate is treated as `false` if it evaluates to `unknown`
+
+
+---
+
+# Aggregate Functions
+ - These functions operate on the multiset of values of a column of a relation, and return a value
+   - **avg**: average value
+   - **min**: minimum value
+   - **max**: maximum value
+   - **sum**: sum of values
+   - **count**: number of values
+
+
+---
+
+# Aggregate Functions Examples
+ - Find the average salary of instructors in the Computer Science department 
+```
+select avg(salary)
+  from instructor
+ where dept_name = 'Comp. Sci'
+```
+ - Find the total number of instructors who teach a course in the Spring 2018 semester
+```
+select count(distinct ID)
+  from teaches
+ where semester = 'Spring' and year = 218
+```
+ - Find the number of tuples in the <i>course </i>relation
+```
+select count(*)
+  from course
+```
+
+
+---
+
+# Aggregate Functions Group By
+ - Find the average salary of instructors in each department
+```
+select dept_name, avg(salary) as avg_salary
+  from instructor
+ group by dept_name
+  ```
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.03.Figure.3.13.Instructors.Grouped.png" style="width:100%"/>
+   <figcaption>Figure 3.13</figcaption> 
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.03.Figure.3.14.Group.By.png" style="width:100%"/>
+   <figcaption>Figure 3.14</figcaption> 
+  </figure>
+ </div>
+</div>
+
+---
+
+# Aggregation (Cont.)
+ - Attributes in **select** clause outside of aggregate functions must appear in **group by** list
+   - /* erroneous query in all SQL except SQLite */
+```
+select dept_name, ID, avg(salary)
+ from instructor
+group by dept_name
+```
+
+
+---
+
+# Aggregate Functions - Having Clause
+ - Find the names and average salaries of all departments whose average salary is greater than 42000
+ - Predicates in the **having** clause are applied after the formation of groups whereas predicates in the **where** clause are applied before forming groups
+```
+select dept_name, avg(salary) as avg_salary
+  from instructor
+ group by dept_name
+having avg(salary) > 42000
+```
+
+
+---
+
+# Nested Subqueries
+ - SQL provides a mechanism for the nesting of subqueries. A **subquery** is a **select-from-where** expression that is nested within another query.
+ - The nesting can be done in the following SQL query
+```
+select A1, A2, ..., An
+  from R1, R2, ..., Rn
+ where P
+```
+   - **From clause**: $R1$ can be replaced by any valid subquery
+   - **Where clause**: $P$ can be replaced with an expression of the form: `B operation subquery`
+   - **Select clause**: $A1$ can be replaced by a subquery that generates a single value
+
+
+---
+
+# Set Membership
+ - Find courses offered in Fall 2017 and in Spring 2018
+```
+select course_id
+  from section
+ where sem = 'Fall' and year = 2017 and
+       course_id in (select course_id
+                       from section
+                      where semester='Spring' and year=2018) 
+```
+ - Find courses offered in Fall 2017 but not in Spring 2018
+```
+select course_id
+  from section
+ where sem = 'Fall' and year = 2017 and
+       course_id not in (select course_id
+                           from section
+                          where semester='Spring' and year=2018) 
+```
+
+
+---
+
+# Set Membership (Cont.)
+ - Name all instructors whose name is neither “Mozart” nor Einstein”
+```
+select distinct name
+  from instructor
+ where name not in ('Mozart', 'Einstein')
+```
+ - Find the total number of (distinct) students who have taken course sections taught by the instructor with ID 10101
+   - The query can be written in a much simpler manner.  The formulation above is simply to illustrate SQL features
+```
+select count(distinct ID) 
+  from takes
+ where (course_id, sec_id, semester, year) in
+       (select course_id, sec_id, semester, year
+          from teaches
+         where teaches.ID = 10101)
+```
+
+
+---
+
+# Set Comparison - _some_ clause
+ - Not supported in SQLite!
+   - $=$ **some** $\equiv$ **in**
+   - $\ne$ **some** $\equiv$ **not in**
+ - Find names of instructors with salary greater than that of some (at least one) instructor in the Biology department.
+```
+select distinct T.name
+  from instructor as T, instructor as S
+ where T.salary > S.salray and
+       S.dept_name = 'Biology'
+```
+ - Same query using &gt; <b>some</b> clause
+```
+select name
+  from instructor
+ where salary > some (select salary
+                        from instructor
+                       where dept_name = 'Biology')
+```
+<p>
+
+Note:
+Page 101
+
+
+# Definition of _some_ clause
+ - F &lt;comp&gt; <b>some</b> <i>r </i>⇔ ∃ <i>t </i>∈<i> r</i> such that (F &lt;comp&gt; <i>t </i>)<br/>Where &lt;comp&gt; can be:  &lt;,  ≤, &gt;, =, ≠
+<p>0</p>
+<p>5</p>
+<p>6</p>
+<p>(5 &lt; <b>some</b></p>
+<p>) = true</p>
+<p>0</p>
+<p>5</p>
+<p>0</p>
+<p>) = false</p>
+<p>5</p>
+<p>0</p>
+<p>5</p>
+<p>(5 ≠<b> some</b></p>
+<p>) = true (since 0 ≠ 5)</p>
+<p>(read:  5 &lt; some tuple in the relation) </p>
+<p>(5 &lt; <b>some</b></p>
+<p>) = true</p>
+<p>(5 = <b>some</b></p>
+<p>(= <b>some</b>) ≡<b> in</b></p>
+<p>However, (≠<b> some</b>) ≡<b> not in</b></p>
+
+
+---
+
+# Set Comparison _all_ clause
+
+ - Not supported in SQLite!
+   - $\ne$ **all** $\equiv$ **not in**
+ - Find the names of all instructors whose salary is greater than the salary of all instructors in the Biology department.
+```
+select name
+  from instructor
+ where salary > all (select salary
+                       from instructor
+                      where dept_name = 'Biology')
+```
+
+Note:
+
+page 100
+
+# Clause
+ - F &lt;comp&gt; <b>all </b><i>r </i>⇔ ∀ <i>t </i>∈<i> r</i> (F &lt;comp&gt; <i>t)</i>
+<p>0</p>
+<p>5</p>
+<p>6</p>
+<p>(5 &lt; <b>all</b></p>
+<p>) = false</p>
+<p>6</p>
+<p>10</p>
+<p>4</p>
+<p>) = true</p>
+<p>5</p>
+<p>4</p>
+<p>6</p>
+<p>(5 ≠<b> all</b></p>
+<p>) = true (since 5 ≠ 4 and 5 ≠ 6)</p>
+<p>(5 &lt; <b>all</b></p>
+<p>) = false</p>
+<p>(5 = <b>all</b></p>
+<p>(≠<b> all</b>) ≡<b> not in</b></p>
+<p>However, (= <b>all</b>) ≡<b> in</b></p>
+
+
+---
+
+# Test for Empty Relations
+ - The **exists** construct returns the value **true** if the argument subquery is nonempty.
+ - <b>exists </b><i>r </i>⇔ <i>r </i>≠<i> Ø</i>
+ - <b>not exists </b><i>r </i>⇔ <i>r </i>= <i>Ø</i>
+
+
+---
+
+# Use of _exists_ clause
+ - Yet another way of specifying the query “Find all courses taught in both the Fall 2017 semester and in the Spring 2018 semester”
+```
+select course_id
+  from selection as S
+ where semester = 'Fall' and 
+       year = 2017 and
+       exists (select * 
+                 from selection as T
+                where semester = 'Spring' and
+                      year = 2017 and
+                      S.course_id = T.source_id)
+```
+
+Note:
+
+p 101
+
+---
+
+# Use of _not exists_ clause
+ - Find all students who have taken all courses offered in the Biology department.
+```
+select distinct S.ID, S.name
+  from student as S
+ where not exists (select course_id
+                      from course
+                     where dept_name = 'Biology'
+                   except
+                   select T.course_id
+                     from takes as T
+                     where S.id = T.id)
+```                     
+ - $X – Y = \emptyset \iff X \subset Y $
+ - Cannot write this query using = all and its variants
+ - SQL Relational Division
+   - First nested query lists all courses offered in Biology
+   - Second lists all courses a particular student took
+
+---
+
+# Test for Absence of Duplicate Tuples
+ - The **unique** construct tests whether a subquery has any duplicate tuples in its result.
+ - The **unique** construct evaluates to “true” if a given subquery contains no duplicates.
+ - Find all courses that were offered at most once in 2017
+```
+select T.course_id
+  from course as T
+ where unique (select R.course_id
+                 from seection as R
+                where T.course_id = R.course_id and
+                      R.year = 2017)
+```
+ - **unique** not supported in SQLite
+
+
+---
+
+# Subqueries in the From Clause
+ - SQL allows a subquery expression to be used in the **from** clause
+ - Find the average instructors’ salaries of those departments where the average salary is greater than $42,000.”
+```
+select dept_name, avg_salary
+  from (select dept_name, avg(salary) as avg_salary
+          from instructor
+         group by dept_name)
+ where avg_salary > 42000
+```
+ - Note that we do not need to use the **having** clause
+ - Another way to write above query
+```
+select dept_name, avg_salary
+  from (select dept_name, avg(salary)
+          from instructor
+         group by dept_name) as dept_avg(dept_name, avg_salary)
+ where avg_salary > 4200
+```
+
+
+---
+
+# With Clause
+ - The **with** clause provides a way of defining a temporary relation whose definition is available only to the query in which the **with** clause occurs.
+ - Find all departments with the maximum budget 
+```
+with max_budget(value) as (select max(budget)
+                             from department)
+--                             
+select D.dept_name
+  from department as D, max_budget as M
+ where D.budget = M.value
+```
+
+
+---
+
+# Complex Queries using With Clause
+ - Find all departments where the total salary is greater than the average of the total salary at all departments
+``` 
+with dept_total(dept_name, value) as (select dept_name, sum(salary)
+                                        from instructor
+                                       group by dept_name),
+--
+   dept_total_avg(value) as (select avg(value)
+                               from dept_total)
+--
+select dept_name
+  from dept_total, dept_total_avg
+ where dept_total.value > dept_total_avg.value
+```
+
+
+---
+
+# Scalar Subquery
+ - Scalar subquery is one which is used where a single value is expected
+ - List all departments along with the number of instructors in each department
+```
+select dept_name, (select count(*)
+                     from instructor I
+                     where D.dept_name = I.dept_name) as num_instructors
+  from department D
+```
+ - Runtime error if subquery result more than one tuple
+
+
+---
+
+# Modification of the Database
+ - Deletion of tuples from a given relation.
+ - Insertion of new tuples into a given relation
+ - Updating of values in some tuples in a given relation
+
+
+---
+
+# Deletion
+ - Delete all instructors
+```
+delete from instructor
+```
+ - Delete all instructors from the Finance department
+```
+delete from instructor where dept_name = 'Finance'
+```
+ - Delete all tuples in the instructor relation for those instructors associated with a department located in the Watson building.
+```
+delete from instructor
+ where dept_name in (select dept_name
+                       from department
+                      where building = 'Watson')
+```
+
+
+---
+
+# Deletion (Cont.)
+ - Delete all instructors whose salary is less than the average salary of instructors
+   - Problem:  as we delete tuples from <i>instructor</i>, the average salary changes
+   - Solution used in SQL:
+     1. First, compute **avg**(salary) and find all tuples to delete
+     2. Next, delete all tuples found above without recomputing **avg**
+```
+delete from instructor
+ where salary < (select avg(salary) 
+                   from instructor)
+```
+
+
+---
+
+# Insertion
+ - Add a new tuple to _course_
+```
+insert into course
+             values('CS-427', 'Database Systems', 'Comp. Sci.', 4)
+```
+ - or equivalently by explicitly stating fields
+```
+insert into course (course_id, title, dept_name, credits)
+             values('CS-427', 'Database Systems', 'Comp. Sci.', 4)
+```
+ - Add a new tuple to _student_ with <i>tot_creds</i> set to null
+```
+insert into student
+             values('3003', 'Green', 'Finance', null)
+```
+
+
+---
+
+# Insertion (Cont.)
+ - Make each student in the Music department who has earned more than 144 credit hours an instructor in the Music department with a salary of $18,000.
+```
+insert into instructor
+   select ID, name, dept_name, 18000
+     from student
+    where dept_name = 'Music' and
+          total_cred > 144
+```
+ - The **select from where** statement is evaluated fully before any of its results are inserted into the relation.
+ - Otherwise queries like the following would cause problems
+```
+insert into table1 select * from table1
+```
+
+---
+
+# Updates
+ - Give a 5% salary raise to all instructors
+```
+update instructor
+   set salary = salary * 1.05
+```
+ - Give a 5% salary raise to those instructors who earn less than 70000
+```
+update instructor
+   set salary = salary * 1.05
+ where salary < 70000
+```
+ - Give a 5% salary raise to instructors whose salary is less than average
+```
+update instructor
+   set salary = salary * 1.05
+ where salary < (select avg(salary)
+                   from instructor)
+```
+
+
+---
+
+# Updates (Cont.)
+ - Increase salaries of instructors whose salary is over $100,000 by 3%, and all others by a 5% 
+   - Write two **update** statements:
+```
+update instructtor
+   set salary = salary * 1.03
+ where salary > 100000;
+update instructor
+   set salary = salary * 1.05
+ where salary < 100000
+```
+   - The order is important
+   - Can be done better using the **case** statement
+
+---
+
+# Case Statement for Conditional Updates
+ - Same query as before but with case statement
+```
+update instructor
+   set salary = case
+                   when salary <= 100000 then salary * 1.05
+                   else salary * 1.03
+                end
+```
+
+---
+
+# Updates with Scalar Subqueries
+ - Recompute and update tot_creds value for all students
+```
+update student S
+    set tot_cred = (select sum(credits)
+                      from takes, course
+                     where takes.course_id = course.course_id and
+                           S.ID= takes.ID.and
+                           takes.grade <> 'F' and
+                           takes.grade is not null)
+```
+ - Sets <i>tot_creds</i> null for students who have not taken any course
+ - Instead of **sum**(_credits_), use:
+```
+update student S
+    set tot_cred = (select case
+                             when sum(credits) is not null then sum(credits)
+                             else 0
+                           end  
+                      from takes, course
+                     where takes.course_id = course.course_id and
+                           S.ID= takes.ID.and
+                           takes.grade <> 'F' and
+                           takes.grade is not null)
+```
+<p>
+

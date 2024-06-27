@@ -1,0 +1,67 @@
+<%
+  # https://www.db-book.com/db6/practice-exer-dir/12s.pdf
+
+  from collections import namedtuple
+  authors_pages = [1000, 1250, 1500, 1750]
+  books_pages = [2000, 1750, 1250, 1000]
+
+%>
+## {{!linkable_header('Evaluations')}} {{points_evaluation}} points
+
+In this section, you will show your knowledge of query evaluation.
+
+% for index in range(number_evaluation):
+  % if section == '003' or (member_number % number_evaluation) == index:
+    % include('viewAnswer', answer=f' Only seen by students number member_number % {number_evaluation} == {index}')
+
+   <!-- Exercise 12.5 https://www.db-book.com/db6/practice-exer-dir/12s.pdf -->
+   Let relation Authors take {{authors_pages[index]}} pages and 
+   relation Books take {{books_pages[index]}} pages.
+   Assume both Authors and Books tuples are 64 bytes such that each 4K page contains 64 tuples.
+   Neither relation has an index and neither is sorted.
+
+   **Min.IO.{{index+1}}:** Determine which of the following has the lowest cost in terms of I/Os to compute the cross product (not the natural join)
+   of $Authors \bowtie Books$?  
+   You may assume there is infinite memory, but if two of the following have the same lowest I/O cost,
+   choose the one that requires the least number of memory pages.  
+
+   **A:** Read in Authors tuple by tuple, perform a simple nested loop with an inner loop of Books  
+   **B:** Read in Books tuple by tuple, perform a simple nested loop with an inner loop of Authors.  
+   **C:** Read in Authors block by block, perform a block nested loop with an inner loop of Books.  
+   **D:** Read in Books block by block, perform a block nested loop with an inner loop of Authors.  
+   **E:** Externally sort both relations in two passes, read in Authors block by block, perform a block nested loop with an inner loop of Blocks.  
+   **F:** Externally sort both relations in two passes, read in Books block by block, perform a block nested loop with an inner loop of Authors.  
+   <%
+   answer = 'C' if authors_pages[index] < books_pages[index] else 'D'
+   answer2 = f'''Key here is that it is a cross product.  There is no WHERE clause in the relational algebra
+Pick the smaller relation to be the outer loop, read all at once, block read larger relation
+Answer: {answer}'''
+   choices = [x for x in 'ABCDEF']
+   %>
+   {{!expression(answer, dict(A=1, B=2, C=3, D=4, E=5, F=6, a=1, b=2, c=3, d=4, e=5, f=6), dict(A=7, B=8, C=9, D=10, E=11, F=12, a=7, b=8, c=9, d=10, e=11, f=12), points=1, name=f'Min.IO.{index+1}')}}
+   %include('viewAnswer', answer=answer2)
+
+   **How.Many.IO.{{index+1}}:** Again, assuming infinite memory,
+   each tuple is 64 bytes, and the resulting cross product tuple is 128 bytes,  
+   how many I/O operations does it require to read in both relations, complete the cross product using the least number of I/Os, and write out the result?  
+   % answer = f'({authors_pages[index]} + {books_pages[index]})+({authors_pages[index]}*64)*({books_pages[index]}*64)*128/4096'
+   % answer2 = f'''You have to read in both relations {authors_pages[index]} + {books_pages[index]}
+The cross product creates {authors_pages[index]}*64 by {books_pages[index]}*64 tuples
+each cross product tuple is 128 bytes.
+There are {authors_pages[index]}*64 authors tuples
+There are {books_pages[index]}*64 books tuples
+The cross product tuples are 128 bytes
+Answer: {answer}'''
+   {{!expression(answer, dict(A=1, B=2), points=7, name=f'How.Many.IO.{index+1}')}}
+   %include('viewAnswer', answer=answer2)
+
+   **How.Many.Pages.{{index+1}}:** How many memory pages are required to complete the lowest-cost cross product?  
+   % answer = f'2 + {min(authors_pages[index], books_pages[index])}'
+   % answer2 = f'''You need to read in the smaller relation in how ever many pages are needed.
+Then you need one page for the larger relations input and one for its output.
+Answer: {answer}'''
+   {{!expression(answer, dict(A=1, B=2), points=7, name=f'How.Many.Pages.{index+1}')}}
+   %include('viewAnswer', answer=answer2)
+
+  % end  # section == 003 or member_number%number_evaluation == index
+% end  # for index in range(number_evaluation)

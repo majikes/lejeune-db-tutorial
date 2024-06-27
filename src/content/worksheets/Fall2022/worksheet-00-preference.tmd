@@ -1,0 +1,85 @@
+<%
+setInfo(due='2022-08-29 10:55:00',
+        maxpenalty=0.75, penalty=.2,
+        assessment_type='worksheet',
+        exceptions=dict(lside=dict(due='2022-08-30 00:00:00')),
+        pages=['questions', 'submit']
+        )
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# 01 Discussion about worksheet grading preference
+
+
+
+Worksheets were intended by me to be class participation. 
+If you forget to submit, then you didn't participate.
+If you missed class or were late, you didn't participate.
+
+There have been many after-class discussions about worksheets.
+As brought up in Wednesday's class,
+I would like to end all the discussion with this worksheet's query of the class's opinion.
+
+
+If there is a majority (greater than 50%) of the class that agree with
+one of the three options below, I will change worksheets grades.
+If there is not a majority, then I will leave the syllabus as is.
+
+---
+
+**<u>Option A:</u>** is the current syllabus that states there are no 
+extensions.
+In class I will ask, did everyone submit, survey the class for any objections,
+then turn off the submit button.
+Students who cannot attend class due to COVID or some other illness can use Zoom to attend class, participate, and submit worksheets.
+
+I do make exceptions for people who tell me 24 hours before class that they have a job interview,
+medical appointment, etc.
+I do ask for documentation and then extend the worksheet until midnight.
+
+---
+
+**<u>Option B:</u>** is that I will allow five dropped worksheets but then instead of having
+worksheets worth 6% of your grade, it will be worth only 5%.
+The total grades will go from 101% to 100%.
+
+Essentially, the current syllabus assumes that people will miss some classes and therefore
+you shouldn't expect to submit all the worksheets.
+Essentially if we allow you to drop the five lowest worksheets, 
+you'll be expected to miss five or less classes.
+
+There will be no exceptions for people who have job interviews, etc.
+
+---
+
+**<u>Option C:</u>** is that we don't use worksheets.
+The midterms and the final exam will increase by 2.5% to 34.5% and 39.5%.
+
+This option would be a reflection that students don't find the worksheets effective.
+
+---
+
+**Worksheet.Choice:** Given the above three options, how should worksheets be handled?  
+ **A** The existing syllabus description of no late submissions.   
+ **B** Drop five worksheets but then drop worksheets from 6% of 101% to 5% of 100% of your grade.  
+ **C** Don't use worksheets and increase exams and midterms by 2.5% each.  
+ % answer='A'
+ % answer2='''
+ SELECT A.value, count(*)
+   FROM Answer AS A
+  WHERE A.field='Worksheet.Choice' AND
+        A.postid IN (SELECT S.id
+                       FROM Submitted AS S
+                      WHERE S.key='worksheet-00-preference')
+  GROUP BY A.value
+  ORDER BY count(*);
+'''
+ {{!select(answer, 'ABC', points=100, name='Worksheet.Choice')}}
+ %include('viewAnswer', answer=answer2)
+
+% if 'submit' in pages:
+ % include('worksheet-pledge.md')
+ % include('submit.md')
+% else:
+ If this were a real, classroom worksheet then a submit button was appear at the bottom.
+% end

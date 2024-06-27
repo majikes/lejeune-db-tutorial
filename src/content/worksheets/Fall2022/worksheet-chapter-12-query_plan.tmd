@@ -1,0 +1,84 @@
+<%
+setInfo(
+      due="2021-10-19 15:15:00",
+      needsSubmitCode=True,
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      harley87=dict(needsSubmitCode=False, due='2021-10-26 15:15:00')),
+)
+dbs = ['states-B.sqlite']
+%>
+
+# Chapter 12 Query plan
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+% answer2 = 'DROP INDEX IF EXISTS Terms_termtype'
+**Drop.Index:** Just to be sure the grader will work,
+enter the following command: {{answer2}}
+{{!sql(answer2, dbs=dbs, name='Drop.Index', points=10)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Number.Senators:** Similar to the midterm question (but without the left join), return the state names between A and G, inclusive, and the number of senators elected in 2021.  
+% answer = '''SELECT statename, count(*) as count
+  FROM states S, terms T
+ WHERE S.abbrev=T.state AND
+       S.statename <= 'G' AND
+       termtype='sen' AND
+       startdate like '2021%'
+ GROUP BY statename'''
+{{!sql(answer, dbs=dbs, points=50, name='Number.Senators')}}
+%include('viewAnswer')
+
+---
+
+**Query.Plan.1:** Find the query plan of the above query.  
+**NOTE:** This question may not turn green.  The grader will give you credit for any answer  
+% answer2 = f'EXPLAIN QUERY PLAN {answer}'
+{{!sql(answer2, dbs=dbs, points=10, name='Query.Plan.1')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Create.Index:** Create an index named `Terms_termtype` on relation `Terms`'s column `termtype`.
+% answer2 = 'CREATE INDEX Terms_termtype on Terms(termtype)'
+{{!sql(answer2, dbs=dbs, points=10, name='Create.Index')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**SQL.Master:** Just to ensure the index was created, enter the following command:  
+**NOTE:** This question may not turn green.  The grader will give you credit for any answer  
+% answer2 = '''SELECT * FROM sqlite_master where name='Terms_termtype' '''
+{{answer2}}  
+{{!sql(answer2, dbs=dbs, points=10, name='SQL.Master')}}
+%include('viewAnswer', answer=answer2)
+
+
+---
+
+**Query.Plan.2:** Find the query plan of the original query.  
+**NOTE:** This question may not turn green.  The grader will give you credit for any answer  
+% answer2 = f'EXPLAIN QUERY PLAN {answer}'
+{{!sql(answer2, dbs=dbs, points=10, name='Query.Plan.2')}}
+%include('viewAnswer', answer=answer2)
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

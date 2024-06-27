@@ -1,0 +1,40 @@
+% key_values = ['Pregame', 'Postgame']
+
+<h1>Game likerts</h1>
+
+% for key_index, key_value in enumerate(key_values):
+<table>
+ <thead>
+  <tr>
+    <th>{{key_values[key_index]}} question</th>
+   % for k,v in likert_scale.items():
+      <th>{{v}}</th>
+   % end
+  </tr>
+ </thead>
+
+      % for qk, qv in questions.items():
+        <tr>
+          <th>{{qv}}</th>
+          % for lk in likert_scale:
+             <th>{{pre_post_likerts[keys[key_index]][qk][lk]}}</th>
+          % end
+        </tr>  
+  % end
+</table>
+% end
+
+<h1>Feeling comments</h1>
+
+% for key_index, key_value in enumerate(key_values):
+  <h3>{{key_values[key_index]}} feelings:</h3>
+   % for f in feelings[keys[key_index]]:
+      {{f.text}} 
+      % if f.count > 1:
+         <b>APPEARS {{f.count}} TIMES</b>
+      % end
+      <br />
+   % end
+% end
+
+% rebase('assessment.base')

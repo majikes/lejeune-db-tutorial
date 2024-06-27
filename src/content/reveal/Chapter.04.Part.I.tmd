@@ -1,0 +1,655 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+---
+
+### Chapter 4:  Intermediate SQL
+
+- By the end of class you should know
+  - Join Expressions
+  - Views
+- Note that from the [reading list]({{HTTPS_FQDN}}/syllabi/reading) skipping the following:
+  - Recursive definitions/views
+  - Assertions
+  - Authorization
+
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch4.pdf
+
+Point out that we won't be covering the entire chapter
+
+---
+
+### Joined Relations
+
+- **Join operations** take two relations and return a single relation.
+- A join operation is a Cartesian product which requires that
+  - Some tuples in the two relations match and
+  - Also specifies attributes present in the result
+- Two syntax forms of JOIN operations
+  - Implicit join using  **FROM** clause
+  - Explicitly join using the **JOIN** clause
+     - A **NATURAL** join is explicit join that uses common columns
+- Three types of joins:
+  1. Inner join
+  1. Outer join
+  1. Full join
+
+Note: 
+
+There are two ways to specify joins, implicit and explicit
+
+There are three types of joins
+
+
+---
+
+### Natural Join in SQL
+
+- Natural join matches all common attributes' values
+  - Retains only one copy of each matching attribute / value
+- [List the student names along with their course ID of the courses that they have taken]({{HTTPS_FQDN}}/sql/interpreter/Chapter.04.Figure.4.3.natural.join.students.takes) 
+```
+select name, course_id
+  from student, takes
+ where student.ID = takes.ID
+```
+- Same query in SQL with “natural join” construct
+```
+select name, course_id
+  from student natural join takes
+```
+
+Note:
+
+Next three slides shows the images of the joins
+
+---
+
+### Natural Join student takes (continue)
+
+<div class="row">
+   <div class="twocolumns">
+    <figure style="border: 0">
+      <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.Figure.4.1.student.relation.png"        style="width:100%"/>
+         <figcaption>Figure 4.1<br/>student relation</figcaption>
+    </figure>
+   </div>
+   <div class="twocolumns">
+    <figure style="border: 0">
+      <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.Figure.4.2.takes.relation.png"        style="width:100%"/>
+         <figcaption>Figure 4.2<br/>takes relation</figcaption>
+    </figure>
+  </div>
+</div>
+
+---
+
+### Natural Join student takes (continue)
+
+- List the student names along with the course ID of the courses that they have taken
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.Figure.4.3.Nature.join.student.takes.png" style="width:60%"/>
+     <figcaption>Figure 4.3<br/>natural join student takes</figcaption>
+</figure>
+
+Notes:
+
+Go over: show the single ID column:  
+ - {{HTTPS_FQDN}}/sql/interpreter/Chapter.04.Figure.4.3.natural.join.students.takes  
+ - In general, but not necessary, the columns are presented in order
+
+---
+
+### Natural Join in SQL (Cont.)
+
+- The **from** clause can have multiple relations combined using natural join:
+```
+select A1, A2, ... An
+  from r1 natural join r2, ... natural join rn
+ where P
+```
+
+Note:
+
+First, select attribute 1, 2, 3, up to n
+
+Second select the relations **FROM** which to **natural join** relation 1, 2, 3, n
+
+where predicate is true
+
+
+---
+
+### Dangerous in Natural Join
+
+- Beware of unrelated attributes with same name which get equated incorrectly
+- List the student names along w/ course titles taken
+  - Correct version
+```
+select name, title 
+  from student natural join takes, course
+ where takes.course_id = course.course_id
+```
+  - [Incorrect version]({{HTTPS_FQDN}}/sql/interpreter/Chapter.04.dangerous.natural.joins)
+```
+select name, title
+  from student natural join takes natural join course
+```
+  - This query omits all (student name, course title) pairs where the student takes a course in a department other than the student's own department. 
+- **I recommend that you do not use natural joins in this class!**
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.04.dangerous.natural.joins
+
+Notice that dept_name is in student and in course.  
+ - Levy is in Physics department 
+ - Levy took courses in the computer science department
+ - But they are not listed
+
+This is why I **never** use natural joins.
+
+---
+
+### Outer Join
+
+- Join operation that avoids loss of information.
+- Computes the join and then adds tuples form one relation that does not match tuples in the other relation to the result of the join. 
+- Uses <i>null</i> values.
+- [Three types of outer join]({{HTTPS_FQDN}}/visualization/joins.html):
+  <br/>Up to now, we've done inner joins
+  - left outer join
+  - right outer join
+  - full outer join
+- Most SQL Dialects only support left outer join
+  - Right &amp; full outer joins made from left outer joins
+
+
+Note:
+
+Try the Visual Join with adding users
+
+
+
+---
+
+### Inner Join Venn Diagram
+
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.04-Course.Takes.Venn.Diagram.png" style="width:35%"/>
+ <figcaption>Join types</figcaption>
+</figure>
+
+-  Inner join
+```sql
+SELECT *
+  FROM Course C, Takes T
+ WHERE C.course_id=T.course_id
+```
+    - Selecting the inner part of the Venn diagram
+
+---
+
+### Left Outer Join
+
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.04-Course.Takes.Venn.Diagram.png" style="width:35%"/>
+ <figcaption>Join types</figcaption>
+</figure>
+
+-  Left outer join
+```sql
+SELECT *
+  FROM Course C
+  LEFT OUTER JOIN Takes T
+               ON C.course_id=T.course_id
+```
+    - [Selecting the left (and inner) part of the Venn diagram]({{HTTPS_FQDN}}/sql/interpreter/Chapter.04.Venn.Diagrams)
+    - Keyword OUTER optional
+
+Note:
+
+For the Left Join, notice that BIO-399 has not been offered.
+
+---
+
+### Nulls and Order By
+
+
+-  Left joins, generally, produce Null values
+-  ORDER BY can be specified with left joins
+-  Each version of SQL decides how to sort Null
+    - For this class we use SQLite
+    - Null comes before any character
+    - Null comes before any number
+
+Note:
+
+For the Left Join, notice that BIO-399 has not been offered.
+
+{{HTTPS_FQDN}}/pages/worksheets/worksheet-04-01-inner-outer  
+{{HTTPS_FQDN}}/worksheets/worksheet-04-01-inner-outer
+
+---
+
+### Left Outer Join Examples
+
+- [student natural left outer join takes]({{HTTPS_FQDN}}/sql/interpreter/Chapter.04.Figure.4.4.student.natural.left.takes)
+  - Relational algebra
+    - student &#x27D5; takes
+    - student &#x27D5;$_{\mbox{student.id} = \mbox{takes.id}}$ takes
+  - How to do [left outer join]({{HTTPS_FQDN}}/visualization/joins.html)
+    - First inner join as before
+    - For every tuple in left relation that does not match
+      - add missing tuple with right tuple attributes null
+```
+select *
+  from student natural left outer join takes
+```
+
+- See Figure 4.4 for the results
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.04.Figure.4.4.student.natural.left.takes
+
+---
+
+### Right Outer Join
+
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.04-Course.Takes.Venn.Diagram.png" style="width:35%"/>
+ <figcaption>Join types</figcaption>
+</figure>
+
+-  Right outer join
+```sql
+SELECT *
+  FROM Course C
+  RIGHT OUTER JOIN Takes T
+                ON C.course_id=T.course_id
+```
+    - Selecting the right (and inner) part of the Venn diagram
+    - Not supported in Sqlite
+    - Simply reverse order of relations and do left join
+
+Note:
+
+Right join is not supported in MySQL nor SQLite
+
+Can be easily done by reversing table order and doing left join
+
+---
+
+### Right Outer Join
+
+- Not supported in SQLite
+  - Emulated by reordering relations and doing left join
+- [takes natural right outer join students]({{HTTPS_FQDN}}/sql/interpreter/Chapter.04.takes.natural.right.students)
+  - Relational algebra
+    - takes &#x27D6; student
+    - takes &#x27D6;$_{\mbox{student.id} = \mbox{takes.id}}$ student
+  - How to do [right outer join]({{HTTPS_FQDN}}/visualazation/joins.html)
+    - First inner join as before
+    - For every tuple in right relation that does not match
+      - add missing tuple with left tuple attributes null
+
+```
+select *
+    -- takes natural right join students
+    -- emulate right join by reversing left / right relations
+  from student natural left join takes
+```
+
+- See Figure 4.5 for the results
+
+
+Note:
+
+- {{HTTPS_FQDN}}/sql/interpreter/Chapter.04.takes.natural.right.students
+
+---
+
+### Full Outer Join
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.04-Course.Takes.Venn.Diagram.png" style="width:20%"/>
+ <figcaption>Join types</figcaption>
+</figure>
+
+-  Full outer join
+
+```sql
+SELECT *
+  FROM Course C
+  RIGHT OUTER JOIN Takes T
+                ON C.course_id=T.course_id
+UNION ALL -- Keep duplicates!
+SELECT *
+  FROM Course C
+  LEFT OUTER JOIN Takes T
+               ON C.course_id=T.course_id
+```
+
+   - Rarely used
+   - Use Left and Right Join with UNION ALL
+
+Note:
+
+Full joins are rarely used
+
+Mainly used to find all records in a Cartesian product where superkeys are mismatch
+
+
+---
+
+### Full Outer Join
+
+- Not supported in SQLite
+- [Display a list of all students in the Comp. Sci. department, along with their course sections]({{HTTPS_FQDN}}/sql/interpreter/Chapter.04.full.join). List all CS students & all Spring 2017 sections
+  - Relational algebra
+    - takes &#x27D7; student
+    - takes &#x27D7;$_{\mbox{student.id} = \mbox{takes.id}}$ student
+  - How to do [full outer join]({{HTTPS_FQDN}}/visualazation/joins.html)
+    - Do left join union with right join 
+    - Ensure columns match
+
+```
+SELECT CS.ID, CS.name, CS.dept_name, CS.tot_cred,
+       SP.course_id, SP.sec_id, SP.semester, SP.year, SP.grade
+  FROM CS_Students as CS
+  LEFT JOIN Spring_2017 as SP ON CS.ID=SP.ID
+UNION
+SELECT SP.ID, CS.name, CS.dept_name, CS.tot_cred,
+       SP.course_id, SP.sec_id, SP.semester, SP.year, SP.grade
+  FROM Spring_2017 AS SP
+  LEFT JOIN CS_Students AS CS ON CS.ID=SP.ID;
+```
+
+- See Figure 4.6 for the results
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.04.full.join
+
+---
+
+### Joined Types and Conditions
+
+- **Join operations** take two relations and return as a result another relation.
+- These additional operations are typically used as subquery expressions in the **from** clause
+- **Join condition** – defines which tuples in the two relations match, and what attributes are present in the result of the join.
+- **Join type** – defines how tuples in each relation that do not match any tuple in the other relation (based on the join condition) are treated.
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.join.types.png" style="width:75%"/>
+   <figcaption>Join types</figcaption>
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.join.conditions.png" style="width:100%"/>
+   <figcaption>Join conditions</figcaption>
+  </figure>
+ </div>
+</div>
+
+
+---
+
+### Joined Relations - Examples
+
+```
+select *
+  from course inner join prereq on
+       course.course_id = prereq.course_id
+```
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.04.inner.join.on.course_id.jpg" style="width:100%"/>
+ <figcaption>Course inner join prereq</figcaption>
+</figure>
+ 
+- What is the difference between the [above, and a natural join]({{HTTPS_FQDN}}/sql/interpreter/Chapter.04.example.joins)?
+
+Note:
+
+An inner join with condition shows both course_id
+
+A natural join only shows one course_id   
+- May not have an ON or USING clause
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.04.example.joins
+
+---
+
+### Views
+
+- In some cases, it is not desirable for all users to see the entire logical model (that is, all the actual relations stored in the database).
+- Consider a person who needs to know an instructors name and department, but not the salary.  This person should see a relation described, in SQL, by 
+```
+select ID, name, dept_name
+  from instructor
+```
+- A **view** provides a mechanism to hide certain data from the view of certain users. 
+- Any relation that is not of the conceptual model but is made visible to a user as a “virtual relation” is called a **view**.
+
+
+---
+
+### View Definition
+
+- A view is defined using the **create view** statement which has the form <br/>**create view** $v$ as &lt;query expression&gt;<br/>where &lt;query expression&gt; is any legal SQL expression.<br/>The view name is represented by $v$.
+- Once a view is defined, the view name can be used to refer to the virtual relation that the view generates.
+- View definition is not the same as creating a new relation by evaluating the query expression
+  - Rather, a view definition causes the saving of an expression; the expression is substituted into queries using the view.
+
+
+---
+
+### View Definition and Use
+
+- A view of instructors without their salary
+```
+create view faculty as
+ select ID, name, dept_name
+   from instructor
+```
+- Find all instructors in the Biology department
+```
+select name
+  from faculty
+ where dept_name = 'Biology'
+```
+- Create a view of department salary totals
+
+```
+create view departments_total_salary(dept_name, total_salary) as
+ select dept_name, sum(salary)
+   from instructor
+  group by dept_name
+```
+
+- **Authorization** is the process to restrict/permit users to views
+  - Covered in section 4.7 (easy read)
+  - **NOT** part of COMP 421 core content
+
+---
+
+{{HIDDEN}}
+
+### Views Defined Using Other Views
+
+- One view may be used in the expression defining another view 
+- A view relation $v_1$ is said to _depend directly_ on a view relation $v_2$ if $v_2$ is used in the expression defining $v_1$
+- A view relation $v_1$ is said to _depend on_ view relation $v_2$ if either $v_1$ depends directly to $v_2$ or there is a path of dependencies from $v_1$ to $v_2$
+- A view relation $v$ is said to be _recursive_ if it depends on itself.
+
+
+---
+
+### Views Defined Using Other Views
+
+{{HIDDEN}}
+
+```
+create view physics_fall_2017 as
+select course.course_id, sec_id, building, room_number
+  from course, section
+ where course.course_id = section.course_id and
+       course.dept_name = 'Physics' and
+       section.semester = 'Fall' and
+       section.year = '2017'
+```
+
+```
+create view physics_fall_2017_watson as
+select course_id, room_number
+  from pysics_fall_2017
+ where build = 'Watson'
+```
+
+
+---
+
+### View Expansion
+
+{{HIDDEN}}
+
+- Expand  the view 
+```
+create view physica_fall_2017_watson as
+select course_id, room_number
+  from pysics_fall_2017
+ where build = 'Watson'
+```
+- To:
+
+```
+create view physics_fall_2017_watson as
+select course_id, room_number
+  from (select course.course_id, building, room_number
+          from course.course_id = section.course_id and
+               course.dept_name = 'Physics' and
+               section.semester = 'Fall' and
+               section.year = '2017')
+         where building = 'Watson'
+```
+
+
+---
+
+### View Expansion (Cont.)
+
+{{HIDDEN}}
+
+- A way to define the meaning of views defined in terms of other views.
+- Let view $v_1$ be defined by an expression $e_1$ that may itself contain uses of view relations.
+- View expansion of an expression repeats the following replacement step:<br/>**repeat**<br/>&nbsp;&nbsp;&nbsp;&nbsp;Find any view $v_i$ in $e_i$<br/>&nbsp;&nbsp;&nbsp;&nbsp;Replace the view $v_i$ by the expression defining $v_i$<br/>**until** no more view relations are present in $e_1$.
+- As long as the view definitions are not recursive, this loop will terminate
+
+
+
+Note:
+
+Do not discuss 
+### Materialized Views
+
+
+
+- Certain database systems allow view relations to be physically stored.
+  - Physical copy created when the view is defined.
+  - Such views are called **Materialized view**
+- If relations used in the query are updated, the materialized view result becomes out of date
+  - Need to **maintain** the view, by updating the view whenever the underlying relations are updated.
+
+
+---
+
+### Update of a View
+
+{{HIDDEN}}
+
+- Not allowed by SQLite and many others
+- Add a new tuple to $faculty$ view which we defined earlier
+```
+insert into faculty 
+    values ('30765', 'Green', 'Music')
+```
+- This insertion must be represented by the insertion into the $instructor$ relation
+  - Must have a  value for salary.
+- Two approaches
+  - Reject the insert
+  - Inset the tuple `('30765', 'Green', 'Music', null)` into the $instructor$ relation
+
+Note:
+
+---
+
+### Some Updates Cannot be Translated Uniquely
+
+{{HIDDEN}}
+
+
+- <b>create view </b><i>instructor_info</i><b> as</b>
+<p><b>select </b><i>ID</i>, <i>name</i>, <i>building</i></p>
+<p><b>from </b><i>instructor</i>, <i>department</i></p>
+<p><b>where </b><i>instructor</i>.<i>dept_name</i>= <i>department</i>.<i>dept_name</i>;</p>
+- <b>insert into </b><i>instructor_info</i>
+<p><b>values </b>('69987', 'White', 'Taylor');</p>
+- Issues
+  - Which department, if multiple departments in Taylor?
+  - What if no department is in Taylor?
+
+
+
+### And Some Not at All
+
+{{HIDDEN}}
+
+- <b>create view </b><i>history_instructors</i><b> as</b>
+<p><b>select </b>*</p>
+<p><b>from </b><i>instructor</i></p>
+<p><b>where </b><i>dept_name</i>= 'History';</p>
+- What happens if we insert
+<p>('25566', 'Brown', 'Biology', 100000)</p>
+<p>into <i>history_instructors?</i></p>
+
+
+
+### View Updates in SQL 
+
+{{HIDDEN}}
+
+- Most SQL implementations allow updates only on simple 
+<p>views</p>
+  - The <b>from </b>clause has only one database relation.
+  - The <b>select </b>clause contains only attribute names of the 
+<p>relation, and does not have any expressions, aggregates, </p>
+<p>or <b>distinct </b>specification.</p>
+  - Any attribute not listed in the <b>select </b>clause can be set to 
+<p>null</p>
+  - The query does not have a <b>group </b>by or <b>having </b>clause.
+
+
+---
+
+### Epilogue
+
+- You should know how to do joins
+- You should know how to create views
+- Next class we will finish off Chapter 4

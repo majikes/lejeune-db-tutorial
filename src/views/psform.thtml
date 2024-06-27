@@ -1,0 +1,53 @@
+% from inputs import getInfoWithExceptions
+% from assessments import submit_code_in_pages, submit_in_pages
+
+<form id="myform" method="post" action="{{get_url('answer', key=key)}}"
+  data-key="{{key}}"
+  data-z="{{zwsp}}"
+% if defined('autosave') and autosave:
+  data-interval="5"
+% end
+% if defined('exam') and exam:
+  data-focus="1"
+% end
+>
+% if defined('exam') and exam:
+<button type="button" id="fullscreen">Click here to go to full screen mode and remove this message.</button>
+% end
+
+<div>
+% from datetime import datetime 
+% if defined('due') and due:
+   % if (due < datetime.now()):
+    <p style="color: red; font-size:150%">Assessment was due by {{due.strftime('%a')}}, {{due}}</p>
+   % else:
+    <p>Assessment due <b>before</b> {{due.strftime('%a')}}, {{due}}.
+     % if defined('assessment_type') and assessment_type == 'worksheet':
+        <p>If given as an in-class worksheet, this worksheet is due when Professor Majikes asks <i>"You have 15 seconds to submit!!!"</i>.
+          <br/>Remember, no late submissions accepted.  Hand it in on time or you don't hand it in.
+          <br/>Better to get a less than perfect score and subsequent submit later than to get a zero!
+     % end
+    </p>
+   % end
+% end
+{{!base}}
+</div>
+
+% if submit_in_pages(pages):  # We need a submit button
+   % if submit_code_in_pages(pages):  # We need a submit code textarea
+      <p>Submit code from the front of class: <input name="_submitCode" placeholder="Enter the submit code" required="required"/></p>
+   % end
+   <input type="submit" name="_submit" value="Submit"/>
+% end
+
+<input type="hidden" name="_check" value=""/>
+% if defined('includeTimer') and includeTimer:
+% include('elapsed')
+% end
+</form>
+  <script>
+    var _section = "{{section}}";
+    var _pages = "{{pages}}";
+    var _rubrics = {{!rubrics}};
+  </script>
+% rebase('assessment.base')

@@ -1,0 +1,30 @@
+<h1>Feedback for {{onyen}}</h1>
+
+<%
+from config import downtime_answers_published, downtime_start, downtime_end, downtime_key
+import itertools
+keys = sorted(f.key for f in feedbacks)  # Set will eliminate duplicates
+fb_group = {key:list(g) for key,g in itertools.groupby(feedbacks, lambda f: f.key)}
+
+
+for key in keys:
+  assessments = sorted(fb_group[key], key=lambda x:  x.post_id)
+  include('feedbackitem', f=assessments[0], onyen=onyen)
+  if len(assessments) > 1:
+      # Show all the assessments after the first in a detail group  
+%>    
+      <details>
+        <summary><b>More</b> {{key}} submissions</summary>
+        <%
+        for f in assessments[1:]:
+          include('feedbackitem', f=f, onyen=onyen, detailed_feedback=True)
+        end
+         %>
+      </details>
+%   end
+% end
+</dl>
+<style>
+table { border-collapse: collapse; }
+</style>
+% rebase('assessment.base')

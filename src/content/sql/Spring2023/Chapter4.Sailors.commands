@@ -1,0 +1,68 @@
+DROP TABLE IF EXISTS S1;
+CREATE TABLE S1 (sid char(20), sname char(20), rating integer, age real);
+INSERT INTO S1 values ('22', 'Dustin', 7, 45.0);
+INSERT INTO S1 values ('31', 'Lubber', 8, 55.5);
+INSERT INTO S1 values ('58', 'Rusty', 10, 35.0);
+
+SELECT 'The Sailors S1 table:' as '';
+SELECT * FROM S1;
+
+DROP TABLE IF EXISTS S2;
+CREATE TABLE S2 (sid char(20), sname char(20), rating integer, age real);
+INSERT INTO S2 values ('28', 'yuppy',  9, 35.0);
+INSERT INTO S2 values ('31', 'Lubber', 8, 55.5);
+INSERT INTO S2 values ('44', 'guppy',  5, 35.0);
+INSERT INTO S2 values ('58', 'Rusty', 10, 35.0);
+
+SELECT 'The Sailors S2 table:' as '';
+SELECT * FROM S2;
+
+DROP TABLE IF EXISTS S3;
+CREATE TABLE S3 (sid char(20), sname char(20), rating integer, age real);
+INSERT INTO S3 values ('22', 'Dustin',  7, 45.0);
+INSERT INTO S3 values ('29', 'Brutus',  1, 33.0);
+INSERT INTO S3 values ('31', 'Lubber',  8, 55.5);
+INSERT INTO S3 values ('32', 'Andy',    8, 25.5);
+INSERT INTO S3 values ('58', 'Rusty',  10, 35.0);
+INSERT INTO S3 values ('64', 'Horatio', 7, 35.0);
+INSERT INTO S3 values ('71', 'Zorba',  10, 16.0);
+INSERT INTO S3 values ('74', 'Horatio', 9, 35.0);
+INSERT INTO S3 values ('85', 'Art',     3, 25.5);
+INSERT INTO S3 values ('95', 'Bob',     3, 63.5);
+
+SELECT 'The Sailors S3 table:' as '';
+SELECT * FROM S3;
+
+DROP TABLE IF EXISTS B1;
+CREATE TABLE B1 (bid string, bname char(20), color char(20));
+INSERT INTO B1 values ('101', 'Interlake', 'blue');
+INSERT INTO B1 values ('102', 'Interlake', 'red');
+INSERT INTO B1 values ('103', 'Clipper', 'green');
+INSERT INTO B1 values ('104', 'Marine', 'red');
+
+SELECT 'The Boats B1 table:' as '';
+SELECT * FROM B1;
+
+DROP TABLE IF EXISTS R1;
+CREATE TABLE R1 (sid string, bid string, day date);
+INSERT INTO R1 VALUES ('22', '101', '10/10/96');
+INSERT INTO R1 VALUES ('58', '103', '11/12/96');
+
+SELECT 'The Reserves R1 table:' as '';
+SELECT * FROM R1;
+
+DROP TABLE IF EXISTS R2;
+CREATE TABLE R2 (sid string, bid string, day date);
+INSERT INTO R2 VALUES ('22', '101', '10/10/98');
+INSERT INTO R2 VALUES ('22', '102', '10/10/98');
+INSERT INTO R2 VALUES ('22', '103', '10/8/98' );
+INSERT INTO R2 VALUES ('22', '104', '10/7/98' );
+INSERT INTO R2 VALUES ('31', '102', '11/10/98');
+INSERT INTO R2 VALUES ('31', '103', '11/6/98' );
+INSERT INTO R2 VALUES ('31', '104', '11/12/98');
+INSERT INTO R2 VALUES ('64', '101', '9/5/98');
+INSERT INTO R2 VALUES ('64', '102', '9/8/98');
+INSERT INTO R2 VALUES ('74', '103', '9/8/98');
+
+SELECT 'The Reserves R2 table:' as '';
+SELECT * FROM R2;

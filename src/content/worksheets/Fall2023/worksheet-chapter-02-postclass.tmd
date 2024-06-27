@@ -1,0 +1,128 @@
+<%
+setInfo(
+        assessment_type='worksheet',
+       )
+dbs = ['wkst-nuclear.sqlite']
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+
+# Chapter 2 Post class
+
+<!-- https://www.db-book.com/db6/practice-exer-dir/2s.pdf -->
+
+
+---
+
+The book showed a schema diagram but that is not the only database schema formatting tool.
+Below is a schema diagram for database that keeps track room accesses in a _ficticous_
+nuclear power plant.
+Note, that the colors are slightly different,
+the primary keys are not underlined,
+etc.
+
+This schema format is taken from the free database tool, [DbVisualizer](https://www.dbvis.com/).
+There are many such database tools that you can download and use.
+I will use this one in any diagrams shown in class.
+
+<figure>
+ <img src="{{static('images/Nuclear.schema.diagram.png')}}" style="width: 75%">
+ <figcaption>Schema diagram for a nuclear power plant database</figcaption>
+</figure>
+
+---
+
+**Relational.Algebra.Operations:** Answer the following information about the Companies relation.  
+<%
+answer = ['company_id', 'yes', 'company_id']
+symbols = answer + ['id', 'name', 'address_number', 'address_street_name', 'phone_number'] + ['key', 'superkey'] + ['employee_type', 'company_id'] + ['yes', 'no']
+answer2=f'''Questions taken from page 60 2.1
+
+{answer[0]} company_id is the primary key as noted by the little key
+{answer[1]} A superkey is composed of the key plus other attributes
+{answer[2]} Persons' attribute company_id references Companies' id '''
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+What is the appropriate primary key?,{answer[0]}
+Could the tuple (company_id&#44; name) be a key or a superkey?,{answer[1]}
+Which field in Persons references tuples in Companies,{answer[2]}
+''', symbols=symbols, name='Relational.Algebra.Operations', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+Enter the following command to alphabetically list all the company names in the database:
+```sql
+SELECT name
+  FROM Companies
+ ORDER BY name
+```
+{{!sql('''SELECT name FROM Companies ORDER BY name''', points=20, name='company_names', dbs=dbs)}}
+
+**Unique.Name:** Given the instance of _Companies_ shown in the above query,
+no two companies have the same name.
+From this can we conclude that name can be used as a superkey or primary key of relation Companies?  
+<%
+answer = 'No'
+answer2 =f'''Question 2.4 from the book
+
+No. For this possible instance of the company table the names
+are unique, but in general this may not be always the case (unless corporate
+has a rule that they do not deal with two companies with similar or the
+same name
+which is a rather unlikey scenario).
+
+Answer: {answer}'''
+choices = [answer, 'Yes']
+%>
+{{!select(answer, choices, points=20, name='Unique.Name')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Persons:** Given the schema diagram above which of the SQL queries below
+best matches the following relational algebra $\Pi_{name} Persons$?
+
+**A:** `SELECT * FROM Persons`  
+**B:** `SELECT name FROM Persons WHERE id > 50`  
+**C:** `SELECT name FROM Persons ORDER by name`  
+**D:** `SELECT name FROM Persons`
+**E:** `SELECT * FROM Persons where name exists`
+**F:** `SELECT * FROM Name`  
+**G:** `SELECT Person FROM Name`  
+
+% answer = 'D'
+% answer2 = f'''The question is asking for the Partition of Persons to get the names
+
+Answer {answer}'''
+% choices = 'ABCDEFG'
+{{!select(answer, choices, points=20, name='Persons')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Works.For.Smith.And.Son:** Given the schema diagram above which of the following relational algebras
+find the names of the people who work for the company Smith and Son?
+
+**A:** $\Pi_\text{name} (\sigma_{(companies.company\\_id=persons.company\\_id) \land (companies.name='Smith and Son')} \text{companies} \times \text{persons})$  
+
+**B:** $\Pi_\text{name} (\sigma_{(companies.company\\_id=persons.persons\\&lowbar;id) \land (companies.name='Smith and Son')} \text{companies} \times \text{persons})$  
+
+**C:** $\sigma_{(companies.company\\&lowbar;id=persons.persons\\&lowbar;id) \land (companies.name='Smith and Son')} \text{companies} \times \Pi_\text{name} (\text{persons})$  
+
+**D:** $\sigma_{(companies.company\\&lowbar;id=persons.company\\&lowbar;id) \land (companies.name='Smith and Son')} \text{companies} \times \Pi_\text{name} (\text{persons})$  
+
+% answer = 'A'
+% answer2 = f'''You have to do the partition after the join and the company_id is in Persons not Companies
+
+Answer {answer}'''
+% choices = 'ABCD'
+{{!select(answer, choices, points=20, name='Works.For.Smith.And.Son')}}
+% include('viewAnswer', answer=answer2)
+
+
+% include('worksheet-submit.md')

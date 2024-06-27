@@ -1,0 +1,84 @@
+<%
+import json
+with open('game-crime.json') as fid:
+    game_data = json.load(fid)
+points_limit = 100
+setInfo(
+        needsSubmitCode=False,
+        assessment_type='worksheet',
+        due='2023-02-21  8:00:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False),
+                        meghanav=dict(needsSubmitCode=False, due='2022-09-22 00:00:00'),
+                        ),
+        pages=['questions', 'submit'],
+        max_segments=3,
+        maxpenalty=1.00, penalty=.20,
+        points_limit=100,
+        points_total=100,
+       )
+dbs = ['midterm1-basketball-1.sqlite']
+
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+# 1 Midterm 1 worksheet
+
+---
+
+## {{!linkable_header('Basketball Database Schema')}}
+
+Here are the tables you'll find for the database used in the midterm.
+Your queries will be run against two versions of the database.
+One of the databases will be much smaller and only contain a subset of the information.
+ 
+% import json
+% schema = json.load(open(f'./content/exams/databases/{dbs[0].replace(".sqlite", ".json")}', encoding="utf-8"))
+```sql
+{{schema}}
+```
+
+---
+
+## {{!linkable_header('Scratch area')}} 
+
+The following scratch space can be used to help develop and test queries against these two databases
+if you want. Nothing about the scratch space contributes to any points on the midterm and anything in the
+scratch space is ignored.
+
+
+{{!sql(''' select 1 ''', name='_scratch_sql_queries_1', dbs=dbs)}}
+
+---
+
+
+**Player.Count:** List the number of players in the database:  
+
+% answer = '''
+SELECT count(*)
+ FROM Players
+'''
+{{!sql(answer, dbs=dbs, points=100, sort=True, name='Player.Count')}}
+% include('viewAnswer')
+
+
+--- 
+
+Note how many players are in the database.
+This should give you a warning that if you make a query without proper qualifications in the `WHERE` clause,
+it may take a long time.
+For example, if you want all the players on all the teams but forget the qualifications as shown in the following command,
+then the query will time out and you'll be forced to do a `<cntrl>R` or `<command>R`.
+
+```
+SELECT *
+  FROM Players, Teams
+  -- Missing WHERE Players.team_id = Teams.team_id
+```
+
+--
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

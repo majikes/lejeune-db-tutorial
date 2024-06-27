@@ -1,0 +1,135 @@
+# Chapter 1 worksheet
+
+<%
+setInfo(
+due="2020-08-13 23:59:59",
+points_total=42,
+penalty=1,
+maxpenalty=1,
+exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+)
+%>
+
+13 August 2020
+
+### {{next()}}. DBMS vs File Systems
+
+You are a senior software developer at Zamazon mentoring a new intern.
+
+Unfortunately, the intern did not take COMP 521.
+
+The intern believes storing all customer data in the file system is better than storing the data in a database management system (DBMS) because it's convenient.
+
+Which of the following are valid reasons you could give for using a DBMS over a file system?
+
+A) Since many different users access the data concurrently, the DBMS can prevent inconsistencies in the data.
+
+B) Different users should have the different level of security access of the data, which is easier to enforce with a DBMS.
+
+C) DBMS have no overhead so querying a DBMS will always be faster than querying a file system for the same information.
+
+D) A and B
+
+E) A and C
+
+F) B and C
+
+{{!select('D', list('ABCDEF'), points=8)}}
+
+### {{next()}}. Conceptual Schema
+
+A zoo manages data about their animals, their exhibits, and their zoo keepers
+in a database. The database has the following conceptual schema:
+
+animals(animal_id: string, animal_name: string, species_name: string, weight: real, age: integer)
+
+exhibits(exhibit_name: string, maximum_capacity: integer)
+
+zoo_keepers(employee_id: string, employee_name: string)
+
+lives_in(animal_id: string, exhibit_name: string, start_date: date, end_date: date)
+
+looks_after(employee_name: string, animal_id: string, feeding_time_of_day: integer)
+
+Answer the following questions about this conceptual schema:
+
+{{!table(inputs=1, headings='''Question,Input your answer here''', table='''
+How many relations does this conceptual schema have?,5,
+How many attributes does the animals relation have?,5,
+How many fields does the animals relation have?,5,
+How many relations in this conceptual schema represent an entity?,3,
+How many relations in this conceptual schema represent a relationship?,2,''',symbols=['0','1','2','3','4','5'], points=10)}}
+
+### {{next()}}. External Schema
+
+On the zoo website, the zoo displays the name, species, and the zookeeper of each animal with this external schema:
+
+animal_info(animal_name: string, species_name: string, employee_name: string)
+
+Which of the following statements are reasons why the relation animal_info is in the external schema and is not in the conceptual schema?
+
+A) Reduce abstraction and reduce data independence of the database
+
+B) Limit redundancy that could lead to inconsistencies
+
+C) Prevent wasting space from storing repeated data
+
+D) A and B
+
+E) A and C
+
+F) B and C
+
+{{!select('F', list('ABCDEF'), points=4)}}
+
+### {{!next()}}. Data Definition Language
+
+Is this statement True or False? Check the box if True.
+
+{{!checkbox(False, points=None)}} A data definition language (DDL) is used to define the conceptual and physical schemas.
+
+### {{!next()}}. Data Manipulation Language
+
+Is this statement True or False? Check the box if True.
+
+{{!checkbox(True, points=4)}} The data manipulation language (DML) allows users to create, modify, and query data in the DBMS.
+
+### {{!next()}}. DDL and DML
+
+Is this statement True or False? Check the box if True.
+
+{{!checkbox(True, points=4)}} Together, the DML and DDL form the data sublanguage, and the data sublanguage is embedded within a host language.
+
+### {{!next()}}. Schemas
+
+Which of the following statements about schemas is true?
+
+A) A given database can have more than one external schema.
+
+B) A given database can have more than one conceptual schema.
+
+C) A given database can have more than one physical schema.
+
+D) All of the above.
+
+{{!select('A', list('ABCD'), points=4)}}
+
+### {{!next()}}. Write-Ahead Log
+
+Complete this sentence:
+
+A write-ahead log records each write action in the log ({{!select('before', ['before', 'after'], points=4)}}) the corresponding change is made in the database.
+
+### {{!next()}}. Crash Recovery
+
+Which of the following statements is an effective method a DBMS uses to recover from a crash while performing transactions?
+
+A) Automatically revert to the last saved checkpoint, ignoring all the changes made since that checkpoint was saved
+
+B) Find all partially executed transactions using the write-ahead log and resume them for increased efficiency
+
+C) Find all partially executed transactions using the write-ahead log and revert them since transactions should be all or nothing actions
+
+D) Start over with an empty database and execute every transaction in the write-ahead log
+
+{{!select('C', list('ABCD'), points=4)}}

@@ -1,0 +1,50 @@
+<%
+import string
+alphabet = list(string.ascii_uppercase)
+
+concurrence_question_true = 'The transaction manager and/or the concurrency-control manager will control the interaction among concurrent transactions to ensure the consistency of the database.'
+concurrence_question_false = ['The transaction manager will not allow the second student\'s transaction to start before the first student\'s transaction finishes.',
+                              'There is no component of the database system that prevents these two students from registering for the same course with only one seat available.',
+                              'The integrity manager automatically puts both students on the wait list. The database wait list processor chooses which student gets the seat.',
+                              'The query process will throw an exception and both students will have to try to register again.']
+%>
+
+
+% for index in range(number_chapter_review):
+  % if section == '003' or (team_member_number % number_chapter_review) == index:
+
+  **Concurrent.Student.{{index+1}}:** Assume that two students are trying to register for a course
+  in which there is only one seat available.
+  What component, if any, of a database system prevents both students from being given that last seat?  
+
+  % for answer_index in range(len(concurrence_question_false)+1):
+    % if answer_index < index + 1:
+       **{{alphabet[answer_index]}}** {{concurrence_question_false[answer_index]}}  
+    % elif answer_index == index + 1:
+       **{{alphabet[answer_index]}}** {{concurrence_question_true}}  
+    % else:
+       **{{alphabet[answer_index]}}** {{concurrence_question_false[answer_index-1]}}   
+    % end
+  % end
+  **{{alphabet[answer_index+1]}}** None of the above  
+<%
+answer = alphabet[index+1]
+answer2 = f'''This is exercise 1.11 from page 32.
+
+Page 21 1.6.3 Transaction Management
+
+When several transactions update the database concurrently, the consistency of data
+may no longer be preserved, even though each individual transaction is correct.
+It is the responsibility of the concurrency-control manager (part of the transaction
+manager description) to control the interaction among the concurrent transactions
+
+Answer: {answer}'''
+%>
+   {{!select(answer, alphabet[:len(concurrence_question_false)+2], points=5, name=f' Concurrent.Student.{index+1}')}}
+   % include('viewAnswer', answer=answer2)
+
+---
+
+  % end  # section == 003 or team_member_number%number_chapter_review == index
+% end  # for index in range(number_chapter_review)
+

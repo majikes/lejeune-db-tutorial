@@ -1,0 +1,102 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Student;
+CREATE TABLE STUDENT (ID			varchar(5), 
+                      name			varchar(20) not null, 
+                      dept_name		varchar(20), 
+                      tot_cred		numeric(3,0) check (tot_cred >= 0));
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('00128', 'Zhang', 'Comp. Sci.', '102');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('12345', 'Shankar', 'Comp. Sci.', '32');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('19991', 'Brandt', 'History', '80');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('23121', 'Chavez', 'Finance', '110');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('44553', 'Peltier', 'Physics', '56');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('45678', 'Levy', 'Physics', '46');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('54321', 'Williams', 'Comp. Sci.', '54');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('55739', 'Sanchez', 'Music', '38');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('70557', 'Snow', 'Physics', '0');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('76543', 'Brown', 'Comp. Sci.', '58');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('76653', 'Aoi', 'Elec. Eng.', '60');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('98765', 'Bourikas', 'Elec. Eng.', '98');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('98988', 'Tanaka', 'Biology', '120');
+
+DROP TABLE IF Exists Course;
+CREATE TABLE COURSE (course_id		varchar(8), 
+                     title			varchar(50), 
+                     dept_name		varchar(20),
+                     credits		numeric(2,0) check (credits > 0));
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-101', 'Intro. to Biology', 'Biology', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-301', 'Genetics', 'Biology', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-399', 'Computational Biology', 'Biology', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-101', 'Intro. to Computer Science', 'Comp. Sci.', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-190', 'Game Design', 'Comp. Sci.', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-315', 'Robotics', 'Comp. Sci.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-347', 'Database System Concepts', 'Comp. Sci.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('EE-181', 'Intro. to Digital Systems', 'Elec. Eng.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('FIN-201', 'Investment Banking', 'Finance', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('HIS-351', 'World History', 'History', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('MU-199', 'Music Video Production', 'Music', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('PHY-101', 'Physical Principles', 'Physics', '4');
+DROP TABLE IF EXISTS Takes;
+CREATE TABLE TAKES (ID			varchar(5), 
+                    course_id		varchar(8),
+                    sec_id			varchar(8), 
+                    semester		varchar(6),
+                    year			numeric(4,0),
+                    grade		        varchar(2),
+                    primary key (ID, course_id, sec_id, semester, year));
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('00128', 'CS-101', '1', 'Fall', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('00128', 'CS-347', '1', 'Fall', '2017', 'A-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('12345', 'CS-101', '1', 'Fall', '2017', 'C');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('12345', 'CS-190', '2', 'Spring', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('12345', 'CS-315', '1', 'Spring', '2018', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('12345', 'CS-347', '1', 'Fall', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('19991', 'HIS-351', '1', 'Spring', '2018', 'B');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('23121', 'FIN-201', '1', 'Spring', '2018', 'C+');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('44553', 'PHY-101', '1', 'Fall', '2017', 'B-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('45678', 'CS-101', '1', 'Fall', '2017', 'F');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('45678', 'CS-101', '1', 'Spring', '2018', 'B+');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('45678', 'CS-319', '1', 'Spring', '2018', 'B');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('54321', 'CS-101', '1', 'Fall', '2017', 'A-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('54321', 'CS-190', '2', 'Spring', '2017', 'B+');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('55739', 'MU-199', '1', 'Spring', '2018', 'A-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('76543', 'CS-101', '1', 'Fall', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('76543', 'CS-319', '2', 'Spring', '2018', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('76653', 'EE-181', '1', 'Spring', '2017', 'C');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('98765', 'CS-101', '1', 'Fall', '2017', 'C-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('98765', 'CS-315', '1', 'Spring', '2018', 'B');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('98988', 'BIO-101', '1', 'Summer', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('98988', 'BIO-301', '1', 'Summer', '2018', null);
+
+DROP TABLE IF EXISTS Section;
+CREATE TABLE Section (course_id		varchar(8), 
+                      sec_id			varchar(8),
+                      semester		varchar(6)
+                      check (semester in ('Fall', 'Winter', 'Spring', 'Summer')), 
+                      year			numeric(4,0) check (year > 1701 and year < 2100), 
+                      building		varchar(15),
+                      room_number		varchar(7),
+                      time_slot_id		varchar(4),
+                      primary key (course_id, sec_id, semester, year));
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('BIO-101', '1', 'Summer', '2017', 'Painter', '514', 'B');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('BIO-301', '1', 'Summer', '2018', 'Painter', '514', 'A');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('CS-101', '1', 'Fall', '2017', 'Packard', '101', 'H');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('CS-101', '1', 'Spring', '2018', 'Packard', '101', 'F');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('CS-190', '1', 'Spring', '2017', 'Taylor', '3128', 'E');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('CS-190', '2', 'Spring', '2017', 'Taylor', '3128', 'A');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('CS-315', '1', 'Spring', '2018', 'Watson', '120', 'D');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('CS-319', '1', 'Spring', '2018', 'Watson', '100', 'B');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('CS-319', '2', 'Spring', '2018', 'Taylor', '3128', 'C');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('CS-347', '1', 'Fall', '2017', 'Taylor', '3128', 'A');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('EE-181', '1', 'Spring', '2017', 'Taylor', '3128', 'C');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('FIN-201', '1', 'Spring', '2018', 'Packard', '101', 'B');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('HIS-351', '1', 'Spring', '2018', 'Painter', '514', 'C');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('MU-199', '1', 'Spring', '2018', 'Packard', '101', 'D');
+INSERT INTO SECTION (course_id, sec_id, semester, year, building, room_number, time_slot_id) VALUES ('PHY-101', '1', 'Fall', '2017', 'Watson', '100', 'A');
+
+SELECT 'List all the courses offerred once in 2017' AS '';
+select T.course_id
+    from course as T
+   where 1 = (select count(R.course_id)
+                from section as R
+               where T.course_id = R.course_id and
+                     R.year = 2017)											 

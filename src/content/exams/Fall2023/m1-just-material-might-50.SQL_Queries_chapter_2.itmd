@@ -1,0 +1,151 @@
+<%
+from collections import namedtuple
+import string
+
+katex_underscore = r'\textunderscore{}'
+katex_le = r'\le'
+
+SELECT_ALL = namedtuple('SELECT_ALL', 'relation attribute where op value')
+select_alls = [SELECT_ALL(relation='student', op='=', attribute='name',
+                          where=f'dept{katex_underscore}name', value="'Comp. Sci.'"),
+               SELECT_ALL(relation='course', attribute='title',
+                          where=f'dept{katex_underscore}name', op='=', value="'Math'"),
+               SELECT_ALL(relation='department', attribute='building',
+                          where='budget', op=katex_le, value='500000'),
+               SELECT_ALL(relation='instructor', attribute='name',
+                          where='salary', op=katex_le, value='50000'),
+
+               ]
+
+all_semesters = ['Fall', 'Winter', 'Spring', 'Summer']
+SET_DIFF = namedtuple('SET_DIFF', 'semester dept_name not_semester')
+set_diffs = [SET_DIFF(semester='Fall', dept_name='Astronomy',
+                      not_semester=[x for x in all_semesters if x!= 'Fall']),
+             SET_DIFF(semester='Spring', dept_name='Biology',
+                      not_semester=[x for x in all_semesters if x!= 'Spring']),
+             SET_DIFF(semester='Spring', dept_name='Physics',
+                      not_semester=[x for x in all_semesters if x!= 'Spring']),
+             SET_DIFF(semester='Fall', dept_name='Math',
+                      not_semester=[x for x in all_semesters if x!= 'Fall']),
+            ]
+
+DID_NOT_TAKE = namedtuple('DID_NOT_TAKE', 'dept title')
+did_not_takes = [DID_NOT_TAKE(dept='Comp. Sci.', title='Game Design'),
+                 DID_NOT_TAKE(dept='Math', title='Computability Theory'),
+                 DID_NOT_TAKE(dept='Cybernetics', title='Security'),
+                 DID_NOT_TAKE(dept='Statistics', title='UNIX System Programming')
+                 ]
+
+alphabet = list(string.ascii_uppercase)
+%>
+
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % q = select_alls[index]
+    **List.All.{{index+1}}:** Create a SQL query for the relational expression:
+    $\Pi_\text{ {{q.attribute}} } (\sigma_{\text{ {{q.where}} } {{q.op}} \text{ {{q.value}} } }  (\text{ {{q.relation}} })) $
+    % answer = f'''
+-- Relational algebra return sets, must use DISTINCT
+SELECT DISTINCT {q.attribute}
+  FROM {q.relation}
+ WHERE {q.where.replace(katex_underscore, '_')} {q.op.replace(katex_le, '<=')} {q.value}
+'''
+    {{!sql(answer, dbs=dbs, points=4, name=f' List.All.{index+1}', sort=1)}}
+    % include('viewAnswer')
+  %end
+%end
+
+---
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    <%
+    q = set_diffs[index]
+    sel_letter = alphabet[index+2]
+    sel_answer = f' List the unique course titles that are offered by the {q.dept_name} department {q.semester} semester but not at other times'
+    not_list_1 = ", ".join(x for x in all_semesters[2:] if x != q.semester)
+    not_list_2 = ", ".join(x for x in all_semesters[:-2] if x != q.semester)
+    sel_wrong = [f' List the courses that are offered by the {q.dept_name} department {q.semester} semester',
+                   f' List the unique course titles that are offered by the {q.dept_name} department all semesters',
+                   f' List the courses that are offered by the {q.dept_name} department all semesters',
+                   f' List the unique course titles that are offered by the {q.dept_name} department {q.semester} but not {not_list_1} semester(s)',
+                   f' List the unique course titles  that are offered by the {q.dept_name} department {q.semester} but not {not_list_2} semester(s)',
+                   ]
+    %>
+    **Relational.Algebra.{{index+1}}:** Create a SQL query for the relational expression:
+
+    $\Pi_{\text{title}} (\sigma_{\text{semester}='{{q.semester}}' \land \text{dept\textunderscore{}name}='{{q.dept_name}}'}  (\rho_{S} (\text{Section}) \bowtie_{\text{C.course\textunderscore{}id} = \text{S.course\textunderscore{}id}} \rho_{C} (\text{Course})))$  
+    % for n in q.not_semester:
+      $-$
+      $\Pi_{\text{title}} (\sigma_{\text{semester}='{{n}}' \land \text{dept\textunderscore{}name}='{{q.dept_name}}'}  (\rho_{S} (\text{Section}) \bowtie_{\text{C.course\textunderscore{}id} = \text{S.course\textunderscore{}id}} \rho_{C} (\text{Course})))$  
+    % end
+    % answer = f'''
+-- Relational Minus / Subtraction
+SELECT DISTINCT title
+  FROM Section S, Course C
+ WHERE C.course_id = S.course_id AND
+       dept_name = '{q.dept_name}' AND
+       semester = '{q.semester}'
+
+EXCEPT
+
+SELECT title
+  FROM Section S, Course C
+ WHERE C.course_id = S.course_id and
+       dept_name = '{q.dept_name}' AND
+       semester != '{q.semester}'
+
+'''
+    {{!sql(answer, dbs=dbs, points=4, name=f' Relational.Algebra.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+    **Relational.Algebra.In.Words.{{index+1}}:** Which of the following best represents in words what **Relational.Algebra.{{index+1}}** is asking for?    
+    % for rel_alg_inx in range(len(sel_wrong)+1):
+       % if rel_alg_inx < index+2:
+ **{{alphabet[rel_alg_inx]}}** {{sel_wrong[rel_alg_inx]}}  
+       % elif rel_alg_inx == index+2:
+ **{{sel_letter}}** {{sel_answer}}  
+       % else:
+ **{{alphabet[rel_alg_inx]}}** {{sel_wrong[rel_alg_inx-1]}}    
+       % end
+    % end
+ **{{alphabet[len(sel_wrong)+2]}}** All of the above  
+ **{{alphabet[len(sel_wrong)+3]}}** None of the above  
+    {{!select(sel_letter, alphabet[:len(sel_wrong)+3], points=4, name=f' Relational.Algebra.In.Words.{index+1}')}}
+    % include('viewAnswer', answer=sel_letter)
+
+  %end
+%end
+
+---
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % q = did_not_takes[index]
+    **Did.Not.Take.{{index+1}}:** List the name and total number of credits for students in the {{q.dept}} department who did not take the {{q.dept.lower()}} course named '{{q.title}}'.  
+    Order the list in descending order by the name.
+    % answer = f'''
+-- Simple except
+SELECT S.name, S.tot_cred
+  FROM Student S
+ WHERE S.dept_name = '{q.dept}' AND
+       NOT EXISTS (SELECT *
+                     FROM Takes T, Course C
+                    WHERE S.ID = T.ID AND
+                          T.course_id = C.course_id AND
+                          C.dept_name = '{q.dept}' AND
+                          C.title = '{q.title}')
+ ORDER BY S.name DESC
+'''
+    {{!sql(answer, dbs=dbs, points=9, name=f' Did.Not.Take.{index+1}')}}
+    % include('viewAnswer')
+  %end
+%end
+
+---
+
+

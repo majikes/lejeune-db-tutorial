@@ -1,0 +1,106 @@
+<%
+setInfo(
+      due="2021-10-19 15:01:00",
+      needsSubmitCode=True,
+			pages=['ISAM', 'B-tree', 'B-tree-example', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False)),
+)
+dbs = ['states-A.sqlite']
+%>
+
+# Chapter 10 worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'ISAM' in pages:
+
+---
+
+**ISAM**: Which of the following is **false** for an ISAM index?  
+% answer = 'C. ISAM does not support clustered index'
+% answer2 = f''' page 341 says the ISAM structure is completely static.
+The figure on page 341 shows the leaf overflow pages.
+The last paragraph on 341 says it works for all the alternative indices
+page 344 says that long overflow chains lead to poor performance
+
+Answer: {answer}'''
+% choices = ['A. ISAM index structure is static', 'B. Inserts into leaf pages could go into overflow pages', answer, 'D. Inserts over time lead to poor performance', 'E. None of the above']
+{{!select(answer, choices, points=20, name='ISAM')}}
+%include('viewAnswer', answer=answer2)
+
+% end
+% if 'B-tree' in pages:
+
+---
+
+**Linked.Leaf**: Which of the following is true of the leaf nodes of B+ trees and ISAM?  
+% answer = 'B. B+ trees link each leaf page'
+% answer2 = f'''page 343 shows ISAM leaf pages nodes unlinked
+page 345 shows B+ tree linked pages
+Plus you need the links for sequential scans!
+
+Answer: {answer}'''
+% choices = ['A. ISAM links each leaf page', answer, 'C. Both A and B',  'D. Neither ISAM nor B+ trees link leaf pages']
+{{!select(answer, choices, points=20, name='Linked.Leaf')}}
+%include('viewAnswer', answer=answer2)
+
+% end
+% if 'B-tree-example' in pages:
+
+---
+
+Assume you have the following B+ tree with $d=2$ 
+and a single-level index.
+Assume that $p_n$ are a node pointers and 13, 17, 24, 30 are key values.
+
+<!--
+|   |   |   |   |   |   |   |   |   |
+|---|---|---|---|---|---|---|---|---|
+|$p_1$ |13 | $p_2$ |17 | $p_3$ |24 | $p_4$ | 30| $p_5$ |
+-->
+
+<img src="{{static('images/worksheet-chapter-10.png')}}" style="float:right; vertical-align:0px; width=75%"/>
+
+**Valid**: Is this a valid B+ Tree with order $d=2$?  
+% answer = 'Yes, each node less than or equal to 2d key values'
+% answer2 = f''' Each node can have 2d keys.
+There are 1 plus the number of pointers
+They must be in sorted order
+
+Answer: {answer}'''
+% choices = ['Yes, but the key values do not have to be in order', 'No, there should only be d key value in the node', 'No, there are 2d+1 pointers', 'None of them', answer]
+{{!select(answer, choices, points=20, name='Valid')}}
+%include('viewAnswer', answer=answer2)
+
+**Looking.For.5**: If a key search was done for entry $5*$, which pointer
+would point to the data record?  
+% answer = 'p1'
+% answer2 = f''' Since 5 &lt; 13, it's {answer}'''
+% choices = [f'p{x}' for x in range(1,6)] + ['It\'s not there']
+{{!select(answer, choices, points=20, name='Looking.For.5')}}
+%include('viewAnswer', answer=answer2)
+
+
+**Looking.For.22**: If a key search was done for entry $22*$, which pointer
+would point to the data record?  
+% answer = 'p3'
+% answer2 = f''' Since 17 %lt; 22 &lt; 14, it's {answer}'''
+% choices = [f'p{x}' for x in range(1,6)]
+{{!select(answer, choices, points=20, name='Looking.For.22')}}
+%include('viewAnswer', answer=answer2)
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

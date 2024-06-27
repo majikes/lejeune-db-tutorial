@@ -1,0 +1,26 @@
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('29', 'Brutus',  1, 33.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('32', 'Andy',    8, 25.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+INSERT INTO Sailors values ('64', 'Horatio', 7, 35.0);
+INSERT INTO Sailors values ('71', 'Zorba',  10, 16.0);
+INSERT INTO Sailors values ('74', 'Horatio', 9, 35.0);
+INSERT INTO Sailors values ('85', 'Art',     3, 25.5);
+INSERT INTO Sailors values ('95', 'Bob',     3, 63.5);
+
+SELECT 'The Sailors Sailors table:' as '';
+SELECT * FROM Sailors;
+
+
+SELECT 'Update the rating of Art, sid 85:' as '';
+UPDATE Sailors
+   SET rating = rating+1
+ WHERE sid = 85;
+
+SELECT 'The Sailors Sailors table:' as '';
+SELECT * FROM Sailors;

@@ -1,0 +1,2 @@
+Supplier(sno: string, pno: string);
+Parts(pno: string);

@@ -1,0 +1,111 @@
+<% setInfo(
+      due="2023-04-19  0:00:00",
+      needsSubmitCode=False,
+        assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      ehrensam=dict(needsSubmitCode=False, due="2023-04-19 00:00:00"))
+)
+%>
+
+# Chapter 19 Functional Dependencies
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+<!-- https://www.javatpoint.com/dbms-boyce-codd-normal-form -->
+Let's assume you have the following **EMPLOYEE** table which is stolen from [javatpoint.com](https://www.javatpoint.com/dbms-boyce-codd-normal-form):
+
+
+| **EMPL_ID** | **EMP_COUNTRY** | **EMP_DEPT**  | **DEPT_TYPE** | **EMP_DEPT_NO**  |
+|-------------|-----------------|---------------|---------------|------------------|
+|  264        |  India          |  Design       |  D394         |  293  |
+|  264        |  India          |  Test         |  D394         |  300  |
+|  364        |  UK             |  Stores       |  D283         |  232  |
+|  364        |  UK             |  Development  |  D283         |  549  |
+
+**FD.1:** Which of the following are functional dependencies?  
+% answer = ['True', 'False', 'False', 'True', 'True']
+% answer2 = f'''
+This is taken from https://www.javatpoint.com/dbms-boyce-codd-normal-form
+
+If you know the EMP_ID, then you know the EMP_COUNTRY
+- EMPL_ID = 264 implies EMP_COUNTRY India and EMPL_ID 364 imples EMP_COUNTRY UK
+EMP_ID -> EMP_COUNTRY {answer[0]}
+
+If you know the EMP_ID, then you DO NOT know the EMP_DEPT
+- EMPL_ID 264 could be EMP_DEPT Design or Test
+EMP_ID -> EMP_DEPT {answer[1]}
+
+If you know the EMP_ID, then you DO NOT know the EMP_DEPT_NO
+- EMPL_ID 264 could be EMP_DEPTR_NO 293 or 300
+EMP_ID -> EMP_DEPT {answer[2]}
+
+If you know the EMP_DEPT the you know the DEPT_TYPE
+- EMPL_DEPT Design implies D394
+- EMPL_DEPT Test implies DEPT_TYPE D394
+- EMPL_DEPT Stories imples DEPT_TYPE D283
+- EMPL_DEPT Development implies DEPT_TYPE 283
+EMP_DEPT -> DEPT_TYPE {answer[3]}
+
+If you know the EMP_DEPT then you know the DEPT_TYPE and EMP_DEPT_NO
+EMP_DEPT -> {{DEPT_TYPE, EMP_DEPT_NO}} {answer[4]}
+
+Answer: {answer}
+'''
+% rightarrow = r'$\rightarrow$'
+{{!table(inputs=1, headings='Functional Dependency, True or False', table=f'''
+EMP_ID {rightarrow} EMP_COUNTRY,{answer[0]}
+EMP_ID {rightarrow} EMP_DEPT,{answer[1]}
+EMP_ID {rightarrow} EMP_DEPT_NO,{answer[2]}
+EMP_DEPT {rightarrow} DEPT_TYPE,{answer[3]}
+EMP_DEPT {rightarrow} {{DEPT_TYPE&#44; EMP_DEPT_NO}},{answer[4]}
+''', symbols=answer, points=50, name='FD.1')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+So the potential keys are the functional dependencies above.
+
+**EMP_COUNTRY** table:
+
+
+| **EMPL_ID** | **EMP_COUNTRY** |
+|-------------|-----------------|
+|  264        |  India          |
+|  364        |  UK             |
+
+
+**EMP_DEPT** table:
+
+| **EMP_DEPT**  | **DEPT_TYPE** | **EMP_DEPT_NO**  |
+|---------------|---------------|------------------|
+|  Design       |  D394         |  293  |
+|  Test         |  D394         |  300  |
+|  Stores       |  D283         |  232  |
+|  Development  |  D283         |  549  |
+
+
+**EMP_DEPT_MAPPING** table:
+
+| **DEPT_TYPE** | **EMP_DEPT_NO**  |
+|---------------|------------------|
+|  D394         |  293  |
+|  D394         |  300  |
+|  D283         |  232  |
+|  D283         |  549  |
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

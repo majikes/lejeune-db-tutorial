@@ -1,0 +1,118 @@
+# Chapter 3 worksheet: Practice with SQL
+
+<%
+setInfo(
+due="2020-08-20 17:00:00",
+penalty=1,
+maxpenalty=1,
+exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+)
+%>
+
+% dbs=['students.sqlite']
+
+I have created a _table_ Students using the following SQL commands.
+
+```
+create table if not exists Students
+(sid text,
+ name text,
+ login text,
+ age integer,
+ gpa real);
+
+insert into Students values ('53666', 'Jones', 'jones@cs', 18, 3.4);
+insert into Students values ('53688', 'Smith', 'smith@cs', 18, 3.2);
+insert into Students values ('53650', 'Smith', 'smith@math', 19, 3.9);
+```
+
+### {{!next()}}. List the contents of the Students table.
+
+{{!sql('''select * from Students''', dbs=dbs, points=5)}}
+
+### {{!next()}}. List the sid and gpa for all students.
+
+{{!sql('''select sid, gpa from Students''', dbs=dbs, points=10)}}
+
+### {{!next()}}. List the gpa for all students who are 18 years old.
+
+{{!sql('''select gpa from Students where age=18''', dbs=dbs, points=10)}}
+
+### {{!next()}}. Add the following student to your table.
+
+- sid: 53655
+- name: Simpson
+- login: simpson@cs
+- age: 19
+- gpa: 3.1
+
+{{!sql('''insert into Students values ('53655', 'Simpson', 'simpson@cs', 19, 3.1)''', dbs=dbs, points=0)}}
+
+**Note:** My software can't tell if that worked because insert doesn't return anything.
+
+### {{!next()}}. List the contents of the table again to see if you got it right.
+
+{{!sql('''select * from Students''', dbs=dbs, points=10)}}
+
+### Break things!
+
+Now go back and execute the cell where you inserted the new student again. Then run
+the cell where you listed the contents. There should be 2 copies of that student now.
+Ouch! We've got duplicate entries in our database! We'll learn how to prevent this.
+
+You can fix this by refreshing the page to reload the database and then run each cell
+again.
+
+### {{!next()}}. Create a new table Enrolled
+
+Include the following fields.
+
+- sid: text
+- cid: text
+- grade: text
+
+**Note:** I recommend you use the `create table if not exists` syntax to avoid getting
+into difficulties when you rerun the cell.
+
+{{!sql('''create table if not exists Enrolled (sid text, cid text, grade text)''', dbs=dbs, points=0)}}
+
+My code can't really tell if you got that table correct because create table doesn't
+return anything for me to check.
+
+### {{!next()}}. Insert some entries into the Enrolled table.
+
+| sid   | cid         | grade |
+| ----- | ----------- | ----- |
+| 53688 | Carnatic101 | C     |
+| 53688 | Reggae203   | B     |
+| 53650 | Topology112 | A     |
+| 53666 | History105  | B     |
+
+**Note**: You can put multiple SQL statements into the box below and
+separate them using semicolons.
+
+{{!sql('''insert into Enrolled values ('53688', 'Carnatic101', 'C');
+insert into Enrolled values ('53688', 'Reggae203', 'B');
+insert into Enrolled values ('53650', 'Topology112', 'A');
+insert into Enrolled values ('53666', 'History105', 'B');
+''', dbs=dbs, points=0)}}
+
+Again, I can't really tell if that worked because it doesn't return a result.
+
+### {{!next()}}. List the contents of the Enrolled table.
+
+Finally, some feedback on whether that worked.
+
+{{!sql('''select * from Enrolled''', dbs=dbs, points=15)}}
+
+**Note:** My checking software is simply comparing your result to what I expect. It is
+not smart. For example, if you reordered the fields in your database, 'select \*' won't
+work.
+
+### {{!next()}}. List the student name and course id for each student whose grade is A.
+
+{{!sql('''select name, cid from Students, Enrolled where Students.sid = Enrolled.sid and grade = 'A' ''', dbs=dbs, points=10)}}
+
+To best simulate the way the grader will work, I suggest you reload your page and step
+one cell to the next pressing execute. If it shows all the answers correct under those
+conditions it should pass the grader just fine.

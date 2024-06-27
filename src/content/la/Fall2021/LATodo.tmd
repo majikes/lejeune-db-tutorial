@@ -1,0 +1,257 @@
+Title: LA To Dos
+Category: Handouts
+Date: 2020-08-11
+Status: draft
+
+# LA To Do
+
+This is a web page of the things that have to be done.
+It will be updated regularly.
+
+## <a href="#before-class" name="before-class"><u>Before classes start:</u></a>
+
+ - Please read over the following pages for any typographical errors or ambiguity.  
+     - [LA Information](/mypoll/draft/la-information.html)  
+     - [Syllabus](/category/syllabi.html) along with supplementary pages on 
+[Piazza Policy](/piazza-policy.html),
+[office hours](https://comp550fa20.cs.unc.edu/office-hours.html), and
+[reading assignments](https://comp550fa20.cs.unc.edu/readingassignments.html).  
+
+ - Check out worksheet-m1-review-pseudocode for problems with grading!
+ - Complete the [Google Interest Form](https://docs.google.com/forms/d/1YyJlfXPHZsPuKuAw9RIYzQrz25zZIoBTMtgBOX1E-9k)  
+    - Ensure you can get to the [Piazza class page]({{PIAZZA}}).
+
+ - Fill out and submit the very easy worksheets that the students will do during the first week of class:  
+    - [Pseudocode worksheet](https://comp550fa20.cs.unc.edu/mypoll/worksheets/worksheet-00-pseudo).
+    - First day's worksheet [worksheet01-welcome](https://comp550fa20.cs.unc.edu/mypoll/worksheets/worksheet01-welcome)  
+    - Card trick worksheet [worksheet02-cards](https://comp550fa20.cs.unc.edu/mypoll/worksheets/worksheet02-cards)  
+
+ - Fill out and submit the quizzes:  
+    - You can't submit [quiz-demo](/mypoll/quizzes/quiz-demo)  
+    - [Card game quiz](/mypoll/quizzes/quiz01-card)   
+ 
+ - Sign up for [GIT Access](/mypoll/draft/la-information.html#git)
+ - Fill out [Office Hour Doodle](https://doodle.com/poll/4kw4ut6im6747awm).
+    - Doodle didn't allow me to specify weekly, so I just picked dates for next week. Of course, office hours will be recurring every week starting August 17th.
+    - We will have a group meeting to discuss how many hours you will work (between 4-6).
+    - But for now, please specify all times **WHEN** you are available.
+    - After consulting with all of you, I will set the schedule such that not everyone is at the same or nearly same time.
+    
+ - Fill out the [Weekly Group Meeting Doodle](https://doodle.com/poll/f8aeezw937dem2h6)
+    - I selected times from 10:00 AM to 11:00 PM M/T/W/TH and F 10:00 AM to 12:00 noon
+    - Please specify all times **WHEN** you are available.
+    - These meetings starting the week of August 17th, will be quick and Agile.
+    - See [Scrum](https://en.wikipedia.org/wiki/Scrum_(software_development))
+    - You will have two minutes to say:   
+        1. What you did last week  
+        2. What you plan to do this week  
+        3. What problems you have  
+
+## <a href="#week-aug-10" name="week-aug-10"><u>Week of August 10th:</u></a>
+
+ At our first one-on-one meeting I should have showed you how the assessments (quizzes, homeworks, exams, worksheets) work.
+    - We will go into more detail with the following work.
+
+ - For LAs, I'd like you to think about a algorithm you'd like to implement in our Javascript Pseudocode  
+    - Examples, DP Rod Cutting (CLRS p 369), Shortest Path Dikstra's Algorithm (CLRS p. 658), Greedy Task-scheduling (CLRS 16.5 but described in [Geeks for Geeks](https://www.geeksforgeeks.org/job-sequencing-problem/)), or one of the sorting programs (insertion sort, quicksort, mergesort) from CLRS
+    - After this is written in Pseudocode, I will show you how this gets put into  a homework. The goal here is to see how you do an full-stack development.  
+    - You must complete the pseudocode within two weeks (by August 28th)
+ - For TAs, I'd like you to think about writing a quiz.
+    - See [assessments](https://comp550fa20.cs.unc.edu/mypoll/assessments?) for examples.
+        - These are in mypoll/src/content/quizzes
+    - Right now I have quizzes through the middle of next week (8/19)
+    - I need something that would be:
+        - 15 minutes in length
+        - Maybe 3 to five questions.
+        - But would cover the _high points_ of the week's subject
+    - For example, I need one on [summations](/mypoll/worksheets/worksheet04-analysis), [iterative and master method](/mypoll/worksheets/worksheet06-iterative-master), and [Dynamic Programming](/mypoll/worksheets/worksheet08-DP)
+    - The quiz content should be similar to the worksheets in mypoll/content/worksheets
+    - Of course, I'll need the quiz in order that they appear above.  It won't help me to have a summations worksheet in October.
+    - You must complete this by the end of the week (before August 17th)
+
+## <a href="#week-sep-1" name="week-sep-1"><u>Week of Sept 1:</u></a>
+    - How are office hours going?
+    - Everyone should have GIT access.  I'm looking for anyone who could not push their branch named the same as their onyen, to let help know.   We need this squared away.
+    - Everyone should have their comments in about [homework 02]({{get_url('homeworks', key='homework02-recurrence')}})
+    - Do we have quiz 3?
+    - Has everyone looked at the [extra credit]({{get_url('extracredit', key='extra00')}})?
+        - Have to get the program correct.
+        - Max you get back is 25% of whatever you lost on the exam (not counting late points)
+        - You must submit it before Midnight Sunday 9/20.  No late exemptions given
+        - You cannot go to LAs or TAs for help. 
+        - No student help
+    - Standardize lateness for quizzes, worksheets,
+        - Very steep 
+        - Don't hand in late
+    - For homeworks and exams
+        - 2% per minute, 75% max
+
+## <a href="#week-sep-16" name="week-sep-16"><u>Week of Sept 16th</u></a>
+
+I goofed on the m1-MIB pagination.
+It caused a lot of rework and potential errors.
+Will try to do better.
+
+Did not get from everyone how long it takes each of you to review quizzes, homeworks, and exams.  
+ - Assuming one hour quiz, 2 hour homework, three hour exam.  
+ - Assuming one week's notice is enough for each of these.  
+
+Do not have review input from each of you on midterm.  
+ - In the future, I'm going to ask that you send your comments in a note.
+ 
+I have selection done so that you can review it whenever you have time.
+You should not be able to get to matrix chain multiplication as it is not yet ready.   
+ - Can review selection's homework 3 [https://comp550fa20.cs.unc.edu/mypoll/homeworks/homework03-select](https://comp550fa20.cs.unc.edu/mypoll/homeworks/homework03-select)  
+ - Can review selection's midterm 2 [https://comp550fa20.cs.unc.edu/mypoll/exams/m2-halloween]([https://comp550fa20.cs.unc.edu/mypoll/exams/m2-halloween)  
+
+## <a href="#week-sep-30" name="week-sep-30"><u>Week of Sept 30th</u></a>
+
+ - Midterm 2 is, in large part, out
+    - Still need to do Kruskal and Prim algorithm
+    - Hoping to add a counter example
+ - Huffman part of homework 4 is out
+
+I could use some help:
+
+   * Someone to do a greedy and DP coin change program in JavaScript   
+       Needed by 10/10 so it can be put into the exam, earlier if in homework 4  
+   * Need someone to review [worksheet Kruskal](/mypoll/worksheets/worksheet10-kruskal)     
+
+## <a href="#week-oct-07" name="week-oct-07"><u>Week of Oct 7th</u></a>
+
+ - [Homework 4](https://docs.google.com/document/d/1L34SS1ynhyvjnyWj7LWZa54lzjJrSTV5SI1IzQuDJZU/edit?usp=sharing) is out  
+   Please get your comments in  
+   I plan to give out Kruskal and pipe cutting soon (Thursday?)  
+
+ - [Midterm 2](https://docs.google.com/document/d/16YMVHecE64aWQv3QnzYFhdDTXD1mHIYho9nXKPhDhKQ/edit?usp=sharing) is out  
+   Please get your comments in  
+   Ensure your comments are actionable (that they are clear, explain what is wrong, and what needs to change)
+
+ - Discussion:  May or may not add an extra credit to midterm 2.   Or could add it as a last week project and count it as a extra credit for the final  
+
+ - Discussion: Final Exam:
+      Could go with linear navigation (cannot go back to question 1 after seeing question 2)
+      Could go with a large number of questions and 3 hours  
+      Could go with Spring 2020 format and have reasonable number of questions and only 90 minutes  
+      Would like your opinion.  I'm leaning toward 90 minute exam like Spring w/ possible extra credit due week before exams.
+
+I could use some help:
+
+   * Ankur is working on a Python coin change problem.
+       May or may not get added to midterm 2 (more likely the final)
+
+## <a href="#week-oct-14" name="week-oct-14"><u>Week of Oct 14th</u></a>
+
+ - Homework 4 is out, students will have all of it tomorrow.
+ - Midterm 2:<ul>
+    <li>Didn't get comments from everyone  </li>
+    <li> Only severe error comments accepted.   </li>
+    <li> No bonus question.  </li>
+    <li> Expecting results similar to Midterm 1</li>
+    </ul>
+
+ - Homework 5 should be out for your review this weekend.<ul>
+    <li>Cover Longest Common Subsequence and Linear Programming</li>
+    </ul>
+
+ - Final Exam will be out for your review in a week or so
+
+ - Think about your plans for next semester.<ul>
+    <li> Do you want to LA/TA for this class again? </li>
+    <li> Ideas to improve next semester?</li><ul>
+         <li>Videos and reverse teaching</li>
+         <li>Different kinds of questions in browser</li>
+         </ul>
+    </ul>
+
+## <a href="#week-oct-21" name="week-oct-14"><u>Week of Oct 21st</u></a>
+
+ - Midterm 2 is tonight
+ - Homework 5 is out for your review.<ul>
+    <li>https://docs.google.com/document/d/10vSO1cEj1BygRX-pYX4Av-3qRtsfNNBWrZUF3SntN_g</li>
+    <li>https://comp550fa20.cs.unc.edu/mypoll/homeworks/homework05-bond</li>
+    <li>Longest Common Subsequence will go out Thursday 10/28</li>
+    <li>Linear Programming will be given to students Thursday 11/5</li>
+    <li>Homework 5 will be tentatively due 11/12</li></ul>
+ - Final exam:<ul>
+    <li>90 minute exam.  Probably 500 points</li>
+    <li>I have about half of it done</li>
+    <li>Plan to make it available to you in a week</li>
+    <li>Will probably do the same thing with each LA/TA getting one student version</li>
+    <li>I'd love to get your opinion on the conflict exam</li> </ul>
+ - Let me know if you are planning to be COMP 550 LA/TA next semester<ul>
+    <li> Ideas to improve next semester?</li><ul>
+         <li>Videos and reverse teaching</li>
+         <li>Different kinds of questions in browser</li>
+         </ul>
+    </ul>
+
+## <a href="#week-oct-28" name="week-oct-28"><u>Week of Oct 28st</u></a>
+
+ - Homework 5 is out for your review.<ul>
+    <li>https://docs.google.com/document/d/10vSO1cEj1BygRX-pYX4Av-3qRtsfNNBWrZUF3SntN_g</li>
+    <li>https://comp550fa20.cs.unc.edu/mypoll/homeworks/homework05-bond</li>
+    <li>Longest Common Subsequence will go out Thursday 10/28</li>
+    <li>Linear Programming will be given to students Thursday 11/5</li>
+    <li>Homework 5 will be tentatively due 11/12</li></ul>
+ - Final exam:<ul>
+    <li>Syllabus updated with exam info (90 mins), time, conflicts</li>
+    <li>90 minute exam.  425 points</li>
+    <li>https://docs.google.com/document/d/1IxJ_j1N3gQfmZjIes4TW0ZfcxRwdXSyG0vD5GblhyDk</li>
+    <li>Need comments back by Friday 11/6</li>
+ - Let me know if you are planning to be COMP 550 LA/TA next semester<ul>
+    <li> Ideas to improve next semester?</li><ul>
+         <li>Videos and reverse teaching</li>
+         <li>Different kinds of questions in browser</li>
+         </ul>
+    </ul>
+ </ul>
+
+## <a href="#week-nov-04" name="week-nov-04"><u>Week of Nov 4th</u></a>
+
+ - Homework 5 goes to students tomorrow.  Due Sunday 11/15 11:59:59 PM.<ul>
+    <li><a href="https://docs.google.com/document/d/10vSO1cEj1BygRX-pYX4Av-3qRtsfNNBWrZUF3SntN_g">Homework 5 google document<a></li>
+    <li><a href={{get_url('homeworks', key='homework05-bond')}}>Homework 5</a></li>
+    </ul>
+ - FE out<ul>
+    <li>Syllabus updated with exam info (90 mins), time, conflicts</li>
+    <li>90 minute exam.</li>
+    <li><a href="https://docs.google.com/document/d/1IxJ_j1N3gQfmZjIes4TW0ZfcxRwdXSyG0vD5GblhyDk">FE-bit google document</a></li>
+    <li><a href={{get_url('exams', key='fe-bit')}}>Final exam</a></li>
+    <li>Need comments back by Friday 11/6</li>
+    </ul>
+ - Let me know if you are planning to be COMP 550 LA/TA next semester<ul>
+    <li> Ideas to improve next semester?</li><ul>
+         <li>Videos and reverse teaching</li>
+         <li>Different kinds of questions in browser</li>
+         </ul>
+    </ul>
+
+## <a href="#week-nov-11" name="week-nov-11"><u>Week of Nov 11th</u></a>
+
+ - Our last LA/TA meeting of the semester!!!
+ - Homework 5 goes to students tomorrow.  Due Sunday<ul>
+    <li>Lots of questions on infeasible solution (see 29.5 or my lecture notes)</li>
+    <li>Students making unforced errors in algebra</li>
+    </ul>
+ - FE out<ul>
+    <li>Found and fixed another hash error that caused green highlight not to work</li>
+    <li>Please re-read and confirm the wording for Huffman percentage is better now</li>
+    </ul>
+ - Let me know if you are planning to be COMP 550 LA/TA next semester<ul>
+    <li> Ideas to improve next semester?</li><ul>
+         <li>Videos and reverse teaching</li>
+         <li>Different kinds of questions in browser</li>
+         </ul>
+    </ul>
+
+## Future improvements
+
+   * Need to change how images are imported (probably delay until next semester when we get rid of Pelican)  
+       Pandoc, for some reason, cannot find the images to include them  
+   * Ability to enter data on an assessment that gets run by a program   
+       This would be the reverse of the pseudocode we already have
+   * Add autocomplete to table select pull down  
+       https://www.w3schools.com/howto/howto_js_autocomplete.asp
+   * Put a timer on the assessments.   
+   * A way to do math proofs???  

@@ -1,0 +1,130 @@
+<%
+setInfo(due="2021-11-18 15:15:00",
+        needsSubmitCode=True,
+        exceptions=dict(gksrb32=dict(due='2021-11-19 00:00:00', needsSubmitCode=False),
+                        _003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        )
+dbs=['books1.sqlite', 'books2.sqlite']
+%>
+# Final Exam Review 1
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+
+```sql
+   CREATE TABLE Authors (
+      login text primary key,
+      email text,
+      first_name text,
+      last_name text
+   )
+
+   CREATE TABLE Books (
+      id integer primary key autoincrement,
+      title text,
+      author text references authors(login),
+      language text,
+      created date
+  )
+
+  CREATE TABLE Categories (
+     category text,
+     book integer references books(id),
+     unique (book, category)
+  )
+```
+
+---
+
+**List.Categories:** List the book categories in the database in reverse alphabetical order.  
+% answer = '''
+SELECT DISTINCT category
+  FROM Categories
+  ORDER BY category DESC
+'''
+{{!sql(answer, sort=1, dbs=dbs, points=20, name='List.Categories')}}
+% include('viewAnswer')
+
+---
+
+**List.Book.And.Categories:** List all the book titles along with their categories.
+Present the list in reverse alphabetical order by their title then category.  
+For example, if the book titled <i>Plurals: Canes, nomine Montius et Daisia</i>
+had categories <b>Animals and Nature</b> and <b>Fairy and Folk Tales</b> this
+would be displayed on two lines.  
+Plurals: Canse, nomine Montius et Daisia, Fairy and Folk Tales  
+Plurals: Canse, nomine Montius et Daisia, Animals and Nature  
+% answer = '''
+SELECT title, category
+  FROM Books B, Categories C
+  WHERE b.id=c.book
+  ORDER BY title, category DESC
+'''
+{{!sql(answer, dbs=dbs, points=20, name='List.Book.And.Categories')}}
+% include('viewAnswer')
+
+---
+
+**List.First.Book.Per.Category:** List the book categories in alphabetical order along with
+the first book id (the one with the smallest id) that used that category.  
+% answer = '''
+SELECT category, min(book) as book_id
+  FROM Categories
+  GROUP BY category
+  OrDER BY  book_id
+'''
+{{!sql(answer, dbs=dbs, points=20, name='List.Authors')}}
+% include('viewAnswer')
+
+---
+
+**First.Name** List all the first names of authors in reverse alphabetical order and
+the number of authors that have that first name.  
+For example, if only two author's have the first name Anna, 
+return Anna, 2.  
+If Andrea only occurs once, return Andrea, 1.  
+% answer = '''
+SELECT first_name, COUNT(*) as C
+  FROM Authors
+ GROUP BY first_name
+ ORDER BY first_name DESC
+'''
+{{!sql(answer, dbs=dbs, num_rows=15, points=20, name='First.Name')}}
+% include('viewAnswer')
+
+---
+
+**First.Name.More.Four:** List all the first names of authors in reverse alphabetical order and
+the count of times more than four the name appears.  
+If the name appears less than four time, display null.  
+% answer = '''
+WITH C1 AS (SELECT DISTINCT COUNT(*) as C
+              FROM Authors
+              Group by first_name
+              HAVING c>4),
+C2 AS (SELECT DISTINCT first_name, count(*) as C
+              FROM Authors
+              Group by first_name)
+
+SELECT C2.first_name, C1.c-4
+  FROM C2
+  LEFT JOIN C1
+  ON C1.C = C2.C
+  ORDER BY C2.first_name DESC
+'''
+{{!sql(answer, dbs=dbs, num_rows=15, points=20, name='First.Name.More.Four')}}
+% include('viewAnswer')
+
+---
+
+%end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

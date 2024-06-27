@@ -1,0 +1,78 @@
+<%
+from math import log
+from datetime import datetime, date
+setInfo(
+      due="2022-10-31  8:00:00",
+      needsSubmitCode=False,
+      assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      xxxxxxxx=dict(needsSubmitCode=False, due='2021-10-26 15:15:00')),
+)
+%>
+
+# Chapter 13 Reading of External sorting
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**When:** When does a database management system sort?  
+ **A** When a users asks for a field in ascending order  
+ **B** When bulk loading a tree  
+ **C** When eliminating duplicates  
+ **D** When doing joins  
+ % choices = ['A', 'B', 'C', 'D', 'A and B', 'B and C', 'C and D', 'A, B, and C', 'A, B, and D', 'A, C, D', 'B, C, D', 'All of them', 'None of them']
+ % answer = 'All of them'
+ % answer2 = f'''See page 422. Answer: {answer}'''
+ {{!select(answer, choices, points=25, name='When')}}
+ %include('viewAnswer', answer=answer2)
+
+---
+
+% num_pages = 64
+% assert datetime.now().date() < date(2023, 1, 1)
+**Two.Way.Sort:** If there are {{num_pages}} pages, how many passes does it take fro a simple two-way merge sort to sort the data?  
+  % answer = f'{int(log(num_pages)/log(2))+1}'
+  % answer2 = f'Section 13.2 talks about simple sort and says it is $ceiling(\log_2(pages))+1$: Answer {answer}'
+  % choices = [f'{x}' for x in range(100)]
+  {{!select(answer, choices, points=25, name='Two.Way.Sort')}}
+  %include('viewAnswer', answer=answer2)
+
+---
+
+**Blocked.I.O.memory:** Given the sizes of memory, all but the largest files can be sorted in just two passes using blocked I/O.  
+ % answer = 'True'
+ % answer2 = f'Quote taken from start of the second paragraph on page 431.  Answer: {answer}'
+ % choices = ['True', 'False']
+ {{!select(answer, choices, points=25, name='Blocked.I.O.memory')}}
+ %include('viewAnswer', answer=answer2)
+
+---
+
+% assert datetime.now().date() < date(2023, 1, 1)
+**Blocked.I.O.actual:** Assuming you had a blocking factor of 32 pages, 5000 4K memory pages, and a file of one billion bytes.
+How many passes does it take to sort the file?  
+ % answer = '4'
+ % answer2 = f'Taken from Figure 13.9 column two last row.  Answer: {answer}'
+ % choices = [f'{x}' for x in range(100)] + ['Too many']
+ {{! select(answer, choices, points=25, name='Blocked.I.O.actual')}}
+ %include('viewAnswer', answer=answer2)
+
+---
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

@@ -1,0 +1,174 @@
+<%
+setInfo(
+      assessment_type='worksheet',
+)
+import json
+with open('wkst.large.university1.json') as fid:
+      university_data = json.load(fid)
+setInfo(
+        assessment_type='worksheet',
+       )
+dbs = ['wkst.large.university1.sqlite', 'wkst.large.university2.sqlite']
+symbols = ['True', 'False']
+
+%>
+
+# Post-chapter 4 worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+## {{!linkable_header('SQL Tutorial Cheat Sheet')}}
+
+Following are three SQL tutorial cheat sheets available from http://www.sqltutorial.org
+
+<img src="{{static('images/SQLTutorial.1.jpeg')}}" style="width:85%" alt="First of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.2.jpeg')}}" style="width:85%" alt="Second of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.3.jpeg')}}" style="width:85%" alt="Third of three SQL Tutorial cheat sheets"/>
+
+---
+
+### {{!linkable_header('Database used')}}
+
+The schema for the database used in this class is below.
+It is from the database used in chapter 3 of the book 
+that describes a university.
+
+<pre>
+ <code class="sql">
+  % for line in university_data.split('\n'):
+    {{line}}
+  % end
+ </code>
+</pre>
+
+---
+
+## {{!linkable_header('Questions')}}
+
+---
+
+**All.Courses.Spring.2017:** Consider the following SQL query for the question
+"list the instructor name and course title for all courses taught in Spring 2017".
+
+```
+SELECT name, title
+  FROM instructor, natural join teaches natural join section natural join course
+ WHERE semester = 'Spring' and
+       year = 2017
+```
+
+What is wrong with the query?
+
+**A.** The query is fine as it is and cannot be improved.  
+**B.** Semester is ambiguous because it appears in two relations  
+**C.** Year is ambiguous because it appears in two relations  
+**D.** Input relation section is an unnecessary and makes the query slower  
+**E.** This query will not work if an instructor teaches a class in a department other than their own department.  
+**F.** B and C  
+**G.** B and D  
+**H.** B and E  
+**I.** C and D  
+**J.** C and E  
+**K.** D and E  
+<%
+answer = 'K'
+choices = [x for x in 'ABCDEFGHIJK']
+answer2 = f'''
+Section is unneeded.
+
+Also if Jack Snoeyink who is in the computer science department teaches Math 281, the natural
+join would require instructor.dept_name = course.dept_name but that's wrong.
+
+Answer {answer}
+'''
+%>
+{{!select(answer, choices, name='All.Courses.Spring.2017', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Some.people.hate.left.joins:** Some folks don't like left joins.
+But if you picture [the Venn diagrams](/visualization/joins.html),
+a left join can be done with a union of the two shaded areas.  
+Which of the following statements is equivalent to `select * from student natural left outer join takes`?  
+
+**A** select * from student S, Takes T where T.ID=S.ID  
+**B** select * from student natural join takes  
+**C** select *, null, null, null, null, null from student  
+**D** select * from student natural join takes  
+&nbsp;&nbsp;&nbsp;&nbsp;union  
+&nbsp;&nbsp;&nbsp;&nbsp;select ID, name,dept_name,tot_cred, NULL, NULL, NULL, NULL, NULL  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from student S1 where not exists  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(select ID from takes T1 where T1.id=S1.id)  
+**E** None of them
+
+<%
+answer = 'D'
+choices = [x for x in 'ABCDE']
+answer2 = f'''
+It's simply a union of the two Venn diagrams
+
+Answer {answer}
+'''
+%>
+{{!select(answer, choices, name='Some.people.hate.left.joins', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+
+---
+
+**All.Courses.Fall.2010:** Write a query to 
+list the instructor name and course title for all courses taught in Fall 2010.
+
+<%
+answer = '''
+SELECT name, title
+  FROM instructor as I, Teaches as T, Course as C
+ WHERE semester = 'Fall' and
+       year = 2010 AND
+       I.ID = T.ID AND
+       T.course_id = C.course_id
+'''
+%>
+{{!sql(answer, dbs=dbs, points=20, name=f'All.Courses.Fall.2010', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Courses.Taught.By.Instructor.Majikes:** Count the number of courses taught by the instructor named 'Majikes'  
+<%
+answer = '''
+SELECT COUNT(*)
+  FROM instructor as I, Teaches T
+  where name = 'Majikes' AND
+        I.ID = T.ID
+'''
+%>
+{{!sql(answer, dbs=dbs, points=20, name=f'Courses.Taught.By.Instructor.Majikes', sort=True)}}
+% include('viewAnswer')
+
+
+---
+
+**All.Instructors.Number.Courses:** Display a list of **all** instructor IDs and their names
+along with the number of sections they taught.
+Ensure to 
+<%
+answer = '''
+SELECT I.ID, I.name, COUNT(T.ID)
+  FROM instructor as I
+  LEFT JOIN Teaches as T on I.ID=T.ID
+ GROUP BY I.ID, I.name
+'''
+%>
+{{!sql(answer, dbs=dbs, points=20, name=f'All.Instructors.Number.Courses', sort=True)}}
+% include('viewAnswer')
+
+---
+
+% include('worksheet-submit.md')

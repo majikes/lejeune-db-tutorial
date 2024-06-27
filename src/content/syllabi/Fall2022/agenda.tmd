@@ -1,0 +1,304 @@
+Introduction
+<!-- Z in column 1 followed by a URL is for the Zoom recording, leave URL blank for meeting url -->
+<!-- Days in the past appear blue/grey, Next day has a marker, Future is in white -->
+
+# Aug 15  Lecture01
+
+CL Read over the [syllabus]({{get_url('syllabi', page_name='syllabus')}}) so you can find the Easter egg and ask questions about the class. | Ensure you have the [textbook]({{get_url('syllabi', page_name='syllabus')}}#textbook,-class-discussion-site,-required-browser,-course-care). Careful of free PDFs they have been known to have mistakes. | Complete the [demo worksheet]({{get_url('worksheets', key='worksheet-00-demo')}}) before Monday the 22nd 8:00 AM. @worksheet-00-demo | A [welcome video]({{get_url('panopto', hexcode='aa2acf25-4519-4df1-b0d6-aee100099c01')}}) is available.  | Read the [syllabus section on Piazza]({{get_url('syllabi', page_name='syllabus')}}#piazza) and the [worksheet bonus for good Piazza posts]({{get_url('syllabi', page_name='syllabus')}}#worksheet-bonus). | Watch [the video](https://youtu.be/tVqWcrMPxfY) on why you should use a discussion forum like Piazza. | Watch video on how to sign up for [Course Care]({{get_url('panopto',hexcode='e69a803f-d891-481e-8ef8-ac9b013890ac')}}) or [the help page office hours instruction]({{get_url('syllabi', page_name='help')}}#office-hours).
+
+We will introduce the course, discuss logistics and objectives, and generally discuss the [syllabus]({{get_url('syllabi', page_name='syllabus')}}).
+You can get a head start on reading chapters one and read chapter 2 **for concepts** before the next class (See  the [reading list]({{get_url('syllabi', page_name='reading')}})).
+
+S Chapter.00.Introduction.pdf Introduction
+P1 [Aug 15 Recording]({{get_url('panopto', hexcode='25fe14dd-e286-42a6-b79d-aef200fde658')}})
+
+| Chapter 1: Overview of Database Systems
+# Aug 17 Lecture02
+
+CL Read chapter 1 and complete [worksheet on chapter 1]({{get_url('worksheets', key='worksheet-chapter-01')}}) before 8:00 AM today. @worksheet-chapter-01 | Complete the [worksheet demo]({{get_url('worksheets', key='worksheet-00-demo')}}) before 8:00 AM Monday. @worksheet-00-demo | Have you checked your [grades]({{get_url('grades')}})?
+
+S Chapter.01.pdf Chapter 1
+P1 [Aug 17 Recording]({{get_url('panopto', hexcode='79c11b3a-bf96-4889-8a43-aef4010512df')}})
+
+
+| Chapters 2 and 3: Database Design and the Relational Model
+# Aug 22 Lecture03
+
+CL Read Chapter 2 for ER concepts and submit the [worksheet on chapter 2]({{get_url('worksheets', key='worksheet-chapter-02')}}) today before 8:00 AM. @worksheet-chapter-02 | Complete the [worksheet demo]({{get_url('worksheets', key='worksheet-00-demo')}}) before 8:00 AM today. @worksheet-00-demo | Read Chapter 3. | After you have installed [Anaconda]({{get_url('syllabi', page_name='syllabus')}}#anaconda-/-python-sqlite3), you can verify your installation with a [demo assignment]({{static('images/A0.zip')}}) which will not be graded. Note that wherever you download the demo assignment, you must start `jupyter notebook` from that directory or a file tree _above_ that directory. | An [SQL database of students from chapter 3]({{get_url('sql_interpreter', key='Chapter3.Students')}}) that you can play with as we/you go through chapter 3. 
+
+
+S Chapter.02.pdf Chapter 2
+P1 [Aug 22 Recording]({{get_url('panopto', hexcode='b4e148da-6f28-4c1d-9be9-aef900f509f1')}})
+# worksheet-02-1 before class
+# worksheet-02-2 after class
+
+
+| Chapters 3: Relational Model Part I
+# Aug 24 Lecture04
+
+
+
+CL [Homework A1]({{get_url('homeworks', key='A1')}}) SQL and Relational Algebra released, _due Sept 7 8:00 AM._ @A1 | You need [Anaconda]({{get_url('syllabi', page_name='syllabus')}}#anaconda-/-python-sqlite3) installed to start homework assignments
+
+
+<code>create table if not exists Students<br /> (sid text,</br /> name text,<br /> login text,<br /> age integer, <br /> gpa real);<br /><br /> create table if not exists Enrolled<br /> (sid char(20),<br /> name char(20),<br /> grade char(2));</code>
+
+We may start into the second part of chapter 3
+
+S Chapter.03-1.pdf Chapter 3 Part I
+P1 [Aug 24 Recording]({{get_url('panopto', hexcode='60f994b7-6127-477b-964f-aefb00feb9cf')}})
+
+| Chapters 3: Relational Model Part II
+# Aug 29 Lecture05
+
+
+We may start Chapter 4
+
+CL You can start thinking about which [team]({{get_url('worksheets', key='worksheet-00-teams')}}) you'd like to be on for the games class.
+
+Results of the preferences is to keep the existing syllabus of no extensions. There were 99 votes for that option.
+
+S Chapter.03-2.pdf Chapter 3 Part II
+P1 [Aug 29 Recording]({{get_url('panopto', hexcode='9c009921-765c-4bae-bca8-af0001016b7b')}})
+
+
+| Chapter 4 Part I
+# Aug 31 Lecture06
+
+CL Read chapter 4.1 to 4.2 before class. | No office hours, Labor Day, Sept 5th
+
+S Chapter.04-1.pdf Chapter 4 Part I
+P1 [Aug 31 Recording]({{get_url('panopto', hexcode='d1af1858-fa81-4b7c-97a1-af0200fa8817')}})
+
+
+| Labor Day no class
+# Sep 5
+
+CL No class.  | No office hours | Submit button for [teams]({{get_url('worksheets', key='worksheet-00-teams')}}) available at 8:00 AM.
+
+| Chapters 4 Part II
+# Sep 7 Lecture07
+
+CL Assignment A1 due by 11:59: 59 PM @A1  | Assignment A2 due by Wednesday Sept 21, 08:00 AM before games class @A2
+S Chapter.04-2.pdf Chapter 4 Part II
+P1 [Sep 7 Recording]({{get_url('panopto', hexcode='43bc3eb3-8bbd-44f9-877d-af0900f90c9f')}})
+
+# Today's slides are a Jupyter Notebook: [Chapter 5 SQL queries]({{HTTPS_FQDN}}/static/slides/CH5-SQLQueries-Preclass.ipynb)
+
+
+| Chapter 5: SQL Chapter 5.1-5.4 Nested Queries and Aggregates
+# Sep 12 Lecture08
+
+# CL Read 5.5-5.10. Assignment A2 given out and due Thursday 9/23 11:59:59 PM
+CL Chapters 5 before class (we will only cover triggers superficially). | Chapter 5.1-5.3 covers basic SQL commands which we have already covered and we will not cover in class again. | Complete [Chapter 5.1-5.3 review worksheet]({{get_url('worksheets', key='worksheet-chapter-5-1-to-5-3')}}) _before 8:00 AM_ @ worksheet-chapter-5-1-to-5-3 | Ensure you have submitted [teams]({{get_url('worksheets', key='worksheet-00-teams')}}) _before 8:00 AM_ @ worksheet-00-teams | From now on, no live streaming of class
+
+# Today's slides are a Jupyter Notebook: [Chapter 5 SQL aggregates and nulls]({{HTTPS_FQDN}}/static/slides/CH5-AggregatesAndNull-Preclass.ipynb)
+
+S Chapter.05-1.pdf Chapter 5 Part I
+P1 [Sep 12 Recording]({{get_url('panopto', hexcode='08a257ed-841e-4ae1-a170-af0e00ee36a0')}})
+
+
+| Chapter 5: SQL Group By, Having and Triggers
+# Sep 14 Lecture09
+
+CL Chapter 5.5.1 through to the end of the chapter
+
+S Chapter.05-2.pdf Chapter 5 Part II
+P1 [Sep 14 Recording]({{get_url('panopto', hexcode='1116215c-bc6f-4f3d-b726-af1000f935c7')}})
+
+| Chapter 6: Database Application Development
+# Sep 19 Lecture10
+
+CL Skim 6, read 6.1.1, 6.1.2 | Also skim the [Python Database API](https://www.python.org/dev/peps/pep-0249/) | You may want to read about [row factories](https://www.kite.com/python/docs/sqlite3.Connection.row_factory). | Today's slides will be a Jupyter Notebook download, you will need to start Jupyter Notebook to follow along in class. | Lecture will be short.  We will follow up with a sailor's game to prepare for Wednesday.
+
+
+S CH6-ApplicationProgramming-Preclass.ipynb Chapter 6 Jupyter Notebook  
+
+S Pregame.pdf Pregame
+
+P1 [Sep 19 Recording]({{get_url('panopto', hexcode='048c22ca-2165-454a-91fe-af1500f81375')}})
+
+
+
+| Exam Review / Game
+# Sep 21
+
+Must be in class.  No zoom support for games.
+
+CL Assignment A2 due 8:00 AM @A2
+
+
+| Wellness Day - No classes
+# Sep 26 
+
+| Midterm 1
+# Sep 28
+
+[Midterm 1 Spring 2021]({{get_url('handouts', pdf='COMP521-Midterm1-Spring21')}})
+[Midterm 1 Fall 2022]({{get_url('handouts', pdf='COMP421.Fall2021.Midterm1')}})
+
+| Chapter 7
+# Oct 3 Lecture11
+
+CL We will finish up Chapter 5 on update and left joins |  Read Chapter 7 but gloss over DDTs, style sheets. See [reading list](https://comp421.cs.unc.edu/syllabi/reading) | You may want to have the telnet client installed on your workstation if you want to follow along. | Test by running telnet command from your terminal prompt (it will time out if works) |  [Mac Install of telnet client](https://osxdaily.com/2018/07/18/get-telnet-macos/) takes 15 minutes | [Windows enable of telnet client](https://www.lifewire.com/what-is-telnet-2626026) | Complete the [chapter 7 worksheet]({{get_url('worksheets', key='worksheet-chapter-07')}}) before 8:00 AM Monday. @worksheet-chapter-07
+
+
+# CL Homework A2 due Thursday 11:59:59 PM
+
+
+S Chapter.05.Joins.pdf Chapter 5 joins we missed
+
+S CH7-InternetApplications-Preclass.ipynb Chapter 7 Internet Applications
+
+P1 [Oct 3 Recording]({{get_url('panopto', hexcode='d78d6d4a-34a8-41a7-be93-af2300f8d0be')}})
+ 
+| Chapter 8: Overview of Storage and Indexing (Part I and possibly Part II)
+# Oct 5 Lecture12
+
+CL Read chapter 8 and complete [worksheet on chapter 8]({{get_url('worksheets', key='worksheet-chapter-08')}}) before 8:00 AM today. @worksheet-chapter-08 | Chapter 8 is high-density of information!!!! | Complete worksheet given out after Monday's class on [joins, worksheet 05 E,]({{get_url('worksheets', key='worksheet-05-E')}}) before 8:00 AM @worksheet-05-E | [Homework A3]({{get_url('homeworks', key='A3')}}) available after class, password='model-view-controller', due Oct 16 11:59:59 PM @A3
+
+S Chapter.08-1.pdf Chapter 8  Part I
+
+S Chapter.08-2.pdf Chapter 8  Part II
+
+P1 [Oct 5 Recording]({{get_url('panopto', hexcode='2e6719dd-b3f3-4f50-876e-af2500f40b64')}})
+
+| Chapter 9: Storing Data
+# Oct 10 Lecture13
+# worksheet-09-A in class
+
+CL Read chapter 9 excluding RAID in 9.2 and complete [worksheet chapter 9]({{get_url('worksheets', key='worksheet-chapter-09')}}) by 8:00 AM @worksheet-chapter-09
+
+S Chapter.09.pdf Chapter 9
+
+P1 [Oct 10 Recording]({{get_url('panopto', hexcode='67c0a562-32f1-4a37-bf98-af2a00f55d8b')}})
+
+| Chapter 10 + 11.1: Indexing
+# Oct 12 Lecture14
+
+# Assignment 4 Storage + SQL released.
+
+CL Read chapter 10 and 11.1.  | Homework [A3]({{get_url('homeworks', key='A3')}}) due by 10/16 11:59:59 PM | Homework [A4]({{get_url('homeworks', key='A4')}}) out after class today, password='marvel-io', and due by 10/23 11:59:59 PM
+
+S Chapter.10.pdf Chapter 10
+
+S Chapter.11.1.pdf Chapter 11
+
+P1 [Oct 12 Recording]({{get_url('panopto', hexcode='1d738394-a2cd-4cdf-8076-af2c00fbb30e')}})
+
+| Chapter 12: Query Evaluation
+# Oct 17 Lecture15
+
+CL Read chapter 12 and complete [worksheet chapter 12]({{get_url('worksheets', key='worksheet-chapter-12')}}) before 8:00 AM
+
+S Chapter.12.pdf Chapter 12
+
+P1 [Oct 17 Recording]({{get_url('panopto', hexcode='941ef413-2c2f-4224-a8ac-af3100f917c1')}})
+
+| Finish off Chapter 12 Query Evaluation
+# Oct 19 Lecture16
+
+CL Homework [A4]({{get_url('homeworks', key='A4')}}) due by 10/23 11:59:59 PM @ A4 | [Nuclear schema worksheet]({{get_url('worksheets', key='worksheet-game-nuclear-00')}}) given out after class
+
+S Chapter.12.pdf Chapter 12
+
+P1 [Oct 19 Recording]({{get_url('panopto', hexcode='d5016692-8005-4c71-8f6f-af3300fb0114')}})
+
+| Games II
+# Oct 24 Lecture17
+
+CL [Nuclear schema worksheet]({{get_url('worksheets', key='worksheet-game-nuclear-00')}}) due by 8:00 AM @ worksheet-game-nuclear-00 | [Nuclear pre-game worksheet]({{get_url('worksheets', key='worksheet-game-nuclear-01')}}) will be given out at the start of class @ worksheet-game-nuclear-01 | Complete [nuclear post-game worksheet]({{get_url('worksheets', key='worksheet-game-nuclear-02')}}) before 11:59:59 PM @worksheet-game-nuclear-02 | Homework A4 extended until 11:59:59 PM tonight
+
+S GameII.pdf Game Slides
+
+P1 [Oct 24 Recording]({{get_url('panopto', hexcode='2753590b-dab3-458b-99ae-af3801342efb')}})
+
+| Midterm 2
+# Oct 26
+
+# S 19-Midterm2.pdf Midterm Slide
+[Midterm 2 Fall 2022]({{get_url('handouts', pdf='COMP421.Fall2021.Midterm2')}})
+
+
+| Chapter 13: External Sorting I
+# Oct 31 Lecture19
+
+CL Read 13 and complete [chapter 13 worksheet]({{get_url('worksheets', key='worksheet-chapter-13')}}) by 8:00 AM @worksheet-chapter-13
+
+S Chapter.13.pdf Chapter 13
+
+P1 [Oct 31 Recording]({{get_url('panopto', hexcode='12087b46-f758-43a5-abef-af3f00fbafc2')}})
+
+
+| Chapter 13: External Sorting II. (Possibly Chapter 14)
+# Nov 2 Lecture 20
+
+P1 [Nov 2  Recording]({{get_url('panopto', hexcode='73e2ec6e-d07a-4574-a589-af4100f44463')}})
+
+| Chapter 14: Evaluating Relational Operators
+# Nov 7 Lecture21
+
+CL Homework A5 given out.  password = 'books-json' | Bonus worksheet only available only on Friday
+
+P1 [Nov 7  Recording]({{get_url('panopto', hexcode='676bf4b4-6a8e-472d-ace6-af460109c270')}})
+S Chapter.14.pdf Chapter 14
+
+
+| Finish off Chapter 14 and if time
+# Nov 9
+
+The databases used for the final exam are available
+
+
+CL Bonus [worksheet]({{get_url('worksheets', key='worksheet-14-Veterans')}}) only available to submit on Friday. @worksheet-14-Veterans
+
+P1 [Nov 9  Recording]({{get_url('panopto', hexcode='5805ec48-612c-4d57-b9de-af480109f51a')}})
+
+| Chapter 19: Database Design
+# Nov 14
+
+CL Read chapter 19 | Do you know what a [closure](https://en.wikipedia.org/wiki/Closure_(computer_programming)) is?
+
+P1 [Nov 14 Recording]({{get_url('panopto', hexcode='22a604c2-3536-4333-a03b-af4d0109d0c3')}})
+
+
+S Chapter.19.pdf Chapter 19
+
+| Chapter 19 and review
+# | Chapter 16: Overview of Transaction Management
+# Nov 16
+
+P1 [Nov 14 Recording]({{get_url('panopto', hexcode='22a604c2-3536-4333-a03b-af4d0109d0c3')}})
+
+| Finish off chapter 19, start on transaction processing
+# Nov 21
+
+CL Chapter 16, Transaction Management will **NOT** be on the final | To not interfere with the grades, the [Final Exam Worksheet]({{get_url('oldstuff', key='worksheet-fe-practice')}}) location has been renamed and does not appear on the grades page.
+
+P1 [Nov 21 Recording]({{get_url('panopto', hexcode='1c866079-0642-4a53-afc9-af5400fce67c')}})
+
+| No class Thanksgiving break
+# Nov 23
+
+CL Homework [A5]({{get_url('homeworks', key='A5')}}) due before 11:59:59 PM to receive a worksheet bonus @ A5 |  Homework [A5]({{get_url('homeworks', key='A5')}}) before Sunday 11:59:59 PM with no bonus @ A5 | Homework [A5]({{get_url('homeworks', key='A5')}}) absolutely not accepted after Sunday 11:59:59 PM @ A5
+
+| Chapter 16, Transaction Management 
+# | SQL Query Review
+# Nov 28
+
+CL Transaction management is a great thing to know.  It is not on the final exam! | Any stump the chump questions?
+
+S Chapter.16.pdf Chapter 16
+
+P1 [Nov 28 Recording]({{get_url('panopto', hexcode='f160986c-4e01-46c0-a05a-af5b0100e15a')}})
+
+| Exam Review
+Nov 30
+
+[Final Exam Fall 2022]({{get_url('handouts', pdf='COMP421.Fall2021.FinalExam')}})
+
+# S 22-Mock-FE.pdf Final Exam Mock
+
+
+P1 [Nov 30 Recording]({{get_url('panopto', hexcode='5449b5f4-264e-43ed-ba7f-af5d01168b83')}})
+

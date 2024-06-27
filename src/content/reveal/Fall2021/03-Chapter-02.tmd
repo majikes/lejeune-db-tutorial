@@ -1,0 +1,184 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+---
+
+## Today's notes
+
+ * From the [agenda $\dots$]({{HTTPS_FQDN}}#chapter-1:-overview-of-database-systems)
+   - Office hours are on [help page]({{HTTPS_FQDN}}/syllabi/help).
+ * From last time
+   - [Agenda]({{HTTPS_FQDN}}#agenda) &amp; [grades]({{HTTPS_FQDN}}/grades)  determine what's due or submitted
+ * {{FRAG}} By the end of class you should understand
+     - The entity relationship model (chapter 2)
+     - We will also cover the relational model (chapter 3)
+ * {{FRAG}} Any questions???
+
+
+Notes:
+
+---
+
+## Overview of Database Design
+
+ * <b>Conceptual design</b>: What are the <b>entities</b> and <b>relationships</b>?
+   - That are the entities and relationships between them for this business?
+   - What are the integrity constraints or business rules
+
+Note:
+
+Page 26
+
+The conceptual design gives the entities (nouns) and relationships (verbs).
+
+What information about these entities should be stored in the database?  What constraints or business rules need to be stored in the database
+
+
+---
+
+## ER Modeling and ER Diagrams
+
+<div class="row">
+ <div class="column">
+   <li><b>Entity</b>:  An object distinguishable from other objects with a set of attributes.</li> 
+   <li class="fragment"><b>Entity Set</b>:  A collection of similar entities.  E.g., all employees.<ul>
+     <li>All entities in an entity set have the same set of attributes.</li>
+     <li>Each entity set has a key.</li>
+     <li>Each attribute has a domain.</li>
+     </ul></li>
+ </div>   
+ <div>
+    <img src="{{HTTPS_FQDN}}/static/images/entity_attributes.png" style="width:35%;"/>
+    <img src="{{HTTPS_FQDN}}/static/images/employees_ssn_name_log.png" style="width:33%;"/>
+ </div>
+</div>
+
+Note:
+
+Page 28
+
+An entity has a set of attributes that distinguish it from other entities.
+
+A collection of similar entities is an entity set.  Why is it called a set?  Uniqueness.
+
+Each entity set member must have a value (could be null) for each attribute.  The attribute has a domain (integer, character, etc).    There’s a unique key for each entity.
+
+---
+ 
+## ER Model Basics
+
+<img src="{{HTTPS_FQDN}}/static/images/employee_works_in_department.png" style="width:100%;">
+
+ * **Relationship**: Association among two or more entities.
+  e.g., David works in the Math department.
+ * **Relationship Set**: Collection of similar relationships.<ul class="fragment">
+   <li>An n-ary relationship set, $R$, relates $n$ entity sets $E_1, \dots E_n$ each relationship in $R$ involves entities</li>
+   <li class="fragment"> Same entity set could participate in different relationship sets, or in different <q>roles</q> in same set.</li></ul>
+
+Note:
+
+Page 29
+
+A relationship is a verb that describes who entities relate.
+They can be uniary, binary, and ternary.
+
+The relationship set is the collection of the relationships.
+
+---
+
+## ISA (is-a) Hierarchies
+
+<img src="{{HTTPS_FQDN}}/static/images/isa_hierarchy.png" style="width:70% right:0;"/>
+
+ * Useful to subdivide entities into classes $\rightarrow$ like OO
+ * {{FRAG}} Declare <code>A ISA B</code>, every <code>A</code>, entity is also considered a <code>B</code> entity. 
+ * {{FRAG}} <b>Overlap constraints</b>:  Can Joe be an Hourly_Emps as well as a Contract_Emps entity?  (Allowed/disallowed)
+ * {{FRAG}} <b>Covering constraints</b>:  Does every Employees entity also have to be an Hourly_Emps or a Contract_Emps entity? (Yes/no) 
+ * {{FRAG}} Reasons for using ISA: 
+    - To add descriptive attributes specific to a subclass.
+    - To identify entities that participate in a relationship.
+
+Note:
+
+Page 37
+
+There is a concept of hierarchy in relational databases where attributes are inherited.
+
+How about Senior and New employees. Must they be a cover?
+
+There are no right and wrong answers for these.   It depends on how you want to set up the database
+
+---
+## Conceptual Design
+
+ * **Design choices**:
+   * Should a concept be modeled as an entity or an attribute?
+   * Should a concept be modeled as an entity or a relationship?
+   * Identifying relationships: Binary or ternary?
+   * {{FRAG}} Should an employee phone number be an attribute or a relationship?
+ * {{FRAG}} Constraints in the ER Model:
+   * A lot of data semantics can (and should) be captured.
+   * But some constraints not captured in ER diagrams.
+   * {{FRAG}} A manager has a separate budget for each department?
+
+Note:
+Page 40
+
+These are more design choices.
+
+For example, should an phone number be a attribute of an employee?  What if employees had multiple phone numbers?
+
+What about relationships?   A manager could have a budget for each department (one-to-one) or might have a sum budget for all departments
+
+---
+
+## Entity versus attribute
+
+ * Should address be an attribute of Employees or an entity (connected to Employees by a relationship)?
+   * {{FRAG}} Depends upon the use we want to make of address information, and the semantics of the data:
+     * If we have several addresses per employee, address must be an entity since attributes cannot themselves be multivalued. 
+     * If the structure (city, street, etc.) is important, e.g., we want to retrieve employees in a given city, address must be modeled as an entity (since attribute values are atomic). 
+
+Note:
+
+No, we could easily have address-city as an attribute. It’s done all the time.    But think about Amazon, do you think address is an attribute of customer or a separate entity?
+
+---
+
+## Entity versus Relationship
+
+ * Should managers have a separate budget for each department?
+ 
+<div class="row">
+ <div class="column">
+  <ul class="fragment">
+    <li>First is OK if a manager gets a separate discretionary budget for each dept.</li>
+    <li class="fragment">What if a manager gets a discretionary budget that covers all managed depts?<ul>
+     <li><b>Redundancy</b>: <code>dbudget</code> stored for each dept managed by manager.</li>
+     <li><b>Misleading</b>: Suggests <code>dbudget</code> associated with department-mgr combination.</li>
+     </ul></li>
+ </div>
+ <div class="column">
+    <img src="{{HTTPS_FQDN}}/static/images/managers_one_budget.png" style="width:33%; left:0"/>
+    <img src="{{HTTPS_FQDN}}/static/images/managers_separate_budget.png" style="width:33%; left:0"/>
+ </div>   
+</div>
+
+Note:
+
+Should the budget be part of the department or something a manager can sum together for all departments?
+
+---
+
+## Epilogue
+ 
+  * Entities are nouns, Relationships are verbs but $\dot$
+     * {{FRAG}} Decide entity versus attribute
+     * {{FRAG}} Decide entity versus relationship
+     * {{FRAG}} <code>ISA</code> relationships are like OOP
+  * {{FRAG}} Any questions before going to Chapter 3?

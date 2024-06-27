@@ -1,0 +1,243 @@
+<%
+from collections import namedtuple
+katex_underscore = r'\textunderscore{}'
+katex_le = r'\le'
+
+all_semesters = ['Fall', 'Winter', 'Spring', 'Summer']
+
+INSTRUCTOR = namedtuple('INSTRUCTOR', 'dept num_letters semester not_semester advisor_name student_name advisor_id')
+instructors = [INSTRUCTOR(dept='Accounting', num_letters=3,
+                          semester='Fall', not_semester=[x for x in all_semesters if x!= 'Fall'],
+                          advisor_name='Eric Sussman', student_name='Godfrey', advisor_id='eric'),
+               INSTRUCTOR(dept='History', num_letters=2,
+                          semester='Spring', not_semester=[x for x in all_semesters if x!= 'Spring'],
+                          advisor_name='Pauli Murray', student_name='Loher', advisor_id='murray'),
+               INSTRUCTOR(dept='Physics', num_letters=4,
+                          semester='Summer', not_semester=[x for x in all_semesters if x!= 'Summer'],
+                          advisor_name='Stephen Hawking', student_name='Lui', advisor_id='stephen'),
+               INSTRUCTOR(dept='Biology', num_letters=3,
+                          semester='Winter', not_semester=[x for x in all_semesters if x!= 'Winter'],
+                          advisor_name='George Church', student_name='Singhal', advisor_id='george')]
+# Ensure that student name is not in Accounting, History, Physics, or Biology departments
+# It goofs up the question that asks for students in those departments!
+%>
+
+## {{!linkable_header('SQL Queries')}} {{points_sql_queries}} points
+
+In this section, you will write SQL queries for the university described in the book.
+Your queries will be tested immediately against two different databases.
+If your queries output matches the expected output, the
+displayed answers will be outlined in green.
+Your actual score will be determined when your query is
+tested against a different database but green feedback should mean that you are on track to receive full credit.
+
+---
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % i = instructors[index]
+    **List.Instructors.{{index+1}}:** List the names of the instructors in the department of {{i.dept}}.  
+    List the names in reverse alphabetical order.
+    % answer = f'''
+--- Simple list
+SELECT name
+  FROM Instructor
+ WHERE dept_name = '{i.dept}'
+ ORDER BY name DESC     '''
+    {{!sql(answer, dbs=dbs, points=5, name=f' List.Instructor.{index+1}')}}
+    % include('viewAnswer')
+
+    % i = instructors[index]
+    **List.Students.And.Instructors.{{index+1}}:** List the names of people in the department of {{i.dept}}.
+    This should be a single column table with the names of both the instructors and the students in the department of {{i.dept}}.  
+    List the names in reverse alphabetical order.
+    % answer = f'''
+--- UNION test
+SELECT name
+  FROM Instructor
+ WHERE dept_name = '{i.dept}'
+
+ UNION
+
+ SELECT name
+   FROM Student
+  WHERE dept_name ='{i.dept}'
+
+ ORDER BY name DESC '''
+    {{!sql(answer, dbs=dbs, points=7.5, name=f' List.Students.And.Instructors.{index+1}')}}
+    % include('viewAnswer')
+
+
+    % i = instructors[index]
+    **List.Instructor.{{index+1}}.{{i.num_letters}}:** List the names of the instructors in the department of {{i.dept}} who have a name with
+    exactly {{i.num_letters}} letters in their name.  
+    List the names in alphabetical order.
+    % answer = f'''
+--- Wildcard test
+SELECT name
+  FROM Instructor
+ WHERE name like '{i.num_letters * "_"}' AND
+       dept_name = '{i.dept}'
+ ORDER BY name      '''
+    {{!sql(answer, dbs=dbs, points=5, name=f' List.Instructor.{index+1}.{i.num_letters}')}}
+    % include('viewAnswer')
+
+
+    % i = instructors[index]
+    **List.Instructor.Did.Not.Teach.All.{{index+1}}:** List the names of the instructors in the department of {{i.dept}} who have **never** taught at least one {{i.dept}} course.   
+    Another way to say this is: list all the names of {{i.dept}} instructors except those who taught all of the {{i.dept}} courses.    
+    For example, if the {{i.dept}} department offers twelve courses, your answer should include any {{i.dept}} instructor's name who hasn't taught at least one section of every offered {{i.dept}} course.  
+    % answer = f'''
+--- SQL Division
+SELECT I.name
+  FROM Instructor I
+ WHERE I.dept_name = '{i.dept}'  AND
+EXISTS (SELECT C1.course_id
+          FROM Course C1
+         WHERE C1.dept_name = '{i.dept}' 
+
+        EXCEPT
+
+        SELECT C2.course_id
+         FROM Course C2, Teaches T2
+        WHERE C2.course_id = T2.course_id AND
+              T2.ID = I.ID)
+'''
+    {{!sql(answer, dbs=dbs, points=7.5, name=f' List.Instructor.Did.Not.Teach.All.{index+1}', sort=True)}}
+    % include('viewAnswer')
+
+---
+
+    % i = instructors[index]
+    **Update.Credits.{{index+1}}:** Update the credits for {{i.dept}} courses such that they are worth 50% more than before.  
+    **NOTE$_1$:** With all SQL statements like this that modify the database, you either need to refresh the web page before rerunning or handle the fact that the statement was previously run.  
+    **NOTE$_2$:** The grader will run your modifications against both databases which should report **two** empty green boxes.  Then the grader will run two select statments against both databases to verify the modification which should be in **four** more green boxes. A correct answer should have a total of **six** green boxes  
+    % answer = f'''
+-- Simple update
+UPDATE Course
+       SET credits = credits * 1.5
+       WHERE dept_name='{i.dept}'
+'''
+    % ics1 = f"""
+SELECT *
+  FROM Course
+
+EXCEPT SELECT *
+         FROM Course
+        WHERE dept_name in {tuple(x.dept for x in instructors)} ORDER BY course_id""",
+    % ics2 = f"""
+SELECT *
+  FROM Course
+ WHERE dept_name = '{i.dept}'  ORDER BY course_id """
+    {{!sql(answer, dbs=dbs, points=7.5, ics=[ics1, ics2], name=f' Update.Credits.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+
+
+---
+
+    % i = instructors[index]
+    **Relational.Algebra.{{index+1}}:** Create a SQL query for the relational expression:  
+
+    $\Pi_{\text{title}} (\sigma_{\text{semester}='{{i.semester}}' \land \text{dept\textunderscore{}name}='{{i.dept}}'}  (\rho_s \text{(Section)} \bowtie_{\text{c.course\textunderscore{}id} = \text{s.course\textunderscore{}id}} \rho_c \text{(Course)}))$  
+    % for n in i.not_semester:
+      $-$
+      $\Pi_{\text{title}} (\sigma_{\text{semester}='{{n}}' \land \text{dept\textunderscore{}name}='{{i.dept}}'}  (\rho_s \text{(Section)} \bowtie_{\text{c.course\textunderscore{}id} = \text{s.course\textunderscore{}id}} \rho_c \text{(Course}))$  
+    % end
+    % answer = f'''
+-- Relational Minus / Subtraction
+SELECT title
+  FROM Section S, Course C
+ WHERE C.course_id = S.course_id AND
+       dept_name = '{i.dept}' AND
+       semester = '{i.semester}'
+
+EXCEPT
+
+SELECT title
+  FROM Section S, Course C
+ WHERE C.course_id = S.course_id and
+       dept_name = '{i.dept}' AND
+       semester != '{i.semester}'
+
+'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' Relational.Algebra.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+---
+
+    **Largest.Classroom.{{index+1}}:** List the building and room_number of the classroom(s) of a {{i.dept}} class section that has the largest capacity.  
+    % answer =f'''
+--- Aggregate Max
+WITH {i.dept}_capacity AS (SELECT capacity, C1.building, C1.room_number
+                             FROM Classroom C1, Course C2, Section S
+                            WHERE C2.course_id = S.course_id AND
+                                  C2.dept_name =  '{i.dept}' AND
+                                  C1.building = S.building AND
+                                  C1.room_number = S.room_number)
+
+SELECT DISTINCT C1.building, C1.room_number
+  FROM Classroom C1, {i.dept}_capacity C2
+ WHERE C1.capacity = (SELECT MAX(capacity) FROM {i.dept}_capacity) AND
+       C1.building = C2.building and
+       C1.room_number = C2.room_number
+'''
+    {{!sql(answer, dbs=dbs, points=7.5, name=f' Largest.Classroom.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+---
+
+  **List.Department.Budget.Maximum.Salary.{{index+1}}:** List all the department names, their budgets, and the maximum instructor salary for each department.  
+  List the departments by largest budget to smallest budget.  
+  **NOTE:** You can be assured that all departments have at least one instructor.  
+  % answer = '''
+--- Select with order, group by
+SELECT D.dept_name, D.budget, MAX(I.salary) as salary
+  From Department D, Instructor I
+ WHERE D.dept_name = I.dept_name
+ GROUP BY D.dept_name
+ ORDER BY budget DESC'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' List.Department.Budget.Average.Salary.{index+1}')}}
+    % include('viewAnswer')
+
+---
+
+  **List.Students.With.Their.Advisor.{{index+1}}:** List the name of each student in the {{i.dept}} department who has an advisor.
+  In addition to the name of the student, give the name of the student's advisor.  
+  **Note:** Only the student has to be in the {{i.dept}} department.  
+  % answer = f'''
+--- This question won't work for Natural joins
+SELECT S.name, I.name
+  FROM Student S, Instructor I, Advisor A
+ WHERE S.ID = A.s_id AND
+       I.ID = A.i_id AND
+       S.dept_name = '{i.dept}'  '''
+    {{!sql(answer, dbs=dbs, points=5, name=f' List.Students.With.Their.Advisor.{index+1}', sort=True)}}
+    % include('viewAnswer')
+
+  **List.Students.And.Advisor.If.Exists.{{index+1}}:** List the name of each student in the {{i.dept}} department and if they have an advisor list the advisor name.
+  If the student doesn't have an advisor leave the advisor name NULL.  
+  % answer = f'''
+--- This question won't work for Natural joins multiple dept names
+--- Left join
+WITH Student_Instructors AS (SELECT A.S_id, A.I_id, I.name
+                               FROM Student S, Instructor I, Advisor A
+                              WHERE S.ID = A.s_id AND
+                                    I.ID = A.i_id AND
+                                    S.dept_name = '{i.dept}')
+
+SELECT S.name, I.name
+  FROM Student S
+  LEFT JOIN Student_Instructors I
+         ON S.id = I.S_id
+ WHERE S.dept_name = '{i.dept}' '''
+    {{!sql(answer, dbs=dbs, points=5, name=f' List.Students.And.Advisor.If.Exists.{index+1}', sort=True)}}
+    % include('viewAnswer')
+
+
+---
+
+  % end
+% end
+

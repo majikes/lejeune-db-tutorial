@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+ <title>Notes Data Entry</title>
+<script>
+  document.title = 'Notes Data Entry';
+</script>
+
+<body>
+        <textarea id="MathInput" rows="25" cols="50"  onchange="UpdateMath(this.value)" ></textarea>
+</body>
+</html>
+% rebase('assessment.base')

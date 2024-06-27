@@ -1,0 +1,590 @@
+---
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+
+---
+
+### Chapter 14-3:  Indexing Part III
+
+- Should know basic concepts, insert/delete of $B^+$-trees
+  - Hash Indices
+  - Multiple-key access
+  - Indices on multiple keys
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch14.pdf
+
+
+---
+
+### Static Hashing
+
+- A **bucket** is storage unit containing one or more entries
+  - Typically a disk block
+  - Entry to bucket using search-key value using **hash function**
+- Hash function $h$ maps all search-key values $K$ to all buckets $B$
+- Hash function used to locate entries (access, insert, delete)
+- Multiple search-key values map to same bucket
+  -  Thus entire bucket searched sequentially to locate entry
+- Two flavors of buckets:
+  - **Hash index**, buckets store pointers to records
+  - **Hash file-organization** buckets store records
+
+
+---
+
+### Handling of Bucket Overflows
+
+- Bucket overflow can occur because of 
+  - Insufficient buckets 
+  - Skew in distribution of records.  This can occur due to two reasons:
+    -  Multiple records have same search-key value
+    -  Chosen hash function produces non-uniform distribution of given key
+- Probability of bucket overflow can be reduced
+  - It cannot be eliminated
+  - It is handled by using **_overflow buckets_**
+
+
+---
+
+### Handling of Bucket Overflows (Cont.)
+
+- **Overflow chaining** – bucket overflow chained linked list
+<img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.25.Hashing.With.Overflow.png" style="width:35%" />
+<figcaption>Figure 14.25 Overflow chaining in a disk-based hash structure</figcaption>
+</figure>
+
+
+---
+
+### Example of Hash File Organization 
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Example.Of.Hash.Organization.png" style="width:60%"/>
+ <figcaption>Hash file organization of <i>instructor</i> file, using <i>dept_name </i>as key.</figcaption>
+</figure>
+
+
+
+---
+
+### Deficiencies of Static Hashing
+
+- Function $h$ maps search-key values to a fixed set of bucket $B$
+  - Database grows or shrinks over time
+  - If initial # buckets is too small; db grows
+    - Performance degrades due to overflows
+  - If space too large; wasted space; underfull
+  - If database shrinks, again space will be wasted.
+- One solution: periodic re-organization with new hash function
+  - Expensive, disrupts normal operations
+- Better solution: allow the number of buckets to be modified
+
+
+---
+
+### Dynamic Hashing
+
+- Periodic rehashing
+  - If # entries grows; $\approx$ 1.5 times size of hash table
+    -  Create new 2 times size hash table
+    -  Rehash all entries to new table
+- Linear Hashing
+  - Do rehashing in an incremental manner
+- Extendable Hashing
+  - Buckets shared by multiple hash values
+  - Doubling of # of entries in hash table, without doubling # of buckets
+
+
+---
+
+### Comparison of Ordered Indexing and Hashing
+
+- Cost of periodic re-organization
+- Relative frequency of insertions and deletions
+- Optimize average access time at the expense of worst-case access time?
+- Hashing better at retrieving specific record / key
+  - **Not used for range queries**
+- In practice:
+  - PostgreSQL supports hash indices, but discourages use
+  - SQLServer supports only B$^+$-trees
+
+
+---
+
+### Multiple-Key Access
+
+- Use multiple indices for certain types of queries.
+```
+select ID
+  from instructor
+ where dept_name = “Finance” and
+       salary = 80000
+```
+- Possible strategies using indices on single attributes:
+  1. Use index on <i>dept_name</i> then test <i>salary = 80000</i>
+  2. Use index on <i>salary</i> then test <i>dept_name</i> = “Finance”.
+  3. <i>dept_name</i> index $\rightarrow$ pointers<br/><i>salary</i> index $\rightarrow$ pointers<br/>Take intersection of both sets pointers
+
+
+---
+
+### Indices on Multiple Keys
+
+- **Composite search keys** search keys containing more than one attribute
+  - E.g. (<i>dept_name, salary</i>)
+- Lexicographic ordering: $(a_1, a_2) \lt (b_1, b_2)$ if either 
+  - $a_1 \lt b_1$, or 
+  - $a_1 = b_1$ and  $a_2 \lt b_2$
+
+
+---
+
+### Indices on Multiple Attributes
+
+- Suppose index search-key (dept_name, salary)
+- **where dept_name = “Finance” and salary = 80000** the index used
+  - Using two separate indices is less efficient
+  - Fetch many records (or pointers) satisfying only one of the conditions
+- **where dept_name = “Finance” and salary < 80000** index used
+- **where dept_name &lt; “Finance” and balance = 80000** cannot use index
+- Index used to satisfy first but not second condition
+
+Note: 
+
+This is attribute not keys
+
+---
+
+{{HIDDEN}}
+
+### Other Features
+
+- **Covering indices**
+  - Add extra attributes to index so (some) queries can avoid fetching the actual records
+  - Store extra attributes only at leaf
+    -  Why?
+- Particularly useful for secondary indices 
+  - Why?
+
+
+---
+
+### Creation of Indices
+
+```
+create index takes_pk on takes (ID,course_ID, year, semester, section)
+drop index takes_pk
+```
+- Most DBMS allow specification type index and clustering.
+- Indices on primary key created automatically
+    - Why?
+- Some DBMS create indices on foreign key attributes
+    - Why might such an index be useful for this query?
+    - $\text{takes} \bowtie \sigma_{\text{name} = '\text{Shankar}'} ( \text{student} )$
+- Indices _can_ speed up lookups; slow updates
+    - Index tuning assistants/wizards supported on several DBMS
+
+
+---
+
+### Index Definition in SQL
+
+- Create an index
+```
+create index <index-name> on <relation-name> (<attribute-list>)
+```
+- For example
+```
+create index b-index on branch(branch_name)
+```
+- To drop an index 
+```
+drop index <index-name>
+```
+
+
+---
+
+{{HIDDEN}}
+
+### Write Optimized Indices
+
+- Performance of 
+- B$^+$-trees can be poor for write-intensive workloads
+    - One I/O per leaf, assuming all internal nodes are in memory
+    - With magnetic disks, &lt; 100 inserts per second per disk
+    - With flash memory, one page overwrite per insert
+- Two approaches to reducing cost of writes
+    - <b>Log-structured merge tree</b>
+    - <b>Buffer tree</b>
+
+
+---
+
+{{HIDDEN}}
+
+### Log Structured Merge (LSM) Tree
+
+- Consider only inserts/queries for 
+<p>now</p>
+- Records inserted first into in-memory 
+<p>tree (L0 tree)</p>
+- When in-memory tree is full, records 
+<p>moved to disk (L1 tree)</p>
+    - B$^+$-tree constructed using 
+<p>bottom-up build by merging </p>
+<p>existing L1 tree with records from </p>
+<p>L0 tree</p>
+- When L1 tree exceeds some 
+<p>threshold, merge into L2 tree</p>
+    - And so on for more levels
+    - Size threshold for Li+1 tree is <i>k </i>
+<p>times size threshold for Li tree </p>
+<img src="Ă.jpg"/>
+
+
+---
+
+{{HIDDEN}}
+
+### LSM Tree (Cont.)
+
+- Benefits of LSM approach
+    - Inserts are done using only sequential I/O operations
+    - Leaves are full, avoiding space wastage
+    - Reduced number of I/O operations per record inserted as compared 
+<p>to normal B$^+$-tree (up to some size)</p>
+- Drawback of LSM approach
+    - Queries have to search multiple trees
+    - Entire content of each level copied multiple times
+- Stepped-merge index
+    - Variant of LSM tree with multiple trees at each level
+    - Reduces write cost compared to LSM tree
+    - But queries are even more expensive
+    -  Bloom filters to avoid lookups in most trees 
+- Details are covered in Chapter 24 
+
+
+---
+
+{{HIDDEN}}
+
+### LSM Trees (Cont.)
+
+- Deletion handled by adding special “delete” entries
+    - Lookups will find both original entry and the delete entry, and must 
+<p>return only those entries that do not have matching delete entry</p>
+    - When trees are merged, if we find a delete entry matching an 
+<p>original entry, both are dropped.</p>
+- Update handled using insert+delete
+- LSM trees were introduced for disk-based indices
+    - But useful to minimize erases with flash-based indices
+    - The stepped-merge variant of LSM trees is used in many BigData
+<p>storage systems</p>
+    -  Google BigTable, Apache Cassandra, MongoDB
+    -  And more recently in SQLite4, LevelDB, and MyRocks storage 
+<p>engine of MySQL </p>
+
+
+---
+
+{{HIDDEN}}
+
+### Buffer Tree
+
+- Alternative to LSM tree
+- Key idea: each internal node of B$^+$-tree has a buffer to store inserts
+    - Inserts are moved to lower levels when buffer is full
+    - With a large buffer, many records are moved to lower level each 
+<p>time</p>
+    - Per record I/O decreases correspondingly 
+- Benefits
+    - Less overhead on queries
+    - Can be used with any tree index structure
+    - Used in PostgreSQL Generalized Search Tree (GiST) indices
+- Drawback: more random I/O than LSM tree
+<img src="ĉ.jpg"/>
+
+
+---
+
+{{HIDDEN}}
+
+### Bitmap Indices
+
+- Bitmap indices are a special type of index designed for efficient 
+<p>querying on multiple keys</p>
+- Records in a relation are assumed to be numbered sequentially 
+<p>from, say, 0</p>
+  - Given a number <i>n</i> it must be easy to retrieve record <i>n</i>
+    -  Particularly easy if records are of fixed size
+- Applicable on attributes that take on a relatively small number of 
+<p>distinct values</p>
+  - E.g. gender, country, state, …
+  - E.g. income-level (income broken up into a small number of  
+<p>levels such as 0-9999, 10000-19999, 20000-50000, 50000-</p>
+<p>infinity)</p>
+- A bitmap is simply an array of bits
+
+
+---
+
+{{HIDDEN}}
+
+### Bitmap Indices (Cont.)
+
+- In its simplest form a bitmap index on an attribute has a bitmap 
+<p>for each value of the attribute</p>
+  - Bitmap has as many bits as records
+  - In a bitmap for value v, the bit for a record is 1 if the record 
+<p>has the value v for the attribute, and is 0 otherwise</p>
+
+
+---
+
+{{HIDDEN}}
+
+### Bitmap Indices (Cont.)
+
+- Bitmap indices are useful for queries on multiple attributes 
+    - not particularly useful for single attribute queries
+- Queries are answered using bitmap operations
+    - Intersection (and)
+    - Union (or)
+- Each operation takes two bitmaps of the same size and applies 
+<p>the operation on corresponding bits to get the result bitmap</p>
+    - E.g.   100110  AND 110011 = 100010
+<p>100110  OR  110011 = 110111</p>
+<p>NOT 100110  = 011001</p>
+    - Males with income level L1:   10010 AND 10100 = 10000
+- Can then retrieve required tuples.
+- Counting number of matching tuples is even faster
+
+
+---
+
+{{HIDDEN}}
+
+### Bitmap Indices (Cont.)
+
+- Bitmap indices generally very small compared with relation size
+  - E.g. if record is 100 bytes, space for a single bitmap is 1/800 of 
+<p>space used by relation.  </p>
+    -  If number of distinct attribute values is 8, bitmap is only 1% 
+<p>of relation size</p>
+
+
+---
+
+{{HIDDEN}}
+
+### Efficient Implementation of Bitmap Operations
+
+- Bitmaps are packed into words;  a single word and (a basic CPU 
+<p>instruction) computes and of 32 or 64 bits at once</p>
+    - E.g. 1-million-bit maps can be and-ed with just 31,250 instruction
+- Counting number of 1s can be done fast by a trick:
+    - Use each byte to index into a precomputed array of 256 elements 
+<p>each storing the count of 1s in the binary representation</p>
+    -  Can use pairs of bytes to speed up further at a higher memory 
+<p>cost</p>
+    - Add up the retrieved counts
+- Bitmaps can be used instead of Tuple-ID lists at leaf levels of 
+<p>B$^+$-trees, for values that have a large number of matching records</p>
+    - Worthwhile if &gt; 1/64 of the records have that value, assuming a 
+<p>tuple-id is 64 bits</p>
+    - Above technique merges benefits of bitmap and B$^+$-tree indices
+
+
+---
+
+{{HIDDEN}}
+
+### SPATIAL AND TEMPORAL 
+
+<img src="Ė.jpg"/>
+<p><b>INDICES</b></p>
+
+
+---
+
+{{HIDDEN}}
+
+### Spatial Data
+
+- Databases can store data types such as lines, polygons, in 
+<p>addition to raster images </p>
+  - allows relational databases to store and retrieve spatial 
+<p>information</p>
+  - Queries can use spatial conditions (e.g. contains or overlaps).
+  - queries can mix spatial and nonspatial conditions 
+- <b>Nearest neighbor queries</b>, given a point or an object, find the 
+<p>nearest object that satisfies given conditions.</p>
+- <b>Range queries </b>deal with spatial regions. e.g., ask for objects 
+<p>that lie partially or fully inside a specified region.</p>
+- Queries that compute intersections or unions of regions.
+- <b>Spatial join </b>of two spatial relations with the location playing the 
+<p>role of join attribute.</p>
+
+
+---
+
+{{HIDDEN}}
+
+### Indexing of Spatial Data
+
+- <b>k-d tree</b> - early structure used for 
+<p>indexing in multiple dimensions.</p>
+- Each level of a <i>k-d</i> tree partitions the 
+<p>space into two.</p>
+    - choose one dimension for partitioning 
+<p>at the root level of the tree.</p>
+    - choose another dimensions for 
+<p>partitioning in nodes at the next level </p>
+<p>and so on, cycling through the </p>
+<p>dimensions.</p>
+- In each node, approximately half of the 
+<p>points stored in the sub-tree fall on one </p>
+<p>side and half on the other.</p>
+- Partitioning stops when a node has 
+<p>less than a given number of points.</p>
+<img src="ě.jpg"/>
+- The <b>k-d-B tree</b> extends the 
+<p><i>k-d</i> tree to allow multiple </p>
+<p>child nodes for each </p>
+<p>internal node; well-suited </p>
+<p>for secondary storage.</p>
+
+
+---
+
+{{HIDDEN}}
+
+### Division of Space by Quadtrees
+
+<p><b>Quadtrees</b></p>
+- Each node of a quadtree is associated with  a rectangular region of space; the top 
+<p>node is associated with the entire target space.</p>
+- Each non-leaf  nodes divides its region into four equal sized quadrants
+    - correspondingly each such node has four child nodes corresponding to the 
+<p>four quadrants and so on</p>
+- Leaf nodes have between zero and some fixed maximum number of points (set to 
+<p>1 in example).</p>
+
+
+---
+
+{{HIDDEN}}
+
+### R
+
+<img src="Ġ.jpg"/>
+<p><b>-</b></p>
+<img src="ġ.jpg"/>
+<p><b>Trees</b></p>
+- <b>R-trees</b> are a N-dimensional extension of B$^+$-trees, useful for 
+<p>indexing sets of rectangles and other polygons.</p>
+- Supported in many modern database systems, along with 
+<p>variants like R$^+$<sup> </sup>-trees and R*-trees.</p>
+- Basic idea: generalize the notion of a one-dimensional interval 
+<p>associated with each B+ -tree node to an </p>
+<p>N-dimensional interval, that is, an N-dimensional rectangle.</p>
+- Will consider only the two-dimensional case (<i>N </i>= 2) 
+  - generalization for <i>N </i>&gt; 2 is  straightforward, although R-trees 
+<p>work well only for relatively small N</p>
+- The <b>bounding box </b>of a node is a minimum  sized rectangle that 
+<p>contains all the rectangles/polygons associated with the node</p>
+<p>•<i> Bounding boxes of children of a node are allowed to overlap</i></p>
+
+
+---
+
+{{HIDDEN}}
+
+### Example R
+
+<img src="Ĥ.jpg"/>
+<p><b>-</b></p>
+<img src="ĥ.jpg"/>
+<p><b>Tree</b></p>
+- A set of rectangles (solid line) and the bounding boxes (dashed line) of 
+<p>the nodes of an R-tree for the rectangles.</p>
+- The R-tree is shown on the right.
+
+
+---
+
+{{HIDDEN}}
+
+### Search in R
+
+<img src="Ĩ.jpg"/>
+<p><b>-</b></p>
+<img src="ĩ.jpg"/>
+<p><b>Trees</b></p>
+- To find data items intersecting a given query point/region, do the 
+<p>following, starting from the root node:</p>
+    - If the node is a leaf node, output the data items whose keys intersect the 
+<p>given query point/region.</p>
+    - Else, for each child of the current node whose bounding box intersects 
+<p>the query point/region, recursively search the child</p>
+- Can be very inefficient in worst case since multiple paths may need to be 
+<p>searched, but works acceptably in practice.</p>
+
+
+---
+
+{{HIDDEN}}
+
+### Indexing Temporal Data
+
+- Temporal data refers to data that has an associated time period 
+<p>(interval)</p>
+- Time interval has a start and end time
+    - End time set to infinity (or large date such as 9999-12-31) if a tuple 
+<p>is currently valid and its validity end time is not currently known</p>
+- Query may ask for all tuples that are valid at a point in time or during a 
+<p>time interval</p>
+    - Index on valid time period speeds up this task
+<img src="Ĭ.jpg"/>
+
+
+---
+
+{{HIDDEN}}
+
+### Indexing Temporal Data (Cont.)
+
+- To create a temporal index on attribute <i>a</i>:
+    - Use spatial index, such as R-tree, with attribute <i>a</i> as one dimension, 
+<p>and time as another dimension</p>
+    -  Valid time forms an interval in the time dimension
+    - Tuples that are currently valid cause problems, since value is infinite or 
+<p>very large</p>
+    -  Solution:  store all current tuples (with end time as infinity) in a 
+<p>separate index, indexed on (<i>a, start-time</i>)</p>
+  - To find tuples valid at a point in time <i>t </i>in the current tuple index, 
+<p>search for tuples in the range (<i>a, 0</i>) to (<i>a,t</i>)</p>
+- Temporal index on primary key can help enforce temporal primary key 
+<p>constraint</p>
+<img src="į.jpg"/>
+
+
+---
+
+### Chapter 14 Epilogue
+
+- What we learned:
+  - Basic index concepts
+  - Difference between B$^+$ trees and Hashes
+    - When to use either
+  - B$^+$-trees
+    - Insertion, deletion, and query

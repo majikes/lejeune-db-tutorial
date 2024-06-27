@@ -1,0 +1,89 @@
+<%
+setInfo(due="2021-12-04 00:00:00",
+        needsSubmitCode=False,
+        exceptions=dict(gksrb32=dict(due='2021-11-19 00:00:00', needsSubmitCode=False),
+                        _003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        )
+dbs=['books1.sqlite', 'books2.sqlite']
+%>
+# Piazza Questions
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+## Piazza
+
+This worksheet will be used for **SQL query** questions posted to the Piazza folder <b>fe-questions</b>
+that the instructor things are worthy of doing by the rest of the class.
+It uses the same database for the exam, the books database for assignment A5.
+
+<font color='red'>Note</font>: Since this worksheet appears in the grades
+list but this worksheet **cannot** be submitted,
+I incremented the number of worksheets to be dropped from 2 to three.
+
+```sql
+CREATE TABLE Authors (
+   login text primary key,
+   email text,
+   first_name text,
+   last_name text
+)
+
+CREATE TABLE Books (
+   id integer primary key autoincrement,
+   title text,
+   author text references authors(login),
+   language text,
+   created date
+)
+
+CREATE TABLE Photos (
+   id integer primary key autoincrement,
+   url text unique,
+   width integer,
+   height integer
+)
+
+CREATE TABLE Pages (
+   book integer references books(id),
+   number integer,
+   photo integer references photos(id),
+   caption text,
+   primary key (book, number)
+)
+
+CREATE TABLE Categories (
+   category text,
+   book integer references books(id),
+   unique (book, category)
+)
+
+CREATE VIEW PageCounts as
+   select book, count(*) as count from pages group by book
+```
+
+---
+
+**List.Tables:** List all the table names in the database
+that are not named _sqlite_sequence_&nbsp;?  
+% answer = '''
+SELECT name
+  FROM sqlite_master
+  WHERE type='table' AND
+        name != 'sqlite_sequence'
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=5, name='List.Tables')}}
+% include('viewAnswer')
+
+---
+
+%end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

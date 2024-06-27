@@ -1,0 +1,11 @@
+<%
+  from math import ceil, log
+  from collections import namedtuple
+  pages = [17, 18, 19, 20]
+%>
+## {{!linkable_header(name_evaluation)}} {{points_evaluation}} out of {{points_limit}} points
+
+%include('content/exams/fe-root-necessary-serve-61.counting.itmd')
+%include('content/exams/fe-root-necessary-serve-61.two-way-merge-sort.itmd')
+%include('content/exams/fe-root-necessary-serve-61.block-nested-loop-join.itmd')
+%include('content/exams/fe-root-necessary-serve-61.index-nested-loop-join.itmd')

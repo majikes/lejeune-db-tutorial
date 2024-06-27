@@ -1,0 +1,76 @@
+#### {{!linkable_header(name_counting)}} {{points_counting}} out of the {{points_evaluation}} {{name_evaluation.lower()}} points out of {{points_limit}} total points
+
+**Calculator:** You may use this box as a calculator.
+Just type in any expression that can be evaluated by a JavaScript eval.
+For example, `2 ** 0.5` will show you the result of the square root of 2
+in the red box to the right.
+Leaving the box empty or filled in will **NOT** affect your grade.
+{{!calculator(name=f'_calculator.counting')}}
+
+---
+
+Use the following schema and table information for the next five one-point questions:
+
+```sql
+Sailors (sid: integer, sname: string, rating: integer, age: real)
+Reserves (sid: integer, bid: integer, day: dates)
+```
+
+The Sailors table has 40,000 rows of tuples. Each row is 50 bytes, 80 rows fit on a page.  
+The Reserves table has 100,000 rows of tuples. Each row is 40 bytes, 100 rows fit on a page.  
+
+<%
+choices = [f'{x}' for x in range(10)] + ['100,000', '40,000', '40', '50', '100', '80', '1000', '500', '250', '750', 'None of these']
+for index in range(number_counting):
+  if (section == '003') or (conflict_exam and index == number_counting-1) or (not conflict_exam and ((member_number%(number_counting-1) == index))):
+      if index == number_counting -1:
+        include('viewAnswer', answer=f' Only seen by students at the conflict exam')
+      else:
+        include('viewAnswer', answer=f' Only seen by member number % {number_counting-1} == {index}')
+      end
+%>
+
+  % for index2 in range(5):  # Loop to just put the questions in a different order
+   % if (index2 + member_number + 0) % 5 == index:
+ %answer = '100,000'
+ **Cardinality.{{index+1}}:** What is the cardinality of Reserves?  
+ {{!select(answer, choices, points=1, name=f'Cardinality.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+   % if (index2 + member_number + 1) % 5 == index:
+ %answer = '4'
+ **Arity.{{index+1}}:** What is the degree of Sailors?  
+ {{!select(answer, choices, points=1, name=f'Arity.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+   % if (index2 + member_number + 2) % 5 == index:
+ %answer = '1000'
+ **Pages.{{index+1}}:** Assuming 100% occupancy, how many pages does Reserves require?  
+ {{!select(answer, choices, points=1, name=f'Pages.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+   % if (index2 + member_number + 3) % 5 == index:
+ %answer = 'No'
+ %choices_yes_no = ['Yes', 'No']
+ **Hash.{{index+1}}:** If Reserves has a hash index on sid can it be used to help reduce the number of I/Os on the query `SELECT * FROM Reserves WHERE sid < 3`?  
+ {{!select(answer, choices_yes_no, points=1, name=f'Hash.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+   % if (index2 + member_number + 4) % 5 == index:
+ %answer = 'Yes'
+ %choices_yes_no = ['Yes', 'No']
+ **Btree.{{index+1}}:** If Sailors has a B+tree index on $\langle$ sname, rating $\rangle$, can it be used to help reduce the number of I/Os on the query `SELECT * FROM Sailors WHERE sname > 'J'`?  
+ {{!select(answer, choices_yes_no, points=1, name=f'Btree.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+  % end # For index2
+
+---
+
+  % end  # section == 003 or member_number%number_counting == index
+% end  # for index in range(number_counting)

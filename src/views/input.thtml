@@ -1,0 +1,9 @@
+<input name="{{name}}"
+ type="{{get('type', 'text')}}"
+ autocomplete="nope"
+ <% if defined('symbols'):  %>
+ data-symbols="{{symbols}}"
+<% end %> 
+% include('attrs')
+/><span class="evalmessage"></span>
+% include('points')

@@ -1,0 +1,28 @@
+# LA Information 
+## COMP 421 Fall 2021
+% from agenda import parse
+% upnext = False
+
+## {{!linkable_header('LA To-Do List')}}
+
+I will no longer be maintaining this agenda list.
+
+Please use the [grades]{{get_url('grades')}} page to see what work should be reviewed and submitted.
+
+Any questions about the time frame that things are required should use the time frame on the exam.
+You may also want to ask that question in the Zoom chat room.
+
+# {{!linkable_header('Zoom chat')}}
+
+We will use [Zoom messaging chat](https://support.zoom.us/hc/en-us/sections/200258579-Chats) and the `COMP 550` channel for our class.
+On a Mac this is `<command>zoom.us` on Windows it is `zoom`.
+
+After you have been invited to the channel,
+you should see the following panel.
+You will be able to use this channel to do immediate messaging to the instructional team.
+For example, you could send all of us a message if there is a problem with office hours.
+You might want to message me with a student who is problematic,
+disruptive, or has a problem you can't help with.
+
+![Zoom chat]({{static('images/ZoomChat.png')}}){width=50%}
+

@@ -1,0 +1,54 @@
+<%
+from collections import namedtuple
+import string
+
+katex_underscore = r'\textunderscore{}'
+katex_le = r'\le'
+
+SELECT_ALL = namedtuple('SELECT_ALL', 'relation1 relation2 attribute dept_name1 dept_name2')
+select_alls = [SELECT_ALL(relation1='student', relation2='takes', attribute='name',
+                          dept_name1='Comp. Sci.', dept_name2='Math'),
+               SELECT_ALL(relation1='instructor', relation2='teaches', attribute='name',
+                          dept_name2='Comp. Sci.', dept_name1='Math'),
+               SELECT_ALL(relation1='student', relation2='takes', attribute='name',
+                          dept_name1='Physics', dept_name2='Elec. Eng.'),
+               SELECT_ALL(relation1='instructor', relation2='teaches', attribute='name',
+                          dept_name1='Physics', dept_name2='Elec. Eng.'),
+
+               ]
+
+alphabet = list(string.ascii_uppercase)
+%>
+
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % q = select_alls[index]
+    **Relational.Algebra.1.{{index+1}}:** Create a SQL query for the relational expression:  
+    $\Pi_\text{ {{q.attribute}} } (\text{ {{q.relation1}} } \bowtie_{(\text{ {{q.relation1}}.ID = X.ID })} \text{X} \leftarrow (\sigma_{\text{dept{{katex_underscore}}name = '{{q.dept_name1}}'}} ( \text{ {{q.relation2}} } \bowtie \text{course} ))) - $  
+    $\Pi_\text{ {{q.attribute}} } (\text{ {{q.relation1}} } \bowtie_{\text{ {{q.relation1}}.ID = X.ID })} \text{X} \leftarrow (\sigma_{\text{dept{{katex_underscore}}name = '{{q.dept_name2}}'}} ( \text{ {{q.relation2}} } \bowtie \text{course} ))) $  
+    % answer = f'''
+-- Relational algebra Set intersection
+SELECT DISTINCT {q.attribute}
+  FROM {q.relation1}, (SELECT *
+                         FROM {q.relation2} NATURAL JOIN Course
+                       WHERE dept_name = '{q.dept_name1}') AS X
+ WHERE {q.relation1}.ID = X.ID
+
+EXCEPT
+
+SELECT DISTINCT {q.attribute}
+  FROM {q.relation1}, (SELECT *
+                         FROM {q.relation2} NATURAL JOIN Course
+                        WHERE dept_name = '{q.dept_name2}') AS X
+ WHERE {q.relation1}.ID = X.ID
+
+'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' Relational.Algebra.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+---
+
+  %end
+%end

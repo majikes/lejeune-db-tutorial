@@ -1,0 +1,115 @@
+<%
+import string
+alphabet = list(string.ascii_uppercase)
+
+harry_potter_true = 'First Wizardly must be inserted into the department relation before Professor Dumbledore can be inserted into the instructor relation.'
+harry_potter_false = ['The transaction and/or concurrency-control manager will control the order of the inserts to ensure the consistency of the database.',
+                      'The inserts can be handled in any order.',
+                      'There is no component of the database management system that enforces the order of these two insertions.',
+                      'Databases, like Harry Potter, are all about magic.  It just happens magically.',
+                      'The query processor will pre-process the insertions to ensure they execute in the correct order.',
+                      ]
+%>
+
+
+% for index in range(number_chapter_review):
+  % if section == '003' or (team_member_number % number_chapter_review) == index:
+
+  **Inserting.Dumbledore.{{index+1}}:** Using our database schema, assume that our university is going to have a department of Wizardly and its first instructor is Professor Dumbledore.
+  Are there any considerations to inserting Dumbledore to the instructor table and inserting Wizardly to the department table?  
+
+  % for answer_index in range(len(harry_potter_false)+1):
+    % if answer_index < index + 2:
+      **{{alphabet[answer_index]}}** {{harry_potter_false[answer_index]}}  
+    % elif answer_index == index + 2:
+      **{{alphabet[answer_index]}}** {{harry_potter_true}}  
+    % else:
+      **{{alphabet[answer_index]}}** {{harry_potter_false[answer_index-1]}}  
+    % end
+  %end
+  **{{alphabet[answer_index+1]}}** None of the above  
+
+  <%
+  answer = alphabet[index+2]
+  answer2 = f'''We discussed this in Lecture 3
+  If the insert of Dumbledore into instructor occurs first, an integrity error will be thrown. 
+  First the department of Wizardly must be inserted into the department relation before Dumbledore
+  can be inserted into the instructor relation.
+
+  Answer: {answer}'''
+  %>
+  {{!select(answer, alphabet[:len(harry_potter_false)+2], points=5, name=f' Inserting.Dumbledore.{index+1}')}}
+     % include('viewAnswer', answer=answer2)
+
+---
+
+  <div class="row" stus>
+    <div class="twocolumns">
+     <b><u>Query A</u></b> Union<br/>
+     <img src="{{get_url('slides', slide_name='m1-dance-copy-agree-91.Query.A.png')}}" style="width:100%" >
+    </div> 
+    <div class="twocolumns">
+     <b><u>Query B</u></b> Multiple WHERE clauses<br/>
+     <img src="{{get_url('slides', slide_name='m1-dance-copy-agree-91.Query.B.png')}}" style="width:100%" >
+    </div>
+  </div>
+
+  **Union.Equivalence.{{index+1}}:** Assuming the same schema used throughout this exam and given the previous two queries (query A and B), which of the following statements are true?  
+
+  **A**: Either query A or query B is syntactically incorrect  
+  **B**: Query A and query B are syntactically correct and **never** produce the same result  
+  **C**: Query A and query B are syntactically correct and **sometimes** produce the same result  
+  **D**: Query A and query B are syntactically correct and **always** produce the same result  
+  **E**: None of these are true  
+
+<%
+answer = 'C'
+answer2 = f''' The two queries are syntactically correct.
+They will produce the same results if there are no duplicates.  
+But to be equivalent, Query B would need the DISTINCT keyword
+
+Try plugging the queries into https://comp421.cs.unc.edu/sql/interpreter/Chapter.02.Figure.2.14.Union.Fall.2017.Spring.2018
+
+Answer: {answer}'''
+%>
+   {{!select(answer, alphabet[:5], points=5, name=f' Union.Equivalence.{index+1}')}}
+   % include('viewAnswer', answer=answer2)
+
+---
+
+  <div class="row" stus>
+    <div class="twocolumns">
+     <b><u>Query C</u></b> Except <br/>
+     <img src="{{get_url('slides', slide_name='m1-dance-copy-agree-91.Query.C.png')}}" style="width:100%" >
+    </div>
+    <div class="twocolumns">
+     <b><u>Query D</u></b> WHERE WITH subquery<br/>
+     <img src="{{get_url('slides', slide_name='m1-dance-copy-agree-91.Query.D.png')}}"  style="width:100%">
+    </div>
+  </div>
+
+  **Except.Equivalence.{{index+1}}:** Assuming the same schema used throughout this exam and given the previous two queries (query C and D), which of the following statements are true?  
+
+  **A**: Either query C or query D is syntactically incorrect  
+  **B**: Query C and query D are syntactically correct and **never** produce the same result  
+  **C**: Query C and query D are syntactically correct and **sometimes** produce the same result  
+  **D**: Query C and query D are syntactically correct and **always** produce the same result  
+  **E**: None of these are true  
+
+<%
+answer = 'D'
+answer2 = f''' The two queries are syntactically correct.
+They will produce the same results if there are no duplicates.  
+There are no duplicates because the section relation's key is course_id, sec_id, semester, year
+
+Try plugging the queries into https://comp421.cs.unc.edu/sql/interpreter/Chapter.02.Figure.2.16.Fall.2017.Except.Spring.2018
+
+Answer: {answer}'''
+%>
+   {{!select(answer, alphabet[:5], points=5, name=f' Except.Equivalence.{index+1}')}}
+   % include('viewAnswer', answer=answer2)
+
+
+  % end  # section == 003 or team_member_number%number_chapter_review == index
+% end  # for index in range(number_chapter_review)
+

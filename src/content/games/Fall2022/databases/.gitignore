@@ -1,0 +1,8 @@
+*.sqlite
+*json
+*backup
+sql-murder-mystery.db
+sql-murder-mystery.db.original
+*.pickle
+*.png
+sql-murder-mystery-source

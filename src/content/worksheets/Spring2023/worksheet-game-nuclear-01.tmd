@@ -1,0 +1,150 @@
+<%
+setInfo(
+      assessment_type='worksheet'
+)
+answer = '1'
+choice = list('123456')
+%>
+
+# Pre-game nuclear questionnaire
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+A Likert scale will be used for all of the questions on this worksheet.  
+  **1.** Strongly disagree  
+  **2.** Disagree  
+  **3.** Neutral  
+  **4.** Agree  
+  **5.** Strongly agree  
+
+  **6.** I prefer not to give an opinion  
+
+There are no wrong answers.  You get full credit as long as you answer all questions.
+
+You **cannot** submit this worksheet without answering all questions.
+
+--- 
+
+
+
+## {{!linkable_header('Chrome-Based System')}}
+
+
+**Green.Highlights:** I find the correct-answer, green-highlight of the Chrome-based system helpful.  
+ **1.** Strongly disagree  
+ **2.** Disagree  
+ **3.** Neutral  
+ **4.** Agree  
+ **5.** Strongly agree  
+
+ **6.** I prefer not to give an opinion  
+{{!select(answer, choice, required="required", points=10, name='Green.Highlights')}}
+
+---
+
+## {{!linkable_header('Getting Ready For Games')}}
+
+**Game.Worry:** I am worried about the database game.  
+ **1.** Strongly disagree  
+ **2.** Disagree  
+ **3.** Neutral  
+ **4.** Agree  
+ **5.** Strongly agree  
+
+ **6.** I prefer not to give an opinion  
+{{!select(answer, choice, required="required", points=10, name='Game.Worry')}}
+
+--- 
+
+**Pregame:** I think the [nuclear schema worksheet]({{get_url('worksheets', key='worksheet-game-nuclear-00')}}) will be helpful.  
+ **1.** Strongly disagree  
+ **2.** Disagree  
+ **3.** Neutral  
+ **4.** Agree  
+ **5.** Strongly agree  
+
+ **6.** I prefer not to give an opinion  
+{{!select(answer, choice, required="required", points=10, name='Pregame')}}
+
+--- 
+
+**Ready.Game:** I feel ready to play the database game.  
+ **1.** Strongly disagree  
+ **2.** Disagree  
+ **3.** Neutral  
+ **4.** Agree  
+ **5.** Strongly agree  
+
+ **6.** I prefer not to give an opinion  
+{{!select(answer, choice, required="required", points=10, name='Ready.Game')}}
+
+--- 
+
+## {{!linkable_header('Feelings on Gamification')}}
+
+**Game.Interest:** I think that gamification in the database class will improve my **interest** in databases.  
+ **1.** Strongly disagree  
+ **2.** Disagree  
+ **3.** Neutral  
+ **4.** Agree  
+ **5.** Strongly agree  
+
+ **6.** I prefer not to give an opinion  
+{{!select(answer, choice, required="required", points=10, name='Game.Interest')}}
+
+---
+
+**Database.Understanding:** I think that gamification in the database class will improve my **understanding** of databases.  
+ **1.** Strongly disagree  
+ **2.** Disagree  
+ **3.** Neutral  
+ **4.** Agree  
+ **5.** Strongly agree  
+
+ **6.** I prefer not to give an opinion  
+{{!select(answer, choice, required="required", points=10, name='Database.Understanding')}}
+
+---
+
+**Database.Enjoyment:** I think that gamification in the database class will increase my **enjoyment** of databases.  
+ **1.** Strongly disagree  
+ **2.** Disagree  
+ **3.** Neutral  
+ **4.** Agree  
+ **5.** Strongly agree  
+
+ **6.** I prefer not to give an opinion  
+{{!select(answer, choice, required="required", points=10, name='Database.Enjoyment')}}
+
+---
+
+**More.Games:** I look forward to **more gamification** in education.  
+ **1.** Strongly disagree  
+ **2.** Disagree  
+ **3.** Neutral  
+ **4.** Agree  
+ **5.** Strongly agree  
+
+ **6.** I prefer not to give an opinion  
+{{!select(answer, choice, required="required", points=10, name='More.Games')}}
+
+---
+
+**Do.Well:** I believe I will **do well** in the database game.  
+ **1.** Strongly disagree  
+ **2.** Disagree  
+ **3.** Neutral  
+ **4.** Agree  
+ **5.** Strongly agree  
+
+ **6.** I prefer not to give an opinion  
+{{!select(answer, choice, required="required", points=10, name='Do.Well')}}
+
+--- 
+
+**Feelings:** How do you feel about the gamification part of COMP421?  
+{{!textarea(required="required", num_rows=10, style="height:200px;width:100%", points=10, name='Feelings')}}
+
+---
+
+% include('worksheet-submit.md')

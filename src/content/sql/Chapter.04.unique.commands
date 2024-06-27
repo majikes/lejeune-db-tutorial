@@ -1,0 +1,58 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Student;
+
+create table student (ID        varchar(5),
+                      name      varchar(20) not null,
+                      dept_name varchar(20),
+                      tot_cred  numeric(3,0) check (tot_cred >= 0),
+                      email     text,
+                      unique(email),
+                      primary   key (ID));
+
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email) 
+             VALUES ('00128', 'Zhang', 'Comp. Sci.', '102', 'Zhang@cs.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('12345', 'Shankar', 'Comp. Sci.', '32', null);
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('19991', 'Brandt', 'History', '80', 'Shankar@cs.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('23121', 'Chavez', 'Finance', '110', 'Chavez@fin.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('44553', 'Peltier', 'Physics', '56', null);
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('45678', 'Levy', 'Physics', '46', 'Levy@phy.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('54321', 'Williams', 'Comp. Sci.', '54', 'Williams@cs.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('55739', 'Sanchez', 'Music', '38', 'Sanchez@mus.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('70557', 'Snow', 'Physics', '0', 'snow@phy.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('76543', 'Brown', 'Comp. Sci.', '58', 'Brown@cs.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('76653', 'Aoi', 'Elec. Eng.', '60', 'Aoi@ee.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('98765', 'Bourikas', 'Elec. Eng.', '98', 'Bourikas@ee.unc.edu');
+INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+             VALUES ('98988', 'Tanaka', 'Biology', '120', 'Tanaka@bio.unc.edu');
+
+
+SELECT 'The Student Relation:' as '';
+SELECT * FROM Student
+ ORDER BY email;
+
+
+SELECT 'Try to add Joe Williams @ Williams@cs.unc.edu' as '';
+-- INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+--             VALUES ('123456', 'Joe Williams', 'Comp. Sci.', 0, 'Williams@cs.unc.edu');
+
+
+SELECT 'Try to add Joe with null email' as '';
+-- INSERT INTO STUDENT (ID, name, dept_name, tot_cred, email)
+--             VALUES ('123456', 'Joe Williams', 'Comp. Sci.', 0, null);
+
+SELECT 'The Student Relation:' as '';
+SELECT * FROM Student
+ ORDER BY email;
+

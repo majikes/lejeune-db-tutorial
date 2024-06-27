@@ -1,0 +1,36 @@
+Following are three SQL tutorial cheat sheets available from http://www.sqltutorial.org
+<% 
+import json
+setInfo(
+      assessment_type='worksheet',
+)
+with open('wkst-nuclear.json', encoding='utf-8') as fid:
+    schema = json.load(fid)
+%>
+
+<img src="{{static('images/SQLTutorial.1.jpeg')}}" style="width:85%" alt="First of four SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.2.jpeg')}}" style="width:85%" alt="Second of four SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.3.jpeg')}}" style="width:85%" alt="Third of four SQL Tutorial cheat sheets"/>
+
+
+Following are three SQL tutorial cheat sheets available from http://learnsql.com
+<img src="{{static('images/SQLTutorial.4.png')}}" style="width:85%" alt="Fourth of four SQL Tutorial cheat sheets"/>
+
+---
+
+## {{!linkable_header('Schema')}}
+
+<figure>
+  <img src="https://comp421.cs.unc.edu/static/images/Nuclear.schema.diagram.png"
+     style="width:75%; ">
+  <figcaption>Schema diagram for the nuclear database game</figcaption>
+</figure>
+
+% for line in schema.split('\n'):
+  % if line[:6] == 'CREATE':
+     {{line}}<br/>
+  % else:
+     &nbsp;&nbsp;&nbsp;&nbsp;{{line}}<br/>
+  % end
+% end
+

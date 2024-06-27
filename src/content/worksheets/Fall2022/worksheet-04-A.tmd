@@ -1,0 +1,87 @@
+<%
+import json
+with open('sailors.json') as fid:
+    schema = json.load(fid)
+setInfo(duration=80,
+        due='2022-08-31 10:45:00',
+        assessment_type='worksheet',
+        maxpenalty=0.75, penalty=.2,
+        exceptions=dict(lside=dict(due='2022-09-03 00:00:00')),
+        pages=['questions','submit']
+        )
+dbs = ['sailors1.sqlite', 'sailors.sqlite']
+%>
+
+# 04-A Relational Algebra
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}}
+
+Here is the tables used in this worksheet.
+
+<pre><code class="sql">
+% for line in schema.split('\n'):
+    {{!line}}
+% end
+</code></pre>
+
+---
+
+**Relational.Algebra.I:** Write a SQL query for $\pi_{sname,rating} {Sailors}$:  
+% answer = '''
+SELECT sname, rating
+   FROM Sailors
+'''
+{{!sql(answer, dbs=dbs, points=25, name='Relational.Algebra.I', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Relational.Algebra.II:** Write a SQL query for $\pi_{sname,rating} (\rho_{age >8} {Sailors} )$:  
+% answer = '''
+SELECT sname, rating
+   FROM Sailors
+  WHERE age > 8
+'''
+{{!sql(answer, dbs=dbs, points=25, name='Relational.Algebra.II', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Relational.Algebra.III:** Write a SQL query for ${Sailors} \bowtie_{Sailors.sid = Reserves.sid} {Reserves}$:  
+% answer = '''
+SELECT *
+   FROM Sailors AS S, Reserves as R
+  WHERE S.sid = R.sid
+'''
+{{!sql(answer, dbs=dbs, points=25, name='Relational.Algebra.III', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Relational.Algebra.IV:** Write a SQL query for $\rho_{Sailors.rating \ge 5} (((\pi_{sname, rating} {Sailors}) \bowtie_{Sailors.sid = Reserves.sid} {Reserves}) \bowtie_{Reserves.bid = Boats.bid} (\pi_{bname} {Boats}))$:  
+% answer = '''
+SELECT S.sname, S.rating, B.bname
+   FROM Sailors AS S, Reserves as R, Boats AS B
+  WHERE S.sid = R.sid AND
+        S.rating >= 5 AND
+        R.bid = B.bid
+'''
+{{!sql(answer, dbs=dbs, points=25, name='Relational.Algebra.IV', sort=True)}}
+% include('viewAnswer')
+
+---
+
+% if 'submit' in pages:
+ % include('worksheet-pledge.md')
+ % include('submit.md')
+% else:
+ If this were a real, classroom worksheet then a submit button was appear at the bottom.
+% end

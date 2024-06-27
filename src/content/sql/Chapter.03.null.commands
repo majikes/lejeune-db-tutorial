@@ -1,0 +1,65 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Section;
+CREATE TABLE Section (course_id varchar(8), sec_id varchar(8),
+                      semester varchar(6) check(semester in ('Fall', 'Winter', 'Spring', 'Summer')),
+                      year numeric(4,0) check (year > 1701 and year < 2100),
+                      building varchar(15), room_number varchar(7), time_slot_id varchar(4));
+INSERT INTO Section (course_id, sec_id, semester, year, building, room_number, time_slot_id)
+            VALUES ('BIO-101', 1, 'Summer', 2017, 'Painter', 514, 'B'),
+                   ('BIO-311', 1, 'Summer', 2018, 'Painter', 514, 'A'),
+                   ('CS-101',  1, 'Fall',   2017, 'Packard', 101, 'H'),
+                   ('CS-101',  1, 'Spring', 2018, 'Packard', 101, 'F'),
+                   ('CS-190',  1, 'Spring', 2017, 'Taylor', 3128, 'E'),
+                   ('CS-190',  2, 'Spring', 2017, 'Taylor', 3128, 'A'),
+                   ('CS-315',  1, 'Spring', 2018, 'Watson',  120, 'D'),
+                   ('CS-319',  1, 'Spring', 2018, 'Watson',  100, 'B'),
+                   ('CS-319',  2, 'Spring', 2018, 'Taylor', 3128, 'C'),
+                   ('CS-347',  1, 'Fall',   2017, 'Taylor', 3128, 'A'),
+                   ('EE-181',  1, 'Spring', 2017, 'Taylor', 3128, 'C'),
+                   ('FIN-201', 1, 'Spring', 2018, 'Packard', 101, 'B'),
+                   ('HIS-351', 1, 'Spring', 2018, 'Painter', 514, 'C'),
+                   ('MU-199',  1, 'Spring', 2018, 'Packard', 101, 'D'),
+                   ('PHY-101', 1, 'Fall',   2017, 'Watson',  100, 'A')
+                   ;
+
+SELECT "SQLite doesn't support true or false, use 1 or 0." as '';
+SELECT 'Permutations on logincal and with null' AS '';
+SELECT null and 1 AS nullAndTrue,
+       null and 0 AS nullAndFalse,
+			 null and null AS nullAndNull;
+
+SELECT 'Permutations on logincal or with null' AS '';
+SELECT null or 1 AS nullOrTrue,
+       null or 0 AS nullOrFalse,
+			 null or null AS nullOrNull;
+
+SELECT 'Course id, section, semester, year for sections in building Packard:' as '';
+SELECT course_id, sec_id, semester, year
+  FROM Section
+ WHERE building = 'Packard';	
+
+SELECT 'Course id, section, semester, year for sections in building Packard or 5 lt null:' as '';
+SELECT course_id, sec_id, semester, year
+  FROM Section
+ WHERE building = 'Packard' OR
+       5 < null;
+
+SELECT 'Course id, section, semester, year for sections in building Packard and 5 lt null:' as '';
+SELECT course_id, sec_id, semester, year
+  FROM Section
+ WHERE building = 'Packard' AND
+       5 < null;
+
+SELECT 'Course id, section, semester, year for sections in building Packard and null or null:' as '';
+SELECT course_id, sec_id, semester, year
+  FROM Section
+ WHERE building = 'Packard' AND
+       (null or null);
+
+SELECT 'Course id, section, semester, year for sections in building Packard or null or null:' as '';
+SELECT course_id, sec_id, semester, year
+  FROM Section
+ WHERE building = 'Packard' OR
+       (null or null);
+

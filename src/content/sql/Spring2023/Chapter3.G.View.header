@@ -1,0 +1,4 @@
+Students(sid: string, name: string, login: string, age: integer, gpa: real); 
+Enrolled(sid:string, cid: string, grade: string);
+YoungActiveStudents(name: string, grade: string);
+

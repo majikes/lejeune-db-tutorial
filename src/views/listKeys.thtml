@@ -1,0 +1,30 @@
+<h1>Submissions</h1>
+
+<p>All submissions for {{onyen}}</p>
+<ul>
+  <% for key in sorted(keys): %>
+  <li>
+    <a href="{{get_url('viewKey', onyen=onyen, key=key[0])}}">
+      {{key[0]}}
+    </a>
+  </li>
+  <% end %>
+</ul>
+
+% if homeworks and (len(homeworks) > 0):
+  <p>Python submissions for {{onyen}}</p>
+  <ul>
+    % for homework in homeworks:
+      % if homework.notebook_id:
+        <li>
+           % if homework.url:
+             <a href="{{homework.url}}" target="_blank">{{homework.key}} graded</a>
+           % else:
+             {{homework.key}} submitted
+           % end
+        </li>
+      % end
+    % end
+  </ul>
+% end
+% rebase('assessment.base')

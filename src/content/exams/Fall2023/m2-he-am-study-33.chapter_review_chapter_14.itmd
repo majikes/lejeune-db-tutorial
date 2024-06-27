@@ -1,0 +1,97 @@
+<%
+  import string
+  from collections import namedtuple
+
+  B_plus_true = ['Every path from the root of the tree to the leaf of the tree is the same length',
+                 'The height of the tree is proportional to the logarithm of the base $n$ of $M$',
+                 'Lookup (search) on B$^+$-trees is straightforward and efficient',
+                 'B$^+$ trees are much shorter than other binary-tree structures such as AVL trees',
+                         ]
+  B_plus_false = ['Each non-leaf node stores $n$ keys']
+
+  key = ['ID', 'course_id', 'year', 'grade']
+  relation = ['Instructor', 'Course', 'Section', 'Takes']
+  key_search_true = ['Zero I/Os']
+  key_search_false = ['M I/Os',
+                      'n I/Os',
+                      'M/100 I/Os',
+                      '100/M I/Os']
+
+  DISKS = namedtuple('DISKS', 'seek RPM tran')
+  disks = [DISKS(seek='s', RPM=5400,  tran='t'),
+           DISKS(seek='S', RPM=7200,  tran='T'),
+           DISKS(seek='s', RPM=9000,  tran='T'),
+           DISKS(seek='S', RPM=15000, tran='s'),
+           ]
+
+  alphabet = list(string.ascii_uppercase)
+%>
+
+
+% for index in range(number_chapter_review):
+  % if section == '003' or (team_member_number % number_chapter_review) == index:
+
+   Following are statements about a B$^+$-tree index with $P_1, P_2, \dots, P_n$ pointers in each index node for a relation of $M$ tuples.  
+   % incorrect_index = (index * 3 + 1) % (len(B_plus_true)+1)
+   % for answer_index in range(len(B_plus_true)+1):
+       % if answer_index < incorrect_index:
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**{{alphabet[answer_index]}}** {{B_plus_true[(index*2 + answer_index) % len(B_plus_true)]}}  
+       % elif answer_index == incorrect_index:
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**{{alphabet[answer_index]}}** {{B_plus_false[index % len(B_plus_false)]}}  
+       % else:
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**{{alphabet[answer_index]}}** {{B_plus_true[(index*2 + answer_index-1) % len(B_plus_true)]}}  
+       % end
+   % end
+<%
+answer = alphabet[incorrect_index]
+answer2 = f''' Page 677 Summary point 5 and 6 has each of these points except for {answer}
+There are $n$ pointers but only $n-1$ keys
+
+ Answer: {answer}'''
+%>
+    **B.Plus.Booleans.{{index+1}}:** Given the book's discussion of B$^+$ trees in chapter 14,
+    which of the above is a false statement?  
+   {{!select(answer, alphabet[:5], points=5, name=f' B.Plus.Booleans.{index+1}')}}
+   % include('viewAnswer', answer=answer2)
+
+---
+
+   **Disk.I.O.Keys.{{index+1}}:** For the following question, assume the same M tuples, n tuples per index, with 100 tuples per 4K block,
+   the disk blocks are 4K in size,
+   and assume the dense index B$^+$ search tree of {{key[index]}} kept entirely in memory such that no I/Os are required to read the B$^+$-tree,
+   how many I/Os are required for `SELECT DISTINCT {{key[index]}} FROM {{relation[index]}}`?  
+   % correct_index = (index * 3 + 1) % (len(key_search_false)+1)
+   % for answer_index in range(len(key_search_false)+1):
+       % if answer_index < correct_index:
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**{{alphabet[answer_index]}}** {{key_search_false[(index*2 + answer_index) % len(key_search_false)]}}  
+       % elif answer_index == correct_index:
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**{{alphabet[answer_index]}}** {{key_search_true[index % len(key_search_true)]}}  
+       % else:
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**{{alphabet[answer_index]}}** {{key_search_false[(index*2 + answer_index-1) % len(key_search_false)]}}  
+       % end
+   % end
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**F** None of the above.   
+   <%
+answer = alphabet[correct_index]
+answer2 = f''' Since the select is only on search keys and B+ tree in memory,
+no I/Os are required.
+
+ Answer: {answer}'''
+%>
+   {{!select(answer, alphabet[:6], points=5, name=f' Disk.I.O.Keys.{index+1}')}}
+   % include('viewAnswer', answer=answer2)
+
+   % d = disks[index]
+   **Disk.{{index+1}}:** Assume a disk spins at {{d.RPM}} revolutions per minute,
+   transfer time of one block of {{d.tran}} milliseconds, and 
+   a average seek time of {{d.seek}} milliseconds.  
+   Write an expression that calculates the average time in milliseconds required to complete an I/O for one block of data.  
+   % answer = f'{d.seek} + 0.5 * 60 * 1000 / {d.RPM} + {d.tran}'
+   {{!expression(answer, dict(t=1, T=2, s=4, S=8), dict(t=2, T=4, s=8, S=16), points=5, name=f' Disk.{index+1}')}}
+   % include('viewAnswer')
+
+---
+
+  % end  # section == 003 or team_member_number%number_chapter_review == index
+% end  # for index in range(number_chapter_review)
+

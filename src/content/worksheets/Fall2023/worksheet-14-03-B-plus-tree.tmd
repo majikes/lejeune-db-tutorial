@@ -1,0 +1,89 @@
+There is only one type of join in SQL&#44; the natural join,{answer[2]}
+<%
+setInfo(assessment_type='worksheet')
+%>
+
+# Chapter 14 B$^+$ tree
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+<%
+instructor_records = [
+'10101 Srinivasan Comp. Sci. 65000',
+'12121 Wu         Finance    90000',
+'15151 Mozart     Music      40000',
+'32343 El Said    History    80000',
+'33456 Gold       Physics    87000',
+'45565 Katz       Comp. Sci. 75000',
+'58583 Califieri  History    60000',
+'76543 Singh      Finance    80000',
+'22222 Einstein   Physics    95000',
+'76766 Crick      Biology    72000',
+'83821 Brandt     Comp. Sci. 92000',
+'98345 Kim        Elec. Eng. 80000',
+'Left leaf',
+'Left center leaf',
+'Right center leaf',
+'Right leaf',
+'Null']
+%>
+---
+
+<img src="{{static('images/Chapter-14-1-B-tree-salary.png')}}" style="float:none; width:75%"/>
+
+---
+
+**Left.Leaf.Pointers:** What is the value of the following pointers in the left leaf node?
+% answer = ['15151 Mozart     Music      40000', '58583 Califieri  History    60000',  'Null', 'Left center leaf']
+{{!table(inputs=1, headings='Pointer, Value', table=f'''
+P1,{answer[0]}
+P2,{answer[1]}
+P3,{answer[2]}
+P4,{answer[3]}
+''', symbols=instructor_records, name='Left.Leaf.Pointers', points=25)}}
+% include('viewAnswer')
+
+
+---
+
+**Left.Center.Leaf.Pointers:** What is the value of the following pointers in the left-center leaf node?
+% answer = ['10101 Srinivasan Comp. Sci. 65000', '76766 Crick      Biology    72000', 'Null', 'Right center leaf']
+{{!table(inputs=1, headings='Pointer, Value', table=f'''
+P1,{answer[0]}
+P2,{answer[1]}
+P3,{answer[2]}
+P4,{answer[3]}
+''', symbols=instructor_records, name='Left.Center.Leaf.Pointers', points=25)}}
+% include('viewAnswer')
+
+---
+
+**Right.Center.Leaf.Pointers:** What is the value of the following points in the right-center leaf node?  
+% answer = ['45565 Katz       Comp. Sci. 75000', '32343 El Said    History    80000', '33456 Gold       Physics    87000', 'Right leaf']
+{{!table(inputs=1, headings='Pointer, Value', table=f'''
+P1,{answer[0]}
+P2,{answer[1]}
+P3,{answer[2]}
+P4,{answer[3]}
+''', symbols=instructor_records, name='Right.Center.Leaf.Pointers', points=25)}}
+% include('viewAnswer')
+
+
+
+**Right.Leaf.Pointers:** What is the value of the following pointers in the right leaf node?
+% answer = ['12121 Wu         Finance    90000', '83821 Brandt     Comp. Sci. 92000', '22222 Einstein   Physics    95000', 'Null']
+{{!table(inputs=1, headings='Pointer, Value', table=f'''
+P1,{answer[0]}
+P2,{answer[1]}
+P3,{answer[2]}
+P4,{answer[3]}
+''', symbols=instructor_records, name='Right.pointers', points=25)}}
+% include('viewAnswer')
+
+
+% include('worksheet-submit.md')

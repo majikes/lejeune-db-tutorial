@@ -1,0 +1,23 @@
+DROP TABLE IF EXISTS Reserves;
+CREATE TABLE Reserves (sid string, bid string, day date);
+INSERT INTO Reserves VALUES ('22', '101', '10/10/96');
+INSERT INTO Reserves VALUES ('58', '103', '11/12/96');
+
+SELECT 'The Reserves table:' as '';
+SELECT * FROM Reserves;
+
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid char(20), sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'dustin', 7, 45.0);
+INSERT INTO Sailors values ('31', 'lubber', 8, 55.5);
+INSERT INTO Sailors values ('58', 'rusty', 10, 35.0);
+
+SELECT 'The Sailors table:' as '';
+SELECT * FROM Sailors;
+
+SELECT 'Select sailor name, age, age minus 5, and twice thir age' as '';
+SELECT 'Age of sailors and two computed fields' as '';
+SELECT  S.sname, S.age, S.age-5, 2*S.age AS age2
+  FROM  Sailors S
+   WHERE  S.sname LIKE 'l_b%'

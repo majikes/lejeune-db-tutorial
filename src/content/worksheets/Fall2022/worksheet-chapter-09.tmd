@@ -1,0 +1,86 @@
+<%
+setInfo(
+      due="2021-10-05 15:15:00",
+      needsSubmitCode=True,
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False)),
+)
+dbs = ['states-A.sqlite']
+%>
+
+# Chapter 9  worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+Good query:
+
+```sql
+WITH Reservations AS (
+    SELECT bid, COUNT(*) AS count 
+        FROM Reserves 
+            GROUP BY bid)
+SELECT *
+  FROM Reservations
+ WHERE count=(SELECT MAX(count) FROM Reservations)
+```
+
+Bad query:
+```sql
+WITH Reservations AS (
+    SELECT bid, COUNT(*) AS count 
+        FROM Reserves 
+            GROUP BY bid)
+SELECT B.*, V.count
+  FROM Boats B, Reservations V
+ WHERE B.bid=V.bid
+```
+
+**Good.Bad**: Why is the above query bad?  
+% answer = 'C. It derived a table and only used it once'
+% choices = ['A. The indention and formatting is bad', 'B. The use of B.*', answer, 'D. Neither is a bad query', 'E. Both are bad queries']
+{{!select(answer, choices=choices, points=25, name='Good.Bad')}}
+% include('viewAnswer')
+
+
+---
+
+**Catalog**: Write a SQL query to select the master catalog of the SQLite database used for the exam?  
+% answer = 'SELECT * FROM sqlite_master'
+{{!sql(answer, dbs=dbs, points=25, num_rows=3, name='Catalog', sort=1)}}
+%include('viewAnswer')
+
+---
+
+**States.Index**: what is the name of the index used in the States relation?  
+% answer = 'A. sqlite_autoindex_States_1'
+% choices = [answer, 'B. sqlite_autoindex_Politicians_1', 'C. sqlite_autoindex_Terms_1', 'D. There are multiple indices on relations States', 'E. There are no indices on relation States']
+{{!select(answer, choices, points=25, name='States.Index')}}
+%include('viewAnswer')
+
+---
+
+**View**:  What is the name of the view on States relation?  
+% answer = 'B. allStateAndCount'
+% choices = ['A. stateAndCount',  answer, 'C. Both A and B', 'D. None of theme']
+{{!select(answer, choices, points=25, name='View')}}
+%include('viewAnswer')
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

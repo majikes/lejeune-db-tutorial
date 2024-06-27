@@ -1,0 +1,74 @@
+<%
+import json
+with open('game-crime.json') as fid:
+    game_data = json.load(fid)
+points_limit = 100
+setInfo(
+        needsSubmitCode=False,
+        assessment_type='worksheet',
+        due='2023-02-16  8:00:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False),
+                        meghanav=dict(needsSubmitCode=False, due='2022-09-22 00:00:00'),
+                        ),
+        pages=['questions', 'submit'],
+        max_segments=3,
+        maxpenalty=1.00, penalty=.20,
+        points_limit=100,
+        points_total=100,
+       )
+dbs=['crime00.sqlite']
+
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+# 1 Crime game worksheet
+
+---
+
+## {{!linkable_header('Crime Game Database Schema')}}
+
+Here is the tables you'll find for the database used in the game.
+ 
+<pre>
+   <code class="sql">
+% for line in game_data['schema'].split('\n'):
+   {{!line}}   
+% end
+   </code>
+</pre> 
+
+---
+
+## {{!linkable_header('Game format')}}
+
+
+The game is multiple submissions.
+You answer one part of the game, submit it, and you are presented with the next stage of the game.
+Once you submit a part of the game, you <font color='red'>cannot</font> go back.
+
+In the following scratch space.
+You can use it to test out queries.
+There are no points for the following SQL query.
+It is a scratch pad.
+{{!sql(''' select 1 ''', name='_scratch_sql_queries_1', dbs=dbs)}}
+
+---
+
+
+**Report.Count:** List the number of reports in the database:  
+
+% answer = '''
+SELECT count(*)
+ FROM Reports
+'''
+{{!sql(answer, dbs=dbs, points=100, sort=True, name='Report.Count')}}
+% include('viewAnswer')
+
+
+--- 
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

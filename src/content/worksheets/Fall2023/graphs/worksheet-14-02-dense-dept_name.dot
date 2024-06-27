@@ -1,0 +1,172 @@
+digraph G
+{
+    splines=false
+    "node0"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">id0</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "instructor0"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">76766</td>
+                        <td port="name">Crick</td>
+                        <td port="dept_name">Biology</td>
+                        <td port="salary">72000</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "node1"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">id1</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "instructor1"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">10101</td>
+                        <td port="name">Srinivasan</td>
+                        <td port="dept_name">Comp. Sci.</td>
+                        <td port="salary">65000</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "node1a"
+    [
+        shape = none
+        label = ""
+    ]
+    "instructor1a"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">45565</td>
+                        <td port="name">Katz</td>
+                        <td port="dept_name">Comp. Sci.</td>
+                        <td port="salary">75000</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "node1b"
+    [
+        shape = none
+        label = ""
+    ]
+    "instructor1b"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">83821</td>
+                        <td port="name">Brandt</td>
+                        <td port="dept_name">Comp. Sci.</td>
+                        <td port="salary">92000</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "node2"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">id2</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "instructor2"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">98345</td>
+                        <td port="name">Kim</td>
+                        <td port="dept_name">Elec. Eng.</td>
+                        <td port="salary">80000</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "node3"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">id3</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "instructor3"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">12121</td>
+                        <td port="name">Wu</td>
+                        <td port="dept_name">Finance</td>
+                        <td port="salary">90000</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+    "node3a"
+    [
+        shape = none
+        label = ""
+    ]
+    "instructor3a"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="id">76543</td>
+                        <td port="name">Singh</td>
+                        <td port="dept_name">Finance</td>
+                        <td port="salary">80000</td>
+                        <td port="ptr"></td>
+                    </tr>
+                </table>>
+    ]
+
+    "node0":"ptr" -> "instructor0":"id"
+
+    "instructor0":"ptr" -> "instructor1":"ptr"
+    "node1":"ptr" -> "instructor1":"id"
+
+    "instructor1":"ptr" -> "instructor1a":"ptr"
+    "instructor1a":"ptr" -> "instructor1b":"ptr"
+    "instructor1b":"ptr" -> "instructor2":"ptr"
+    "node2":"ptr" -> "instructor2":"id"
+
+    "instructor2":"ptr" -> "instructor3":"ptr"
+    "node3":"ptr" -> "instructor3":"id"
+    "instructor3":"ptr" -> "instructor3a":"ptr"
+
+    {rank=source; "node0", "instructor0"}
+    {rank=same; "node1", "instructor1"}
+    {rank=same; "node1a", "instructor1a"}
+    {rank=same; "node1b", "instructor1b"}
+    {rank=same; "node2", "instructor2"}
+    {rank=same; "node3", "instructor3"}
+    {rank=same;  "instructor3a"}
+}

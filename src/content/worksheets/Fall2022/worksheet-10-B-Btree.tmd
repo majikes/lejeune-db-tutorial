@@ -1,0 +1,78 @@
+<%
+import random
+setInfo(
+      due="2022-10-12 10:55:00",
+      assessment_type='worksheet',
+      needsSubmitCode=True,
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      ayanam=dict(needsSubmitCode=False, due='2022-10-14 00:00:00')),
+)
+%>
+
+# Chapter 10 B+ Tree
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+Assume each B+ tree leaf page can contains at most two index entries
+(three pointers and two keys) with integer search keys.
+
+
+<figure>
+ <img src="{{static('images/worksheet-10-B-Btree.png')}}" style="width:75%" alt="B+ tree"/>
+ <figcaption>B+ tree.  Assume all leaf pages linked</figcaption>
+</figure>
+
+**Bulk.Load:** For each variable ($A, B, \dots, F$) in the B+ tree above,
+enter the key values entered by bulk loading the B+ tree.  
+% answer = ['25', 'Null', '22', 'Null', '29', '35']
+% symbols = [f'{x}' for x in range(40)] + ['Null']
+{{!table(inputs=1, headings='Key variable in image above, Key value', table=f'''
+A,{answer[0]}
+B,{answer[1]}
+C,{answer[2]}
+D,{answer[3]}
+E,{answer[4]}
+F,{answer[5]}''', symbols=symbols, name='ISAM.Setup', points=60)}}
+%include('viewAnswer')
+
+---
+
+**Fanout:** What is the fanout of the B+ tree? 
+% answer = '3'
+% answer2 = f'''Fanout is the maximum number of children of an index node has.
+
+Answer: {answer}'''
+{{!expression(answer, dict(n=1), dict(n=2), points=20, name='Fanout')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Height:** What is the height of the B+ tree? 
+% answer = '2'
+% answer2 = f'''The height of the tree is the number of index levels.
+
+Answer: {answer}'''
+{{!expression(answer, dict(n=1), dict(n=2), points=20, name='Height')}}
+%include('viewAnswer', answer=answer2)
+
+--- 
+
+% end
+
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

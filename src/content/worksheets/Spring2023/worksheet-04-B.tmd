@@ -1,0 +1,140 @@
+<%
+import json
+with open('sailors.json') as fid:
+    schema = json.load(fid)
+setInfo(duration=80,
+        due='2023-01-31 10:50:00',
+        assessment_type='worksheet',
+        max_points=80,
+        maxpenalty=0.75, penalty=.2,
+        exceptions=dict(calliexu=dict(due='2022-09-08 00:00:00')),
+        pages=['questions','submit']
+        )
+dbs = ['sailors1.sqlite', 'sailors.sqlite']
+choices = list('ABCD')
+%>
+
+# 04-A Relational Algebra
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}}
+
+Here is the tables used in this worksheet.
+
+<pre><code class="sql">
+% for line in schema.split('\n'):
+    {{!line}}
+% end
+</code></pre>
+
+In the following scratch space.
+You can use it to test out queries.
+There are no points for the following SQL query.
+It is a scratch pad.
+{{!sql(''' select 1 ''', name='_scratch_sql_queries_1', dbs=[dbs[0]])}}
+
+---
+
+**Sids.Divided.Boats:**  $(\pi_{sid, bid} {Reserves}) / (\pi_{bid} {Boats})$:  
+% answer = '''
+SELECT DISTINCT Z.sid
+  FROM Reserves as Z
+ WHERE NOT EXISTS (SELECT Y.bid
+                     FROM Boats as Y
+
+                   EXCEPT 
+
+                   SELECT W.bid
+                     FROM Reserves as W
+                    WHERE W.sid = Z.sid) 
+'''
+{{!sql(answer, dbs=dbs, sort=True, points=20, name='Sids.Divided.Boats')}}
+% include('viewAnswer')
+
+---
+
+**Boat.103:** Write a SQL query $\pi_{sname} ((\rho_{bid=103}{Reserves}) \bowtie {Sailors})$:  
+% answer = '''
+WITH T1 AS (SELECT *
+              FROM Reserves
+             WHERE bid=103),
+     T2 AS (SELECT T1.sid, T1.bid, T1.day, S.sname, S.rating, s.age
+              FROM T1
+           NATURAL JOIN Sailors as S)
+
+SELECT DISTINCT sname 
+           FROM T2;
+'''
+{{!sql(answer, dbs=dbs, sort=True, points=15, name='Boat.103')}}
+% include('viewAnswer')
+
+**English.Boat.103:** Which of the following _best_ describe the about algebra?  
+ **A:** List the boats that had sailors  
+ **B:** List the sailor names that reserved boat 103  
+ **C:** List the distinct sailor names that reserved boat 103  
+ **D:** None of the above  
+% answer = 'C'
+{{!select(answer, choices, points=10, name='English.Boat.103')}}
+% include('viewAnswer')
+
+---
+
+**Red.Boat:** Write a SQL query to list the distinct names of sailors who reserved a red boat:  
+% answer = '''
+SELECT DISTINCT S.sname
+           FROM Sailors as S, Boats AS B, Reserves as R
+          WHERE S.sid=R.sid AND
+                B.bid=R.bid AND
+                B.color='red'
+'''
+{{!sql(answer, dbs=dbs, sort=True, points=15, name='Red.Boat')}}
+% include('viewAnswer')
+
+---
+
+**Red.OR.Green.Boat:** Write a SQL query to list the distinct names of sailors who reserved either a red _or_ green boat:  
+% answer = '''
+SELECT DISTINCT S.sname
+           FROM Sailors as S, Boats AS B, Reserves as R
+          WHERE S.sid=R.sid AND
+                B.bid=R.bid AND
+                (B.color='red' or B.color='green')
+'''
+{{!sql(answer, dbs=dbs, sort=True, points=15, name='Red.OR.Green.Boat')}}
+% include('viewAnswer')
+
+---
+
+**Red.AND.Green.Boat:** Write a SQL query to list the distinct names of sailors who reserved both a red _and_ green boat:  
+% answer = '''
+SELECT DISTINCT S.sname
+           FROM Sailors as S, Boats AS B, Reserves as R
+          WHERE S.sid=R.sid AND
+                B.bid=R.bid AND
+                B.color='red'
+INTERSECT 
+
+SELECT DISTINCT S.sname
+           FROM Sailors as S, Boats AS B, Reserves as R
+          WHERE S.sid=R.sid AND
+                B.bid=R.bid AND
+                B.color='green'
+'''
+{{!sql(answer, dbs=dbs, sort=True, points=25, name='Red.AND.Green.Boat')}}
+% include('viewAnswer')
+
+---
+
+% if 'submit' in pages:
+ % include('worksheet-pledge.md')
+ % include('submit.md')
+% else:
+ If this were a real, classroom worksheet then a submit button was appear at the bottom.
+% end

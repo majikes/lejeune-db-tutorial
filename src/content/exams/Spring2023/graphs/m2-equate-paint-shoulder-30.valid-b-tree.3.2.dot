@@ -1,0 +1,171 @@
+digraph G
+{
+    splines=false
+    ranksep="0.1"
+    nodespe="0.1"
+    root_node
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">15</td>
+                        <td port="connector1"></td>
+                        <td port="key1">_</td>
+                        <td port="connector2"></td>
+                        <td port="key2">_</td>
+                        <td port="connector3"></td>
+                        <td port="key3">_</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+    index_node_1
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">3</td>
+                        <td port="connector1"></td>
+                        <td port="key1">10</td>
+                        <td port="connector2"></td>
+                        <td port="key2">_</td>
+                        <td port="connector3"></td>
+                        <td port="key3">_</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+    index_node_2
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">14</td>
+                        <td port="connector1"></td>
+                        <td port="key1">18</td>
+                        <td port="connector2"></td>
+                        <td port="key2">_</td>
+                        <td port="connector3"></td>
+                        <td port="key3">_</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+    leaf_node_1
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">1*</td>
+                        <td port="key1">2*</td>
+                        <td port="key2">_</td>
+                        <td port="key3">_</td>
+                    </tr>
+                </table>>
+    ]
+    leaf_node_2
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">4*</td>
+                        <td port="key1">9*</td>
+                        <td port="key2">_</td>
+                        <td port="key3">_</td>
+                    </tr>
+                </table>>
+    ]
+    leaf_node_3
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">10*</td>
+                        <td port="key1">11*</td>
+                        <td port="key2">_</td>
+                        <td port="key3">_</td>
+                    </tr>
+                </table>>
+    ]
+    leaf_node_4
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">12*</td>
+                        <td port="key1">13*</td>
+                        <td port="key2">_</td>
+                        <td port="key3">_</td>
+                    </tr>
+                </table>>
+    ]
+    leaf_node_5
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">16*</td>
+                        <td port="key1">17*</td>
+                        <td port="key2">_</td>
+                        <td port="key3">_</td>
+                    </tr>
+                </table>>
+    ]
+    leaf_node_6
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">19*</td>
+                        <td port="key1">31*</td>
+                        <td port="key2">_</td>
+                        <td port="key3">_</td>
+                    </tr>
+                </table>>
+    ]
+
+    root_label [ shape = none label="root" ]
+    root_label -> root_node:"connector0"
+
+    root_node:"connector0" -> index_node_1:"key0" 
+    root_node:"connector1" -> index_node_2:"key0"
+
+    index_1_label [ shape = none label="index 1"]
+    index_1_label -> index_node_1:"connector0"
+    index_node_1:"connector0" -> leaf_node_1:"key0" 
+    index_node_1:"connector1" -> leaf_node_2:"key0"
+    index_node_1:"connector2" -> leaf_node_3:"key0"
+
+    index_node_2:"connector0" -> leaf_node_4:"key0" 
+    index_node_2:"connector1" -> leaf_node_5:"key0"
+    index_node_2:"connector2" -> leaf_node_6:"key0"
+    index_2_label [ shape = none label="index 2"]
+    index_2_label -> index_node_2:"connector4"
+
+    leaf_1_label [ shape=none label="leaf 1"]
+    leaf_1_label -> leaf_node_1:"key0"
+    leaf_2_label [ shape=none label="leaf 2"]
+    leaf_2_label -> leaf_node_2:"key0"
+    leaf_3_label [ shape=none label="leaf 3"]
+    leaf_3_label -> leaf_node_3:"key0"
+    leaf_4_label [ shape=none label="leaf 4"]
+    leaf_4_label -> leaf_node_4:"key0"
+    leaf_5_label [ shape=none label="leaf 5"]
+    leaf_5_label -> leaf_node_5:"key0"
+    leaf_6_label [ shape=none label="leaf 6"]
+    leaf_6_label -> leaf_node_6:"key0"
+
+    // make invisible ranks
+    rank1 [style=invisible]
+    rank1 -> index_1_label -> index_node_1 -> index_node_2 -> index_2_label [style=invis]
+    leaf_1_label -> leaf_2_label -> leaf_3_label -> leaf_4_label -> leaf_5_label -> leaf_6_label [style=invis constraint=false];
+    leaf_node_1 -> leaf_node_2 -> leaf_node_3 -> leaf_node_4 -> leaf_node_5 -> leaf_node_6 [dir=both constraint=false]
+
+    {rank=min; root_label root_node}
+    {rank=same; index_1_label index_node_1 index_node_2 index_2_label}
+    {rank=same; leaf_node_1 leaf_node_2 leaf_node_3 leaf_node_4 leaf_node_5 leaf_node_6 }
+    {rank=max; leaf_1_label leaf_2_label leaf_3_label leaf_4_label leaf_5_label leaf_6_label  }
+}

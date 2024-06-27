@@ -1,0 +1,120 @@
+course_id,title,dept_name,credits,prereqs
+ACC 210,Concepts of Financial Reporting,Accounting,3,
+ACC 220,Introduction to Managerial Accounting",Accounting,3,"ACC 210"
+ACC 310,Intermediate Financial Accounting I,Accounting,3,"ACC 210"
+ACC 311,Intermediate Financial Accounting II,Accounting,3,"ACC 310"
+ACC 330,An Introduction To Income Taxation,Accounting,3,"ACC 210"
+ACC 340,Accounting Information Systems,Accounting,3,"ACC 210"
+ACC 450,Auditing and Assurance Services,Accounting,3,"ACC 311,ACC 340"
+MATH 141,Calculus I,Math,4,
+MATH 241,Calculus II,Math,4,MATH 141
+MATH 242,Calculus III,Math,4,MATH 241
+MA 341,Applied Differential Equations,Math,MATH 242
+CE 214,Engineering Mechancics-Statics,Civil Eng.,3,MATH 242
+CE 250,Introduction to Sustainable Infrastructure,Civil Eng.,3,CE 214
+CE 225,Mechanics of Solids,Civil Eng.,3,CE 214
+CE 282,Hydraulics,Civil Eng.,3,"CE 214,"CE 214,MA 341"
+CE 332,Civil Engineering Materials,Civil Eng.,3,CE 225
+CE 305,Traffic Engineering,Civil Eng.,3,CE 250
+CE 327,Reinforced Concrete Design,Civil Eng.,3,CE 225
+CE 339,Civil Engineeering Systems,Civil Eng.,3,MA 341
+CE 383,Hydrology and Urban Water Systems,Civil Eng.,3,CE 282
+ASTR 100,Understanding the Universe,Astronomy,3,
+ASTR 101,Introduction to Astronomy: The Solar System,Astronomy,3,
+ASTR 102,Introduction to Astronomy: Stars: Galaxies & Cosmology,Astronomy,3,ASTR 101
+MATH 232,Calculus of Functions of One Variable,Math,4,MATH 242
+MATH 233,Calculus of Functions of Several Variables,Math,4,MATH 242
+PHYS 118,Introductory Calculus-based Mechanics and Relativity,Physics,4,"MATH 241,MATH 242"
+PHYS 119,Introductory Calculus-based Electromagnetism and Quanta,Physics,3,"PHYS 118,MATH 233"
+ASTR 202,Introduction to Astrophysics,Astronomy,3,PHYS 119
+ASTR 501,Stellar Astrophysics,Astronomy,3,"ASTR 202,MA 341"
+EXSS 175,Human Anatomy,Athletics,3,
+EXSS 180,Physical Activity in Contemporary Society,Athletics,3
+EXSS 181,Sport and Exercise Psychology,Athletics,3,
+EXSS 273,Research in Exercise and Sport Science,Athletics,3,
+EXSS 385,Biomechanics of Sport,Athletics,3,EXSS 175
+BIOL 101,Principles of Biology,Biology,4,
+BIOL 103,How Cells Function,Biology,3,BIOL 101
+BIOL 104,Biodiversity,Biology,3,BIOL 101
+BIOL 220,Molecular Genetics,Biology,3,"BIOL 101,BIOL 103"
+BIOL 240,Cell Biology,Biology,3,BIOL 103
+BIOL 250,Evolutionary Biology,Biology,3,BIOL 104
+BIOL 260,Introduction to Ecology,Biology,3,BIOL 104
+COMP 110,Introduction to Programming and Data Science,Comp. Sci.,3,MATH 233
+COMP 283,Discrete Structurres,Comp. Sci.,3,MATH 233
+COMP 210,Data Structures and Analysis,Comp. Sci.,3,"COMP 110,MATH 233"
+COMP 211,Systems Fundamentals,Comp. Sci.,3,COMP 210
+COMP 301,Foundations of Programming,Comp. Sci.,3,"COMP 210,MATH 233"
+COMP 311,Computer Organization,Comp. Sci.,3,COMP 211
+COMP 421,Files and Databases,Comp. Sci.,3,"COMP 210,COMP 211,COMP 311"
+COMP 550,Algorithms and Analysis,Comp. Sci.,3,"COMP 211,COMP 301"
+CYB 230,Cyber Security Fundamentals,Cybernetics,3,COMP 210
+CYB 231,Cyber Security Concepts and Tools,Cybernetics,3,CYB 230
+CYB 234,"Legal, Professional, and Ethical Issues in Cyber Systems",Cybernetics,3
+CYB 331,Application of Cryptographic Concepts to Cyber Security,Cybernetics,3,CYB 231
+CYB 440,Operating System Security,Cybernetics,3,COMP 311
+ECE 101,Introduction to Engineering & Probability,Elec. Eng.,3,
+ECE 109,Introduction to Computer Systems,Elec. Eng.,3,
+ECE 115,Introduction to Computing Environments,Elec. Eng.,3,
+ECE 200,"Introduction to Signals, Circuits, and Systems",Elec. Eng.,3,MATH 241
+ECE 211,Electric Circuits,Elec. Eng.,3,ECE 200
+ECE 212,Fundamentals of Logic Design,Elec. Eng.,3,ECE 109
+ECE 302,Microelectronics,Elec. Eng.,3,ECE 211
+ENGL 120,"British Literature, Medieval to 18th Century",English,3,
+ENGL 151,Nineteenth-Century American Literature,English,3,
+ENG 225,Shakespeare,English,3,
+ENG 230,Milton,English,3
+ENG 235,Studies in Jane Austin (British),English,3,
+FIN 210,Concepts of Financial Reporting,Finance,3,
+FIN 320,Financial Management,Finance,3,FIN 210
+FIN 420,Financial Management of Corporations,Finance,3,FIN 320
+FIN 422,Investment and Portfolio Management,Finance,FIN 320
+FIN 426,International Financial Management,Finance,FIN 320
+GEO 100,Earth System Science: Exploring the Connections,Geology,4,
+GEO 101,Geology I: Physical,Geology,3,GEO 100
+GEO 202,Geology II: Historical,Geology,3,"GEO 100,GEO 101"
+GEO 410,Introduction to Mineralogy,Geology,3,"GEO 100,GEO 101"
+GEO 440,Igneous and Metamorphic Petrology,Geology,3,GEO 410
+HIST 102,Introduction to Major Probelms in U.S. History,History,3
+HIST 121,History of Religion in North America,History,3,
+HIST 205,"War, Diplomacy, and Statecraft",History,3,HIST 102
+HIST 236,Sex and American History,History,3,
+HIST 322,Technology and American Culture,History,3,
+SPAN 261,Advanced Spanish in Context,Languages,3,
+SPAN 300,Grammar and Structure of Spanish,Languages,3,SPAN 261
+SPAN 414,Languages of Spain I,Languages,3,
+SPAN 416,Languages of the Americas,Languages,3,
+ROML 461,Romanian I,Languages,3,
+MATH 347,Linear Algebra for Applications,Math,MATH 232
+MARK 360,Marketing Methods,Marketing,3
+MARK 558,Digital Marketing,Marketing,3
+MARK 564,Design Thinking and Product Development,Marketing,3
+MARK 562,Consumer Behavior,Marketing,3,
+MARK 566,Marketing Strategy,Marketing,3,
+PHYS 205,Physics for Engineers and Scientists,Physics,3,MATH 141
+MECH 206,Engineering Statics,Mech. Eng.,3,PHYS 205
+MECH 200,Introduction to Mechnanical Engineering Design,Mech. Eng.,3,
+MECH 208,Engineering Dynamics,Mech. Eng.,3,MATH 242
+MECH 302,Engineering Thermodynamics,Mech. Eng.,3,MECH 200
+MECH 306,Mechanical Engineering Laboratory,Mech. Eng.,3
+MECH 310,Heat Transfer Fundamentals,Mech. Eng.,3,MATH 347
+PHYS 114,General Physics I,Physics,3,MATH 232
+PHYS 331,Numerical Techniques for the Sciences I,Physics,3,PHYS 114
+PHYS 311,Electromagnetism I,Physics,3,PHYS 331
+PHYS 412,Electromagnetism II,Physics,3,PHYS 311
+PHYS 421,Introduction to Quantum Mechanics,Physics,3,MATH 347
+POLI 100,American Democracy in Changing Times,Pol. Sci.,3,
+POLI 130,Introduction to Comparative Politics,Pol. Sci.,3,
+POLI 235,The Politics of Russia and Eurasia,Pol. Sci.,3,POLI 130
+POLI 265,Feminism and Political Theory,Pol. Sci.,3,POLI 130
+POLI 471,Contemporary Political Thought,Pol. Sci.,3,POLI 130
+POLI 472,Problems of Modern Democratic Theory,Pol. Sci.,3,POLI 130
+PSYC 101,General Psychology,Psychology,3,
+PSYC 210,Statistical Principles of Psychological Research,Psychology,3,PSYC 101
+PSYC 230,Cognitive Psychology,Psychology,3,PSYC 101
+PSYC 250,Child Development,Psychology,3,PSYC 101
+PSYC 260,Social Psychology,Psychology,PSYC 101
+STOR 120,Foundations of Statistics and Data Science,Statistics,3,
+STOR 320,Introduction to Data Science,Statistics,3,STOR 120
+STOR 435,Introduction to Probability,Statistics,3,
+STOR 455,Methods of Data Analysis,Statistics,3,

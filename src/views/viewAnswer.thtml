@@ -1,0 +1,6 @@
+% if defined('viewAnswers') and viewAnswers:
+% import re
+<br/>
+<font color='red'>Answer {{!re.sub(r'\*', r'&#x2a;', re.sub(r'\n', r'<br/>', re.sub(r' ', r'&nbsp;', answer))) if isinstance(answer, str) else answer}}</font>
+<br/>
+% end

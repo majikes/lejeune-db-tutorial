@@ -1,0 +1,69 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Instructor;
+CREATE TABLE Instructor (ID INTEGER PRIMARY KEY, name CHAR(20), dept_name CHAR(20), salary INTEGER);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (10101, 'Srinivasan', 'Comp. Sci.', 65000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (12121, 'Wu',         'Finance',    90000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15151, 'Mozart',     'Music',      40000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (22222, 'Einstein',   'Physics',    95000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (32343, 'El Said',    'History',    60000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (33456, 'Gold',       'Physics',    87000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (45565, 'Katz',       'Comp. Sci.', 75000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (58583, 'Califieri',  'History',    62000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76543, 'Singh',      'Finance',    80000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76766, 'Crick',      'Biology',    72000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (83821, 'Brandt',     'Comp. Sci.', 92000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (98345, 'Kim',        'Elec. Eng.', 80000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15015, 'Majikes',    'Comp. Sci.', 90000);
+
+DROP TABLE IF EXISTS Teaches;
+CREATE TABLE Teaches (ID varchar(5), course_id varchar(5), sec_id varchar(5), semester varchar(6), year NUMERIC,
+       PRIMARY KEY(ID, course_id, sec_id, semester, year),
+       FOREIGN KEY(ID) REFERENCES Instructor
+               ON DELETE CASCADE);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('10101', 'CS-101',  1, 'Fall',   2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('10101', 'CS-315',  1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('10101', 'CS-347',  1, 'Fall',   2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('12121', 'FIN-201', 1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('15151', 'MU-199',  1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('22222', 'PHY-101', 1, 'Fall',   2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('32343', 'HIS-351', 1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('45565', 'CS-101',  1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('45565', 'CS-319',  1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('76766', 'BIO-101', 1, 'Summer', 2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('76766', 'BIO-301', 1, 'Summer', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('83821', 'CS-190',  1, 'Spring', 2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('83821', 'CS-190',  2, 'Spring', 2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('83821', 'CS-319',  2, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('98345', 'EE-181',  1, 'Spring', 2017);
+
+DROP TABLE IF EXISTS Course;
+CREATE TABLE COURSE (course_id		varchar(8), 
+                     title			varchar(50), 
+										 dept_name		varchar(20),
+										 credits		numeric(2,0) check (credits > 0),
+										 primary key (course_id));
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-101', 'Intro. to Biology', 'Biology', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-301', 'Genetics', 'Biology', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-399', 'Computational Biology', 'Biology', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-101', 'Intro. to Computer Science', 'Comp. Sci.', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-190', 'Game Design', 'Comp. Sci.', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-315', 'Robotics', 'Comp. Sci.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-319', 'Image Processing', 'Comp. Sci.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-347', 'Database System Concepts', 'Comp. Sci.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('EE-181', 'Intro. to Digital Systems', 'Elec. Eng.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('FIN-201', 'Investment Banking', 'Finance', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('HIS-351', 'World History', 'History', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('MU-199', 'Music Video Production', 'Music', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('PHY-101', 'Physical Principles', 'Physics', '4');
+
+SELECT AVG(salary) AS average_cs_instructor_salary
+  FROM Instructor;
+
+SELECT COUNT(DISTINCT ID) as number_instructors_teaching_in_spring_2018
+  FROM Teaches
+ WHERE semester = 'Spring' AND
+       year = 2018;
+
+SELECT COUNT(*) AS cardinality_of_the_courses_relation
+  FROM Course;

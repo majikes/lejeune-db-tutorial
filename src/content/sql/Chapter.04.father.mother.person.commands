@@ -1,0 +1,64 @@
+PRAGMA foreign_keys = ON; 
+
+DROP TABLE IF EXISTS Person;
+CREATE TABLE Person (ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                     first_name char(40),
+                     last_name char(40),
+                     suffix char(10) DEFAULT '',
+                     mother INTEGER DEFAULT Null,
+                     father INTEGER DEFAULT Null,
+                     FOREIGN KEY(father) REFERENCES Person
+                            ON DELETE SET NULL,
+                     FOREIGN KEY(mother) REFERENCES Person
+                            ON DELETE SET NULL);
+
+INSERT INTO Person (first_name, last_name, suffix) VALUES ('William', 'Kenan', 'Sr.');
+INSERT INTO Person (first_name, last_name) VALUES ('Mary', 'Hargrave');
+INSERT INTO Person (first_name, last_name, suffix, father, mother)
+             VALUES ('William', 'Kenan', 'Jr.',
+                           (SELECT ID FROM Person where first_name='William' AND
+                                                        last_name='Kenan' AND
+                                                        suffix='Sr.'),
+                           (SELECT ID FROM Person where first_name='Mary' AND
+                                                        last_name='Hargrave'));
+INSERT INTO Person (first_name, last_name, father, mother)
+             VALUES ('Sarah', 'Kenan',
+                           (SELECT ID FROM Person where first_name='William' AND
+                                                        last_name='Kenan' AND
+                                                        suffix='Sr.'),
+                           (SELECT ID FROM Person where first_name='Mary' AND
+                                                        last_name='Hargrave'));
+INSERT INTO Person (first_name, last_name, father, mother)
+             VALUES ('Mary Lily', 'Kenan',
+                           (SELECT ID FROM Person where first_name='William' AND
+                                                        last_name='Kenan' AND
+                                                        suffix='Sr.'),
+                           (SELECT ID FROM Person where first_name='Mary' AND
+                                                        last_name='Hargrave'));
+INSERT INTO Person (first_name, last_name) VALUES ('Isaac', 'Flagler');
+INSERT INTO Person (first_name, last_name) VALUES ('Elizabeth', 'Harkness');
+INSERT INTO Person (first_name, last_name, father, mother)
+             VALUES ('Henry', 'Flagler',
+                           (SELECT ID FROM Person where first_name='Isaac' AND
+                                                        last_name='Flagler'),
+                           (SELECT ID FROM Person where first_name='Elizabeth' AND
+                                                        last_name='Harkness'));
+INSERT INTO Person (first_name, last_name, father, mother)
+             VALUES ('Harry', 'Flagler',
+                           (SELECT ID FROM Person where first_name='Henry' AND
+                                                        last_name='Flagler'),
+                           (SELECT ID FROM Person where first_name='Mary Lily' AND
+                                                        last_name='Kenan'));
+INSERT INTO Person (first_name, last_name, father, mother)
+             VALUES ('Carrie', 'Flagler',
+                           (SELECT ID FROM Person where first_name='Henry' AND
+                                                        last_name='Flagler'),
+                           (SELECT ID FROM Person where first_name='Mary Lily' AND
+                                                        last_name='Kenan'));
+
+-- Interest SQLite Error message, try changing the above line to mispell Carrie's mom to Mary Lilly
+SELECT 'The Persons Relation:' As '';
+SELECT P.first_name, P.last_name, P.suffix, 
+     (SELECT first_name || ' ' || last_name || ' ' || suffix FROM Person P2 where P2.id=P.father) as father,
+     (SELECT first_name || ' ' || last_name || ' ' || suffix FROM Person P2 where P2.id=P.mother) as mother
+  FROM Person AS P;

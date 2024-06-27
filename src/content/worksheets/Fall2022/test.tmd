@@ -1,0 +1,214 @@
+# Testing worksheet
+
+11 June 2020
+
+## Instructions
+
+**Don't PANIC!**
+
+You will write SQL queries. They will be tested against two databases.
+The small db has about 0.1% of the books in Tar Heel Reader,
+the larger db has about 1%.
+
+% dbs=['THRa.sqlite', 'THRb.sqlite']
+
+### {{next()}}. How many reviewed, English-language books are in the db?
+
+The iso-code for English is `'en'`. Your query should produce an integer.
+
+Your result should resemble this:
+
+<table class="datatable exampletable">
+  <thead>
+    <tr>
+      <td>count</td>
+    </tr>
+  </thead>
+  <col class="count(*)" />
+  <tbody>
+    <tr>
+      <td>24</td>
+    </tr>
+  </tbody>
+</table>
+
+{{!sql('''
+select count(*) from Books
+  where language = 'en' and reviewed = 1
+''', points=50, dbs=dbs)}}
+
+### {{next()}}. Who are the most prolific authors?
+
+List the Author's last name, first name and the number of books they wrote for
+all authors who have written **more than 2 books**. Order the results first by
+the number of books descending, then by the last name in ascending order and
+finally by the first name in ascending order.
+
+Your result should resemble this:
+
+<table class="datatable exampletable">
+  <thead>
+    <tr>
+      <td>lastname</td>
+      <td>firstname</td>
+      <td>C</td>
+    </tr>
+  </thead>
+  <col class="lastname" />
+  <col class="firstname" />
+  <col class="C" />
+  <tbody>
+    <tr>
+      <td>Fenne</td>
+      <td>Emmaline</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+
+{{!sql('''--sql
+select A.lastname, A.firstname, count(B.id) as C
+    from Books B, Authors A
+    where B.author = A.id
+    group by A.id
+    having C > 2
+    order by C desc, A.lastname asc, A.firstname asc
+''', dbs=dbs, points=8)}}
+
+### {{next()}}. Which books have the most words per page?
+
+List the book title, author last name, word count, page count, and average
+number of words per page. Order your results by average words per page in
+descending order and author last name in ascending order.
+
+Limit your answer to the top 5.
+
+Your result should resemble this:
+
+<table class="datatable exampletable">
+  <thead>
+    <tr>
+      <td>title</td>
+      <td>lastname</td>
+      <td>words</td>
+      <td>pages</td>
+      <td>wordsperpage</td>
+    </tr>
+  </thead>
+  <col class="title" />
+  <col class="lastname" />
+  <col class="count" />
+  <col class="count" />
+  <col class="wordy" />
+  <tbody>
+    <tr>
+      <td>Animal Dads</td>
+      <td>Apps</td>
+      <td>66</td>
+      <td>6</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <td>What Do You See?</td>
+      <td>Ickovitz</td>
+      <td>112</td>
+      <td>11</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Yukon, Yukon, What Do You See?</td>
+      <td>Hamley</td>
+      <td>98</td>
+      <td>10</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <td>Orientation and mobility</td>
+      <td>Upjohn</td>
+      <td>77</td>
+      <td>9</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>Who's in Love with Arthur? Chapter 4</td>
+      <td>Dome</td>
+      <td>47</td>
+      <td>6</td>
+      <td>7</td>
+    </tr>
+  </tbody>
+</table>
+
+{{!sql('''
+with pc as (select book, max(page) as count from Pages group by book),
+     wc as (select book, sum(count) as count from Words group by book)
+select B.title, A.lastname, wc.count as words, pc.count as pages, wc.count / pc.count as wordsperpage
+from Books B, Authors A, pc, wc
+where B.author = A.id and B.id = wc.book and B.id = pc.book
+order by wordsperpage desc, A.lastname
+limit 5
+''', dbs=dbs, points=10)}}
+
+### {{next()}}. What is the average rotational delay of a disk that spins at \(R\) RPM?
+
+Write a single arithmetic expression. Express your result in seconds. RPM means
+Revolutions Per Minute. You answer should involve only constants, the variable
+R, and operators such as +, -, \*, and /.
+
+{{!expression('0.5 * 60 / R', dict(R=3600), dict(R=7200), points=4)}}
+
+### {{next()}}. How long will this external merge sort take?
+
+Make the following assumptions:
+
+- You have \(2^{20}\) bytes of RAM available for buffers.
+- Your disk block and internal buffer size is \(2^{13}\) bytes.
+- Your disk can read or write \(2^{29}\) bytes per second.
+- The table to be sorted is \(T\) MB where \(4 \le T \le 32\).
+- One MB = \(2^{20}\) bytes.
+
+Write a forumla using the variable \(T\) that will produce the estimated
+time in seconds.
+
+{{!expression('2 * 2 * T / 512', dict(T=8), dict(T=16), dict(T=20), points=4)}}
+
+### {{!next()}}. Of the following, which best characterizes the objective of database table normalization?
+
+A) Evaluating queries more efficiently  
+B) Efficient testing of functional dependencies  
+C) Creating more independent relations  
+D) Minimizing redundancy
+
+{{!select('D', list('ABCD'), points=4)}}
+
+### {{!next()}}. Fill in this Truth Table.
+
+{{!table(inputs=2, headings='''A,B,or,and''', table='''
+0,0,0,0
+0,1,1,0
+1,0,1,0
+1,1,1,1''', points=5)}}
+
+### {{!next()}}. Fill in the Table.
+
+{{!table(inputs=0, headings='''letters''', table='''
+a
+b
+c
+d''', symbols=['a','b','c','d'], points=5)}}
+
+### {{!next()}}. Check this box
+
+{{!checkbox(True, points=4)}}
+
+### {{!next()}}. Enter the binary value for 42.
+
+{{!B('101010', points=10)}}
+
+### {{!next()}}. Enter the hex value for 42.
+
+{{!H('2A', points=12)}}
+
+### {{!next()}}. Say something.
+
+{{!textarea()}}

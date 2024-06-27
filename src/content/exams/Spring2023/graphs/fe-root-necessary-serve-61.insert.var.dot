@@ -1,0 +1,101 @@
+digraph G
+{
+    splines=false
+    "block"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">A</td>
+                        <td port="connector1"></td>
+                    </tr>
+                </table>>
+    ]
+    "index0"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">B</td>
+                        <td port="connector1"></td>
+                    </tr>
+                </table>>
+    ]
+    "index1"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">C</td>
+                        <td port="connector1"></td>
+                    </tr>
+                </table>>
+    ]
+    "block0"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">D*</td>
+                        <td port="key1">E*</td>
+                    </tr>
+                </table>>
+    ]
+    "block1"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">F*</td>
+                        <td port="key1">G*</td>
+                    </tr>
+                </table>>
+    ]
+    "block2"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">H*</td>
+                        <td port="key1">I*</td>
+                    </tr>
+                </table>>
+    ]
+    "block3"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">J*</td>
+                        <td port="key1">K*</td>
+                    </tr>
+                </table>>
+    ]
+
+    "block":"connector0" -> "index0":"connector0"
+    "block":"connector1" -> "index1":"connector0"
+
+    "index0":"connector0" -> "block0":"key0"
+    "index0":"connector1" -> "block1":"key0"
+
+    "index1":"connector0" -> "block2":"key0"
+    "index1":"connector1" -> "block3":"key0"
+
+    "block0":"key1" -> "block1":"key0"
+    "block1":"key0" -> "block0":"key1"
+
+    "block1":"key1" -> "block2":"key0"
+    "block2":"key0" -> "block1":"key1"
+
+    "block2":"key1" -> "block3":"key0"
+    "block3":"key0" -> "block2":"key1"
+
+    "root" [ shape = none label="root&#8242;" ]
+    "root" -> "block":"connector0"
+
+    {rank=min; "block" "root"}
+    {rank=same; "block0" "block1" "block2", "block3"}
+}

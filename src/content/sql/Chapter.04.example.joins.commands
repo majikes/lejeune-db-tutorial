@@ -1,0 +1,46 @@
+PRAGMA foreign_keys = ON;
+
+
+DROP TABLE IF EXISTS Course;
+CREATE TABLE COURSE (course_id		varchar(8), 
+                     title			varchar(50), 
+										 dept_name		varchar(20),
+										 credits		numeric(2,0) check (credits > 0),
+										 primary key (course_id));
+INSERT INTO COURSE (course_id, title, dept_name, credits) VALUES ('BIO-301', 'Genetics', 'Biology', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-101', 'Intro. to Biology', 'Biology', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-190', 'Game Design', 'Comp. Sci.', '4');
+
+DROP TABLE IF EXISTS Prereq;
+CREATE TABLE prereq (course_id		varchar(8), 
+                     prereq_id		varchar(8),
+                     primary key (course_id, prereq_id),
+                     foreign key (course_id) references course (course_id)
+                     on delete cascade,
+                     foreign key (prereq_id) references course (course_id)
+                    );
+INSERT INTO Prereq (course_id, prereq_id) VALUES ('BIO-301', 'BIO-101');
+INSERT INTO Prereq (course_id, prereq_id) VALUES ('CS-190', 'CS-101');
+INSERT INTO Prereq (course_id, prereq_id) VALUES ('CS-315', 'CS-101');
+
+
+SELECT 'The Course Relation:' as '';
+SELECT * FROM Course;
+
+SELECT 'The Prereq Relation:' as '';
+SELECT * FROM Prereq;
+
+
+SELECT 'Inner join: Course right join prereq' as '';
+select *
+    from course inner join prereq on
+         course.course_id = prereq.course_id;
+
+SELECT 'Join using: Course join prereq' as '';
+select *
+    from course inner join prereq using(course_id);
+
+SELECT 'Natural join: Course right join prereq' as '';
+select *
+    from course natural join prereq;
+

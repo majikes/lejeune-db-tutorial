@@ -1,0 +1,26 @@
+# Handouts
+
+This page are PDF handouts associated with class.
+
+[Errata for Silberschatz 7th Edition](https://www.db-book.com/errata-dir/db-errata.pdf)
+
+## {{!linkable_header('Midterm 1')}}
+
+[Midterm 1 Fall 2021]({{get_url('handouts', pdf='COMP421.Fall2021.Midterm1')}})  
+[Midterm 1 Fall 2022]({{get_url('handouts', pdf='COMP421.Fall2022.Midterm1')}})  
+[Midterm 1 Spring 2023]({{get_url('handouts', pdf='COMP421.Spring2023.Midterm1')}})  
+[Midterm 1 Fall 2023]({{get_url('handouts', pdf='COMP421.Fall2023.Midterm1')}})  
+
+## {{!linkable_header('Midterm 2')}}
+
+[Midterm 2 Fall 2021]({{get_url('handouts', pdf='COMP421.Fall2021.Midterm2')}})  
+[Midterm 2 Fall 2022]({{get_url('handouts', pdf='COMP421.Fall2022.Midterm2')}})  
+[Midterm 2 Spring 2023]({{get_url('handouts', pdf='COMP421.Spring2023.Midterm2')}})  
+[Midterm 2 Fall 2023]({{get_url('handouts', pdf='COMP421.Fall2023.Midterm2')}})  
+
+## {{!linkable_header('Final Exam')}}
+
+[Final Exam Fall 2021]({{get_url('handouts', pdf='COMP421.Fall2021.FinalExam')}})  
+[Final Exam Fall 2022]({{get_url('handouts', pdf='COMP421.Fall2022.FinalExam')}})  
+[Final Exam Spring 2023]({{get_url('handouts', pdf='COMP421.Spring2023.FinalExam')}})  
+[Final Exam Fall 2023]({{get_url('handouts', pdf='COMP421.Fall2023.FinalExam')}})  

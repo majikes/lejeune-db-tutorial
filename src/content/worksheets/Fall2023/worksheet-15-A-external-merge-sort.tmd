@@ -1,0 +1,57 @@
+<%
+setInfo(
+        assessment_type='worksheet',
+)
+%>
+
+# Chapter 15 External Merge Sort
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+
+---
+
+**Initial.Run.External.Merge.Sort:** Assume you have a $b_r$-block relation and $M$ blocks of memory for buffering, answer the following questions about using the initial stage external merge sort against the relation.  
+Note: In html pull downs, subscripts are not possible, so the variable <i>b_r</i> will be used in place of the $b_r$ used in the book.  
+**Note$_2$:** In class we said the correct answer for the maximum number of blocks in a run created by the first stage was the value M.  That is incorrect.  
+% answer = ['b_r', 'M', 'ceiling(b_r/M)']
+% choices = ['M/b_r', 'b_r/M', 'M', 'ceiling(M/b_r)'] + answer + [f'{x}' for x in range(10)]
+% answer2 = f'''Answers are on page 426.
+Answer: {answer}'''
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+How many blocks are in the relation?,{answer[0]}
+What is the maximum number of blocks in a run created by the first stage?,{answer[1]}
+The number of runs created by the first stage is?,{answer[2]}
+''', points=40, symbols=choices, name='Initial.Run.External.Merge.Sort')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Merge.Pass.1.External.Merge.Sort.Example:** Assume there are 7 ($b_r$) blocks in a relation and you have 4 ($M$) blocks of memory for buffers.
+% answer = ['4', '3', '14', '7', '7']
+% choices = [f'{x}' for x in range(20) ]
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+The initial run will produce two runs&#44; how many blocks are in the **first** run?,{answer[0]}
+The initial run will produce two runs&#44; how many blocks are in the **second** run?,{answer[1]}
+How many block transfers were required to complete the initial run?,{answer[2]}
+What is the number of blocks in the **longest run** after merge pass 1?,{answer[3]}
+How many block transfers were required to complete merge pass 1 which is not written out to disk?,{answer[4]}
+''', points=40, symbols=choices, name='External.Merge.Sort.Example')}}
+%include('viewAnswer')
+
+---
+
+**Number.Merge.Passes.External.Merge.Sort:** Give a general expression in terms of the variables b_r, b_b, and M that describes the number of merge passes required to external merge sort a relation.  
+You may want to refer to the slides.  
+**Note:** You may want to remember the log base identity of $\log_b(x) = \frac{\log_a(x)}{\log_a(b)}$.  
+% answer = 'ceil( log(b_r/M) / log(floor(M/b_b)-1))'
+{{!expression(answer, dict(b_b=1, b_r=2, M=3), dict(b_b=2, b_r=3, M=4), points=20, name='Number.Passes.External.Merge.Sort')}}
+%include('viewAnswer')
+
+
+% include('worksheet-submit.md')

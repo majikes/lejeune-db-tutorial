@@ -1,0 +1,81 @@
+% from config import assessment_dict
+% from assessments import assessments_matching
+% from itertools import groupby
+
+<h1>Stats</h1>
+
+<table>
+ <thead>
+  <tr>
+   <th> </th>
+   <th>Final Exam</th>
+   <th>Midterm 2</th>
+   <th>Midterm 2<br/>with partial credit</th>
+   <th>Midterm 1</th>
+   <th>Homeworks</th>
+   <th>Worksheets</th>
+   <th>Games</th>
+  </tr>
+ </thead>
+ <tr>
+  <th>Average</th>
+  <th>{{round(grades.fe_average, 1)}}</th>
+  <th>{{round(grades.m2_average, 1)}}</th>
+  <th>{{round(grades.m2_with_partial_credit_average, 1)}}</th>
+  <th>{{round(grades.m1_average, 1)}}</th>
+  <th>{{round(grades.homework_average, 1)}}</th>
+  <th>{{round(grades.worksheet_average, 1)}}</th>
+  <th>{{round(grades.game_average, 1)}}</th>
+ </tr>
+ <tr>
+  <th>Median</th>
+  <th>{{round(grades.fe_median, 1)}}</th>
+  <th>{{round(grades.m2_median, 1)}}</th>
+  <th>{{round(grades.m2_with_partial_credit_median, 1)}}</th>
+  <th>{{round(grades.m1_median, 1)}}</th>
+  <th>{{round(grades.homework_median, 1)}}</th>
+  <th>{{round(grades.worksheet_median, 1)}}</th>
+  <th>{{round(grades.game_median, 1)}}</th>
+ </tr>
+</table>
+
+<h2>Assignment scores</h2>
+
+<%
+for this_type, label in assessment_dict.items():
+    these_assessments = assessments_matching(assessments, 'assessment_type', this_type)
+    these_assessments.sort(key=lambda x: x.key)
+    these_assessments = list(a for a, _ in groupby(these_assessments))  # Remove duplicates
+    if len(these_assessments) > 0 :
+%>
+         <h3>{{label}}</h3>
+         <table>
+           <thead>
+               <tr>
+                   <th>Key</th>
+                   <th>Number<br />Fetched</th>
+                   <th>Number<br />Submitted</th>
+                   <th>Average</th>
+                   <th>Median</th>
+               </tr>
+           </thead>
+           % for assessment in these_assessments:
+               <tr>
+                   <th>{{assessment.key}}</th>
+                   <th>{{assessment.fetched_count}}</th>
+                   <th>{{assessment.submitted_count}}</th>
+                   <th>{{round(assessment.average, 1)}}</th>
+                   <th>{{round(assessment.median, 1)}}</th>
+               </tr>
+           % end
+         </table>
+       <%
+      end  # if len(these_assessmnets) > 0
+    end
+end %>
+
+<style>
+table { border-collapse: collapse;
+        border: 2px solid black;}
+</style>
+% rebase('assessment.base')

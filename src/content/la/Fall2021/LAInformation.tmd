@@ -1,0 +1,229 @@
+Even though this form says LA, it should be meant to be understood that it means all Undergraduate Teaching Assistants (UTAs).
+UTAs could be Learning Assistants (LAs) or Teaching Assistants (TAs).
+
+# <a href="#access" name="access">Access to draft information</a>
+
+You can get to the [LA Information here]({{get_url('la', page_name='LAInformation')}}).
+
+# <a href="#information" name="information">LA / TA information form</a>
+
+Please fill out a <a href="https://docs.google.com/forms/d/1YyJlfXPHZsPuKuAw9RIYzQrz25zZIoBTMtgBOX1E-9k" target="_blank">google form to gather your interests</a>.
+This is new for COMP 550 so please fill it out and let me know offline how I can improve the form.
+The form's intent is to determine ways to make the LA/TA experience the best it can be,
+help the students, 
+and improve the classroom instruction.
+
+There is also a [LA To Dos page](/mypoll/draft/la-to-dos.html) that shows what work has to be done
+each week.
+
+# <a href="#zoom-chat" name="zoom-chat">Zoom chat</a>
+
+We will use [Zoom messaging chat](https://support.zoom.us/hc/en-us/sections/200258579-Chats) and the `COMP 550` channel for our class.
+On a Mac this is `<command>zoom.us` on Windows it is `zoom`.
+
+After you have been invited to the channel,
+you should see the following panel.
+You will be able to use this channel to do immediate messaging to the instructional team.
+For example, you could send all of us a message if there is a problem with office hours.
+You might want to message me with a student who is problematic,
+disruptive, or has a problem you can't help with.
+
+![Zoom chat]({{static('images/ZoomChat.png')}}){width=50%}
+
+# <a href="#hours" name="hours">LA</a>
+
+Unless otherwise stated, LAs are hired for 10 hours per week.
+TAs are hired for 20 hours per week.
+At a minimum, all UTAs should have two hours per week to spend
+on their own self improvement.
+This time might, for example, be used to brush up on an algorithm
+or learn about a website subject.
+
+Typically, a UTA will spend four to six hours per week for office hours.
+It is important that the office hours be the same each week.
+For the times when exams, health or other life occurrences change things, a Piazza post should be create to inform students of the change.
+
+After these four mandatory hours, there are different areas that LAs can make up their remaining hours.
+
+## <a href="#classroom" name="classroom">Classroom hours</a>
+
+The current format for the class will be a synchronous delivery.
+This means that students will be in a Zoom classroom meeting
+where a subject is discussed then they will  move to a Zoom breakout session.
+During these sessions, the instructor and LAs will go Zoom co-hosts and will go into the breakout rooms to assist.
+
+LAs who sign up for classroom hours should plan to regularly attend the same class.
+For example, you may attend every Tuesday 9:45 class but not Thursday 9:45.
+If for any reason, you cannot attend your regular class, please inform the instructor.
+But no Piazza post or broadcast to students is needed.
+
+## <a href="#non-lecture-material" name="non-lecture-material">Non-lecture material</a>
+
+For Fall 2020, the first third of class (lectures, worksheets, homeworks, quizzes and exams) will be completed before classes start.
+UTAs will be asked to start work on non-lecture material for the last two thirds of the class.
+This is the most flexible work, but it is the most critical.
+Signing up to do a quiz on Prim's algorithm for the second midterm is a commitment.
+The time is flexible, the commitment is not.
+
+UTAs will review **all** assessments (handouts, quizzes, midterms and exams).
+UTAs **are required** to take, submit, and sign off on all midterms and exams.
+My goal is that questions are fair and unambiguous.
+Answers need to be correct.
+
+**Note:** In general, TAs will be asked to do more non-lecture work than LAs.
+This will be one of the big differences.
+But anyone can express an interest in learning or doing some non-lecture work.
+
+# <a href="#worksheet-bonus" name="worksheet-bonus">Worksheet bonus</a>
+
+As an LA/TA you have the ability to give anyone 5 points extra on their [worksheet bonus](/category/syllabi.html#worksheet_bonus).
+Although the worksheet bonus is, just that, a bonus,
+you can give any student 5 points just for:  
+ - Having a good question at office hours    
+ - Answering a question on Piazza  
+ - Or whatever your discretion thinks is appropriate    
+
+I only ask that you don't give use the same point metric for all the students,
+that you don't just give points to your friends,
+that you never give someone points for something that happened days or weeks ago,
+and that no student receives more than 5 points in a day.
+
+## <a href="#zoom" name="zoom">Zoom</a>
+
+Lastly, it goes without saying that UTAs must have Zoom access.
+We may or may not have a dedicated room for office hours.
+(It is appearing like we will not have dedicated offices for office hours)
+But the ability to use Zoom is required.
+If you do not have a camera or hardware let me know ASAP.
+
+# <a href="#improvements" name="improvements">Possible improvement projects</a>
+
+This is my laundry list of things to improve.
+The list changes weekly as things are fix/improved and as new ideas are conceived.
+If there's something on this list that interests you,
+talk to the instructor. 
+
+- How to assign students to teams such that students are on teams they want to be on?  
+     - Would have a quiz or worksheet type program before classes start
+     - Have pull down to select up to 5 onyens of people you want on the team
+     - Probably need a similar list for people you can't be on a team with
+     - I'm thinking of a greedy algorithm here (a local optimal solution)
+- Automate Prim's or Kruskal's algorithm, Linear Programming, etc.
+     - Don't have to do all, but just pick an algorithm and automate it.   
+     - Need to compute the values on the fly   
+     - Parameterize the original problem so that different studetns get different questions  
+- Ideas of how to improve recitation (general office hours) or office hours in general
+     - Is there some technology that will help?
+- Come up with an itinerary page similar to [COMP 110 Summer](https://20ss2.comp110.com/).
+
+More complicated improvements for instructor
+
+- How to import markdown files so that all the worksheet prologues are the same?
+
+# <a href="#git" name="git">GIT Access</a>
+
+1. You will need to set up the git on the virtual machine for this course. If your are using Mac, go to the terminal and type `ssh <YOUR OYNEN>@jm2.cs.unc.edu`. Windows users can use PUTTY to ssh into the server. You will be prompted to enter your oynen password.
+
+2. After login the virtual machine (i.e. jm2), you will need to follow the Computer Science department's [git getting started](https://cs.unc.edu/help-article/getting-started-git/), specifically follow the __ALL__ of the _How to set up ssh key on stand alone servers and workstations_ part to get SSH keys up.
+
+<!-- From my experience, ssh git@git.cs.unc.edu only works after my keys are set up  -->
+<!-- Once you you have this completed you can verify installation by doing the following command: `ssh git@git.cs.unc.edu`. -->
+
+3. You will then require access to the class GIT code by sending a note to [CS help](mailto:help@cs.unc.edu) (cc `jmajikes@cs.unc.edu`) that includes your **PUBLIC** ssh key (never send anyone your private key). Please specify in the email that you want to access `git@git.cs.unc.edu:jmajikes/COMP550`.
+
+4. Once you have access, clone the 550 repo to jm2 using the following command:
+  `git clone git@git.cs.unc.edu:jmajikes/COMP550`. Notice that jm2 is the only place that you can `make` and get the website running. Cloning the repo to your local machine won't start the websites.
+     * If you are being asked password, try the following command: 
+          ```
+          ssh -i ~/.ssh/<YOUR_EMAIL>.rsa git@git.cs.unc.edu
+          ```
+          If you can ssh successfully, copy your ssh keys to id_rsa on the VM to avoid typing password every time
+          ```
+          cp ~/.ssh/<YOUR_EMAIL>.rsa  ~/.ssh/id_rsa
+          cp  ~/.ssh/<YOUR_EMAIL>.rsa.pub  ~/.ssh/id_rsa.pub
+          ```
+          Do not hensitate to reach out to your teammates or John Majikes if this does not work.
+
+
+5. Once that is installed you will need to install the git submodules by entering the following commands:
+     ```
+      cd web
+      git submodule init
+      git submodule sync
+      git submodule update
+     ```
+     
+# <a href="#make" name="make">Making the website</a>
+
+John Majikes has to give you access to the database.
+`sudo -u postgres createuser <username>`
+
+Change directory to `mypoll/src`.
+Type `make dev`.
+You should see `Serving HTTP on 0.0.0.0 port 808x (http://0.0.0.0:808x/) ...`. For example, if you have `Serving HTTP on 0.0.0.0 port 8084`, you should replace `x` with `4` in the following instructions.
+
+If there is error(s), try the following commands
+<!-- I believe the npm install -g browsify is not the best solution, npm install will install ALL packages required for the project, and it does not require sudo. I have reclone a test repo and npm install works fine -->
+
+```
+npm install
+make dev
+```
+
+To open your browser to this local browser, open a **NEW** Windows command prompt or Mac terminal and type: `ssh -NL 808x:localhost:808x <userid>@jm2.cs.unc.edu`.
+It will prompt you for your password and then you have an ssh tunnel to the system.
+Then open up your browser to localhost:808x.
+
+# <a href="#webpage" name="webpage">Creating or Updating Dynamic Pages</a>
+
+If you go to the _content_ directory you can update any file like `content/worksheets/worksheet03-summation.tmd`
+and see it get updated immediately in the screen you type `make dev`.
+If you refresh your browser, you should see the changed webpage.
+If you change an answer to a question you need to update the rubrics with `./updateRubrics.py`.
+
+
+You can create your own web pages.
+If you do, I suggest you put them in `contents/worksheets/` and you can get to them by going to the same URL as the worksheets.
+
+Everything is done in Markdown.
+You may want to read a [markdown tutorial](https://www.markdowntutorial.com/) or just practice.
+Jumping in and trying might be the best.
+
+If you want to create an assessment or update an answer,
+you'll update the calls to python that are in `\{\{ \}\}`.
+If you are doing this, you will need a one-on-one session with John Majikes.
+
+
+
+
+# <a href="#assessments" name="assessments">Creating worksheets, quizzess, homeworks, or exams</a>
+
+These are some hints and tips I have for creating an assignment.
+
+- Always copy over an existing worksheet
+- Make sure if statements include <pre>(section == '003')</pre> so that the sheet always works for LAs, the grader, the formatter, etc
+- After each question do a make.  This can be done using <pre>:w</pre> and then <pre>! make</pre> in VIM.
+- Remember to run `./updateRubrics.py` if you are changing things and viewing them in the browser.
+
+# Changes
+ - Explain the new class format of class -> zoom
+ - If they attend class, then they'll be co-host and help with breakout room questions.
+ 
+# Get opinions on
+ - Homework2 has a program in it. Given worksheets-00, etc, is homework 2 problematic?  Will students know how to code in this environment?
+ - Need to get the ratio of office hours/student down.  We'll have 180 students? How many UTA hours per week do we need?
+ - How often to meet with UTA?  We should have 4 LAs, 2 TAs.  One hour per week?
+
+# Keep me honest
+ - I really look to the LAs to tell me **before** things go off the rails.
+ - I may have a good idea, but it's only good if the LAs think it's good.
+
+
+# cheating
+ - Need to go over what will be done with honor code violations
+
+
+# Fall 2020
+ - Need to explain how first third rewritten
+ - LAs/TAs will do all quizzes for 2nd and 3rd thirds
+ - Worried that I do not have enough time to rewrite the entire course.

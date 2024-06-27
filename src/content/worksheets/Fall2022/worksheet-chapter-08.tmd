@@ -1,0 +1,93 @@
+<%
+setInfo(
+      due="2021-09-30 15:20:00",
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(rebeccca=dict(due="2021-10-05 14:00:00"),
+                      yuualice=dict(due="2021-10-05 14:00:00"),
+                      ayzhang=dict(due="2021-10-05 14:00:00"))
+)
+%>
+
+# Chapter 8  worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**File.Organization.1**: Given the reading of DBMS 8.2, which of the following are file organizations?  
+% answer = 'C. Heap file'
+% answer2 = f'''Top of page 276 says: The simplest file structure is an unordered file, or heap file.
+
+{answer}'''
+% choices = ['A. Hash file', 'B. Tape file', answer, 'D. All of the above', 'E. None of the above']
+{{!select(answer, choices, points=20, name='File.Organization.1')}}
+%include('viewAnswer', answer=answer2)
+
+
+**File.Organization.2**: Given the reading of DBMS 8.2, what is true of files organizations with indices?  
+% answer = 'C. All of the above'
+% answer2 = f'''Top of page 276 says: a index is a data structure that organizes data 
+records on disk to optimize certain kinds of retrieve operations.
+An index allows us to efficiently retrieve all records that satisfy 
+search conditions on the search key fields of the index.
+
+{answer}'''
+% choices = ['A. Indices are data structures that help optimize retrieval operations', 'B. An index allows efficient retrieval that satisfy search conditions on the search key fields', 'C. All of the above', 'D. None of the above']
+{{!select(answer, choices, points=20, name='File.Organization.2')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**K.star**: What is $k^*$?  
+% answer = 'D. All of the above'
+% answer2 = f'''There's a three item list at the bottom of page 276
+
+{answer}'''
+% choices = ['A. The data entry is the actual data record itself with the search key value of k', 'B. The data entry that is a pair, k and rid', 'C. The data entry is a pair, k and rid-list', answer , 'E. None of the above']
+{{!select(answer, choices, points=20, name='K.star')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Clustered.Indices**: What is a clustered index?  
+% answer = 'A. Files organized s.t. the ordering of data records will be close to the ordering of data entries using an index'
+% answer2 = f'''This is the first sentence of section 8.2.1 on page 277
+
+{answer}'''
+% choices = [answer, 'B. When the indexes are in packed binary format', 'C. It\'s another term for random indices', 'D. All of the above', 'E. None of the above']
+{{!select(answer, choices, points=20, name='Clustered.Indices')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Cost**: According to the cost model in 8.4.1, what letter represents the following terms?  
+% answer = ['B', 'R', 'D', 'C', 'H', 'F']
+% answer2 = f'''Page 283 8.4.1 first paragraph
+
+{answer}'''
+{{!table(inputs=1, headings='Definition or term, Letter', table=f'''
+The number of data pages,{answer[0]}
+The number of records per page,{answer[1]}
+The average time to read or write a page,{answer[2]}
+The average time to compare fields,{answer[3]}
+The time required to apply the hash function,{answer[4]}
+The tree indexes fan-out,{answer[5]}''', symbols=[x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'], name='Cost', points=20)}}
+%include('viewAnswer', answer=answer2)
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

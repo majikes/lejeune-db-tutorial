@@ -1,0 +1,31 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+---
+
+
+## Today's notes
+
+<ul>
+ <li>Midterm 2<ul>
+  <li>Must be in your assigned set</li>
+  <li>Must stay in full screen mode</li>
+  <li>No calculators allowed</li>
+  <li>Only 2 sheets of notes (front and back)<ul>
+       <li>Must be hand written</li>
+       <li>No electronic notebooks, phones out</li></ul></li>
+  <li>Plan, scrap paper recommended<ul>
+       <li>No wire-bound notebooks</li></ul> </li>
+  <li>Copying from neighbor is a Honor Code violation</li></ul>
+ <li>I <i>may</i>&nbsp; get grading done Tuesday tonight around 9:30<ul>
+    <li>Depending on scores, potential for partial credit</li>
+    <li>Tuesday night will post any decision</li>
+    <li>Any partial credit would be due by Sunday noon</li>
+    <li><font color="red">No extensions</font></li></ul>
+ <li>Any questions on midterm ?</li>
+</ul>

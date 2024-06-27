@@ -1,0 +1,99 @@
+<%
+setInfo(
+      assessment_type='worksheet',
+)
+%>
+
+# Chapter 15 Join
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+## {{!linkable_header('Questions')}}
+
+
+Suppose there is a join of $\text{student} \bowtie_{\text{student.ID} = \text{takes.ID}} \text{takes}$.
+Further assume that there are 5,000 student records, 100 student blocks, and that 50 student records fit in each block.
+There are 10,000 takes records, 400 takes blocks, and that 25 takes records fit in each block.
+
+Assume for these questions we need to read in the data but we won't count the output writes.
+This is because the output may be going back to the user and it also makes it easier to
+not have to know how many student IDs match takes IDs.
+
+---
+
+**Nested.Loop.Block.Transfers.Student.Takes:** Assume three buffers (one for student input, one for takes input, and one for output)  are used for the join and that a nested loop with relation student as the outer loop and relation takes as the inner loop,
+write an expression of the number of block transfers.  
+% answer = '5000 * 400 + 100'
+% answer2 = f'''Since the outer loop is students,
+we have to read in the 100 student blocks.
+For each of the 5000 student records in the 100 blocks,
+we have to read the 400 takes blocks.
+That's 100 plus 5000 * 400
+
+Answer {answer} {eval(answer):,}'''
+% nested_student_takes = eval(answer)
+{{!expression(answer, dict(M=1), dict(M=2), points=20, name='Nested.Loop.Block.Transfers.Student.Takes')}}
+%include('viewAnswer', answer=answer2)
+
+
+**Nested.Loop.Block.Transfers.Takes.Student:** Assume three buffers (one for student input, one for takes input, and one for output)  are used for the join and that a nested loop with relation takes as the outer loop and relation student as the inner loop,
+write an expression of the number of block transfers.  
+% answer = '400 + 10000 * 100'
+% answer2 = f'''Since the outer loop is students,
+we have to read in the 400 takes blocks.
+For each of the 10000 takes records in the 400 student blocks,
+we have to read the 100 student blocks
+That's 400 plus 10000 * 100'
+
+Answer {answer} {eval(answer):,}'''
+% nested_takes_student = eval(answer)
+{{!expression(answer, dict(M=1), dict(M=2), points=20, name='Nested.Loop.Block.Transfers.Takes.Student')}}
+%include('viewAnswer', answer=answer2)
+
+
+**Nested.Loop.Block.Transfers.Takes.Student.In.Memory:** Assume 402 buffers (one for student input, 400 for takes input, and one for output) are used for the join and that a nested loop with relation student as the outer loop and relation takes as the inner loop,
+write an expression of the number of block transfers.  
+% answer = '100 + 400'
+% answer2 = f'''You still have to read the outer loop student's 100 blocks,
+but now you only have to read the 400 take blocks once.
+That's 100 plus 400'
+
+Answer {answer} {eval(answer):,}'''
+{{!expression(answer, dict(M=1), dict(M=2), points=20, name='Nested.Loop.Block.Transfers.Takes.Student.In.Memory')}}
+%include('viewAnswer', answer=answer2)
+
+
+
+**Nested.Loop.Block.Transfers.Student.Takes.In.Memory:** Assume 102 buffers (one for takes input, 100 for student input, and one for output) are used for the join and that a nested loop with relation takes as the outer loop and relation student as the inner loop,
+write an expression of the number of block transfers.  
+% answer = '400 + 100'
+% answer2 = f'''You still have to read the outer loop student's 400 blocks,
+but now you only have to read the 100 take blocks once.
+That's 100 plus 400
+And you only need 102 buffers!
+
+Answer {answer} {eval(answer):,}'''
+{{!expression(answer, dict(M=1), dict(M=2), points=20, name='Nested.Loop.Block.Transfers.Student.Takes.In.Memory')}}
+%include('viewAnswer', answer=answer2)
+
+
+
+**Which.Best.Nested.Loop:** Which is the <i>best</i> nested loop algorithm to use?   
+ **A** Nested loop with Student as the outer loop, Takes as the inner loop, 3 buffers  
+ **B** Nested loop with Takes as the outer loop, Students as the inner loop, 3 buffers  
+ **C** Nested loop with Student as the outer loop, Takes as the inner loop, 402 buffers  
+ **D** Nested loop with Takes as the outer loop, Student as the inner loop, 102 buffers  
+% answer = 'D'
+% answer2 = f'''The first two take too many I/O block transfers
+The third and fourth take the same number I/O block transfers but might as well use only 102 buffers
+
+Answer {answer}'''
+{{!select(answer, 'ABCD', points=20, name='Which.Best.Nested.Loop')}}
+%include('viewAnswer', answer=answer2)
+
+% include('worksheet-submit.md')

@@ -1,0 +1,16 @@
+<h1>SQL Interpreters</h1>
+
+<table>
+   <tr>
+      <th>SQL Interpreter</th>
+   </tr>
+% for index, sql in enumerate(sql_interpreters):
+   <tr>
+     <td>
+       <a href="{{get_url("sql_interpreter", key=sql)}}" target="_blank">{{sql}}</a>
+     </td>
+   </tr>
+% end
+</table>
+
+% rebase('assessment.base')

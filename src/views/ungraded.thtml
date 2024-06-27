@@ -1,0 +1,37 @@
+<style>
+table {
+    font-family: arial, sans-serif;
+      border-collapse: collapse;
+        width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+      text-align: left;
+        padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+
+<h1>Ungraded assessments</h1>
+<table>
+  <tr>
+    <th>Index</th>
+    <th>Post ID</th>
+    <th>Key</th>
+    <th>Onyen</th>
+  </tr>
+
+  % for index, u in enumerate(ungraded):
+     <tr>
+       <th>{{index+1}}</th>
+       <th>{{u.id}}</th>
+       <th>{{u.key}}</th>
+       <th>{{u.onyen}}</th>
+     </tr>
+  % end
+</table>
+% rebase('assessment.base')

@@ -1,0 +1,72 @@
+<h1>Submissions</h1>
+<style>
+table.minimalistBlack {
+  border: 3px solid #000000;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+table.minimalistBlack td, table.minimalistBlack th {
+  border: 1px solid #000000;
+  padding: 5px 4px;
+}
+table.minimalistBlack tbody td {
+  font-size: 13px;
+}
+table.minimalistBlack thead {
+  background: #CFCFCF;
+  background: -moz-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+  background: -webkit-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+  background: linear-gradient(to bottom, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+  border-bottom: 3px solid #000000;
+}
+table.minimalistBlack thead th {
+  font-size: 15px;
+  font-weight: bold;
+  color: #000000;
+  text-align: left;
+}
+table.minimalistBlack tfoot {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+  border-top: 3px solid #000000;
+}
+table.minimalistBlack tfoot td {
+  font-size: 14px;
+}
+</style>
+
+
+
+<p>User {{onyen}} submission {{post_id}} for <a href="{{source_url}}" target="_blank">{{key}}</a>
+% if len(submission_values)>0:
+  <b><font color='green'>was successfully submitted</font></b> on {{submission_values[0].time}}
+  % if graded_output:
+    <br/>Grader output shows a score / out of, percentage of
+    {{graded_output.score}} / {{graded_output.points_total}}, {{round(100.0 * graded_output.score / graded_output.points_total, 2)}}%
+    and message of {{graded_output.msg}}
+    % if submission_values[0].assessment_type == 'game':
+       <br />The elapsed time it took you to complete it was {{graded_output.elapsed_time}}
+    % end
+  % else:
+    <br/> It has <b>not</b> yet been graded.
+  % end
+% end
+</p>
+
+
+<table class="minimalistBlack">
+  <tr>
+    <th>Question</th>
+    <th>Answer</th>
+  </tr>
+% for value in submission_values:
+  <tr>
+    <td>{{value.field}}</td>
+    <td><pre>{{value.value}}</pre></td>
+  </tr>
+% end
+</table>
+
+% rebase('assessment.base')

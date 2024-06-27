@@ -1,0 +1,64 @@
+<%
+setInfo(
+        due='2022-09-12  8:00:00',
+        assessment_type='worksheet',
+        pages=['questions', 'submit'],
+        maxpenalty=0.75, penalty=.2)
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# 00 Team Selection Worksheet
+
+Use this worksheet to select the members of class that you would like to work with on a team.
+
+Teams will be used during the games lecture.
+I will sit teams of four adjacent to each other as best I can.
+
+To select people for your team, you must know their Onyen.
+Selections are only accepted if the people you select also select you.
+In other words, if you pick person $A$ but $A$ doesn't pick you,
+I will ignore your request to be in with that person.
+
+Therefore, it is best if you chat offline to coordinate teams
+to ensure you select the same people that selects you.
+
+Enter your selection of people on your team below.
+If you have preferences for less than three other team members,
+enter `NONE` for the remaining Onyens.
+
+**NOTE:** If you have some reason for **not** wanting to be on a team with a particular student,
+please send me a [personal note](mailto:jmajikes@cs.unc.edu).
+For any non-personal notes, questions, or discussions on teams,
+please post a note to [Piazza]({{PIAZZA}}) using the folder `games`.
+See the Syllabus for information on how to [sign up for Piazza]({{get_url('syllabi', page_name='syllabus')}}#piazza).
+
+As with all assignments in COMP 421,
+only your first submission will be accepted.
+Although you will be able to fill out this form,
+**you will not be able to see or hit the submit button until Labor Day.**
+This is being done to allow everyone to think about who they want to be on a team with.
+
+---  
+   
+% setdefault('onyens', [])
+% onyens.append('NONE')
+
+% if 'questions' in pages:
+
+**Student.1**: Select the first Onyen of the student you would like on your team.  
+{{!select('NONE', points=34, choices=onyens, required="required", name='Student.1')}}
+
+**Student.2**: Select the second Onyen of the student you would like on your team.  
+{{!select('NONE', points=33, choices=onyens, required="required", name='Student.2')}}
+
+**Student.3**: Select the third Onyen of the student you would like on your team.  
+{{!select('NONE', points=33, choices=onyens, required="required", name='Student.3')}}
+
+% end
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

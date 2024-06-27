@@ -1,0 +1,68 @@
+
+<%
+for index in range(number_evaluation):
+ if (section == '003') or (conflict_exam and index == number_evaluation-1) or (not conflict_exam and ((member_number%(number_evaluation-1) == index))):
+      if index == number_evaluation -1:
+        include('viewAnswer', answer=f' Only seen by students at the conflict exam')
+      else:
+        include('viewAnswer', answer=f' Only seen by member number % {number_evaluation-1} == {index}')
+      end
+%> 
+
+  % for index2 in range(5):  # Loop to just put the questions in a different order
+   % if (index2 + member_number + 0) % 5 == index:
+ %answer = 'SELECT sname from Sailors'
+ **Sailor.name.{{index+1}}:** List the names of all the sailors.  
+ {{!sql(answer, dbs=sailors_dbs, sort=True, points=1, name=f'Sailor.name.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+   % if (index2 + member_number + 1) % 5 == index:
+ %answer = '''
+ -- Requires selection by sname='Frodo' and not by sid
+ SELECT bname
+   FROM Boats B, Reserves R
+  WHERE R.bid = B.bid AND
+        R.sid = (SELECT sid FROM Sailors where sname='Frodo')
+'''
+ **Frodo.{{index+1}}:** List all the boat names reserved by sailor Frodo.  
+ {{!sql(answer, dbs=sailors_dbs, sort=True, points=1, name=f'Frodo.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+   % if (index2 + member_number + 2) % 5 == index:
+ %answer = 'SELECT DISTINCT color FROM Boats'
+ **Boat.Color.{{index+1}}:** List all the boat colors.  
+ **NOTE:** No boat color should appear more than once  
+ {{!sql(answer, dbs=sailors_dbs, sort=True, points=1, name=f'Boat.Color.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+   % if (index2 + member_number + 3) % 5 == index:
+ %answer = '''
+ -- Requires DISTINCT
+SELECT DISTINCT full_name
+  FROM Politicians P, Terms T
+ WHERE term_type='President' AND
+       P.pid = T.pid
+  ORDER BY start_date;
+'''
+ **Presidents.{{index+1}}:** List the full name of all the U.S. Presidents in the order that they took office.  
+ **NOTE:** Only list each president once.  For example, Grover Cleveland was president before and after President Harrison.  But Grover should only appear once.
+ {{!sql(answer, dbs=politicians_dbs, points=1, name=f'Presidents.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+   % if (index2 + member_number + 4) % 5 == index:
+ %answer = 'SELECT DISTINCT term_type FROM Terms'
+ **Offices.{{index+1}}:** List all the unique offices (senator, president, etc) held by all the politicians in the database.   
+ {{!sql(answer, dbs=politicians_dbs, sort=True, points=1, name=f'Offices.{index+1}')}}
+ % include('viewAnswer')
+   % end
+
+  % end # For index2
+
+---
+
+  % end  # section == 003 or member_number%number_evaluation == index
+% end  # for index in range(number_evaluation)

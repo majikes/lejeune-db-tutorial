@@ -1,0 +1,171 @@
+<style>
+table {
+    font-family: arial, sans-serif;
+      border-collapse: collapse;
+        width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+      text-align: left;
+        padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+h2 {
+    background-color: #7BAFD4;
+}
+</style>
+
+% from config import assessment_dict, assessment_folder_dict, https_fqdn
+% from assessments import drops, assessments_matching
+% from itertools import groupby
+
+<h1>Grades for Onyen: {{onyen}}</h1>
+  <h3>Name: {{grades_row.name}}</h3>
+  <h3>Alias: {{grades_row.game_alias_name}}</h3>
+  <h3>Exam seat: {{grades_row.exam_seat if grades_row.exam_seat else 'N/A'}}</h3>
+<!--
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Exam seat location</th>
+    <th>Exam time</th>
+  </tr>
+  <tr>
+    <th>{{grades_row.section}}</th>
+    <th>{{grades_row.exam_seat if grades_row.exam_seat else 'N/A'}}</th>
+    <th>{{grades_row.exam_time}}
+      % if grades_row.conflict_exam:
+        <font color='red'>Check your email for location!</font>
+      % end
+    </th> 
+  </tr>
+</table>
+-->
+
+<table>
+ <tr>
+   <th>Letter<br />Grade</th>
+   <th>Total<br />points</th>
+   <th>Final exam<br />{{percentage.fe}}%</th>
+   <th>Midterm 2<br />{{percentage.midterm2}}%</th>
+   <th>Midterm 1<br />{{percentage.midterm1}}%</th>
+   <th>Homework<br />{{percentage.homeworks}}%</th>
+   <th>Worksheet<br />{{percentage.worksheets}}%</th>
+   <th>Games<br />{{percentage.games}}%</th>
+ </tr>
+ <tr>
+   <th>N/A</th> <!-- {{grades_row.lettergrade}}</th> -->
+   <!-- Need to test if numeric values in case grader never run for this user -->
+   <th>{{round(grades_row.total, 2) if grades_row.total else 0.00}}</th>
+   <th>{{round(grades_row.fe, 2) if grades_row.fe else 0.00}}</th>
+   <th>{{round(grades_row.midterm2, 2)}}</th>
+   <th>{{round(grades_row.midterm1, 2)}}</th>
+   <th>{{round(grades_row.homeworks, 2) if grades_row.homeworks else 0.00}}</th>
+   <th>{{round(grades_row.worksheets, 2) if grades_row.worksheets else 0.00}}</th>
+   <th>{{round(grades_row.games, 2) if grades_row.games else 0.00}}</th>
+ </tr>
+</table>
+
+<%
+for this_type, label in assessment_dict.items():
+    these_assessments = assessments_matching(assessments, 'assessment_type', this_type)
+    these_assessments.sort(key=lambda x: x.key)
+    if len(these_assessments) > 0: %>
+       % name = label.lower().replace(' ', '-')
+       <h2><a href="{{get_url('grades')}}?onyen={{onyen}}#{{name}}" name="{{name}}">{{label}}</a></h2>
+         % if drops[this_type] > 0:
+           <h3>There are {{len(these_assessments)}} {{label.lower()}}.  You may drop {{drops[this_type]}}.</h3>
+         % end
+         % if this_type == 'game' and len(game_bonuses):
+           <div class="row">
+             <div class="fourcolumns">
+               <h3>You have {{len(game_bonuses)}} game bonuses incorporated into the game grade.</h3>
+             </div>
+             <div class="threefourthcolumns">
+               <table>
+                  <tr>
+                    <th>Game</th>
+                    <th>Reason</th>
+                  </tr>
+                  % for index, bonus in enumerate(game_bonuses):
+                     <tr>
+                       <th>{{index}} {{bonus.key}}</th>
+                       <th>{{bonus.reason}}: {{bonus.explanation}}</th>
+                     </tr>
+                  % end
+               </table>
+             </div>
+         % end
+         % if this_type == 'worksheet' and len(worksheet_bonuses):
+           <div class="row">
+             <div class="fourcolumns">
+               <h3>You have {{len(worksheet_bonuses)}} worksheet bonuses incorporated into the worksheet grade.</h3>
+             </div>
+             <div class="threefourthcolumns">
+               <table>
+                  <tr>
+                    <th>Index</th>
+                    <th>Reason</th>
+                  </tr>
+                  % for index, bonus in enumerate(worksheet_bonuses):
+                     <tr>
+                       <th>{{index}} {{bonus.share_time}}</th>
+                       <th>{{bonus.reason}}</th>
+                     </tr>
+                  % end
+               </table>
+             </div>  
+         % end
+         <table>
+           <tr>
+             <th>Name</th>
+             <th>Percentage score</th>
+             <th>Number <br/>submitted / graded</th>
+             % if this_type != 'game':
+             <th>Grade <i><u>may</u></i> be improved<br/>with subsequent submissions</th>
+             % end
+           </tr>
+           <!-- Sort the assessments by key and then by post_id for partial credit displays -->
+            % for index, assessment in enumerate(these_assessments):
+                <tr>
+                   <th>{{index+1}}
+                 % if assessment.key == 'fe-he-am-study-33' and original_onyen == '':
+                 f2-he-study-33</th>
+                      % if assessment.number_submissions == 0:
+                        <th><font color='red'>Not yet submitted</font></th>
+                      % else:
+                        <th>0.0</th>
+                      % end
+                      <th>{{assessment.number_submissions}} / 0</th>
+                 %else:
+                   % if assessment.number_submissions == 0:
+                      <!-- Never submitted this assessment -->
+                      <a href={{get_url(assessment_folder_dict[this_type], key=assessment.key)}} target="_blank">{{assessment.key}}</a></th>
+                      <th><font color='red'>Not yet submitted</font></th>
+                   % else:
+                      <!-- Show this submitted assessment -->
+                      <a href="{{get_url('viewSubmissionKey', key=assessment.key)}}?onyen={{onyen}}" target="_blank">
+                          {{assessment.key}}</a></th>
+                      <th>{{round(assessment.overall_percentage, 2)}}</th>
+                   % end
+                      <th>{{assessment.number_submissions}} / {{assessment.number_graded}}</th>
+                   % if assessment.assessment_type != 'game':
+                     % if assessment.number_submissions == 0:
+                      <th> N/A </th>
+                     % else:
+                      <th>{{not assessment.one_submission_graded_100_percent}}</th>
+                     % end
+                   % end
+                 % end
+                </tr>
+            % end
+         </table>
+    <% end # if len(these_assessments) > 0
+end # for each type %>
+
+% rebase('assessment.base')

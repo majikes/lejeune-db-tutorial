@@ -1,0 +1,116 @@
+<%
+import json
+from datetime import datetime, date
+setInfo(
+        needsSubmitCode=True,
+        assessment_type='game',
+        due='2023-02-16 10:45:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        max_segments=3,
+        maxpenalty=1.00, penalty=.20,
+       )
+dbs=['game-sailors-1.sqlite', 'game-sailors-2.sqlite']
+with open(f'content/games/databases/{dbs[1].replace(".sqlite", ".json")}', encoding='utf-8') as fid:
+   schema = json.load(fid)
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+# 3 Sailor Game example
+
+---
+
+## {{!linkable_header('SQL Tutorial Cheat Sheet')}}
+
+Following are three SQL tutorial cheat sheets available from http://www.sqltutorial.org
+
+<img src="{{static('images/SQLTutorial.1.jpeg')}}" style="width:85%" alt="First of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.2.jpeg')}}" style="width:85%" alt="Second of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.3.jpeg')}}" style="width:85%" alt="Third of three SQL Tutorial cheat sheets"/>
+
+---
+
+## {{!linkable_header('Sailor Game Database Schema')}}
+
+Here is the tables you'll find for the database used in the game.
+ 
+<pre>
+   <code class="sql">
+% for line in schema.split('\n'):
+   {{!line}}   
+% end
+   </code>
+</pre> 
+
+% if 'questions' in pages:
+
+---
+
+## {{!linkable_header('Game format')}}
+
+
+The game is multiple submissions.
+You answer one part of the game, submit it, and you are presented with the next stage of the game.
+Once you submit a part of the game, you <font color='red'>cannot</font> go back.
+
+In the following scratch space.
+You can use it to test out queries.
+There are no points for the following SQL query.
+It is a scratch pad.
+{{!sql(''' select 1 ''', name='_scratch_sql_queries_1', dbs=dbs)}}
+
+---
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}}
+
+From the last submission, the sailors alphabetically were:
+ 
+ - Albert
+ - Andy
+ - Art
+ - Bart
+ - Bob
+ - Brutus
+ - Dustin 
+ - Frodo
+ - Homer
+ - Horatio
+ - Lisa
+ - Lubber
+ - Majikes _only in the second database_
+ - Rusty
+ - Zorba
+ 
+% assert datetime.now().date()< date(2023, 5, 31), "Every semester, this list has to be checked!"
+
+There are only three colors to choose from: blue, green, and red.
+There are eight blue boats, six green boats, and five red boats.
+
+---
+
+
+**How.Many.BID.111.Reserves:** Write a query to return how many times boat 111 was reserved.  
+% answer = '''SELECT COUNT(*) FROM Reserves where bid=111'''
+{{!sql(answer, dbs=dbs, points=50, sort=True, name='How.Many.BID.111.Reserves')}}
+% include('viewAnswer')
+
+
+**How.Many.Albert.Reserves:** How many boats did sailor Albert reserve?  
+**Note:** You must not first look up Albert's sid then hard code the SQL query! 
+You must do everything in one query!  
+% answer = '''SELECT count(*)
+FROM Reserves AS R, Sailors as S
+WHERE R.sid = S.sid AND
+      S.sname = 'Albert' '''
+{{!sql(answer, dbs=dbs, points=50, name='How.Many.Albert.Reserves', sort=True)}}
+% include('viewAnswer')
+--- 
+
+%end
+
+% if 'submit' in pages:
+% include('games-pledge.md', segment='1')
+% include('submit.md')
+%end

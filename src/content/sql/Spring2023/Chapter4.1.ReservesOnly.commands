@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS R1;
+CREATE TABLE R1 (sid string, bid string, day date);
+INSERT INTO R1 VALUES ('22', '101', '10/10/96');
+INSERT INTO R1 VALUES ('58', '103', '11/12/96');
+
+SELECT 'The Reserves table:' as '';
+SELECT * FROM R1;
+

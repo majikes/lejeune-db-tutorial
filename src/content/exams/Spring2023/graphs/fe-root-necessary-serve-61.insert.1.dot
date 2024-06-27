@@ -1,0 +1,63 @@
+digraph G
+{
+    splines=false
+    "block"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">6</td>
+                        <td port="connector1"></td>
+                        <td port="key1">9</td>
+                        <td port="connector2"></td>
+                    </tr>
+                </table>>
+    ]
+    "block0"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">2*</td>
+                        <td port="key1">4*</td>
+                    </tr>
+                </table>>
+    ]
+    "block1"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">6*</td>
+                        <td port="key1">8*</td>
+                    </tr>
+                </table>>
+    ]
+    "block2"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">10*</td>
+                        <td port="key1">12*</td>
+                    </tr>
+                </table>>
+    ]
+
+    "block":"connector0" -> "block0":"key0"
+    "block":"connector1" -> "block1":"key0"
+    "block":"connector2" -> "block2":"key0"
+
+    "block1":"key0" -> "block0":"key1"
+    "block0":"key1" -> "block1":"key0"
+
+    "block2":"key0" -> "block1":"key1"
+    "block1":"key1" -> "block2":"key0"
+
+    "root" [ shape = none label="root" ]
+    "root" -> "block":"connector0"
+
+    {rank=min; "block" "root"}
+    {rank=same; "block0" "block1" "block2"}
+}

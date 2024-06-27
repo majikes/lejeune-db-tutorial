@@ -1,0 +1,569 @@
+---
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+---
+
+### Announcements
+
+- Midterm 1 in-class portion completed.
+  - Partial credit by getting 100% on a subsequent submission
+  - Available until Tuesday, 10/17 11:59:59 PM
+  - No exceptions.  No extensions.
+  - See [syllabus]({{HTTPS_FQDN}}/syllabi/syllabus#subsequent-submissions) for more information
+  - Three people asked for curve instead subsequent submission
+    - No printed cheat sheets next exam
+    - Curve would be at end of semester, not per midterm
+    - Since no concensus, syllabus stays unchanged
+  - <font color='red'>Class schedule change</font>
+    - Thursday, Oct 12 University Day
+    - Class remote via video
+
+
+---
+
+### Chapter 12: Physical Storage Systems
+
+- By the end of class you should know
+ - General view of physical storage media
+ - Storage interfaces
+ - Different storage systems 
+ - Only covering RAID 0 and 1
+ - Skip 12.6 Disk-block access
+
+---
+
+### Chapter 12: Classification of Physical Storage Media
+
+- Can differentiate storage into:
+  - **volatile storage**: loses contents when power switched off
+  - **non-volatile storage**:
+    - Contents persist even when power is switched off. 
+    - Includes secondary and tertiary storage, as well as batter-backed up main-memory.
+- Factors affecting choice of storage media include
+  - Speed with which data can be accessed
+  - Cost per unit of data
+  - Reliability
+
+
+---
+
+### Storage Hierarchy
+
+<figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.12.Figure.12.1.StorageHierarchy.png"  style="width:60%"/>
+      <figcaption>Figure 12.1 Storage Hierarchy</figcaption>
+</figure>
+
+Note:
+
+Should have learned this overview in COMP 211
+
+---
+
+### Storage Hierarchy (Cont.)
+
+- **primary storage**: Fastest but volatile
+  - Cache, main memory
+- **secondary storage**: non-volatile, moderately fast
+  -  also called **on-line storage**
+  -  Flash memory, magnetic disks
+- **tertiary storage**: lowest level; non-volatile, slow
+  -  also called **off-line storage**
+  -  Used for **archival storage**
+  -  magnetic tape, optical storage
+  - Optical Juke boxes
+    - Petabytes (1000’s of TB) storage
+    - Few drives; numerous disks
+
+
+---
+
+### Storage Interfaces
+
+- Disk interface standards families
+  - SATA (Serial ATA)
+    - SATA 3 supports data transfer speeds of up to 6 gigabits/sec
+  - SAS (Serial Attached SCSI)
+    - SAS Version 3 supports 12 gigabits/sec
+  - NVMe (Non-Volatile Memory Express) interface
+    - Works with PCIe connectors to support lower latency and higher transfer rates
+    - Supports data transfer rates of up to 24 gigabits/sec
+- Disks usually connected directly to computer system
+- In **Storage Area Networks (SAN)**, a large number of disks are connected by a high-speed network to a number of servers
+- In **Network Attached Storage (NAS)** networked storage provides a file system interface using networked file system protocol, instead of providing a disk system interface
+
+
+---
+
+### Magnetic Hard Disk Mechanism
+
+
+<div class="row">
+   <div class="twothirdcolumns">
+    <figure style="border: 0">
+      <img src="{{HTTPS_FQDN}}/static/images/Chapter.12.Figure.12.2.Schematic.Diagram.Of.Magnetic.Disk.Drive.png" style="width:100%"/>
+         <figcaption>Figure 12.2 Schematic diagram of magnetic disk drive</figcaption>
+    </figure>
+   </div>
+   <div class="threecolumns">
+    <figure style="border: 0">
+      <img src="{{HTTPS_FQDN}}/static/images/Chapter.12.Figure.12.3.Photo.Of.Magnetic.disk.Drive.png" style="width:100%"/>
+         <figcaption>Figure 12.3 Photo of magnetic disk drive</figcaption>
+    </figure>
+  </div>
+</div>
+
+---
+
+### Magnetic Disks
+
+- **Read-write head**
+- Surface of platter divided into circular **tracks**
+  - Over 50K-100K tracks per platter on typical hard disks
+- Each track is divided into **sectors**.
+  - Sector smallest unit of data that can be read or written.
+  - Sector size typically 512 bytes (moving to 4K)
+  - Typical sectors per track:
+     - Inner tracks: 500 to 1000
+     - Outer tracks: to 1000 to 2000
+
+Note:
+
+Microsoft windows to support 4K sectors
+
+https://learn.microsoft.com/en-us/troubleshoot/windows-server/backup-and-storage/support-policy-4k-sector-hard-drives
+
+---
+
+### Magnetic Disks
+
+- To read/write a sector
+  - disk arm swings to position head on right track
+  - platter spins continually
+     - data is read/written as sector passes under head
+- Head-disk assemblies 
+  - multiple disk platters on a single spindle (1 to 5 usually)
+  - one head per platter, mounted on a common arm.
+- **Cylinder** $i$ consists of $i^\mbox{th}$ track of all the platters 
+
+
+---
+
+### Magnetic Disks (Cont.)
+
+- **Disk controller** – between computer system &amp; disk drive
+  - accepts high-level commands to read or write a sector 
+  - initiates actions such as:
+    - Move disk arm to correct track
+    - Reading or writing the data
+  - Computes and attaches **checksums** to each sector
+    - Used to verify data correctly written
+    - If corrupted, high probability stored checksum $\ne$ recomputed checksum
+  - Ensures successful writing by reading back sector after writing it
+  - Performs **remapping of bad sectors**
+
+Note:
+
+Disk controller hides the internals of the disk to the operating system
+
+---
+
+### Performance Measures of Disks
+
+- **Access time** – time to read or write request. Consists of:
+  - **Seek time** – time position arm over track.
+    - Average seek time is $\frac{1}{2}$ the worst case seek time.
+    - 4 to 10 milliseconds on typical disks
+  - **Rotational latency** – time for the sector to be under head. 
+    - 4 to 11 msec on typical disks (5400 to 15000 RPM)
+    - Average latency is $\frac{1}{2}$ of the above latency.
+  - Overall latency is 5 to 20 msec depending on disk model
+- **Data-transfer rate** - rate data retrieved from/to disk.
+  - 25 to 200 MB per second max rate, lower for inner tracks
+
+
+---
+
+### Performance Measures (Cont.)
+
+- **Disk block** logical unit for storage
+  - 4 to 16 KB typically
+    - Smaller blocks: more transfers from disk
+    - Larger blocks:  more space wasted / partial filled blocks
+- **Sequential access pattern**
+  - Successive requests for adjacent disk blocks
+  - Disk seek required only for first block
+- **Random access pattern**
+  - Successive requests for blocks anywhere on disk
+  - Each access requires a seek $\rightarrow$ <font color='red'>Bad</font>
+  - Transfer rates slow $\rightarrow$ much time wasted seeking
+- **I/O operations per second (IOPS)**
+  - Number random block reads per second disk supports
+  - 50 to 200 IOPS on current generation magnetic disks
+
+
+Note:
+
+Later on we'll tell you how many records fit into a block.
+
+Figure time to get the data 
+
+---
+
+### Performance Measures (Cont.)
+
+- **Mean time to failure (MTTF)** – average time disk expected to run continuously without any failure.
+  - Typically 3 to 5 years
+  - Probability of failure of new disks is quite low
+    - new disk _theoretical MTTF_ of 500,000 to 1,200,000 hours
+    - Given MTTF 1,200,000 hours, with 1000 new disks, $\dots$<br/>on an average one failure every 1200 hours
+  - MTTF decreases as disk ages
+
+
+Note:
+
+https://comp421.cs.unc.edu/pages/worksheets/worksheet-12-00-disk
+
+https://comp421.cs.unc.edu/worksheets/worksheet-12-00-disk
+---
+
+### Flash Storage
+
+- NOR flash vs NAND flash
+- NAND flash 
+  -  used widely for storage, cheaper than NOR flash
+  -  requires page-at-a-time read; 512 bytes to 4 KB page size
+     - page read 20 to 100 microseconds ($\mu$_s_)
+     - Not much difference between sequential and random  read
+  -  Page can only be written once
+     - Must be erased to allow rewrite
+- **Solid state disks** SSD
+  - Standard block-oriented disk interfaces
+    - Stored internally on on multiple flash storage devices
+  -  Transfer rate up to 500 MB/sec using SATA
+    - up to 3 GB/sec using NVMe PCIe
+
+Note:
+ 
+NVMe Non-volatile memory
+
+We won't be discussing NOR vs NAND flash
+
+---
+
+### Flash Storage (Cont.)
+
+- Erase happens in units of **erase block**
+  - Takes 2 to 5 msec
+  - Erase block typically 256 KB to 1 MB (128 to 256 pages)
+- **Remapping** logical $\rightarrow$ physical page addresses
+  - Avoids waiting for erase
+- **Flash translation table** tracks mapping
+  - Stored in a label field of flash page
+  - Remapping carried out by **flash translation layer**
+- After 100,000 to 1,000,000 erases, erase block becomes unreliable  and cannot be used
+
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.12.Flash.Translation.Table.png" style="width:50%"/>
+     <figcaption>Flash Translation Table</figcaption>
+</figure>
+
+
+---
+
+### SSD Performance Metrics
+
+- Random reads/writes per second
+  - Typical 4 KB reads:  10K reads per second; 10K IOPS)
+  - Typical  4KB writes: 40K IOPS
+  - SSDs support parallel reads
+- Typical 4KB reads: 
+  -  100K IOPS w/ 32 requests in parallel (QD-32) on  SATA
+  -  350K IOPS with QD-32 on NVMe PCIe
+- Typical 4KB writes:
+  -  $\ge$ 100K IOPS with QD-32
+- Data transfer rate for sequential reads/writes
+  - 400 MB/sec for SATA3, 2 to 3 GB/sec using NVMe PCIe
+- **Hybrid disks**: combine small flash cache w/ large disk
+
+
+---
+{{HIDDEN}}
+
+### Storage Class Memory
+
+- 3D-XPoint memory technology pioneered by Intel
+- Available as Intel Optane
+  - SSD interface shipped from 2017
+- Allows lower latency than flash SSDs
+  - Non-volatile memory interface announced in 2018
+- Supports direct access to words, at speeds comparable to  main-memory speeds
+
+
+---
+
+### RAID
+
+- **RAID: Redundant Arrays of Independent Disks**
+  - disk organization managing multiple disks into single view
+    - **high capacity** &amp; **high speed**: use multiple disks in parallel
+    - **high reliability** store data redundantly multiple disks
+- Chance that some disk in set of <i>N</i> disks will fail is much higher  than chance a specific single disk fails
+  - System of 100 disks, each MTTF 100,000 hours, has MTTF of $\frac{100,000}{100}$, 1000, hours
+  - Techniques for using redundancy to avoid data loss are critical with large  numbers of disks
+
+Note:
+
+Need to look up these numbers
+
+---
+
+### Improvement of Reliability via Redundancy
+
+- **Redundancy** – store extra info; rebuild after failure
+- **Mirroring** (or **shadowing**)
+  - Duplicate every disk.  Logical disk $\rightarrow$ two physical disks
+  - Every write is carried out on both disks
+    - Reads can take place from either disk
+  - One disk in a pair fails, data still available in the other
+    - Data loss would occur only if a disk fails, and its mirror disk  also fails before the system is repaired
+      -  Outside of dependent event, probability combined failure small
+- **Mean time to data loss** depends **mean time to repair**
+  - MTTF of 100,000 hours, mean time to repair of 10 hours
+  - Mirror paired disk mean time to data loss of 500*$10^6$ hours: 57K years
+
+Note:
+
+Mean time to data loss ignores dependent failure modes  
+ - Building collapse
+ - Fire
+ - Explosion
+
+---
+
+### Improvement in Performance via Parallelism
+
+- Two main goals of parallelism in a disk system:  
+  1. Load balance multiple small accesses to increase throughput
+  2. Parallelize large accesses to reduce response time
+- Improve transfer rate by striping data across multiple disks.
+
+---
+
+### Improvement in Performance via Parallelism
+#### Striping
+
+- **Bit-level striping** – split the bits of each byte across disks
+  - In an array of eight disks, write bit $i$ of each byte to disk $i$
+  - Each access can read data at 8X rate of a single disk
+  - But seek/access time worse than for a single disk
+- Bit level striping is not used much any more
+- **Block-level striping** – $n$ disks, file's block $i$ goes to disk $i\\%n+1$
+  - Requests for different blocks run in parallel if the blocks reside on  different disks
+  - A request for long sequence of blocks utilizes all disks in parallel
+
+
+---
+
+### RAID Levels
+
+- Schemes to provide redundancy at lower cost by striping 
+  - RAID levels: different cost, performance, reliability
+- **RAID Level 0**:  Block striping; non-redundant.
+  - Used for high-performance / data loss is not critical
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.12.Figure.12.4.a.RAID.0.nonredundant.striping.png" style="width:25%"/>
+     <figcaption>Figure 12.4 (a) RAID 0 non-redundant striping</figcaption>
+</figure>
+
+- **RAID Level 1**: Mirrored disks with block striping
+  - Offers best write performance
+  - Popular for storing database log files
+<figure style="border: 0">
+  <img src="{{HTTPS_FQDN}}/static/images/Chapter.12.Figure.12.4.b.RAID.1.Mirrored.Disks.png" style="width:25%"/>
+     <figcaption>Figure 12.4 (b) RAID 1 Mirrored disks</figcaption>
+</figure>
+
+---
+
+{{HIDDEN}}
+
+### RAID Levels (Cont.)
+
+- <b>Parity blocks</b>: Parity block <i>j</i> stores XOR of bits from block <i>j </i>of each  disk
+  - When writing data to a block <i>j</i>, parity block <i>j </i>must also be computed  and written to disk
+- Can be done by using old parity block, old value of current block  and new value of current block (2 block reads + 2 block writes)
+- Or by recomputing the parity value using the new values of blocks  corresponding to the parity block
+  -  More efficient for writing large amounts of data sequentially
+  - To recover data for a block, compute XOR of bits from all other blocks  in the set including the parity block
+
+
+---
+
+{{HIDDEN}}
+
+### RAID Levels (Cont.)
+
+- <b>RAID Level 5</b><b>: </b>Block-Interleaved Distributed Parity; partitions data  and parity among all<i> N</i> + 1 disks, rather than storing data in <i>N</i> disks  and parity in 1 disk.
+  - E.g., with 5 disks, parity block for <i>n</i>th set of blocks is stored on disk  (<i>n mod</i> 5) + 1, with the data blocks stored on the other 4 disks.
+<img src="m.jpg"/>
+<img src="n.jpg"/>
+
+
+---
+
+{{HIDDEN}}
+
+### RAID Levels (Cont.)
+
+- <b>RAID Level 5 </b>(Cont.)
+  - Block writes occur in parallel if the blocks and their parity blocks  are on different disks.
+- <b>RAID Level 6</b>: P+Q Redundancy scheme; similar to Level 5, but  stores two error correction blocks (P, Q) instead of single parity  block to guard against multiple disk failures. 
+  - Better reliability than Level 5 at a higher cost
+- Becoming more important as storage sizes increase
+<img src="q.jpg"/>
+
+
+---
+
+{{HIDDEN}}
+
+### RAID Levels (Cont.)
+
+- <b>Other levels (not used in practice):</b>
+  - <b>RAID Level 2</b>:  Memory-Style Error-Correcting-Codes (ECC)  with bit striping.
+  - <b>RAID Level 3</b>: Bit-Interleaved Parity
+  - <b>RAID Level 4</b><b>: </b>Block-Interleaved Parity; uses block-level  striping, and keeps a parity block on a separate <b><i>parity disk </i></b>for  corresponding blocks from <i>N</i> other disks.
+- RAID 5 is better than RAID 4, since with RAID 4 with random  writes, parity disk gets much higher write load than other  disks and becomes a bottleneck
+
+
+---
+
+{{HIDDEN}}
+
+### Choice of RAID Level
+
+- Factors in choosing RAID level
+  - Monetary cost
+  - Performance: Number of I/O operations per second, and  bandwidth during normal operation
+  - Performance during failure
+  - Performance during rebuild of failed disk
+- Including time taken to rebuild failed disk
+- RAID 0 is used only when data safety is not important 
+  - E.g. data can be recovered quickly from other sources
+
+
+---
+
+### Choice of RAID Level (Cont.)
+
+{{HIDDEN}}
+
+- Level 1 provides much better write performance than level 5
+  - Level 5 requires at least 2 block reads and 2 block writes to write  a single block, whereas Level 1 only requires 2 block writes
+- Level 1 had higher storage cost than level 5
+- Level 5 is preferred for applications where writes are sequential  and large (many blocks), and need large amounts of data storage
+- RAID 1 is preferred for applications with many random/small  updates
+- Level 6 gives better data protection than RAID 5 since it can  tolerate two disk (or disk block) failures
+  - Increasing in importance since latent block failures on one disk,  coupled with a failure of another disk can result in data loss with  RAID 1 and RAID 5.
+
+
+---
+
+{{HIDDEN}}
+
+### Hardware Issues
+
+- Raid processing can be handled in hardware or software
+  - Transparent to system
+  - Important to understand
+- Software possibly slower
+- Hardware uses non-volatile RAM
+  - Small possibility of failure power outage
+
+Note:
+
+- **Software RAID**: RAID implementations done entirely in  software, with no special hardware support
+- **Hardware RAID**: RAID implementations with special hardware
+  - Use non-volatile RAM to record writes that are being executed
+  - Beware:  power failure during write can result in corrupted disk
+    - E.g. failure after writing one block but before writing the  second in a mirrored system
+    - Such corrupted data must be detected when power is  restored
+      -  Recovery from corruption is similar to recovery from  failed disk
+      -  NV-RAM helps to efficiently detected potentially  corrupted blocks
+
+
+---
+
+{{HIDDEN}}
+
+### Hardware Issues (Cont.)
+
+- **Latent failures**: data successfully written earlier gets damaged can result in data loss even if only one disk fails
+- **Data scrubbing**: continually scan for latent failures, and recover from copy/parity
+- **Hot swapping**: replacement of disk while system is running, without  power down
+  - Supported by some hardware RAID systems, 
+  - reduces time to recovery, and improves availability greatly
+- Many systems maintain spare disks which are kept online, and used  as replacements for failed disks immediately on detection of failure
+  - Reduces time to recovery greatly
+- Many hardware RAID systems ensure that a single point of failure will  not stop the functioning of the system by using 
+  - Redundant power supplies with battery backup
+  - Multiple controllers and multiple interconnections to guard against  controller/interconnection failures
+
+
+---
+
+{{HIDDEN}}
+
+### Optimization of Disk-Block Access
+
+- **Buffering**: in-memory buffer to cache disk blocks
+- **Read-ahead**: Read extra blocks from a track in anticipation that they will be requested soon
+- **Disk-arm-scheduling** algorithms re-order block requests so that  disk arm movement is minimized 
+  - <b>elevator algorithm</b>
+<p>R1</p>
+<p>R5</p>
+<p>R2</p>
+<p>R4</p>
+<p>R3</p>
+<p>R6</p>
+<p>Inner track</p>
+<p>Outer track</p>
+
+
+---
+
+### Magnetic Tapes
+
+- Hold large volumes of data and provide high transfer rates
+  - Transfer rates from few to 10s of MB/s
+- Tapes are cheap, but cost of drives is very high
+- Very slow access time relative magnetic or optical disks
+  - limited to sequential access.
+- Mainly for backup, for storage of infrequently used information, and as an off-line medium for transferring information from one system to another.
+- Jukeboxes used for very large capacity storage
+  - Multiple petabyes ($10^{15}$ bytes)
+
+Note:
+
+Where do you think my grades as an undergraduate (1979) at Penn State (with 90K students) are?
+
+---
+
+### Chapter 12 epilogue
+
+- You should have a pretty good understanding of
+ - General view of physical storage media
+ - Storage interfaces
+ - Different strage systems
+   - Magnetic disks
+   - Flash memory
+   - RAID (0 & 1)
+   - Magnetic Tape
+

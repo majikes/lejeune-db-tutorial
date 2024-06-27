@@ -1,0 +1,31 @@
+digraph G
+{
+    splines=false
+    "block"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="A0"> 2</td>
+                        <td port="A1"> 4</td>
+                        <td port="A2"> 6</td>
+                        <td port="A3">12</td>
+                        <td port="A4">10</td>
+                        <td port="A5"> 8</td>
+                        <td port="A6"> 1</td>
+                        <td port="A7"> 3</td>
+                        <td port="A8"> 5</td>
+                        <td port="A9"> 7</td>
+                        <td port="A10">9</td>
+                        <td port="A11">11</td>
+                    </tr>
+                </table>>
+    ]
+
+    "array" -> "block":"A0"
+    "A0" -> "block":"A0"
+    "A11" -> "block":"A11"
+
+    {rank=min; "block" "array"}
+    {rank=max; "A0" "A11" }
+}

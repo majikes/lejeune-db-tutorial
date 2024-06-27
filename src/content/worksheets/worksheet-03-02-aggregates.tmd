@@ -1,0 +1,112 @@
+<%
+import json
+with open('wkst.university1.json') as fid:
+      university_data = json.load(fid)
+setInfo(assessment_type='worksheet',
+)
+dbs = ['wkst.university1.sqlite', 'wkst.university2.sqlite']
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# 03 Aggregates
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+## {{!linkable_header('SQL Tutorial Cheat Sheet')}}
+
+Following are three SQL tutorial cheat sheets available from http://www.sqltutorial.org
+
+<img src="{{static('images/SQLTutorial.1.jpeg')}}" style="width:85%" alt="First of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.2.jpeg')}}" style="width:85%" alt="Second of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.3.jpeg')}}" style="width:85%" alt="Third of three SQL Tutorial cheat sheets"/>
+
+---
+
+### {{!linkable_header('Database used')}}
+
+The schema for the database used in this class is below.
+It is from the database used in chapter 3 of the book 
+that describes a university.
+
+<pre>
+ <code class="sql">
+  % for line in university_data.split('\n'):
+    {{line}}
+  % end
+ </code>
+</pre>
+
+--- 
+
+## {{!linkable_header('Questions')}} 
+
+
+**Average.Computer.Science.Salary:** What is the average salary of faculty in the computer science ('Comp. Sci.') department?   
+% answer = '''
+SELECT AVG(salary)
+  FROM Instructor
+ WHERE  dept_name = 'Comp. Sci.'
+ '''
+{{!sql(answer, dbs=dbs, sort=True, points=20, name='Average.Computer.Science.Salary')}}
+%include('viewAnswer')
+
+---
+
+**Maximum.Computer.Science.Salary:** What is the maximum salary of faculty in the computer science department?  
+% answer = '''
+SELECT MAX(salary)
+  FROM Instructor
+ WHERE  dept_name = 'Comp. Sci.'
+ '''
+{{!sql(answer, dbs=dbs, sort=True, points=20, name='Maximum.Computer.Science.Salary')}}
+%include('viewAnswer')
+
+---
+
+**Names.Computer.Science.Maximum.Salary:** What is (are) the names of the faculty in the computer science department that make the most money?
+% answer = '''
+--- Temporary relation
+WITH max_salary AS (SELECT MAX(salary) as salary
+                      FROM Instructor
+                     WHERE  dept_name = 'Comp. Sci.')
+SELECT name
+  FROM Instructor I, Max_salary M
+ WHERE I.salary >= M.salary  AND
+       dept_name = 'Comp. Sci.'
+'''
+{{!sql(answer, dbs=dbs, sort=True, points=20, name='Names.Computer.Science.Maximum.Salary')}}
+%include('viewAnswer')
+%include('viewAnswer', answer='''
+--- Average salary in subquery
+SELECT name
+  FROM Instructor
+ WHERE dept_name = 'Comp. Sci.' AND
+       salary >= (SELECT MAX(salary)
+                    FROM Instructor
+                   WHERE dept_name = 'Comp. Sci.')
+''')
+
+---
+
+**Names.Computer.Science.Larger.Than.Average:** What is are the names of the computer science faculty that make more than the average salary of the people in the computer science department?
+% answer = '''
+WITH Avg_salary AS (SELECT AVG(salary) as salary
+                      FROM Instructor
+                     WHERE  dept_name = 'Comp. Sci.')
+SELECT name
+  FROM Instructor I, Avg_salary A
+ WHERE I.salary >= A.salary AND
+       dept_name = 'Comp. Sci.'
+ '''
+{{!sql(answer, dbs=dbs, sort=True, points=20, name='Names.Computer.Science.Larger.Than.Average')}}
+%include('viewAnswer')
+
+---
+
+
+
+
+% include('worksheet-submit.md')

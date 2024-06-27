@@ -1,0 +1,14 @@
+keys_per_block: 2
+cellborder: 1
+tree:
+  keys: [A, B]
+  children:
+    - keys: [C, D]
+      children:
+        - keys: [12*, 16*]
+        - keys: [22*, 23*]
+    - keys: [E, F]
+      children:
+        - keys: [25*, 26*]
+        - keys: [29*, 32*]
+        - keys: [35*, 37*]

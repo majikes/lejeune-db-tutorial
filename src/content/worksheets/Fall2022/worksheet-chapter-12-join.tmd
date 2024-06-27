@@ -1,0 +1,137 @@
+<%
+setInfo(
+      due="2021-10-19 15:15:00",
+      needsSubmitCode=True,
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      harley87=dict(needsSubmitCode=False, due='2021-10-26 15:15:00')),
+)
+dbs = ['states-B.sqlite']
+%>
+
+# Chapter 12 Join
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+<!-- https://courses.cs.duke.edu/fall17/compsci516/Lectures/Lecture-10-QueryEval-Join.pdf -->
+**Join.Loops:** What are the three types of loops used for joins?  
+**NOTE:** Enter the result as a sum.
+For example, if you think the answer is A, B, and C (cases sensitive) write `A + B + C`.  
+ **A.** Simple loops  
+ **B.** Infinite loops  
+ **C.** Index nested loops  
+ **D.** Key nested loops  
+ **E.** Block nested loops  
+ **F.** Block head nested loops  
+% answer = 'A + C + E'
+% answer2 = f'''There are three types of loops simple, block and index
+Answer {answer}'''
+{{!expression(answer, dict(A=1, B=2, C=3, D=4, E=5, F=6), dict(A=2, B=3, C=4, D=5, E=6, F=7), name='Join.Loops', points=5)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+Suppose the database contains two tables:  
+
+`Sailors(sid: integer, sname: string, rating: integer, age: real)`  
+`Reserves(sid: integer, bid: integer, day: dates, rname: string)`  
+
+Assume that there are 40,000 tuples in Sailors taking 500 pages with 80 tuples per page.
+Assume that there are 100,000 tuples in Reserves taking 1,000 pages with 100 tuples per page.
+
+**Simple.Nested.R:** Using a simple nested loop join and no buffer optimization,
+how many I/Os does it take to complete the following join 
+using Reserves as the outer loop?  
+<code>SELECT S.sname, R.day<br />
+&nbsp;&nbsp;FROM Reserves R, Sailors S<br />
+&nbsp;WHERE S.sid = R.sid</code>  
+% answer = '1000 + 100 * 1000 * 500'
+% answer2 = f''' The outer loop has to read 100,000 Reserves tuples one block
+at a time, that's 1000 I/Os
+
+For each tuple within Reserves (100,000) is going to require 500 blocks read.
+
+Answer {answer}'''
+{{!expression(answer, dict(M=1), points=5, name='Simple.Nested.R')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Simple.Nested.S:** Using the same assumptions as **Simple.Nested.R**
+but using Sailors as the outer loop,
+how many I/Os does it take to complete the join?  
+% answer = '500 + 80 * 500 * 1000'
+% answer2 = f''' The outer loop has to read 40,000 Sailors tuples one block
+at a time, that's 500 I/Os
+
+For each tuple within Sailors (40,000) is going to require 1,000 blocks read.
+
+Answer {answer}'''
+{{!expression(answer, dict(M=1), points=5, name='Simple.Nested.S')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Block.Nested.Loop.R:** Using the same SQL query with Reserves as the outer loop,
+but using Block Nested Loop with no buffer optimization,
+how many I/Os does it take to complete the join?  
+% answer = '1000 + 1000 * 500'
+% answer2 = f''' The outer loop has to read 100,000 Reserves tuples one block
+at a time, that's 1000 I/Os
+
+For each block within Reserves (1,000) is going to require 500 blocks read.
+
+Answer {answer}'''
+{{!expression(answer, dict(M=1), points=5, name='Block.Nested.Loop.R')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Block.Nested.Loop.S:** Using the same assumptions from **Block.Nested.Loop.$**,
+but using Sailors as the outer loop with no buffer optimization,
+how many I/Os does it take to complete the join?  
+% answer = '500 + 1000 * 500'
+% answer2 = f''' The outer loop has to read 40,000 Sailor tuples one block
+at a time, that's 500 I/Os
+
+For each block within Sailors is going to require 1000 blocks read.
+
+Answer {answer}'''
+{{!expression(answer, dict(M=1), points=5, name='Block.Nested.Loop.S')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Index.Nested.Loop.S:** Using the same SQL query, but assume that Reserves
+has a hash index on `bid`
+and that on average, due to bucket overloads, that it takes 1.2 I/Os to find the actual tuple,
+how many I/Os does it take to complete the join?  
+% answer = '500 + 40000 * 1.2'
+% answer2 = f''' The outer loop has to read 40,000 Sailor tuples one block
+at a time, that's 500 I/Os
+
+For each one, of the 40,000 Reserve tuples we need to do 1.2 I/Os.
+
+Answer {answer}'''
+{{!expression(answer, dict(M=1), points=5, name='Index.Nested.Loop.S')}}
+%include('viewAnswer', answer=answer2)
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

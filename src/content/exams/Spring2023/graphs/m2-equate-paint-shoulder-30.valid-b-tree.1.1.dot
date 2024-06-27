@@ -1,0 +1,78 @@
+digraph G
+{
+    splines=false
+    ranksep="0.1"
+    nodespe="0.1"
+    root_node
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">10</td>
+                        <td port="connector1"></td>
+                        <td port="key1">15</td>
+                        <td port="connector2"></td>
+                        <td port="key2">_</td>
+                        <td port="connector3"></td>
+                    </tr>
+                </table>>
+    ]
+    leaf_node_1
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">1*</td>
+                        <td port="key1">5*</td>
+                        <td port="key2">6*</td>
+                    </tr>
+                </table>>
+    ]
+    leaf_node_2
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">11*</td>
+                        <td port="key1">12*</td>
+                        <td port="key2">14*</td>
+                    </tr>
+                </table>>
+    ]
+    leaf_node_3
+    [
+        shape = none
+        label = <<table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="key0">16*</td>
+                        <td port="key1">_</td>
+                        <td port="key2">_</td>
+                    </tr>
+                </table>>
+    ]
+
+    root_label [ shape = none label="root" ]
+    root_label -> root_node:"connector0"
+
+    root_node:"connector0" -> leaf_node_1:"key0" 
+    root_node:"connector1" -> leaf_node_2:"key0"
+    root_node:"connector2" -> leaf_node_3:"key0" 
+
+    // leaf labels
+    leaf_label_1 [ shape=none label="leaf 1"]
+    leaf_label_1 -> leaf_node_1:"key0"
+    leaf_label_2 [ shape=none label="leaf 2"]
+    leaf_label_2 -> leaf_node_2:"key0"
+    leaf_label_3 [ shape=none label="leaf 3"]
+    leaf_label_3 -> leaf_node_3:"key0"
+
+    // make invisible ranks
+    leaves [style=invisible]
+    leaves -> leaf_label_1 -> leaf_label_2 -> leaf_label_3 [style=invis constraint=false];
+    leaf_node_1 -> leaf_node_2 -> leaf_node_3 [dir="both" constraint=false];
+
+    {rank=min; root_label root_node}
+    {rank=same; leaf_node_1 leaf_node_2 leaf_node_3}
+    {rank=max; leaf_label_1 leaf_label_2 leaf_label_3 }
+}

@@ -1,0 +1,24 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Department;
+CREATE TABLE Department (dept_name  varchar(20) NOT NULL, 
+                         building   varchar(15), 
+                         budget     numeric(12,2) check (budget > 0),
+                         primary key (dept_name));
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Biology', 'Watson', '90000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Comp. Sci.', 'Taylor', '100000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Elec. Eng.', 'Taylor', '85000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Finance', 'Painter', '120000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('History', 'Painter', '50000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Music', 'Packard', '80000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Physics', 'Watson', '70000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Wizards', 'Hogwarts', '120000');
+
+
+SELECT 'List all departments and their information' AS '';
+SELECT *
+  FROM Department;
+
+SELECT "Can't forget the depart_name in the insert!" AS '';
+-- INSERT INTO DEPARTMENT(building, budget) VALUES ('Brooks', '120000');
+-- INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES (null, 'Brooks', '120000');

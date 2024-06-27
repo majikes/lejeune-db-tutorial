@@ -1,0 +1,76 @@
+<%
+from datetime import datetime, date
+import json
+setInfo(
+      assessment_type='worksheet',
+)
+with open('game-crime.json', encoding='utf-8') as fid:
+    game_data = json.load(fid)
+dbs = ['crime00.sqlite']
+%>
+
+# Crime game worksheet
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+## {{!linkable_header('Schema')}}
+
+<figure>
+  <img src="https://comp421.cs.unc.edu/static/images/game-crime-schema.png"
+     style="width:75%; ">
+  <figcaption>Schema diagram for the crime database game</figcaption>
+</figure>
+
+
+---
+
+% for line in game_data['schema'].split('\n'):
+  % if line[:6] == 'CREATE':
+     {{line}}<br/>
+  % else:
+     &nbsp;&nbsp;&nbsp;&nbsp;{{line}}<br/>
+  % end
+% end
+
+## {{!linkable_header('Questions')}}
+
+
+---
+
+**Question.1**: Above I gave you the schema.
+But the system catalog for the database is a relation in the database.
+
+Enter the following command to find the tables in the database:
+
+% answer = f'''
+SELECT sql
+  FROM sqlite_master
+ WHERE type='table'
+'''
+```
+{{!answer}}
+```
+{{!sql(answer, dbs=dbs, points=10, name='Question.1', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.2**: Get the schema for table with the attribute Name of 'Drivers_Licenses'
+% answer = f'''
+SELECT sql
+  FROM sqlite_master
+ WHERE type='table' and
+       name = 'Drivers_Licences'
+       
+'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.2', sort=True)}}
+% include('viewAnswer')
+
+---
+
+% include('worksheet-submit.md')

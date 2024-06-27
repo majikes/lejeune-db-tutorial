@@ -1,0 +1,6 @@
+    <nav>
+      <ul>
+        <li><a href="{{get_url('root')}}">Home</a></li>
+        <li><a href='{{get_url('logout')}}'>Logout</a></li>
+      </ul>
+    </nav>

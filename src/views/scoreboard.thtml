@@ -1,0 +1,243 @@
+<style>
+  </style>
+  <style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  h1 {
+    padding: 10px 0 0 10px;
+    text-align: center;
+    color: #444;
+    font-size: 30pt;
+  }
+  
+  h4 {
+    font-size: 20pt;
+  }
+  
+  img {
+    border-radius: 5px 5px 0 0;
+  }
+  
+  table {
+    border: 2px solid black;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    display: inline-table;
+  }
+  
+  td {
+    border: 2px solid black;
+    padding: 3px;
+    font-size: 13pt;
+  }
+  
+  tr {
+    border: none;
+  }
+  
+  th {
+    font-size: 17pt;
+  }
+  
+  .card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 10px; /* 5px rounded corners */
+    background-color: #FFF;
+  }
+  
+  /* On mouse-over, add a deeper shadow */
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+  
+  /* Add some padding inside the card container */
+  .container {
+    padding: 2px 16px;
+    text-align: center;
+  }
+  
+  
+  .flex {
+    --spacing: 4px;
+    --direction: row;
+    --align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: var(--align);
+    flex-direction: var(--direction);
+  }
+  
+  /* Adjust the spacing of all (immediate) inner children */
+  .flex > * + * {
+    margin-left: var(--spacing);
+  }
+  
+  /* Horizontally stack items in line. */
+  .hstack {
+    --direction: row;
+  
+  }
+  
+  .hstack:nth-child(even) {
+    background-color: #FFF;
+  }
+  
+  /* Vertically stack items on top of each other. */
+  .vstack {
+    --align: stretch;
+    --direction: column;
+  }
+  /* Adjust spacing for vertically stacking items */
+  .vstack > * + * {
+    margin-left: unset;
+    margin-top: var(--spacing);
+  }
+  
+  
+  /* Adaptive take up space within a stack, used for content or for pushing items. */
+  .spacer {
+    flex: 1;
+  }
+  
+  /* MODIFIERS */
+  /* Adjusts spacing between items */
+  .--sp1 {
+    --spacing: calc(var(--grid) * 1);
+  }
+  .--sp2 {
+    --spacing: calc(var(--grid) * 2);
+  }
+  .--sp3 {
+    --spacing: calc(var(--grid) * 3);
+  }
+  .--sp4 {
+    --spacing: calc(var(--grid) * 4);
+  }
+  .--sp5 {
+    --spacing: calc(var(--grid) * 5);
+  }
+  .--sp6 {
+    --spacing: calc(var(--grid) * 6);
+  }
+  
+  /* Adjusts alignment of items within a stack. */
+  .--top {
+    --align: flex-start;
+  }
+  .--left {
+    justify-content: flex-start;
+  }
+  .--center {
+    justify-content: center;
+  }
+  .--right {
+    justify-content: flex-end;
+  }
+  .--edge {
+    justify-content: space-between;
+  }
+  
+  /* Vertically center items in a VStack */
+  .--v-center {
+    --align: center;
+  }
+  
+  /* RESPONSIVE */
+  /* Responsive styles to swap between HStack and VStack for tablet/desktop */
+  @media (min-width: 40em) {
+    .vstack\@md {
+      --align: stretch;
+      --direction: column;
+    }
+    .vstack\@md > * + * {
+      margin-left: unset;
+      margin-top: var(--spacing);
+    }
+  }
+  @media (min-width: 60em) {
+    .vstack\@lg {
+      --align: stretch;
+      --direction: column;
+    }
+    .vstack\@lg > * + * {
+      margin-left: unset;
+      margin-top: var(--spacing);
+    }
+  }
+  p.code {
+    text-align: center;
+    font-size: 60px;
+    margin: 0;
+  }
+  p#url {
+    text-align: center;
+    font-size: 40px;
+    font-family: monospace;
+    margin: 0;
+  }
+  p#notes {
+    margin: 0;
+    font-siz
+  </style>
+ <script>
+   var meta = document.createElement("meta");
+   meta.httpEquiv = "refresh";
+   meta.content = "30"; // 30 seconds
+   document.getElementsByTagName('head')[0].appendChild(meta);
+ </script>
+  
+ <%
+  from assessments import assessments_matching, assessments_sorted
+  games = sorted({x.key for x in game_assessments})
+  %>
+  
+  
+  <h1>Scoreboard for {{key}}</h1>
+  <h2>Submit Code</h2>
+  <p class="code">
+    Code <span id="code">{{code}}</span>
+    Time <span id="time">{{time}}</span>
+  </p>
+
+  <h2>Game Data</h2>
+  <div class="flex vstack">
+    <div class="flex hstack">
+      % for game in games:
+      <div class="flex vstack">
+        <div class="card">
+          <div class="container">
+            <h4><strong>{{game}}</strong></h4> 
+              <%
+              # Get the assessments for this key
+              these_assessments = assessments_matching(game_assessments, 'key', game)
+              for gameBonusInfo in bonus_info:
+                  podium_assessments = assessments_sorted(these_assessments,
+                                                          gameBonusInfo.assessment_field,
+                                                          reverse=gameBonusInfo.sort_descending,
+                                                          minimum_number=gameBonusInfo.podium_size)
+               %>
+                  <table>
+                    <tr>
+                      <th colspan="2"><strong>{{!gameBonusInfo.reason.replace(' ', '<br/>')}}</strong></th>
+                    </tr>
+                    % for assessment in podium_assessments:
+                      <tr>
+                        <td>{{assessment.game_alias_name   if assessment else "N/A"}}</td>
+                        <td>{{getattr(assessment, gameBonusInfo.assessment_field) if assessment else "---"}}</td>
+                      </tr>
+                    % end
+                  </table>
+              % end
+          </div>
+        </div>
+      </div>
+      % end
+    </div>
+  </div>
+  
+  % rebase('assessment.base')

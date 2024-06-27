@@ -1,0 +1,137 @@
+<%
+setInfo(
+      assessment_type='worksheet',
+)
+symbols = ['True', 'False']
+%>
+
+# Pre-chapter 4 worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+
+## {{!linkable_header('Questions')}}
+
+---
+
+**Natural.Join.True.False:** Answer the following questions about SQL Joins with true or false.  
+<%
+answer = ['True', 'False', 'False']
+answer2 = f'''
+{answer[0]} Page 127.  True.  Two relations in and one output
+{answer[1]} Page 127.  False, Natural join returns only tuples that have matching values in the attributes that appear in both input schema
+{answer[2]} Page 127. False there are multiple types of joins
+'''
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+A natural join has two relations as input and one relation as output,{answer[0]}
+If both input relations have at least one attribute of the same name&#44; a natural join produces a result of the same cardinality as a Cartesian Product,{answer[1]}
+There is only one type of join in SQL&#44; the natural join,{answer[2]}
+''', symbols=symbols, name='Natural.Join.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+
+**Left.Join.True.False:** Answer the following True and False questions about the join below using the relations from chapter 4.
+```
+select *
+  from student natural left outer join takes
+```
+<%
+answer = ['True', 'False', 'False']
+answer2 = f'''
+{answer[0]} Page 133. True.  See ID 70557
+{answer[1]} Page 133. False.  That's why course_id is null
+{answer[2]} Page 132. False. Tanaka has no grade in takes see Figure 4.3
+'''
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+The student Snow appears in the output,{answer[0]}
+Student Snow's ID is in the relation takes,{answer[1]}
+Student Tanaka has a null grade for BIO-301 because there is no tuple with ID=98988 and course_id=BIO-301,{answer[2]}
+''', symbols=symbols, name='Left.Join.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+
+**Right.Join.True.False:** Answer the following True and False questions about the join below using the relations from chapter 4.
+```
+select *
+  from takes natural right outer join student
+```
+<%
+answer = ['True', 'True', 'False']
+answer2 = f'''
+{answer[0]} Page 132. True at the bottom of the page
+{answer[1]} Page 133. True.
+{answer[2]} Page 132/2 False.
+'''
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+Swapping the order of the input relations you can rewrite a left join to a right join,{answer[0]}
+Other than the order of the attribute results&#44; the output relation for the book's left and right joins are the same,{answer[1]}
+The output relation for the book's left and right join are the same because there is no difference between a left and right join,{answer[2]}
+''', symbols=symbols, name='Right.Join.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Views.True.False::** Answer the following questions about views
+<%
+answer = ['True', 'True', 'False']
+answer2 = f'''
+{answer[0]} Page 132 True https://comp421.cs.unc.edu/syllabi/reading
+{answer[1]} Page 137 True
+{answer[2]} Page 137 False you always use a select
+'''
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+According to the class reading list&#44; you can skip reading section 4.2.3 and 4.2.4,{answer[0]}
+A view can create a virtual relation that better matches a certain user's intuition of the structure of the enterprise,{answer[1]}
+When creating a view&#44; you never use a select statement,{answer[2]}
+''', symbols=symbols, name='Views.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+
+---
+
+**Transaction.True.False:** Answer the following questions about SQL set and Transaciton operations with true or false.  
+<%
+answer = ['True', 'True', 'True']
+answer2 = f'''
+{answer[0]} Page 143.  True.  Part of the definition on the page
+{answer[1]} Page 143.  True.  Part of the definition on the page
+{answer[2]} Page 143.  True.  Part of the definition on the page
+'''
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+A transaction consists of a sequence of query and/or update statements,{answer[0]}
+A commit can be part of a transaction,{answer[1]}
+A rollback can be part of a transatction,{answer[2]}
+''', symbols=symbols, name='Set.Null.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Integrity.Constraints.True.False:** Answer the following questions about integrity constraints.  
+<%
+answer = ['False', 'True','False']
+answer2 = f'''
+{answer[0]} Page 146. False.  not null, unique and check
+{answer[1]} Page 149 True.
+{answer[2]} Page 150 False, you have to say ON DELETE CASCADE
+'''
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+The three constraints on a single operation discussed in the chapter are not null&#44; unique&#44; and validate,{answer[0]}
+A foreign key can reference a primary key or a unique integrity constraint,{answer[1]}
+When a foreign key is deleted&#44; the referencing tuples are always deleted,{answer[2]}
+''', symbols=symbols, name='Advanced.Null.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+% include('worksheet-submit.md')

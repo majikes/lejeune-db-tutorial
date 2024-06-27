@@ -1,0 +1,249 @@
+<%
+import json
+from datetime import datetime
+with open('game-nuclear.json') as fid:
+    game_data = json.load(fid)
+NUM_TEAMS = game_data['NUM_TEAMS']
+NUM_MEMBERS = game_data['NUM_MEMBERS']
+points_limit = 100
+setInfo(
+        needsSubmitCode=True,
+        assessment_type='game',
+        due='2022-10-24 10:55:00',
+        exceptions=dict(jess53=dict(needsSubmitCode=False, due='2022-10-28 00:00:00'),
+                        _003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        max_segments=3,
+        maxpenalty=1.00, penalty=.20,
+        points_limit=points_limit,
+        points_total=NUM_TEAMS*NUM_MEMBERS*points_limit,
+       )
+dbs=[f'game-nuclear{team_number%NUM_TEAMS}{member_number%NUM_MEMBERS}.sqlite']
+
+from collections import namedtuple
+PAGE_INFO = namedtuple('PAGE_INFO', '''bytes rec_per_page pages keys_per_page fanout''')
+page_infos = [dict(persons=PAGE_INFO(bytes=256, rec_per_page=32, pages=300,
+                                     keys_per_page=150, fanout=75),
+                   parts=PAGE_INFO(bytes=126, rec_per_page=64, pages=100,
+                                   keys_per_page=125, fanout=85),
+                   buffers=102),
+              dict(persons=PAGE_INFO(bytes=256, rec_per_page=32, pages=100,
+                                     keys_per_page=150, fanout=100),
+                   parts=PAGE_INFO(bytes=100, rec_per_page=64, pages=150,
+                                   keys_per_page=125, fanout=85),
+                   buffers=102),
+              dict(persons=PAGE_INFO(bytes=200, rec_per_page=32, pages=100,
+                                     keys_per_page=150, fanout=125),
+                   parts=PAGE_INFO(bytes=100, rec_per_page=64, pages=100,
+                                   keys_per_page=125, fanout=85),
+                   buffers=102),
+              dict(persons=PAGE_INFO(bytes=225, rec_per_page=32, pages=200,
+                                     keys_per_page=150, fanout=75),
+                   parts=PAGE_INFO(bytes=125, rec_per_page=64, pages=100,
+                                   keys_per_page=125, fanout=85),
+                   buffers=102),
+              ]
+assert len(page_infos) == NUM_MEMBERS
+
+from math import ceil, log
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+# 4 Nuclear Database Escape Room
+
+<div>
+  <center><img src="{{static('images/NuclearPlantRooms.jpg')}}" style="width: 50%; transform:rotate(90deg);"/></center>
+  <div style="text-align: center" >Emirates Nuclear Energy Corporation, United Arab Emerates</div>
+</div>
+
+---
+
+## {{!linkable_header('SQL Tutorial Cheat Sheet')}}
+
+Following are three SQL tutorial cheat sheets available from http://www.sqltutorial.org
+
+<img src="{{static('images/SQLTutorial.1.jpeg')}}" style="width:85%" alt="First of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.2.jpeg')}}" style="width:85%" alt="Second of three SQL Tutorial cheat sheets"/>
+<img src="{{static('images/SQLTutorial.3.jpeg')}}" style="width:85%" alt="Third of three SQL Tutorial cheat sheets"/>
+
+---
+
+## {{!linkable_header('Nuclear Game Database Schema')}}
+
+Here is the tables you'll find for the database used in the games.
+ 
+<div class="row">
+  <pre>
+   <code class="sql">
+% for line in game_data['schema'].split('\n'):
+   {{!line}}   
+% end
+   </code>
+  </pre> 
+</div>
+
+---
+
+## {{!linkable_header('Game format')}}
+
+
+The game is multiple submissions.
+You answer one part of the game, submit it, and you are presented with the next stage of the game.
+Once you submit a part of the game, you <font color='red'>cannot</font> go back.
+
+In the following scratch space.
+You can use it to test out queries.
+There are no points for the following SQL query.
+It is a scratch pad.
+{{!sql(''' select 1 ''', name='_scratch_sql_queries_1', dbs=dbs)}}
+
+---
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}}
+
+% for team in range(NUM_TEAMS):
+   % for member in range(NUM_MEMBERS):
+
+     % if section == '003' or ((member_number % NUM_MEMBERS) == member and (team_number % NUM_TEAMS) == team):
+       % gd = game_data[f'{team}{member}']
+       % incident_date_str = gd['report_info']['incident_date_str']
+       % incident_date = gd['report_info']['incident_date']
+       % company_name = gd['company_info']['name']
+       % contact_name = gd['contact_info']['name']
+       % saboteur_info = gd['saboteur_info']
+       % saboteur_gender = saboteur_info['gender']
+
+
+Given the information so far, you called {{gd['contact_info']['phone_number']}}.
+The contact's name is {{contact_name}}.
+
+You've also discovered that one company, {{company_name}}, was the manufacturer / installer
+of _all_ the parts that were repaired at the SQL City Nuclear Power Company.
+And amazingly, one employee at {{company_name}}, {{saboteur_info['name']}}, opened hundreds more doors than anyone else.
+But your last connection went dead when you relayed the information to {{contact_name.split()[0]}}.
+
+You have another call with {{contact_name.split()[0]}} that goes something like this:
+
+> {{saboteur_info['name'].split()[0]}} is dead.  {{'His' if saboteur_gender == 'male' else 'Her'}} badge shows {{'he' if saboteur_gender == 'male' else 'she'}}  was not a permanent
+> employee at {{company_name}}. {{'He' if saboteur_gender == 'male' else 'She'}} was a {{saboteur_info['employee_type']}}.
+> I was able to get some information from {{'him' if saboteur_gender == 'male' else 'her'}} before {{'he' if saboteur_gender == 'male' else 'she'}} died.
+>
+> I hope you're a good SQL programmer because this totally doesn't make sense to me.
+>
+> {{saboteur_info['name'].split()[0]}} went into a villians monologue.
+> {{'He' if saboteur_info['gender'] == 'male' else 'She' }} said that the part that had the bomb had a part id that matched 
+> some I/O analysis {{'he' if saboteur_gender == 'male' else 'she'}} had done.  And since I wasn't a SQL programmer
+> {{'he' if saboteur_info['gender'] == 'male' else 'she'}} was confident the information wouldn't help me.
+> She said there was some kind of I/O analysis only a smart SQL programmer would be able to get.
+>
+> {{'He' if saboteur_gender == 'male' else 'She'}} said, find the number of I/Os required to find {{'his' if saboteur_gender == 'male' else 'her'}} id in the Persons' table.
+> That number is the id of the Parts table with where the bomb is.
+>
+> Can you find the number of I/Os and the part?
+
+---
+
+### Person's table information 
+
+Assume that each tuple in the Persons' table takes {{page_infos[member]['persons'].bytes}} bytes
+and are stored {{page_infos[member]['persons'].rec_per_page}} data records in an 8K table.
+The Persons' table data records require {{page_infos[member]['persons'].pages}} pages.
+
+There is a hash index on the id and the company id.
+On average, one out of four hash primary buckets have an overflow bucket
+therefore it takes 1.2 I/Os, on average, to get to a data record.
+
+There is also a B+ tree index with a search key of $\langle$ name, street_address $\rangle$.Each index entry holds {{page_infos[member]['persons'].keys_per_page}} keys and the average fanout is {{page_infos[member]['persons'].fanout}}.
+
+---
+
+### Part's table information
+
+Assume that each tuple in the Part's table takes {{page_infos[member]['parts'].bytes}} bytes
+and are stored {{page_infos[member]['parts'].bytes}} data records in an 8K table.
+The Parts' table data records require {{page_infos[member]['parts'].pages}} pages.
+
+There is a hash index on the id.
+On average, one out of four hash primary buckets have an overflow bucket
+therefore it takes 1.2 I/Os, on average, to get to a data record.
+
+There is also a B+tree index with a search key of $\langle$ part_name, part_number, part_type $\rangle$.
+Each index entry holds {{page_infos[member]['parts'].keys_per_page}} keys and the average fanout is {{page_infos[member]['parts'].fanout}}.
+
+---
+
+### Buffer Manager
+
+The buffer manager has {{page_infos[member]['buffers']}} buffer pages to limit the numbers of I/Os.
+
+---
+
+**Number.I/Os.{{team}}.{{member}}:** Given the above assumptions, 
+how many I/Os would it take to retrieve the part name in the Parts table that 
+has an id equal to the Persons id for {{saboteur_info['name']}}.  
+**NOTE:** I/Os are integers so round up if you get a float number.  
+% answer = f"{ceil(log(page_infos[member]['persons'].pages, page_infos[member]['persons'].fanout) + 1) + ceil(1.2)}"
+% answer2 = f'''
+The Select statement would look like:
+
+SELECT name
+  FROM Parts, Persons
+ WHERE Persons.name='{saboteur_info['name']}' AND
+       Persons.id = Parts.id and
+       Parts.installed = true
+
+Given that the Persons table has {page_infos[member]['persons'].pages} and a average fanout of {page_infos[member]['persons'].fanout}...
+The access path would be first find {saboteur_info['name']} which 
+is $\lceil log_{{ {page_infos[member]['persons'].fanout} }}({page_infos[member]['persons'].pages}) \\rceil + 1 = { ceil(log(page_infos[member]['persons'].pages, page_infos[member]['persons'].fanout)) + 1 } $
+
+The access path for the part would be the hash index to find the part
+The hash lookup in the Parts table takes 1.2 I/Os.
+Rounded up the has lookup takes {ceil(1.2)}
+
+Answer: {answer}'''
+% choices = [f'{x}' for x in range(10)] + [f'{x*10}' for x in range(10)]
+{{!select(answer, choices, points=50, name=f' Number.I/Os.{team}.{member}')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+After thinking about the fact that {{saboteur_info['name']}} is going into a monologue,
+maybe {{'he' if saboteur_info['gender'] == 'male' else 'she' }} is mad like a James Bond villian or like Thanos.
+You decide to get the part information that {{saboteur_info['name']}} was talking about.
+
+**Sabotage.Part.{{team}}.{{member}}:** Write a SQL query to retrieve the part name,
+part number, and part type that is installed that has the same Part id as {{saboteur_info['name']}}'s Person id.  
+% answer = f'''
+SELECT part_name, part_number, part_type
+  FROM Parts, Persons
+ WHERE Persons.name='{saboteur_info['name']}' AND
+       Parts.installed = true AND
+       Persons.id = Parts.id
+'''
+{{!sql(answer, dbs=[gd['database_fn']], sort=True, points=50, name=f' Sabotage.Parts.{team}.{member}')}}
+% include('viewAnswer', answer2=answer)
+
+---
+
+After phoning this information to {{contact_name.split()[0]}}
+you get the following text:
+
+> That did it.
+>
+> I was able to deactivate the bomb.
+
+You faint but not before submitting your last game worksheet.
+
+---
+
+   %end
+ %end
+%end
+
+
+% if 'submit' in pages:
+% include('games-pledge.md', segment='1')
+% include('submit.md')
+%end

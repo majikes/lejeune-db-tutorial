@@ -1,0 +1,59 @@
+PRAGMA foreign_keys = ON; 
+
+DROP TABLE IF EXISTS Department;
+CREATE TABLE Department (dept_name varchar(20) PRIMARY KEY,
+                         building  varchar(15), 
+                         budget    numeric(12,2) check (budget > 0));
+INSERT INTO DEPARTMENT (dept_name, building, budget) VALUES ('Biology',    'Watson',  '90000');
+INSERT INTO DEPARTMENT (dept_name, building, budget) VALUES ('Comp. Sci.', 'Taylor',  '100000');
+INSERT INTO DEPARTMENT (dept_name, building, budget) VALUES ('Elec. Eng.', 'Taylor',  '85000');
+INSERT INTO DEPARTMENT (dept_name, building, budget) VALUES ('Finance',    'Painter', '120000');
+INSERT INTO DEPARTMENT (dept_name, building, budget) VALUES ('History',    'Painter', '50000');
+INSERT INTO DEPARTMENT (dept_name, building, budget) VALUES ('Music',      'Packard', '80000');
+INSERT INTO DEPARTMENT (dept_name, building, budget) VALUES ('Physics',    'Watson',  '70000');
+
+DROP TABLE IF EXISTS Instructor;
+CREATE TABLE Instructor (ID INTEGER PRIMARY KEY,
+                         name CHAR(20), 
+                         dept_name CHAR(20), 
+                         salary INTEGER CHECK (salary > 10000),
+                         foreign key(dept_name) references Department(dept_name)
+												     ON DELETE Cascade );
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (10101, 'Srinivasan', 'Comp. Sci.', 65000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (12121, 'Wu',         'Finance',    90000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15151, 'Mozart',     'Music',      40000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (22222, 'Einstein',   'Physics',    95000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (32343, 'El Said',    'History',    60000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (33456, 'Gold',       'Physics',    87000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (45565, 'Katz',       'Comp. Sci.', 75000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (58583, 'Califieri',  'History',    62000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76543, 'Singh',      'Finance',    80000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76766, 'Crick',      'Biology',    72000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (83821, 'Brandt',     'Comp. Sci.', 92000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (98345, 'Kim',        'Elec. Eng.', 80000);
+
+SELECT 'The Instructor Relation:' as '';
+SELECT *
+  FROM Instructor;
+
+SELECT 'The Department Relation:' as '';
+SELECT *
+  FROM Department;
+
+SELECT 'Insert an instructor into a deparment of Wizardry' AS '';
+INSERT INTO Department (dept_name, building, budget) VALUES('Wizardry', 'Hogwarts', 10000);
+INSERT INTO Instructor (ID, name, dept_name, salary)
+                 VALUES ('666666', 'Harry Potter', 'Wizardry', '150000');
+
+SELECT 'Show the instructors and the buildings they are in' AS '';
+SELECT I.name, D.building
+  FROM Instructor AS I, Department as D
+ WHERE I.dept_name = D.dept_name;
+
+SELECT 'Delete the Wizardyry department' AS '';
+DELETE FROM Department where dept_name = 'Wizardry';
+
+SELECT 'Show the instructors' AS '';
+SELECT 'Where is Harry Potter' AS '';
+SELECT *
+  FROM Instructor;

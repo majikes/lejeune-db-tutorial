@@ -1,0 +1,220 @@
+<%
+import json
+with open('wkst.university1.json') as fid:
+    university_data = json.load(fid)
+setInfo(assessment_type='worksheet')
+dbs = ['wkst.university1.sqlite', 'wkst.university2.sqlite']
+%>
+
+# 04 Inner versus outer Join
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+
+<figure style="border: 0" class="center">
+ <img src="https://comp421.cs.unc.edu/static/images/Chapter.04-Course.Takes.Venn.Diagram.png"
+      style="width:50%"/>
+ <figcaption>Venn Diagram</figcaption>
+</figure>
+
+---
+
+Course relation instance:
+
+<style>
+table, th, td {
+ border: 2px solid black;
+}
+</style>
+<table>
+ <tr>
+  <th>course_id</th>
+  <th>title</th>
+  <th>dept_name</th>
+  <th>credits</th>
+ </tr>
+ <tr>
+  <td>BIO101</td>
+  <td>Intro. to Biology</td>
+  <td>Biology</td>
+  <td>3</td>
+ </tr>
+ <tr>
+  <td>BIO301</td>
+  <td>Genetics</td>
+  <td>Biology</td>
+  <td>3</td>
+ </tr>
+ <tr>
+  <td>BIO399</td>
+  <td>Computational Biology</td>
+  <td>Biology</td>
+  <td>3</td>
+ </tr>
+</table>
+
+Takes relation instance
+
+<table>
+ <tr>
+  <th>ID</th>
+  <th>course_id</th>
+  <th>sec_id</th>
+  <th>semester</th>
+  <th>year</th>
+  <th>grade</th>
+ </tr> 
+ <tr>
+  <td>98988</td>
+  <td>BIO101</td>
+  <td>1</td>
+  <td>Summer</td>
+  <td>2017</td>
+  <td>A</td>
+ </tr> 
+ <tr>
+  <td>98988</td>
+  <td>BIO301</td>
+  <td>1</td>
+  <td>Summer</td>
+  <td>2018</td>
+  <td>NULL</td>
+ </tr> 
+</table>
+
+<%
+symbols = [
+  'BIO101',
+  'Intro. to Biology',
+  'Biology',
+  '3',
+  'BIO301',
+  'Genetics',
+  'Biology',
+  '3',
+  'BIO399',
+  'Computational Biology',
+  'Biology',
+  '98988',
+  'BIO101',
+  '1',
+  'Summer',
+  '2017',
+  'A',
+  '98988',
+  'BIO301',
+  '1',
+  'Summer',
+  '2018',
+  'NULL',
+  'ROWUNUSED',
+  ]
+%>
+---
+
+## {{!linkable_header('Questions')}}
+
+**Cartesian.Product:** Given the relational instances above, what is the result of the following join?  
+**NOTE:** This is the entire Venn Diagram  
+```sql
+SELECT C.course_id, C.title, T.year
+  FROM Course C, Takes T
+ ORDER BY C.course_id, C.title, T.year
+```
+**NOTE:** If after completing the rows returned from the query and there are rows remaining in the table,
+entry ROWUNUSED for the unused rows.
+<%
+answer = [
+ ['BIO101', 'Intro. to Biology', '2017'],
+ ['BIO101', 'Intro. to Biology', '2018'],
+ ['BIO301', 'Genetics', '2017'],
+ ['BIO301', 'Genetics', '2018'],
+ ['BIO399', 'Computational Biology', '2017'],
+ ['BIO399', 'Computational Biology', '2018'],
+]
+%>
+{{!table(inputs=0, headings='course_id, title, year', table=f'''
+{answer[0][0]},{answer[0][1]},{answer[0][2]}
+{answer[1][0]},{answer[1][1]},{answer[1][2]}
+{answer[2][0]},{answer[2][1]},{answer[2][2]}
+{answer[3][0]},{answer[3][1]},{answer[3][2]}
+{answer[4][0]},{answer[4][1]},{answer[4][2]}
+{answer[5][0]},{answer[5][1]},{answer[5][2]}
+''', symbols=symbols, name='Cartesian.Product', points=33)}}
+% include('viewAnswer')
+
+---
+
+
+**Inner.Join:** Given the relational instances above, what is the result of the following inner join?  
+**NOTE:** This is the inner part of the Venn Diagram
+```sql
+SELECT C.course_id, C.title, T.year
+  FROM Course C, Takes T
+ WHERE T.course_id = C.course_id
+ ORDER BY C.course_id, C.title, T.year
+```
+**NOTE:** If after completing the rows returned from the query and there are rows remaining in the table,
+entry ROWUNUSED for the unused rows.
+<%
+answer = [
+ ['BIO101', 'Intro. to Biology', '2017'],
+ ['BIO301', 'Genetics', '2018'],
+ ['ROWUNUSED','ROWUNUSED','ROWUNUSED'],
+ ['ROWUNUSED','ROWUNUSED','ROWUNUSED'],
+ ['ROWUNUSED','ROWUNUSED','ROWUNUSED'],
+ ['ROWUNUSED','ROWUNUSED','ROWUNUSED'],
+]
+%>
+{{!table(inputs=0, headings='course_id, title, year', table=f'''
+{answer[0][0]},{answer[0][1]},{answer[0][2]}
+{answer[1][0]},{answer[1][1]},{answer[1][2]}
+{answer[2][0]},{answer[2][1]},{answer[2][2]}
+{answer[3][0]},{answer[3][1]},{answer[3][2]}
+{answer[4][0]},{answer[4][1]},{answer[4][2]}
+{answer[5][0]},{answer[5][1]},{answer[5][2]}
+''', symbols=symbols, name='Inner.Join', points=34)}}
+% include('viewAnswer')
+
+---
+
+
+**Left.Join:** Given the relational instances above, what is the result of the following left join?  
+**NOTE:** This is the left part of the Venn Diagram
+```sql
+SELECT C.course_id, C.title, T.year
+    FROM Course C
+    LEFT JOIN Takes T
+         ON T.course_id = C.course_id
+   ORDER BY C.course_id, C.title, T.year
+```
+**NOTE:** If after completing the rows returned from the query and there are rows remaining in the table,
+entry ROWUNUSED for the unused rows.
+<%
+answer = [
+ ['BIO101', 'Intro. to Biology', '2017'],
+ ['BIO301', 'Genetics', '2018'],
+ ['BIO399', 'Computational Biology', 'NULL'],
+ ['ROWUNUSED','ROWUNUSED','ROWUNUSED'],
+ ['ROWUNUSED','ROWUNUSED','ROWUNUSED'],
+ ['ROWUNUSED','ROWUNUSED','ROWUNUSED'],
+]
+%>
+{{!table(inputs=0, headings='course_id, title, year', table=f'''
+{answer[0][0]},{answer[0][1]},{answer[0][2]}
+{answer[1][0]},{answer[1][1]},{answer[1][2]}
+{answer[2][0]},{answer[2][1]},{answer[2][2]}
+{answer[3][0]},{answer[3][1]},{answer[3][2]}
+{answer[4][0]},{answer[4][1]},{answer[4][2]}
+{answer[5][0]},{answer[5][1]},{answer[5][2]}
+''', symbols=symbols, name='Left.Join', points=34)}}
+% include('viewAnswer')
+
+
+
+% include('worksheet-submit.md')

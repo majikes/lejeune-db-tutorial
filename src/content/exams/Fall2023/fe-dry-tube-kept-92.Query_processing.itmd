@@ -1,0 +1,148 @@
+<style>
+table, th, td {
+ border: 2px solid black;
+}
+th {
+ text-align: center;
+}
+</style>
+<%
+from collections import namedtuple
+import string
+from math import ceil, log, gcd
+
+Q_PROCESS = namedtuple('Q_PROCESS', 'tuples_r1 tuples_r2 tuples_per_block_r1 tuples_per_block_r2 buffers')
+q_processes = [Q_PROCESS(tuples_r1=20000, tuples_r2=45000, tuples_per_block_r1=25, tuples_per_block_r2=30, buffers=25),
+               Q_PROCESS(tuples_r1=45000, tuples_r2=20000, tuples_per_block_r1=30, tuples_per_block_r2=25, buffers=35),
+               Q_PROCESS(tuples_r1=4000,  tuples_r2=11250, tuples_per_block_r1=5,  tuples_per_block_r2=6, buffers=25),
+               Q_PROCESS(tuples_r1=11250, tuples_r2=4000,  tuples_per_block_r1=6,  tuples_per_block_r2=5, buffers=40),
+               ]
+
+%>
+## {{!linkable_header('Query processing')}} {{points_query_processing}} points
+
+In this section, you will show your knowledge of Chapter 15 query processing
+
+**Calculator:** You may use this box as a calculator.
+Just type in any expression that can be evaluated by a JavaScript eval.
+For example, `2 ** 0.5` will show you the result of the square root of 2
+in the red box to the right.
+Leaving the box empty or filled in will **NOT** affect your grade.
+{{!calculator(name=f'_calculator.query_processing')}}
+
+---
+
+
+% for index in range(number_query_processing):
+  % if section == '003' or (team_member_number % number_b_plus_trees) == index:
+
+    <%
+    q = q_processes[index]
+    r1_blocks = q.tuples_r1 // q.tuples_per_block_r1
+    r2_blocks = q.tuples_r2 // q.tuples_per_block_r2
+    if section == '003':
+      assert r1_blocks == (q.tuples_r1 / q.tuples_per_block_r1)
+      assert r2_blocks == (q.tuples_r2 / q.tuples_per_block_r2)
+    end
+    %>
+
+    Let relation $r_1$ have {{f'{q.tuples_r1:,}'}} tuples where each block holds {{q.tuples_per_block_r1}} tuples.
+    Let relation $r_2$ have {{f'{q.tuples_r2:,}'}} tuples where each block holds {{q.tuples_per_block_r2}} tuples.
+
+    **Nested.Loop.R1.Outer.{{index+1}}:** How many block transfers are required if a nested-loop join is done with $r_1$ as the outer loop and there is only one buffer for $r_1$ and one buffer for $r_2$?  
+    **NOTE:** As previously done in class, do not count the number of block transfers required for output of the nested-loop join.  
+    % answer = f'{q.tuples_r1} * {r2_blocks} + {r1_blocks}'
+    % r1_outer_transfers = eval(answer)
+    % evaled = f'{eval(answer):,}'
+    % answer2 = f'''There are {q.tuples_r1} / {q.tuples_per_block_r1} or {r1_blocks} blocks for r1
+There are {q.tuples_r2} / {q.tuples_per_block_r2} or {r2_blocks} blocks for r2
+
+You must read in the {r1_blocks} r1 blocks on the outer loop
+For each of the {q.tuples_r1} tuples in r1 you have to read in all {r2_blocks} r2 blocks
+
+Answer: {answer} or {evaled}'''
+   {{!expression(answer, dict(M=1), dict(M=2), points=2, name=f' Nested.Loop.R1.Outer.{index+1}')}}
+    % include('viewAnswer', answer=answer2)
+
+    **Nested.Loop.R2.Outer.{{index+1}}:** How many block transfers are required if a nested-loop join is done with $r_2$ as the outer loop and there is only one buffer for $r_1$ and one buffer for $r_2$?  
+    **NOTE:** As previously done in class, do not count the number of block transfers required for output of the nested-loop join.  
+    % answer = f'{q.tuples_r2} * {r1_blocks} + {r2_blocks}'
+    % r2_outer_transfers = eval(answer)
+    % evaled = f'{eval(answer):,}'
+    % answer2 = f'''There are {q.tuples_r1} / {q.tuples_per_block_r1} or {r1_blocks} blocks for r1
+There are {q.tuples_r2} / {q.tuples_per_block_r2} or {r2_blocks} blocks for r2
+
+You must read in the {r2_blocks} r2 blocks on the outer loop
+For each of the {q.tuples_r2} tuples in r2 you have to read in all {r1_blocks} r1 blocks
+
+Answer: {answer} or {evaled}'''
+   {{!expression(answer, dict(M=1), dict(M=2), points=2, name=F' Nested.Loop.R2.Outer.{index+1}')}}
+    % include('viewAnswer', answer=answer2)
+
+  **Nested.Loop.Which.Outer.{{index+1}}:** In order to minimized the number of block transfers, which relation should be used for the outer loop?  
+  % choices = ['r1', 'r2', 'Either']
+  % answer = 'r1' if r1_outer_transfers < r2_outer_transfers else 'r2'
+  % answer2 = f''' Since using r1 as the outer nested-loop required {r1_outer_transfers} and
+since using r2 as the outer nested-loop required {r1_outer_transfers} the answer is {answer}'''
+  {{!select(answer, choices, points=1, name=f' Nested.Loop.Which.Outer.{index+1}')}}
+  %include('viewAnswer', answer=answer2)
+
+---
+
+    **Block.Nested.Loop.R1.Outer.{{index+1}}:** How many block transfers are required if a block nested-loop join is used with $r_1$ as the outer relation?   
+    Assume the enhanced version of block nested-loop join where $M$ blocks are used for buffering of input of $r_1$ and $r_2$ and one buffer reserved to collect the output of the join.  
+    **NOTE$_1$:** As previously done in class, do not count the number of block transfers required for output of the block nested-loop join.  
+    **NOTE$_2$:** Remember, the evaluation box allows you to use functions floor(), ceil(), and log().
+    %answer = f'ceil({r1_blocks}/(M-2)) * {r2_blocks} + {r1_blocks}'
+    % M = r1_blocks+1
+    %answer2 = f'''From page 707
+One buffer is for output of the joins.
+One buffer is for reading r2.
+There are M-2 buffers for r1 to block together,
+the outer loop can loop &lceil; {r1_blocks} /  (M-2) &rceil; times.
+Each loop must read the {r2_blocks} r2 blocks.
+
+Plus there's the {r1_blocks} r1 blocks read for the outer loop
+
+Answer: {answer} or {eval(answer)} if M={M}'''
+   {{!expression(answer, dict(M=r1_blocks+1), dict(M=r1_blocks//2+1), points=5, name=F' Block.Nested.Loop.R1.Outer.{index+1}')}}
+  %include('viewAnswer', answer=answer2)
+
+---
+
+  **Sort.Merge.R1.{{index+1}}:** Assuming there are {{q.buffers}} blocks of memory available for sorting $r_1$,
+  complete the following table below.
+  For each pass, how many runs exists in that pass and the number of blocks in the largest run.  
+  **NOTE$_1$:** The table has notation for up to four passes.
+  If the merge-sort completes in less than four passes,
+  those _extra_ passes would note that one run exists and that the largest run is the number of blocks in $r_1$.  
+  **NOTE$_2$:** Remember, the evaluation box allows you to use functions floor(), ceil(), and log().  
+  <%
+  answer = [[ f'{ceil(r1_blocks/q.buffers)}', f'{q.buffers}']]
+  for _ in range(3):
+    num_runs = ceil(eval(answer[-1][0]) / (q.buffers-1))
+    largest = min(eval(answer[-1][1]) * (q.buffers-1), r1_blocks)
+    answer.append([ f'{num_runs}', f'{largest}'])
+  end
+  answer2 = f'''The first pass has &lceil; {r1_blocks} / {q.buffers} &rceil; and the longest is {q.buffers} blocks
+The second pass is &lceil; {ceil(r1_blocks / q.buffers)} / {q.buffers-1} &rceil; with longest {q.buffers} * {q.buffers-1} blocks
+
+Answer: {answer[0]}
+        {answer[1]}
+        {answer[2]}
+        {answer[3]}'''
+  %>
+   {{!table(inputs=1, headings='Pass number,Number runs that exist,Number of blocks in the largest run', table=f'''
+Pass 1,{answer[0][0]},{answer[0][1]}
+Pass 2,{answer[1][0]},{answer[1][1]}
+Pass 3,{answer[2][0]},{answer[2][1]}
+Pass 4,{answer[3][0]},{answer[3][1]}
+''', symbols=[f'{x}' for x in range(max(r1_blocks, r2_blocks)+1)], points=10, name=f' Sort.Merge.R1.{index+1}')}}
+  %include('viewAnswer', answer=answer2)
+
+
+
+---
+
+ %end
+%end

@@ -1,0 +1,154 @@
+<%
+from collections import namedtuple
+from content.exams.fe_mothball_midwife_granite_27 import points_total, points_limit, points_max
+
+setInfo(
+        needsSubmitCode=True,
+        assessment_type='worksheet',
+        due='2023-04-25 11:00:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        max_segments=3,
+        maxpenalty=1.00, penalty=.20,
+       )
+dbs=['midterm2-nc-legislature-1.sqlite']
+PARTISAN = namedtuple('PARTISAN', 'party chamber role start_name vote_type long_name')
+partisans = [PARTISAN(party='Republican', chamber='Senate', role='Senator',
+                      start_name='C', vote_type='yea', long_name='Senate'),
+             PARTISAN(party='Republican', chamber='House',  role='Representative',
+                      start_name='H', vote_type='nay', long_name='House of Representatives'),
+             PARTISAN(party='Democratic',   chamber='House',  role='Representative',
+                      start_name='R', vote_type='yea', long_name='House of Representatives'),
+             PARTISAN(party='Democratic',   chamber='Senate', role='Senator',
+                      start_name='S', vote_type='nay', long_name='Senate'),
+          ]
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+# Final Exam Schema / Prologue worksheet
+
+## Final Exam Prologue 
+
+**<font size="+1">This is the prologue from the final exam.</font>**
+You <font color="red" size="+1">don't</font> have 180 minutes to do this worksheet,
+you <font color="red" size="+1">don't</font> have to stay in full screen mode for this worksheet,
+there are <font color="red" size="+1">not</font> 110 points on this worksheet,
+etc.
+The <font color="red" size="+1">normal worksheet</font> grading applies: 50% minimum grade for worksheets handed in on time; a 75% or better gets full credit.
+
+The prologue applies to the exam and is here in this worksheet for you to read at your leisure!
+
+---
+
+% include('content/exams/fe-mothball-midwife-granite-27.prolog.itmd')
+
+## {{!linkable_header('Legislature Database Schema')}}
+
+Here are the tables you'll find for the database used in the final exam.
+Your queries will be run against two versions of the database.
+One of the databases will be much smaller and only contain a subset of the information.
+
+% import json
+% schema = json.load(open('fe-nc-legislature-1.json'))
+```sql
+{{schema.replace("'", "`")}}
+```
+
+---
+
+In the exam SQL section, you will write SQL queries for the North Carolina legislature schema at the beginning of the exam.
+Your queries will be tested immediately against **two** different databases.
+The second database has small modifications to prevent hard coding answers.
+If your queries output matches the expected output, the
+displayed answers will be outlined in green.
+You need green, highlighted output from the query of **both** databases to get any credit.
+Your actual exam score will be determined when your query is
+tested against a different database but **two** green feedbacks should mean that you are on track to receive full credit.
+
+---
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}}
+
+
+% q = partisans[0]
+#### North Carolina {{q.long_name}}
+
+**NOTE** on North Carolina civics: North Carolina {{q.long_name}} legislators have the attribute role='{{q.role}}' in the Legislators relation
+while roll calls in the North Carolina {{q.long_name}} have the attribute chamber='{{q.chamber}}' in the Roll_calls relation.
+
+**No-yeas-{{q.chamber}}:** List the roll call identifiers, roll call descriptions, bill titles, and bill URLS of the roll calls in the North Carolina {{q.long_name}} that had zero Yea votes.  
+As a further note, after class you can use the URL from this query to look at the bill, its roll calls, and its votes.
+% answer = f'''
+SELECT R.roll_call_id, R.description, B.title, B.url
+  FROM Roll_calls R, Bills B
+ WHERE R.yea=0 AND
+       R.bill_id = B.bill_id AND
+       R.chamber = '{q.chamber}'
+'''
+{{!sql(answer, dbs=dbs, points=25, sort=True, name=f'No-yeas-{q.chamber}')}}
+% include('viewAnswer')
+
+---
+
+% q = partisans[1]
+#### North Carolina {{q.long_name}}
+
+**NOTE** on North Carolina civics: North Carolina {{q.long_name}} legislators have the attribute role='{{q.role}}' in the Legislators relation
+while roll calls in the North Carolina {{q.long_name}} have the attribute chamber='{{q.chamber}}' in the Roll_calls relation.
+
+**No-Nay-{{q.chamber}}:** List the roll call identifiers, roll call descriptions, bill titles, and bill URLs of the roll calls in the North Carolina {{q.long_name}} that had zero Nay votes.  
+As a further note, after class you can use the URL from this query to look at the bill, its roll calls, and its votes.
+% answer = f'''
+SELECT R.roll_call_id, R.description, B.title, B.url
+    FROM Roll_calls R, Bills B
+   WHERE R.nay=0 AND
+         R.bill_id = B.bill_id AND
+         R.chamber = '{q.chamber}'
+'''
+{{!sql(answer, dbs=dbs, points=25, sort=True, name=f'No-yeas-{q.chamber}')}}
+% include('viewAnswer')
+
+---
+
+% q = partisans[0]
+#### North Carolina {{q.party}} Party
+
+**NOTE** on North Carolina civics: There are two _major_ political parties in the state of North Carolina.
+North Carolina {{q.party}} legislators have the attribute party='{{q.party}}'.
+
+**How-Many-{{q.party}}-{{q.chamber}}:** How many legislators in the North Carolina {{q.long_name}} are in the {{q.party}} party?
+% answer = f'''
+SELECT count(*)
+  FROM Legislators L
+ WHERE L.party='{q.party}' and
+       L.role='{q.role}'
+'''
+{{!sql(answer, dbs=dbs, points=25, sort=True, name=f'How-Many-{q.party}-{q.chamber}')}}
+% include('viewAnswer')
+
+---
+
+% q = partisans[2]
+#### North Carolina {{q.party}} Party
+
+**NOTE** on North Carolina civics: There are two _major_ political parties in the state of North Carolina.
+North Carolina {{q.party}} legislators have the attribute party='{{q.party}}'.
+
+**How-Many-{{q.party}}-{{q.chamber}}:** How many legislators in the North Carolina {{q.long_name}} are in the {{q.party}} party?
+% answer = f'''
+SELECT count(*)
+  FROM Legislators L
+ WHERE L.party='{q.party}' and
+       L.role='{q.role}'
+'''
+{{!sql(answer, dbs=dbs, points=25, sort=True, name=f'How-Many-{q.party}-{q.chamber}')}}
+% include('viewAnswer')
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

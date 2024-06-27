@@ -1,0 +1,104 @@
+<%
+setInfo(
+      assessment_type='worksheet',
+)
+%>
+
+# Pre-chapter 2 worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+Unfortunately, in this worksheet, all answers are multiple choice.
+
+## {{!linkable_header('Questions')}}
+
+---
+
+**Relational.Database:** Which _best_ describes the relational database?  
+<%
+answer = 'collection of tables'
+answer2 = f'''Page 37 describes a relational database as a collection of tables
+
+Answer: {{answer}}'''
+choices = [answer, 'collection of rows', 'collection things', 'network of tables', 'network of things', 'hierarchy of tables', 'hierarchy of things']
+%>
+{{!select(answer, list(choices), points=10, name='Relational.Database')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Tuple:** Which _best_ describes the term tuple?  
+<%
+answer = 'All of these'
+choices = [answer, 'An ordered sequence of values', 'a row in a relational', 'An ordered sequence of attributes']
+answer2 = f'''Page 39 describes tuples
+
+Answer: {answer}'''
+%>
+{{!select(answer, list(choices), points=10, name='Tuple')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Database.schema:** Which _best_ describes the term database schema?  
+<%
+answer = 'the logical design of the database'
+choices = [answer, 'the data in the database at a specific time', 'the plan to design a database', 'all of these']
+answer2 = f'''Page 41 describes schema
+
+Answer: {answer}'''
+%>
+{{!select(answer, list(choices), points=10, name='Database.schema')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Key:** Which _best_ describes the term key?  
+<%
+answer = 'all of these'
+choices = [answer, 'attribute collection that uniquely identifies a tuple in a relation', 'a minimal superkey', 'the principal means of identifying a tuple in a relation']
+answer2 = f'''Page 44 describes schema
+
+Answer: {answer}'''
+%>
+{{!select(answer, list(choices), points=10, name='Key')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Relational.Algebra.Operations:** Answer the following questions about relational algebra operations.  
+<%
+answer = ['select', 'project', 'Cartesian product']
+symbols = answer + ['select', 'project', 'rename', 'Cartesian product', 'set difference', 'set addition']
+answer2=f'''
+{answer[0]} Page 49 2.6.1 says sigma is select
+{answer[1]} Page 49 2.6.2 says project is Pi
+{answer[2]} Page50 2.6.4 says thtat Cartesian product is an X'''
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+What relational algebra operation is represented by the lowercase Greek sigma,{answer[0]}
+What relational algebra operation is represented by the uppercase Greek pi,{answer[1]}
+What relational algebra operation is represented by the cross X,{answer[2]}
+''', symbols=symbols, name='Relational.Algebra.Operations', points=30)}}
+% include('viewAnswer', answer=answer2)
+
+
+---
+
+**True.False:** Answer the following miscellaneous true or false questions.  
+<%
+answer = ['False', 'True', 'True']
+symbols = answer 
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+Relational algebra operations can never be combined?,{answer[0]}
+It is possible to write a SQL query in multiple relational algebra statements,{answer[1]}
+The output of a relational algebra operation is always a relation without duplicates,{answer[2]}
+''', symbols=symbols, name='True.False', points=30)}}
+% include('viewAnswer')
+
+
+% include('worksheet-submit.md')

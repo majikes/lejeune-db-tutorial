@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" charset="utf8">
+ <head>
+  <meta charset="utf8"/>
+  <meta name="description" content="SQL Interpreter Demonstration"/>
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/static/extra/sql/codemirror/lib/codemirror.css"/>
+  <link rel="stylesheet" href="{{static('css/sql_interpreter.css')}}"/> 
+  <script src="/static/extra/sql/codemirror/lib/codemirror.js"></script>
+<style>
+#output {
+    background-color: white;
+}
+</style>
+ </head>
+
+ <body>
+  <h1>{{title}}</h1>
+  <main>
+   <textarea id="commands">
+{{commands}}
+   </textarea>
+
+   <button id="execute" class="button">Execute</button>
+   <div id="error" class="error"></div>
+   <pre id="output">Results will be displayed here</pre>
+  </main>
+
+  <script src="/static/extra/sql/codemirror/mode/sql/sql.js"></script>
+  <script type="text/javascript" src="/static/extra/sql/js/gui.js"></script>
+ </body>
+</html>

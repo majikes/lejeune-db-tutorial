@@ -1,0 +1,105 @@
+<%
+setInfo(
+        assessment_type='worksheet',
+        )
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+# Chapter 7 A Attribute closure
+
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+--- 
+
+## Questions
+
+
+
+For reference, you should assume that the Chapter 12 change to Reserves relation is:  
+`Sailors(sid: integer, sname: string, rating: integer, age: real)`
+abbreviated $INRA$ 
+
+Further let's assume this gives us functional dependencies that a Sailor's rating is based totally on their age
+and that the `sid` is really just a hash of the sailor's name.  
+That gives us the functional dependencies $A \rightarrow R$ and $N \rightarrow I$.
+
+Further, we know that in reality, we would never put someone's age in a database
+because it is constantly changing and
+it is far better to use their date of birth.
+So let's add a date of birth field 
+to the relation.
+`Sailors(sid: integer, sname: string, rating: integer, age: real, date_of_birth: date)`
+abbreviated $INRAD$.
+Of course, that then gives us a functional dependency of 
+$D \rightarrow A$
+
+To make this more silly, 
+let's assume that no two people have the same birth date
+and their name is chosen from a hash of their birth date.
+That would give us functional dependency $D \rightarrow N$.
+
+---
+
+In summary **<font color='red'>for this question</font>**, we have Sailors relation abbreviated $INRAD$ with **only the** functional dependencies of
+$A \rightarrow R$,
+$N \rightarrow I$,
+$D \rightarrow A$, and
+$D \rightarrow N$.
+
+For this question, use variables $I$, $N$, and $D$ and separate them with the plus sign, +, operator.
+
+**I.closure:** Using Armstrong's Axiom of reflexivity, augmentation, and transitivity,
+what is the attribute closure of `sid`, $I^+$?  
+**Note**: Use the variables I, N, R, A, D and the addition operator plus, +  
+% answer = 'I'
+% answer2 = f'''Since nothing is determined from the sid I
+just use AA reflexivity property
+Answer: {answer} '''
+{{!expression(answer, dict(I=1, N=2, R=4, A=8, D=16), dict(I=32, N=64, R=128, A=256, D=512), points=20, name='I.closure')}}
+%include('viewAnswer', answer=answer2)
+
+**N.closure:** Using Armstrong's Axiom of reflexivity, augmentation, and transitivity,
+what is the attribute closure of `sname`, $N^+$?  
+**Note**: Use the variables I, N, R, A, D and the addition operator plus, +  
+% answer = 'N + I'
+% answer2 = f'''Reflexivity gives us N and FD gives us I
+Answer: {answer} '''
+{{!expression(answer, dict(I=1, N=2, R=4, A=8, D=16), dict(I=32, N=64, R=128, A=256, D=512), points=20, name='N.closure')}}
+%include('viewAnswer', answer=answer2)
+
+**R.closure:** Using Armstrong's Axiom of reflexivity, augmentation, and transitivity,
+what is the attribute closure of `rating`, $R^+$?  
+**Note**: Use the variables I, N, R, A, D and the addition operator plus, +  
+% answer = 'R'
+% answer2 = f'''Reflexivity gives us R
+Answer: {answer} '''
+{{!expression(answer, dict(I=1, N=2, R=4, A=8, D=16), dict(I=32, N=64, R=128, A=256, D=512), points=20, name='R.closure')}}
+%include('viewAnswer', answer=answer2)
+
+**A.closure:** Using Armstrong's Axiom of reflexivity, augmentation, and transitivity,
+what is the attribute closure of `age`, $A^+$?  
+**Note**: Use the variables I, N, R, A, D and the addition operator plus, +  
+% answer = 'A + R'
+% answer2 = f'''Reflexivity gives us A and FD gives us R
+Answer: {answer} '''
+{{!expression(answer, dict(I=1, N=2, R=4, A=8, D=16), dict(I=32, N=64, R=128, A=256, D=512), points=20, name='A.closure')}}
+%include('viewAnswer', answer=answer2)
+
+**D.closure:** Using Armstrong's Axiom of reflexivity, augmentation, and transitivity,
+what is the attribute closure of `date_of_birth`, $D^+$?  
+**Note**: Use the variables I, N, R, A, D and the addition operator plus, +  
+% answer = 'D + A + N + I + R'
+% answer2 = f'''Reflexivity gives us D
+the two FD give us A and N
+The transitivity of A and N give us R and I respectively
+Answer: {answer} '''
+{{!expression(answer, dict(I=1, N=2, R=4, A=8, D=16), dict(I=32, N=64, R=128, A=256, D=512), points=20, name='D.closure')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+
+% include('worksheet-submit.md')

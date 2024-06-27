@@ -1,0 +1,101 @@
+<%
+from collections import namedtuple
+katex_underscore = r'\textunderscore{}'
+katex_le = r'\le'
+
+STUDENT_NO_CLASS = namedtuple('STUDENT_NO_CLASS', 'dept bldg title')
+no_students = [STUDENT_NO_CLASS(dept='Cybernetics', bldg='Taylor', title='Bioinformatics'),
+               STUDENT_NO_CLASS(dept='Accounting', bldg='Chandler', title='Bankruptcy'),
+               STUDENT_NO_CLASS(dept='Physics', bldg='Power', title='Modern Physics'),
+               STUDENT_NO_CLASS(dept='Statistics', bldg='Saucon', title='Game Design'),
+               ]
+%>
+
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % d = no_students[(index+1)% number_sql_queries]
+    **Instructor.Count.{{index+1}}:** List the names of {{d.dept}} instructors and the number of times they
+    have taught a course in {{d.bldg}} building.
+    If they have never taught a course in that building, express the count as Null
+    % answer = f'''
+-- Left join
+-- Table of instructors who teach in building and count of times
+WITH Instructor_building AS (SELECT I.ID, COUNT(*) as COUNT
+                               FROM Instructor I, Teaches T, Section S
+                              WHERE T.ID=I.ID AND
+                                    T.course_id=S.course_id AND
+                                    T.sec_id=S.sec_id AND
+                                    T.semester=S.semester AND
+                                    T.year = S.year AND
+                                    I.dept_name = '{d.dept}' AND
+                                    S.building = '{d.bldg}'
+                              GROUP BY I.ID )
+
+-- Get the name of every instructor and left join with counts
+SELECT I.name, B.count
+  FROM Instructor I
+  LEFT JOIN Instructor_building B
+        ON  B.ID = I.ID
+ WHERE dept_name = '{d.dept}'
+'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' Instructor.Count.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+    **All.Courses.{{index+1}}:** List the course id and title of all the courses in the {{d.dept}} department.
+    List them in order by their title, then course_id.
+    % answer = f'''
+-- Simple select where
+SELECT C.course_id, C.title
+  FROM Course C
+ WHERE C.dept_name = '{d.dept}'
+ ORDER BY C.title, C.course_id
+'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' All.Courses.{index+1}')}}
+    % include('viewAnswer')
+
+    **Student.Takes.All.{{index+1}}:** List the names of all the students who have taken all the courses in the {{d.dept}} department.  The students can be from any department; only the courses have to be from the {{d.dept}} department.  
+    % answer = f'''
+-- SQL Division
+SELECT S.name
+  FROM Student S
+ WHERE NOT EXISTS (SELECT C.course_id
+                     FROM Course C
+                    WHERE C.dept_name = '{d.dept}'
+
+                   EXCEPT
+
+                   SELECT C1.course_id
+                     FROM Course C1, Takes T1, Student S1
+                    WHERE T1.course_id = C1.course_id AND
+                          T1.ID = S1.ID AND
+                          S.ID = S1.ID)
+'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' Student.Takes.All.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+    **Courses.Always.Offered.{{index+1}}:** List the title of the {{d.dept}} department courses that were offered each semester that this database was keeping track of classes.   
+    For example, for some reason this database has no classes for Summer or Winter 2001.   But it does have courses for Fall and Spring semesters of that year.   Find all the tuples of semesters and years that are in the database, then return the title of the {{d.dept}} courses that were offered during all of those tuples.  
+    % answer = f'''
+-- SQL Division
+SELECT C1.title
+  FROM Course C1
+ WHERE C1.dept_name = '{d.dept}' AND
+       NOT EXISTS (SELECT DISTINCT S2.semester, S2.year
+                     FROM Section S2
+
+                   EXCEPT
+
+                   SELECT S3.semester, S3.year
+                     FROM Section S3
+                    WHERE C1.course_id = S3.course_id) 
+'''
+    {{!sql(answer, dbs=dbs, points=10, name=f' Courses.Always.Offered.{index+1}', sort=1)}}
+    % include('viewAnswer')
+  %end
+%end
+
+-
+
+

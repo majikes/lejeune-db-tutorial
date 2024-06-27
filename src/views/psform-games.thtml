@@ -1,0 +1,40 @@
+% from inputs import getInfoWithExceptions
+% from assessments import submit_code_in_pages, submit_in_pages
+<form id="myform" method="post" action="{{get_url('submit-games', key=key)}}"
+  data-key="{{key}}"
+  data-z="{{zwsp}}"
+% if defined('autosave') and autosave:
+  data-interval="5"
+% end
+>
+
+<div>
+% from datetime import datetime
+% if defined('due') and due:
+   % if (due < datetime.now()):
+    <p style="color: red; font-size:150%">Assessment was due by {{due.strftime('%a')}}, {{due}} </p>
+   % else:
+    <p>Assessment due <b>before</b> {{due.strftime('%a')}}, {{due}}.</p>
+   % end
+% end
+{{!base}}
+</div>
+
+% if submit_in_pages(pages):  # We need a submit button
+   % if submit_code_in_pages(pages):  # We need a submit code
+      <p>Submit code from the front of class: <input name="_submitCode" placeholder="Enter the submit code" required="required"> </p>
+   % end
+   <input type="submit" name="_submit" value="Submit"/>
+% end
+
+<input type="hidden" name="_check" value=""/>
+% if defined('includeTimer') and includeTimer:
+% include('elapsed')
+% end
+</form>
+  <script>
+    var _section = "{{section}}";
+    var _pages = "{{pages}}";
+    var _rubrics = {{!rubrics}};
+  </script>
+% rebase('assessment.base')

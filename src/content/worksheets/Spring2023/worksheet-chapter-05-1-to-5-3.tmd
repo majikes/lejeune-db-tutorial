@@ -1,0 +1,168 @@
+<%
+import json
+setInfo(
+      due="2023-01-31  8:00:00",
+      assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False)),
+)
+with open('wkst-ch5-sailors-2.json', encoding='utf-8') as fid:
+    schema = json.load(fid)
+dbs = ['wkst-ch5-sailors-2.sqlite', 'wkst-ch5-sailors-1.sqlite']
+%>
+
+# Chapter 5.1 through 5.3 Review
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+Here is the schema used in this worksheet:
+
+```sql
+ % for line in schema.split('\n'):
+    {{!line}}
+ % end
+```
+
+---
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**Question.1**: Find the unique names of sailors who have reserved boat number 103.  
+% answer = f'''
+SELECT DISTINCT S.sname
+  FROM Sailors AS S, Reserves AS R
+ WHERE S.sid=R.sid AND
+       R.bid=103 '''
+{{!sql(answer, dbs=dbs, points=10, name='Question.1', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.2**: Find the unique names of sailors who have reserved a red boat.  
+% answer = f'''
+SELECT  DISTINCT S.sname
+  FROM Sailors AS S, Reserves AS R, Boats as B
+ WHERE S.sid=R.sid AND
+       R.bid=B.bid AND
+       B.color='red' '''
+{{!sql(answer, dbs=dbs, points=10, name='Question.2', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.3**: Find the unique colors of the boats reserved by Lubber.  
+% answer = f'''
+SELECT DISTINCT B.color
+  FROM Sailors AS S, Reserves AS R, Boats as B
+ WHERE S.sid=R.sid AND
+       R.bid=B.bid AND
+       S.sname = 'Lubber'
+'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.3', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.4**: Find the unique names of sailors who have reserved at least one boat.  
+% answer = f'''
+SELECT DISTINCT S.sname
+  FROM Sailors AS S, Reserves AS R
+ WHERE S.sid=R.sid
+'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.4', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.5**:Find the unique names of sailors who have reserved a red or a green boat.  
+% answer = f'''
+SELECT DISTINCT S.sname
+  FROM Sailors AS S, Reserves AS R, Boats AS B
+ WHERE S.sid=R.sid AND R.bid=B.bid AND
+       (B.color='red' OR B.color='green')
+'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.5', sort=True)}}
+% include('viewAnswer')
+
+
+---
+
+**Question.11**: Find the names of all the sailors with a rating above 7.  
+% answer = f'''
+SELECT S.sname 
+  FROM Sailors AS S
+ WHERE S.rating > 7  '''
+{{!sql(answer, dbs=dbs, points=10, name='Question.11', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.15**: Find the unique names and ages of all sailors:  
+% answer = f'''
+SELECT DISTINCT S.sname, S.age
+  FROM Sailors AS S'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.15', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.16**: Find the unique sids of sailors who have reserved a red boat.  
+% answer = f'''
+SELECT Distinct R.sid
+  FROM Reserves R, Boats AS B
+  WHERE R.bid=B.bid and B.color='red'
+
+'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.16', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.18**: Find the names and ages of sailors that begin with B.  
+% answer = f'''
+SELECT S.sname, S.age
+  FROM Sailors AS S
+ WHERE S.sname LIKE 'B%'
+'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.18', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.19**: Find the sids of all sailors who have reserved red boats but not green boats.  
+% answer = f'''
+SELECT S1.sid
+  FROM Sailors AS S1, Reserves AS R1, Boats AS B1
+ WHERE S1.sid=R1.sid AND R1.bid = B1.bid AND 
+       B1.color = 'red'
+
+ EXCEPT
+
+SELECT S2.sid
+  FROM Sailors AS S2, Reserves AS R2, Boats AS B2
+ WHERE S2.sid=R2.sid AND R2.bid = B2.bid AND 
+       B2.color = 'green'
+
+'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.19', sort=True)}}
+% include('viewAnswer')
+
+---
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

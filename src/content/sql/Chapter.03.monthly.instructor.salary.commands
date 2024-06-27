@@ -1,0 +1,29 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Instructor;
+CREATE TABLE Instructor (ID INTEGER PRIMARY KEY, name CHAR(20), dept_name CHAR(20), salary INTEGER);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (10101, 'Srinivasan', 'Comp. Sci.', 65000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (12121, 'Wu',         'Finance',    90000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15151, 'Mozart',     'Music',      40000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (22222, 'Einstein',   'Physics',    95000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (32343, 'El Said',    'History',    60000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (33456, 'Gold',       'Physics',    87000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (45565, 'Katz',       'Comp. Sci.', 75000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (58583, 'Califieri',  'History',    62000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76543, 'Singh',      'Finance',    80000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76766, 'Crick',      'Biology',    72000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (83821, 'Brandt',     'Comp. Sci.', 92000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (98345, 'Kim',        'Elec. Eng.', 80000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15015, 'Majikes',    'Comp. Sci.', 90000);
+
+SELECT 'Instructor name and monthly salary truncated' as '';
+SELECT name, salary/12
+  FROM Instructor;
+
+SELECT 'Instructor name and monthly salary' as '';
+SELECT name, salary/12.0 AS monthly_salary
+  FROM Instructor;
+
+SELECT 'Instructor name and monthly salary to two decimal places' as '';
+SELECT name,  printf("%.2f", salary/12.0) as montly_salaray_dollars_cents
+  FROM Instructor;

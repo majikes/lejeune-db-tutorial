@@ -1,0 +1,33 @@
+DROP TABLE IF EXISTS A;
+CREATE TABLE A (sno char(20), pno char(20));
+INSERT INTO A(sno, pno) VALUES('s1', 'p1'),
+                               ('s1', 'p2'),
+                               ('s1', 'p3'),
+                               ('s1', 'p4'),
+                               ('s2', 'p1'),
+                               ('s2', 'p2'),
+                               ('s3', 'p2'),
+                               ('s4', 'p2'),
+                               ('s4', 'p4');
+
+SELECT 'The Suppliers A table:' as '';
+SELECT * FROM A;
+
+DROP TABLE IF EXISTS B3;
+CREATE TABLE B3 (pno char(20));
+INSERT INTO B3(pno) VALUES('p1');
+INSERT INTO B3(pno) VALUES('p2');
+INSERT INTO B3(pno) VALUES('p4');
+
+SELECT 'The Parts B3 table:' as '';
+SELECT * FROM B3;
+
+SELECT 'A ÷ B3:' as '';
+SELECT DISTINCT Z.SNO 
+  FROM A AS Z
+ WHERE NOT EXISTS (SELECT y.pno 
+                     FROM B3 as y  
+                   EXCEPT
+                   SELECT w.pno 
+                     FROM A AS w
+                    WHERE w.sno=z.sno); 

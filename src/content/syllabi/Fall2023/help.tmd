@@ -1,0 +1,146 @@
+# Getting Help
+
+We are here to help! 
+Come in early as it's more helpful to you and office hours are more open.
+Coming in at the last minute is least helpful and most crowded.
+But please do come in.
+Office hours are a service you should enjoy using!
+
+The LAs and TAs on the [instructional team](#the-instructional-team) are fellow students who not too long ago were in your shoes.
+They know the material and are here to help!
+There office hours are spread throughout the week.
+I am sure you will find them a great resource for help.
+
+My office hours are flexible.
+After attempting to get answers during the LA/TA office hours, 
+feel free to come to me for questions on databases.
+If you have questions about other things, please stop on in.
+If you'd just like to talk about something else, please stop on in.
+I really value my time with students.
+It is the best part of my job and the part I'd do for free.
+
+If you'd like to meet with me, please use [you can book me service](https://jmajikes.youcanbook.me).
+If you cannot meet during those times, send me an [email](mailto:jmajikes@cs.unc.edu) and
+offer two general times when you can meet.
+More than likely I will be able to make one of them.
+As a general rule, I am busy Tuesdays and Thursdays before noon.
+
+[Piazza]({{PIAZZA}}) is also an excellent place to ask questions.
+
+## {{!linkable_header('Piazza')}}
+
+We will be using [Piazza]({{PIAZZA}}) (use access code `{{PIAZZA_ACCESS_CODE}}`) for class discussions.
+Sign up by selecting term `Fall 2022`, 
+class `COMP 421: Files and Databases`.
+Once signed up, you can get access to the class Piazza page as [{{PIAZZA}}]({{PIAZZA}}).
+
+The Piazza system is efficient to send help requests to class mates, LAs, TAs, and the instructor.
+You should **not** post solutions (which would be an [Honor Code](https://studentconduct.unc.edu/honor-system/honor-system-branches/honor-court) violation).
+Think of Piazza as virtual study group.
+The answers you receive should be considered pro bono work of your classmates.
+So be kind.
+Search for answers before posting questions.
+
+For remote classes,
+Piazza will be the means of communicating class information.
+You must monitor and stay subscribed to Piazza.
+
+
+
+## {{!linkable_header('The instructional team')}}
+
+% members = sorted(["John Majikes", "Chongyi Zheng", "William Li"])
+% members = sorted(["John Majikes", "Sebastian Sigmon", "Emily Yan", "Kayla Nesbitt", "Nila Thillaivanan", "Wei Shan", "Yulim Kim", "Misha Shvets"])
+<div class="row">
+ <div class="twocolumns">
+ % for index in range(len(members)//2):
+ <figure>
+  <img src="{{static(f'images/team/{members[index].replace(" ", "")}.jpg')}}" style="width:125px;" alt="">
+  <figcaption>{{members[index]}}</caption>
+ </figure>
+ % end
+ </div>
+ <div class="twocolumns">
+ % for index in range(len(members)//2, len(members)):
+ <figure>
+  <img src="{{static(f'images/team/{members[index].replace(" ", "")}.jpg')}}" style="width:125px;" alt="">
+  <figcaption>{{members[index]}}</caption>
+ </figure>
+ % end
+ </div>
+</div>
+
+## {{!linkable_header('Office Hours')}}
+
+We will be using [Course Care](https://course.care/) to request time with the
+assistants. 
+The course enrollment code is {{COURSE_CARE_CODE}}.
+You may want to watch [this video on course care]({{get_url('video', video_name='CourseCare')}}) on how course care works.
+In order to request time you must register for Course Care.
+**Note:** that I will be using [you can book me service](https://jmajikes.youcanbook.me).
+
+The way Course Care works is that during hours when LAs/TAs/Instructor have
+office hours, you:
+
+- Log into Course Care
+- Select COMP 421  
+- In the green box, click `Check-in`  
+- Let us know if you have an assignment problem or a conceptual problem
+- You will need to fill out the five or so items.
+- If you are doing remote office hours, one of the items you fill in will be the URL of the Zoom meeting you scheduled<ul><li>Ensure you are in the Zoom meeting and enabled screen sharing</li></ul>
+- When it is your turn in the queue, you will be joined by an instructor
+
+Note that help sessions are approximately 15 minutes in length. If you are
+working in a group, multiple people can be in the zoom meeting.
+
+### {{!linkable_header('Planned office hours')}}
+
+<%
+hours = [
+(1, '17:00', '22:00', 'Misha Shvets'),
+(3, '17:00', '22:00', 'Misha Shvets'),
+(2, '17:00', '22:00', 'Sebastian Sigmon'),
+(4, '17:00', '22:00', 'Sebastian Sigmon'),
+(1, '12:00', '16:00', 'Yulim Kim'),
+(5, '12:00', '14:00', 'Yulim Kim'),
+(1, '15:30', '17:00', 'Kayla Nesbitt'),
+(3, '15:30', '17:00', 'Kayla Nesbitt'),
+(3, '11:00', '15:00', 'Wei Shan'),
+(5, '11:00', '13:00', 'Wei Shan'),
+(1, '14:00', '16:00', 'Emily Yan'),
+(2, '14:30', '16:30', 'Emily Yan'),
+(4, '14:30', '16:30', 'Emily Yan'),
+(1, '09:00', '10:45', 'Nila Thillaivanan'),
+(3, '09:00', '10:45', 'Nila Thillaivanan'),
+(5, '14:00', '15:45', 'Nila Thillaivanan'),
+]
+from datetime import time
+hours = [(d, time.fromisoformat(s), time.fromisoformat(e), p)
+          for d, s, e, p in hours]
+hours.sort()
+%>
+
+% pd = 0
+
+<table>
+  <thead>
+    <tr>
+      <th>Day</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Person</th>
+    </tr>
+  </thead>
+  <tbody>
+% for d, s, e, p in hours:
+%   day = d if d != pd else 0
+%   pd = d
+    <tr>
+      <td>{{['','Monday','Tuesday','Wednesday','Thursday','Friday'][day]}}</td>
+      <td>{{s.strftime('%I:%M %p').lstrip('0')}}</td>
+      <td>{{e.strftime('%I:%M %p').lstrip('0')}}</td>
+      <td>{{p}}</td>
+    </tr>
+% end
+  </tbody>
+</table>

@@ -1,0 +1,59 @@
+PRAGMA foreign_keys = ON;
+
+
+DROP TABLE IF EXISTS Instructor;
+CREATE TABLE Instructor (ID INTEGER PRIMARY KEY, name CHAR(20), dept_name CHAR(20), salary INTEGER);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (10101, 'Srinivasan', 'Comp. Sci.', 65000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (12121, 'Wu',         'Finance',    90000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15015, 'Majikes',    'Music',      40000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15151, 'Mozart',     'Music',      48000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (22222, 'Einstein',   'Physics',    95000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (32343, 'El Said',    'History',    60000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (33456, 'Gold',       'Physics',    87000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (45565, 'Katz',       'Comp. Sci.', 75000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (58583, 'Califieri',  'History',    62000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76543, 'Singh',      'Finance',    80000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76766, 'Crick',      'Biology',    72000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (83821, 'Brandt',     'Comp. Sci.', 92000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (98345, 'Kim',        'Elec. Eng.', 80000);
+
+DROP TABLE IF EXISTS Student;
+CREATE TABLE STUDENT (ID			varchar(5), 
+                      name			varchar(20) not null, 
+                      dept_name		varchar(20), 
+                      tot_cred		numeric(3,0) check (tot_cred >= 0));
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('00128', 'Zhang', 'Comp. Sci.', '102');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('12345', 'Shankar', 'Comp. Sci.', '32');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('19991', 'Brandt', 'History', '80');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('23121', 'Chavez', 'Finance', '110');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('44553', 'Peltier', 'Physics', '56');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('45678', 'Levy', 'Physics', '46');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('54321', 'Williams', 'Comp. Sci.', '54');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('55739', 'Sanchez', 'Music', '38');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('70557', 'Snow', 'Physics', '0');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('76543', 'Brown', 'Comp. Sci.', '58');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('76653', 'Aoi', 'Elec. Eng.', '60');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('98765', 'Bourikas', 'Elec. Eng.', '98');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('98988', 'Tanaka', 'Biology', '120');
+
+SELECT 'List all instructor names before insert' AS '';
+SELECT name
+  FROM Instructor;
+
+SELECT 'List the student names of students in the Finance department with more than 100 credit hours' AS '';
+SELECT ID, name, dept_name, 18000
+  FROM student
+ WHERE dept_name = 'Finance' AND
+       tot_cred > 100;
+
+SELECT 'Make each student in the Finance department who has earned more than 100 credit hours an instructor in the Finance department with a salary of $18,000' AS '';
+INSERT INTO Instructor
+     SELECT ID, name, dept_name, 18000
+       FROM student
+      WHERE dept_name = 'Finance' AND
+            tot_cred > 100;
+
+SELECT 'List all instructor names after insert' AS '';
+SELECT name
+  FROM Instructor;
+

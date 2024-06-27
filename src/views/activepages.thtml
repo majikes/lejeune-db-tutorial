@@ -1,0 +1,111 @@
+<h1>Active pages <a href="{{url}}" target="_blank">{{key}}</a></h1>
+
+<!-- List of pages that can potentially be deleted -->
+<ol >
+  <% for row in activations: %>
+    <li>
+       <a href="#" onclick="deleteActivePages('{{key}}', '{{row.onyen}}', '{{row.section}}', '{{row.start_time}}', '{{row.end_time}}')">Delete</a>
+      key: {{key}} onyen: {{row.onyen}} section: {{row.section}}
+      <br/>{{sorted(row.active_pages)}}
+      <br/>start_time {{row.start_time}} end_time {{row.end_time}}
+      <p/>&nbsp;
+    </li>
+  <% end %>
+</ol>
+
+<!-- Form to fill out for page access -->
+<h2>Insert page</h2>
+   <p/>
+   <form>
+     <h3>Active for</h3>
+     <div class="row">
+        <div class="twocolumns">
+           <label for="onyen-input">Onyen: (optional)</label><br/>
+           <input type="text" id="onyen-input" name="onyen"/><br/>
+        </div>
+        <div class="twocolumns">
+         Section: (required)<br/>
+         <% for section in all_sections: %>
+              <input type="radio" id="{{section}}" name="section" value="{{section}}"/>
+              <label for="{{section}}">{{section}}</label>
+            <br/>
+         <% end %>
+        </div>
+     </div>
+
+     <h3>When active</h3>
+     <div class="row">
+        <div class="twocolumns">
+           <label for="start_time">Start time:</label>
+           <input type="datetime-local" id="start_time" name="start_time" value="{{today}}"/>
+        </div>
+        <div class="twocolumns">
+           <label for="end_time">End time:</label>
+           <input type="datetime-local" id="end_time" name="end_time" value="{{ldos}}"/>
+        </div>
+     </div>
+     <p/>
+     <label for="activepages">Active pages: (required)</label><br/>
+     <input type="text" id="activepages" name="activepages" value="{{allpages}}" size="120"/><br/>
+
+     <input type="button" value="Insert" onclick="insertActivePages(onyen, section, activepages, start_time, end_time)"/><span class="evalmessage" id="error_msg"></span>
+   </form>
+<script>
+async function insertActivePages(onyen, section, activepage, start_time, end_time) {
+   const fd = new FormData();
+   fd.append('key', '{{key}}');
+   fd.append('onyen', onyen.value);
+   fd.append('section', section.value);
+   fd.append('activepages', activepages.value);
+   fd.append('start_time', start_time.value);
+   fd.append('end_time', end_time.value);
+
+   // Ensure a section was selected (required)
+   var sectionValid = false;
+   var i=0;
+   while (!sectionValid && i<section.length) {
+      if (section[i].checked) sectionValid = true;
+      i++;
+   }
+   if (!sectionValid) alert("Must select a section");
+
+   // Ensure that start_time <= end_time
+   var timeValid = true
+   if (start_time.value == end_time.value) {
+      alert("Start time "+start_time.value+" equals end time");
+      timeValid = false;
+   }
+   if (start_time.value > end_time.value) {
+      alert("Start time "+start_time.value+" must preceed end time "+end_time.value);
+      timeValid = false;
+   }
+
+   if (sectionValid && timeValid) {
+      let response = await fetch("{{get_url('insertActivePages')}}", {method: 'post', body: fd}).then(function(r) {
+            // get the error_msg evalmessage class element
+            let error_msg = document.querySelector('.evalmessage');
+                  if (!r.ok) {
+               // Make error msg the text sent from server
+               r.text().then(function(text) {
+                      error_msg.innerHTML = text; });
+            } else {
+               // Clear error mssage / reload
+               error_msg.innerHTML = '';
+               location.reload(true);
+            }
+         });
+   }
+}
+function deleteActivePages(key, onyen, section, start_time, end_time) {
+   const fd = new FormData();
+   fd.append('key', key);
+   fd.append('onyen', onyen);
+   fd.append('section', section);
+   fd.append('start_time', start_time);
+   fd.append('end_time', end_time);
+
+   fetch("{{get_url('deleteActivePages')}}", {method: 'post', body: fd});
+   location.reload();
+}
+</script>
+% rebase('assessment.base')

@@ -1,0 +1,125 @@
+<%
+setInfo(
+      due="2023-03-21 10:45:00",
+      needsSubmitCode=True,
+        assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      amayak=dict(needsSubmitCode=False, due="2023-03-24 00:00:00")),
+)
+dbs = ['sailors.sqlite']
+%>
+
+# Chapter 12 Conjunctions
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**Conjunction:** What is a logical conjunction?  
+% answer = 'C. The logical AND operator'
+% answer2 = f''' This is background information, I used
+https://en.wikipedia.org/wiki/Logical_conjunction
+
+Answer: {answer}'''
+% choices = ['A. The logical OR operator', 'B. Any logical operator', answer, 'D. None of these' ]
+{{!select(answer, choices, points=33, name='Conjunction')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**CNF:** Which of the following are in conjunctive normal form, CNF?  
+**NOTE:** The question is not asking if it could be changed to CNF!  
+ **A.** WHERE NOT (sname='Albert' OR sname='John)  
+ **B.** WHERE (sname != 'Albert') AND (sname != 'John)  
+ **C.** WHERE (s1.rating > s2.rating) AND s2.sname='Bart'  
+ **D.** WHERE P.bioid=T.bioid AND T.termtype='rep' AND startdate like '2021%'  
+ **E.** WHERE P.bioid=T.bioid OR (T.termtype='rep' AND startdate like '2021%')  
+ **F.** WHERE P.bioid=T.bioid OR T.termtype!='rep' OR startdate < '2021-01-01'  
+% answer = 'B. C. D. and F.'
+% answer2 = f''' A is not because the NOT is applied to the OR
+E is not because there are AND terms applied within OR's 
+All others have ANDs connecting groups of ORs
+
+Answer: {answer}'''
+% choices = ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'All but A', 'All but E', 'B. C. and D.', answer]
+{{!select(answer, choices, points=33, name='CNF')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Selection.Condition:** What are the selection conditions of the following where clause?  
+```sql
+WHERE P.bioid=T.bioid OR
+      T.termtype!='rep' OR
+      startdate < '2021-01-01'
+```  
+ **A.** P.bioid=T.bioid  
+ **B.** T.termtype!='rep'  
+ **C.** startdate &lt; '2021-01-01'  
+% answer = 'All of them'
+% choices = ['A.', 'B.', 'C.', 'A. and B.', 'B. and C.', answer, 'None of them']
+{{!select(answer, choices, points=34, name='Selection.Condition')}}
+% include('viewAnswer')
+
+---
+
+Consider a database with two tables:
+```sql
+Sailors(sid: integer, sname: string, rating: integer, age: real)
+Reserves(sid: integer, bid: integer, day: date, rname: string)
+```
+% reserves_pages = 100
+% sailors_pages = 500
+% average_fanout = 75
+Assume each tuple of Reserves is 40 bytes, each 4K page holds at most 100 records.  
+Assume each tuple of Sailors is 50 bytes, each 4K page holds at most 80 records.  
+Assume that Sailors rating are evenly distributed between zero and ten.  
+Further assume there are {{reserves_pages}} pages of Reserves and {{sailors_pages}} pages of Sailors.
+
+**Sailor.Height.Non.Leaf:** Assume the Sailors have an index of $\langle rating, sname \rangle$ which with has an average fanout of {{average_fanout}}.
+What is the height of the B+ Tree non-leaf nodes?   
+% answer = f'floor( log({sailors_pages}) / log({average_fanout}) )'
+% answer2 = r''' There are 500 pages with an average fanout is 75
+So the number of pages is $\lfloor \log_{{75}}(500) \rfloor$'''
+% answer2 = f'''{answer2}
+Answer: {answer} '''
+{{!expression(answer, dict(n=1), points=10, name='Sailor.Height.Non.Leaf')}}
+% include('viewAnswer', answer=answer2)
+
+
+```sql
+SELECT *
+ FROM Sailors
+WHERE rating >= 5
+```
+
+**Sailors.Greater.Equal.5:** How many I/Os will it take to execute the above query?   
+% answer = f'ceiling( log({sailors_pages}) / log({average_fanout}) ) + ceiling( {sailors_pages}/2 )'
+% answer2 = r''' There are $\lceil \log_{{75}}(500) \rceil$ I/Os to get to the data 
+Since the ratings are evenly distributed and that means half of the pages read
+'''
+% answer2 = f'''{answer2}
+Answer: {answer} '''
+{{!expression(answer, dict(n=1), points=10, name='Sailors.Greater.Equal.5')}}
+% include('viewAnswer', answer=answer2)
+
+
+% end
+
+---
+
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

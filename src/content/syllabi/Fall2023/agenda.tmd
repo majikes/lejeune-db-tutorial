@@ -1,0 +1,308 @@
+Lecture 1 - Introduction
+# Tue Aug 22 - Lecture-01.bat
+
+CL Read over the [syllabus]({{get_url('syllabi', page_name='syllabus')}}) so you can find the Easter egg and ask questions about the class. 
+CL Ensure you have the [textbook]({{get_url('syllabi', page_name='syllabus')}}#textbook,-class-discussion-site,-required-browser,-course-care).
+CL Complete the [demo worksheet]({{get_url('worksheets', key='worksheet-00-demo')}}) before Tuesday the 29th 8:00 AM. @worksheet-00-demo
+CL A [welcome video]({{get_url('video', video_name='WelcomeVideo')}}) is available.
+CL Read the [syllabus section on Piazza]({{get_url('syllabi', page_name='syllabus')}}#piazza) and the [worksheet bonus for good Piazza posts]({{get_url('syllabi', page_name='syllabus')}}#worksheet-bonus).
+CL Watch [the video](https://youtu.be/tVqWcrMPxfY) on why you should use a discussion forum like Piazza.
+CL Watch video on how to sign up for [Course Care]({{get_url('panopto',hexcode='e69a803f-d891-481e-8ef8-ac9b013890ac')}}) or [the help page office hours instruction]({{get_url('syllabi', page_name='help')}}#office-hours).
+CL After you have installed [Anaconda]({{get_url('syllabi', page_name='syllabus')}}#anaconda-/-python-sqlite3), you can verify your installation with a [demo assignment]({{static('images/A0.zip')}}) which will not be graded. Note that wherever you download the demo assignment, you must start `jupyter notebook` from that directory or a file tree _above_ that directory. 
+
+We will introduce the course, discuss logistics and objectives, and generally discuss the [syllabus]({{get_url('syllabi', page_name='syllabus')}}).
+
+You can get a head start on reading chapters one.
+We will cover part of Chapter one on the first day!
+
+S 00.Introduction.pdf Introduction
+
+Unfortunately zoom was not working today
+
+| Lecture 2 - Chapter 1: Overview of Database Systems
+# Thur Aug 24th
+
+CL Read chapter 1 before class  
+CL Complete [pre-class worksheet on chapter 1]({{get_url('worksheets', key='worksheet-chapter-01-preclass')}}) before 8:00 AM today. @worksheet-chapter-01-preclass
+CL Have you checked your [grades]({{get_url('grades')}})?
+CL Assuming we complete  [post-class worksheet on chapter 1]({{get_url('worksheets', key='worksheet-chapter-01-postclass')}}) before 8:00 AM next class. @worksheet-chapter-01-postclass
+
+S Chapter.01.pdf Chapter 1
+
+P1 [Aug 24 Zoom recording]({{get_url('panopto', hexcode='905d39f9-4662-47ec-8da8-b06801136ce5')}})
+
+| No class
+# Tue Aug 29
+
+| Lecture 3 - Finish Chapter 1 and start Chapters 2: Introduction to the Relational Model
+# Thur Aug 31
+
+CL Complete [post-class worksheet on chapter 1]({{get_url('worksheets', key='worksheet-chapter-01-postclass')}}) before 8:00 AM. @worksheet-chapter-01-postclass
+CL Read Chapter 2 Introduction to the Relational Model before class
+
+
+S Chapter.02.pdf Chapter 2
+
+P1 [Aug 31 Zoom recording]({{get_url('panopto', hexcode='a70cdc22-6a21-4ec2-b6f1-b06f01172a2c')}})
+
+| Lecture 4 - Finish off Chapter 2 and start on Chapters 3 Part I
+# Thur Sep 7
+
+CL Many worksheets due by 8:00 AM today.
+CL Read Chapter 3 up to and including 3.5 
+CL Check the due date for [pre-class worksheet on chapter 2]({{get_url('worksheets', key='worksheet-chapter-02-preclass')}})
+CL You need [Anaconda]({{get_url('syllabi', page_name='syllabus')}}#anaconda-/-python-sqlite3) installed to start homework assignments
+CL [Homework A1]({{get_url('homeworks', key='A1')}}) Due Friday, 9/15 11:59:59 PM
+
+S Chapter.02.pdf Chapter 2
+
+S Chapter.03-1.pdf Chapter 3 Part I
+
+Sorry there are no recordings today
+
+| Lecture 5 - Chapters 3 Part II
+# Tue Sep 12
+
+
+CL [Homework A1]({{get_url('homeworks', key='A1')}}) due Friday 9/15 11:59:59 PM
+
+
+S Chapter.03-2.pdf Chapter 3 Part  II
+
+P1 [Sep 12 Zoom recording]({{get_url('panopto', hexcode='b5d30bca-671a-461d-99d0-b07b011598bd')}})
+
+| Lecture 6 - Chapter 3 Part II
+# Thur Sep 14
+
+SQL relational division, more
+
+P1 [Sep 14 Zoom recording]({{get_url('panopto', hexcode='cd694686-8656-4d29-8eab-b07d0114130c')}})
+CL [Homework A1]({{get_url('homeworks', key='A1')}}) due Friday 11:59:59 PM
+CL [Chapter 4 preclass worksheet]({{get_url('worksheets', key='worksheet-chapter-04-preclass')}}) given out after class.
+
+| Lecture 7 Chapter 4 Part I
+# Tue Sept 19
+
+CL Read chapter 4.1 to 4.2 Joins and Views before class.
+CL [Chapter 4 preclass worksheet]({{get_url('worksheets', key='worksheet-chapter-04-preclass')}}) due 8:00 AM
+CL [Homework A2]({{get_url('homeworks', key='A2')}}) out today at 12:30 PM due Wednesday, 9/27 11:59:59 PM
+
+P1 [Sep 19 Zoom recording]({{get_url('panopto', hexcode='4b70f805-1654-4861-8e3e-b08201192907')}})
+
+S Chapter.04-1.pdf Chapter 4 Part I
+
+
+
+| Lecture 8 Chapter 4 Part II
+# Thur Sept 14
+
+CL [Homework A2]({{get_url('homeworks', key='A2')}}) due Wednesday 11:59:59 PM
+CL Finish reading Chapter 4 Transactions, IC Schema, Indexes
+
+P1 [Sep 21 Zoom recording]({{get_url('panopto', hexcode='714997bd-1cf7-42fa-9293-b0840112c1f4')}})
+
+S Chapter.04-2.pdf Chapter 4 Part II
+
+
+
+| Lecture 9 Chapter 5 Application programming
+# Sep 26 Chapter 5 
+
+Today's slides will be on application application programming
+
+
+
+[Chapter 5 Jupyter Notebook]({{static('slides/CH5-Application-Programming.ipynb')}} )
+
+[Chapter 5 Slide PDF]({{static('slides/CH5-Application-Programming.pdf')}} )
+
+
+CL [Homework A2]({{get_url('homeworks', key='A2')}}) due Wednesday 11:59:59 PM
+CL [game worksheet]({{get_url('worksheets', key='worksheet-game-nuclear-01')}}) available after class due before Thursday 8:00 AM
+
+
+P1 [Sep 26 Zoom recording]({{get_url('panopto', hexcode='3D08da7342-d3ba-4c76-820c-b089011d3eab')}})
+
+
+| Game 1
+
+
+CL [game worksheet]({{get_url('worksheets', key='worksheet-game-nuclear-01')}}) due before  8:00 AM
+CL [game worksheet]({{get_url('worksheets', key='worksheet-game-nuclear-02')}}) available after class and due before 11:59:59 PM
+
+
+|  Midterm 1
+# Tue Oct 3
+
+CL [Schema and scratch area for Midterm 1]({{get_url('oldstuff', key='m1-scratch')}})
+CL [Spring 2023 Midterm 1 COMP 421]({{get_url('handouts', pdf='COMP421.Spring2023.Midterm1')}})
+CL [Fall 2021 Midterm 1 COMP 421]({{get_url('handouts', pdf='COMP421.Fall2021.Midterm1')}})
+CL [Spring 2021 Midterm 1 COMP 521]({{get_url('handouts', pdf='COMP521-Midterm1-Spring21')}})
+
+
+| Lecture 10 - Chapter 9 Application Development
+# Thu Oct 5
+
+
+CL [Homework A3]({{get_url('homeworks', key='A3')}}) out after class and due Monday, 10/16 11:59:59 PM
+
+ [Chapter 9 Jupyter Notebook]({{static('slides/CH9-Application-Development.ipynb')}} )
+
+
+P1 [Oct 5 Zoom recording]({{get_url('panopto', hexcode='8acc4f07-af94-48e3-bf64-b09201100904')}})
+
+
+
+| Lecture 11 - Physical Storage Chapter 12
+# Tue Oct 10
+
+CL [Homework A3]({{get_url('homeworks', key='A3')}}) due Monday, 10/16 11:59:59 PM
+
+
+P1 [Oct 10 Zoom recording]({{get_url('panopto', hexcode='e944a931-4546-43e2-b455-b0970114441e')}})
+
+
+
+S Chapter.12.pdf Chapter 12
+
+
+
+
+ 
+| University Day - Class via video - Lecture 12 - Chapter 13 - Data Storage Structures
+# Thu Oct 12
+
+CL University Day, 11:00 AM conflicts with class
+CL By 11:00 AM, video of class will be posted
+CL [worksheet 13 00]({{get_url('worksheets', key='worksheet-13-00-fixed-length-records')}}) due by Friday 11:59:59 PM
+CL All Chapter-13 in-class worksheets due by 11:59:59 PM
+CL [Homework A3]({{get_url('homeworks', key='A3')}}) due Monday, 10/16 11:59:59 PM
+
+
+S Chapter.13.pdf Chapter 13
+
+P1 [Oct 12 Zoom recording]({{get_url('panopto', hexcode='8deba97b-0aae-4fb1-9fa7-b09801647562')}})
+
+| Lecture 13  - Chapter 14 Part I Indexing
+# Tue Oct 17
+
+
+CL [Homework A3]({{get_url('homeworks', key='A3')}}) due Monday 11:59:59 PM
+CL Worksheet on game II schema, [crime 00 worksheet]({{get_url('worksheets', key='worksheet-game-crime-00')}}) out after class and due before 8:00 AM day of game II @worksheet-game-crime-00
+
+S Chapter.14-1.pdf Chapter 14 Part I
+
+P1 [Oct 17 Zoom recording]({{get_url('panopto', hexcode='4a98c71d-48b6-48af-8763-b09e0119bf6d')}})
+
+
+
+| Lecture 14 - Chapter 14 Part II Indexing
+# Tue Oct 24
+
+CL Worksheet on game II schema, [crime 00 worksheet]({{get_url('worksheets', key='worksheet-game-crime-00')}}) due before 8:00 AM day of game II @worksheet-game-crime-00
+
+S Chapter.14-2.pdf Chapter 14 Part II
+
+P1 [Oct 24 Zoom recording]({{get_url('panopto', hexcode='0d94199b-8da6-43c6-84f7-b0a5011a3e42')}})
+
+| Lecture 15 - Chapter 14 Part III Indexing
+# Thur Oct 26
+
+CL Worksheet on game II schema, [crime 00 worksheet]({{get_url('worksheets', key='worksheet-game-crime-00')}}) due before 8:00 AM day of game II @worksheet-game-crime-00
+CL Pregame II survey, [crime 01 worksheet]({{get_url('worksheets', key='worksheet-game-crime-01')}}) out after class and due before 8:00 AM day of game II @worksheet-game-crime-01
+
+S Chapter.14-3.pdf Chapter 14 Part III
+
+P1 [Oct 26 Zoom recording]({{get_url('panopto', hexcode='52be3ad1-adde-425d-9e43-b0a7010e86f0')}})
+
+
+
+
+| Games II
+
+CL Worksheet on game II schema, [crime 00 worksheet]({{get_url('worksheets', key='worksheet-game-crime-00')}}) due before 8:00 AM @worksheet-game-crime-00
+CL Pre-game II survey, [crime 01 worksheet]({{get_url('worksheets', key='worksheet-game-crime-01')}}) due before 8:00 AM @worksheet-game-crime-01
+CL Post-game II survey, [crime 02 worksheet]({{get_url('worksheets', key='worksheet-game-crime-02')}}) out after class due before 11:59:59 PM @worksheet-game-crime-02
+
+
+
+
+| Midterm 2
+# Thu Nov 2
+
+
+
+| Lecture 16 - Chapter 15 Query Processing - Part I
+# Tue Nov 7 
+
+CL [Homework A4]({{get_url('homeworks', key='A4')}}) out and due by 12/5 11:59:59 PM
+
+P1 [Nov 7 Zoom recording]({{get_url('panopto', hexcode='e88d685a-55e6-4c8a-bb4a-b0b301278433')}})
+
+S Chapter.15-1.pdf Chapter 15 Part I
+
+| Lecture 17 - Chapter 15 Query Processing - Part II
+# Thu Nov 9
+
+CL Read chapter 6 for next class
+
+S Chapter.15-2.pdf Chapter 15 Part II
+
+P1 [Nov 9 Zoom recording]({{get_url('panopto', hexcode='1cff036c-41ed-4b5f-906e-b0b50127c4bc')}})
+
+| Lecture 18 - Chapter 6
+# Thu Nov 14
+
+CL Read chapter 7 for next class
+
+S Chapter.06.pdf Chapter 6
+
+P1 [Nov 14 Zoom recording]({{get_url('panopto', hexcode='e0012b22-4c65-4fe5-9184-b0ba012a8311')}})
+
+
+| Lecture 19 - Chapter 7 Part I
+# Tue Nov 16
+
+
+CL Homework A5 out; due 12/5 11:59:59 PM
+CL Lowest grade of A1-A5 will be dropped
+
+P1 [Nov 16 Zoom recording]({{get_url('panopto', hexcode='debeb055-6d53-4a42-9945-b0bc0126d901')}})
+
+S Chapter.07-1.pdf Chapter 7 Part I
+
+
+| Lecture 20 - Chapter 7 Part II
+#  Finish off Chapter 14
+# Thu Apr 13  - Lecture 22
+
+CL Start where we left Chapter 7 Part I, at BCNF side 22
+CL From today's class, understand functional dependencies, how to evaluation a relation for FD, and how you'd pick a primary key
+
+
+S Chapter.07-2.pdf Chapter 7 Part II
+
+| Lecture 21 - Chapter 17 Part I
+
+CL Read chapter 17
+
+S Chapter.17.pdf Chapter 17
+
+P1 [Nov 28 Zoom recording]({{get_url('panopto', hexcode='86d0e242-a028-4186-9957-b0c80125aa96')}})
+
+
+| Lecture 22 - Chapter 17 Part II
+
+
+P1 [Nov 30 Zoom recording]({{get_url('panopto', hexcode='4c64d2e0-3f7b-4d50-834c-b0ca01171222')}})
+
+| Exam Review
+
+
+CL [Homework A4]({{get_url('homeworks', key='A4')}}) due by 11:59:59 PM
+CL [Homework A5]({{get_url('homeworks', key='A5')}}) due by 11:59:59 PM
+CL No recording for today's class
+CL No office hours after tomorrow
+
+
+

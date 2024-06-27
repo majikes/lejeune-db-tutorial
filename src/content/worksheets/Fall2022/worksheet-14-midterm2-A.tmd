@@ -1,0 +1,67 @@
+<%
+setInfo(
+        due='2021-11-04 14:33:00',
+        exam=False,
+        needsSubmitCode=True,
+        exceptions=dict(_003=dict(needsSubmitCode=False, duration=999)),
+        pages=['questions', 'submit'],
+        maxpenalty=0.75, penalty=.2,
+        )
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+# Mock Midterm 2-A
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+--- 
+
+## Questions
+
+% if 'questions' in pages:
+
+I had a student say that there was no
+explicit restriction on posting answers on Piazza.
+So I had to update the Syllabus to explicitly state the obvious.  
+Please go to this link [https://comp421fa21.cs.unc.edu/syllabi/syllabus#course-policies-and-honor-code](https://comp421fa21.cs.unc.edu/syllabi/syllabus#course-policies-and-honor-coder).
+
+**Do.I.really.have.to.state.this?:** Do you understand that posting answers on Piazza is a violation of the Honor Code?  
+{{!select('Yes', choices=['Yes'], points=20, name='Really.I.Have.To.State.This')}}
+
+**Discord:** Do you understand that using Discord, GroupMe or other bulletin boards to post answers even _after_&nbsp; the assessment is a violation of the honor code?  
+{{!select('Yes', choices=['Yes'], points=20, name='Discord')}}
+
+**Cheat.Sheet:** Do you understand that a cheat sheet for the exam **must** be hand written.
+It must fit on two sheets, front and back, of traditional 8.5 x 11 inch paper?  
+{{!select('Yes', choices=['Yes'], points=20, name='Cheat.Sheet')}}
+
+---
+
+The text in the exam prologue states:
+
+You **MAY NOT** Google for anything,
+you **MAY NOT** visit any websites,
+and you **MAY NOT** copy from a friend.
+Do not paste information into your exam unless it was copied from your own exam.
+You **MUST NOT** receive help from anyone.
+
+**No.Google:** I understand that pasting anything into this exam that did not come from this exam is an honor code violation.  
+{{!select('Yes', choices=['Yes'], points=20, name='No.Google')}}
+
+---
+
+**Final.Exam:** I have looked at the [agenda Final Exam](https://comp421fa21.cs.unc.edu/#final-exam) and noted the date / time.
+It is also **only two hours long**.  
+{{!select('Yes', choices=['Yes'], points=20, name='Final.Exam')}}
+
+% end
+
+---
+
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

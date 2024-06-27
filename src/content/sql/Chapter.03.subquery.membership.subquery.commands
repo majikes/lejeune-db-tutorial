@@ -1,0 +1,82 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Instructor;
+CREATE TABLE Instructor (ID INTEGER PRIMARY KEY, name CHAR(20), dept_name CHAR(20), salary INTEGER);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (10101, 'Srinivasan', 'Comp. Sci.', 65000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (12121, 'Wu',         'Finance',    90000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15015, 'Majikes',    'Music',      40000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15151, 'Mozart',     'Music',      48000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (22222, 'Einstein',   'Physics',    95000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (32343, 'El Said',    'History',    60000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (33456, 'Gold',       'Physics',    87000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (45565, 'Katz',       'Comp. Sci.', 75000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (58583, 'Califieri',  'History',    62000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76543, 'Singh',      'Finance',    80000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (76766, 'Crick',      'Biology',    72000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (83821, 'Brandt',     'Comp. Sci.', 92000);
+INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (98345, 'Kim',        'Elec. Eng.', 80000);
+
+DROP TABLE IF EXISTS Takes;
+CREATE TABLE TAKES (ID			varchar(5), 
+                    course_id		varchar(8),
+                    sec_id			varchar(8), 
+                    semester		varchar(6),
+                    year			numeric(4,0),
+                    grade		        varchar(2),
+                    primary key (ID, course_id, sec_id, semester, year));
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('00128', 'CS-101', '1', 'Fall', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('00128', 'CS-347', '1', 'Fall', '2017', 'A-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('12345', 'CS-101', '1', 'Fall', '2017', 'C');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('12345', 'CS-190', '2', 'Spring', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('12345', 'CS-315', '1', 'Spring', '2018', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('12345', 'CS-347', '1', 'Fall', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('19991', 'HIS-351', '1', 'Spring', '2018', 'B');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('23121', 'FIN-201', '1', 'Spring', '2018', 'C+');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('44553', 'PHY-101', '1', 'Fall', '2017', 'B-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('45678', 'CS-101', '1', 'Fall', '2017', 'F');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('45678', 'CS-101', '1', 'Spring', '2018', 'B+');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('45678', 'CS-319', '1', 'Spring', '2018', 'B');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('54321', 'CS-101', '1', 'Fall', '2017', 'A-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('54321', 'CS-190', '2', 'Spring', '2017', 'B+');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('55739', 'MU-199', '1', 'Spring', '2018', 'A-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('76543', 'CS-101', '1', 'Fall', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('76543', 'CS-319', '2', 'Spring', '2018', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('76653', 'EE-181', '1', 'Spring', '2017', 'C');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('98765', 'CS-101', '1', 'Fall', '2017', 'C-');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('98765', 'CS-315', '1', 'Spring', '2018', 'B');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('98988', 'BIO-101', '1', 'Summer', '2017', 'A');
+INSERT INTO TAKES (ID, course_id, sec_id, semester, year, grade) VALUES ('98988', 'BIO-301', '1', 'Summer', '2018', null);
+
+DROP TABLE IF EXISTS Teaches;
+CREATE TABLE Teaches (ID varchar(5), course_id varchar(5), sec_id varchar(5), semester varchar(6), year NUMERIC,
+       PRIMARY KEY(ID, course_id, sec_id, semester, year),
+       FOREIGN KEY(ID) REFERENCES Instructor
+               ON DELETE CASCADE);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('10101', 'CS-101',  1, 'Fall',   2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('10101', 'CS-315',  1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('10101', 'CS-347',  1, 'Fall',   2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('12121', 'FIN-201', 1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('15151', 'MU-199',  1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('22222', 'PHY-101', 1, 'Fall',   2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('32343', 'HIS-351', 1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('45565', 'CS-101',  1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('45565', 'CS-319',  1, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('76766', 'BIO-101', 1, 'Summer', 2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('76766', 'BIO-301', 1, 'Summer', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('83821', 'CS-190',  1, 'Spring', 2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('83821', 'CS-190',  2, 'Spring', 2017);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('83821', 'CS-319',  2, 'Spring', 2018);
+INSERT INTO Teaches (ID, course_id, sec_id, semester, year) VALUES('98345', 'EE-181',  1, 'Spring', 2017);
+
+SELECT 'List instructor names who are neither Mozart nor Einstein' AS '';
+SELECT distinct name
+  FROM Instructor
+ WHERE name not in ('Mozart', 'Einstein');
+
+SELECT 'List the total number of student who have taken course taught by instructor 10101' AS '';
+SELECT COUNT(DISTINCT ID) 
+  FROM takes
+ WHERE (course_id, sec_id, semester, year) IN
+           (SELECT course_id, sec_id, semester, year
+              FROM teaches
+  						WHERE teaches.ID = 10101);

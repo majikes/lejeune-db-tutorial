@@ -1,0 +1,34 @@
+# Reading Assignments
+
+For each lecture, it will state what the reading assignments are.
+This  list is a more general list that might be helpful to get ahead of schedule or to review before the exams.
+It is also more tentative as things may happen to change the sequence or timing of the class.
+
+
+Chapter 1 Overview of Database Systems  
+Chapter 2 Database Design (<font color='red'>minus</font> 2.7 UML)  
+Chapter 3 Relational Model  
+Chapter 4 Relational Algebra  
+Chapter 5 SQL Queries  
+Chapter 6 Database Application Development  
+  - We will cover 6.1 but use Python instead of Java for 6.2-6.7
+
+Midterm 1
+
+Chapter 7 Internet Applications REST  
+  - Skip over XML DTD, stylesheets
+Chapter 8 Overview of Storage and Indexing  
+Chapter 9 Storing Data excluding 9.2 RAID  
+Chapter 10 Indexing  
+Chapter 11.1 Hashing (will not cover 11.2-11.4)  
+Chapter 12 Query Evaluation  
+Chapter 13 External Sorting (skip 13.2)  
+Chapter 14 Evaluating Relational Operators  
+Chapter 16 Overview of Transaction Management   (Not done in Spring 23)  
+
+Midterm 2
+
+Chapter 17 Concurrency Control (Not done in Spring 23)  
+Chapter 18 Crash Recovery (Not done in Spring 23)  
+Chapter 19 Database Design
+

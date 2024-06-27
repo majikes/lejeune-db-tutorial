@@ -1,0 +1,3 @@
+Students(sid: string, name: string, login: string, dob: date, gpa: real)
+Courses(cid: string, cname: string, credit: int)
+Enrolled(sid: string, cid: string, grade: string)

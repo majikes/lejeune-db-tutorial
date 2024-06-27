@@ -1,0 +1,3 @@
+Students(sid: string, name: string, login: string, age: integer, gpa: real);   <br />
+Enrolled(sid:string, cid: string, grade: string);
+

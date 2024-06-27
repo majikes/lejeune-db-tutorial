@@ -1,0 +1,42 @@
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('29', 'Brutus',  1, 33.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('32', 'Andy',    8, 25.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+INSERT INTO Sailors values ('64', 'Horatio', 7, 35.0);
+INSERT INTO Sailors values ('71', 'Zorba',  10, 16.0);
+INSERT INTO Sailors values ('74', 'Horatio', 9, 35.0);
+INSERT INTO Sailors values ('85', 'Art',     3, 25.5);
+INSERT INTO Sailors values ('95', 'Bob',     3, 63.5);
+
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('29', 'Brutus',  1, 33.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('32', 'Andy',    8, 25.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+INSERT INTO Sailors values ('64', 'Horatio', 7, 35.0);
+INSERT INTO Sailors values ('71', 'Zorba',  10, 16.0);
+INSERT INTO Sailors values ('74', 'Horatio', 9, 35.0);
+INSERT INTO Sailors values ('85', 'Art',     3, 25.5);
+INSERT INTO Sailors values ('95', 'Bob',     3, 63.5);
+
+SELECT 'Sailors table:' as '';
+SELECT * FROM Sailors;
+
+SELECT 'Average age of voting age sailors for each rating group' as '';
+SELECT S.rating, MIN(S.age) as minage
+  FROM Sailors AS S
+ WHERE S.age >= 18 
+ GROUP BY S.rating
+ HAVING 1 < (SELECT COUNT(*)
+               FROM Sailors AS S2
+              WHERE S.age >= 18 AND 
+                    S.rating=S2.rating);

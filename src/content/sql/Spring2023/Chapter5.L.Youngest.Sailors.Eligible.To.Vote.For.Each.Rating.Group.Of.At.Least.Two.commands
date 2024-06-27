@@ -1,0 +1,66 @@
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('29', 'Brutus',  1, 33.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('32', 'Andy',    8, 25.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+INSERT INTO Sailors values ('64', 'Horatio', 7, 35.0);
+INSERT INTO Sailors values ('71', 'Zorba',  10, 16.0);
+INSERT INTO Sailors values ('74', 'Horatio', 9, 35.0);
+INSERT INTO Sailors values ('85', 'Art',     3, 25.5);
+INSERT INTO Sailors values ('95', 'Bob',     3, 63.5);
+
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('29', 'Brutus',  1, 33.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('32', 'Andy',    8, 25.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+INSERT INTO Sailors values ('64', 'Horatio', 7, 35.0);
+INSERT INTO Sailors values ('71', 'Zorba',  10, 16.0);
+INSERT INTO Sailors values ('74', 'Horatio', 9, 35.0);
+INSERT INTO Sailors values ('85', 'Art',     3, 25.5);
+INSERT INTO Sailors values ('95', 'Bob',     3, 63.5);
+
+SELECT 'First Step the Sailors Sailors table:' as '';
+SELECT * FROM Sailors;
+
+SELECT 'Second Step Sailors S.age >= 18:' as '';
+SELECT 'Eliminate Zorba' as '';
+SELECT * 
+  FROM Sailors as S
+ WHERE S.age >= 18; 
+
+SELECT 'Third Step Sailors Eliminate unwanted columns' as '';
+SELECT S.rating, S.age
+  FROM Sailors as S
+ WHERE S.age >= 18; 
+
+SELECT 'Fourth Step Group By rating:' as '';
+SELECT 'NOTE: Only one row per group is shown!' as '';
+SELECT S.rating, S.age 
+  FROM Sailors AS S
+ WHERE S.age >= 18 
+ GROUP BY S.rating; 
+
+
+SELECT 'Fifth Step apply group-qualification HAVING' as '';
+SELECT S.rating, S.age 
+  FROM Sailors AS S
+ WHERE S.age >= 18 
+ GROUP BY S.rating
+ HAVING COUNT(*) > 1;
+
+
+SELECT 'Sixth/Final Step show the minimum age for each group' as '';
+SELECT S.rating, MIN(S.age) as minage
+  FROM Sailors AS S
+ WHERE S.age >= 18 
+ GROUP BY S.rating
+ HAVING COUNT(*) > 1;

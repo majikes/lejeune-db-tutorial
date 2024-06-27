@@ -1,0 +1,138 @@
+<%
+setInfo(
+        assessment_type='worksheet',
+        )
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# Chapter 1 Post-class worksheet
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+--- 
+
+## {{!linkable_header('Questions')}} 
+
+Each of the items below describe a problem solved by a database.
+The table contains terms of features of a database.
+For each database feature, select the letter of the problem that it solves.  
+
+% letter_symbols = [x for x in 'ABCDEFGH']
+
+- **A** Larger amounts of storage and cost to access data written by various application programs  
+- **B** Data in various files and formats
+- **C** Efficient and convenient access to data
+- **D** All portions or no portions of a logical unit of work completing
+- **E** Physical layer data abstraction
+- **F** University payroll personnel should see financial information but not academic records  
+- **G** Multiple data updates to a field that occur near simultaneously to each updater  
+- **H** None of these
+
+% answer = ['D', 'F', 'A', 'G']
+% answer2=f'''
+{answer[0]} page 20 describes atomicity
+{answer[1]} page 7 says that not ever user should be able ot access all data security
+{answer[2]} page 6 describes data redundancy
+{answer[3]} page 7 describes concurrent access anomalies'''
+
+**DB.Solves**: For each database feature below, select the letter of the problem that it solves.  
+{{!table(inputs=1, headings='Database feature, Problem solved', table=f'''
+Atomicity,{answer[0]}
+Security,{answer[1]}
+Data redundancy and inconsistency,{answer[2]}
+Concurrency,{answer[3]}
+''', symbols=letter_symbols, name='DB.Solves', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Ted.Codd** Select the item that is **NOT** true about Edgar "Ted" Codd.  
+<%
+answer = 'Invented the database'
+answer2 = f'''Ted Codd defined the relational model for a database,
+Fred Brooks sent him to graduate school
+His paper was written in 1970
+
+He did not invent the database
+
+Answer {answer}'''
+choices = [answer, 'Defined the relational database model',
+           'None of these', 'All of these',
+          'Fred Brooks knew Ted Codd',
+          'Wrote a seminal paper on databases in 1970']
+%>
+{{!select(answer, choices=choices, points=20, name='Ted.Codd')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+Levels of abstraction:
+
+- **A** The single way all users view the data
+- **B** There are at least one, but generally many
+- **C** Describes what is in each relation
+- **D** Describes how multiple layers interact
+- **E** Specifies how the data is stored
+- **H** None of these
+
+% answer = ['E', 'C', 'B']
+% letter_symbols = [x for x in 'ABCDEFGH']
+% answer2=f'''
+Page 9 describes the three levels of abstraction
+
+Answer {answer}'''
+
+**Abstraction** Letter representing the best answer:  
+{{!table(inputs=1, headings='Level of abstraction, Letter of definition', table=f'''
+Physical level abstraction,{answer[0]}
+Logical level abstraction,{answer[1]}
+View level abstraction,{answer[2]}
+''', symbols=letter_symbols, name='Abstraction', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+
+% answer = ['False', 'False', 'True', 'False', 'False']
+% symbols = ['True', 'False']
+% answer2=f'''
+{answer[0]} Don't want to use DB if single user, high access
+{answer[1]} DDL defines data
+{answer[2]} Page 18, relational is the most widely used database model
+{answer[3]} We will not build a database
+{answer[3]} We will not cover all the engines in detail
+
+Answer {answer}'''
+
+True.False.1: Select whether the following statements are true or false.  
+{{!table(inputs=1, headings='Statement, True or False', table=f'''
+Databases solve most data storage problems and should always be used,{answer[0]}
+Data manipulation language defines the properties of data in a DBMS,{answer[1]}
+The relational DB model is the most widely used database model,{answer[2]}
+COMP 421 will cover how to build a database management system,{answer[3]}
+COMP 421 will cover all database engines in detail,{answer[4]}
+''', symbols=symbols, name='True.False.1', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+% answer = ['False', 'False', 'False', 'False', 'False']
+% symbols = ['True', 'False']
+% answer2=f'''
+{answer[0]} Databases are used by most people
+{answer[1]} Exercise 1.5 says they are quite different as on uses free form syntax
+{answer[2]} Queries of data are DML statements
+
+Answer {answer}'''
+
+True.False.2: Select whether the following statements are true or false.  
+{{!table(inputs=1, headings='Statement, True or False', table=f'''
+Only sophisticated users use databases,{answer[0]}
+Database queries are quite similar to web search queries,{answer[1]}
+`Select * from instructor` is a DDL query,{answer[2]}
+''', symbols=symbols, name='True.False.2', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+
+% include('worksheet-submit.md')

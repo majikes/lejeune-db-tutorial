@@ -1,0 +1,76 @@
+# COMP 421 Fall 2022
+% from agenda import parse
+% upnext = False
+
+## {{!linkable_header('Agenda')}}
+
+
+% if user_is_admin(user):
+  <font color="grey">Text in grey is comments that students can't yet see</font>
+% end
+
+The agenda is tentative.
+You should check it before each class.
+The farther items are in the future, the more likely their due dates are to change.
+
+<!--
+The [syllabus COVID community standards]({{get_url('syllabi', page_name='syllabus')}}#covid-19-and-community-   standards)
+  explains the reasons for attending class via zoom.
+  If you need to attend class via zoom, please use the **[Zoom link]({{get_url('zoom')}})** for a synchronous     instruction.
+  Each class's zoom recording will appear below.
+  **Remember,** COMP 421 is synchronous and attending in-person is better than via Zoom.
+
+  If you do use Zoom you must use the Single Sign On.
+  This is a security precaution against Zoom bombing.
+  Do not enter your password on the Zoom screen, but instead click on the SSO pointed to by the arrow.
+  Enter your password on the second screen.
+
+  <div class="row">
+   <div class="twocolumns">
+    <img src="{{static('images/Zoom.UNC.Login.png')}}" width="50%">
+   </div>
+   <div class="twocolumns">
+    <img src="{{static('images/Zoom.UNC.Domain.png')}}" width="50%">
+   </div>
+  </div>
+-->
+
+Each item with a &#x2610; is a box you can check / click  when it is completed.
+I highly recommend that you use these boxes to ensure you are current on submissions.
+You can also use the [grades page]({{get_url('grades')}}) to see your submission status.
+
+<!-- Use agenda's parse to break up each line starting with a "\n| "
+     and create variable d for its details.
+     Each day starts at FDOC 1/19/21 and must end before LDOC 5/5/21 -->
+% for d in parse('content/syllabi/agenda.tmd', user):
+
+ <div class="agenda {{d['when']}}" markdown=1>
+ <!-- if this class details is the first present or future, flag it as "Next" -->
+ % if not upnext and d['when'] in ['present', 'future']:
+   % upnext = True
+   <div class="arrow_box">{{!linkable_header('Next')}}
+   </div>
+ % end
+
+ <!-- Following markdown should be indented by h3 has to appear in col 1 -->
+ % title_lower = d['title'].lower().replace(' ', '-')
+### {{d['date'].strftime('%a %m/%d')}} <a href="#{{title_lower}}" name="{{title_lower}}"><u>{{d['title']}}</u></a>
+
+ {{!d['body']}}
+
+ </div>
+
+% end
+
+ <div class="agenda future" markdown=1>
+ 
+  <!-- Following markdown should be indented by h3 has to appear in col 1 -->
+  % title_lower = "Final Exam".lower().replace(' ', '-')
+ <h3> {{exam_time.strftime('%m/%d')}} <a href="#{{title_lower}}" name="{{title_lower}}"><u>Final Exam</u></a></h3>
+ 
+ % if conflict_exam:
+  <font color='red'>Conflict</font>
+ %end
+  Final Exam on {{exam_time.strftime('%B %d, %Y at %I:%M %p')}} 
+  <br />
+ </div>

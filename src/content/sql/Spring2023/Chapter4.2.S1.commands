@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS S1;
+CREATE TABLE S1 (sid char(20), sname char(20), rating integer, age real);
+INSERT INTO S1 values ('22', 'Dustin', 7, 45.0);
+INSERT INTO S1 values ('31', 'Lubber', 8, 55.5);
+INSERT INTO S1 values ('58', 'Rusty', 10, 35.0);
+
+SELECT 'The Sailors S1 table:' as '';
+SELECT * FROM S1;

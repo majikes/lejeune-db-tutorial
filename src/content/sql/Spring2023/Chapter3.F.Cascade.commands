@@ -1,0 +1,52 @@
+-- Needed to state you want SQLite 3.x support for foreign keys
+PRAGMA foreign_keys = ON;
+
+-- Must drop Enrolled table if dropping Students table.  Know why?
+-- HINT: move the DROP of Enrolled _after_ the Students table and hit Execute twice
+DROP TABLE IF EXISTS Enrolled;
+DROP TABLE IF EXISTS Students;
+
+-- Create and populate the Students relation
+CREATE TABLE Students (sid char(20), name char(20), login char(10), age integer, gpa real,
+					   PRIMARY KEY(sid));
+INSERT INTO Students values ('50000', 'Dave',  'dave@cs', 19, 3.3);
+INSERT INTO Students values ('53666', 'Jones', 'jones@cs', 18, 3.4);
+INSERT INTO Students values ('53688', 'Smith', 'smith@cs', 18, 3.2);
+INSERT INTO Students values ('53650', 'Smith', 'smith@math', 19, 3.9);
+INSERT INTO Students values ('53831', 'Madayan', 'madayan@music', 11, 1.8);
+INSERT INTO Students values ('53832', 'Guldu', 'guldu@music', 12, 2.0);
+
+-- Display the Students relation
+SELECT 'The Students table:' as '';
+SELECT * FROM Students;
+
+-- Create and populate the Enrolled relation
+CREATE TABLE Enrolled
+   (sid CHAR(20),  cid CHAR(20),  grade CHAR(2),
+    PRIMARY KEY  (sid,cid),
+    FOREIGN KEY (sid) 
+            REFERENCES  Students
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+             );
+INSERT INTO Enrolled (sid, cid, grade) values ('53688', 'Carnatic101', 'C');
+INSERT INTO Enrolled values ('53832', 'Reggae203', 'B');
+INSERT INTO Enrolled values ('53650', 'Topology112', 'A');
+INSERT INTO Enrolled values ('53666', 'History105', 'B');
+
+-- Display the Enrolled relation
+SELECT 'The Enrolled table:' as '';
+SELECT * FROM Enrolled;
+
+-- Let's assume that Guldu drops out of school and is deleted from the students table
+SELECT 'Guldu drops out of school' AS '';
+DELETE FROM Students
+ WHERE sid = '53832';
+
+-- Display the Students relation
+SELECT 'The Students table:' as '';
+SELECT * FROM Students;
+
+-- Display the Enrolled relation
+SELECT 'The Enrolled table:' as '';
+SELECT * FROM Enrolled;

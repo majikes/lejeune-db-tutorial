@@ -1,0 +1,36 @@
+<h1>List submissions {{key}}</h1>
+% from config import assessment_dict, assessment_folder_dict
+
+<p>User {{onyen}} submissions for
+   <a href="{{get_url(assessment_folder_dict[posts[0].assessment_type], key=key, onyen=onyen)}}">{{key}}</a></p>
+<ul>
+  <% for post in posts: %>
+  <li>
+    <a href="{{get_url('viewSubmission', key=key, post_id=post.post_id, onyen=onyen)}}">
+      {{post.time}}  id number {{post.post_id}} </a>
+    % if post.wassubmitted:   # autosave or submitted
+         <b>submitted</b>
+         % if is_admin:  # Admins get an unsubmit button
+              graces={{post.gracecounts}} <input type="button" value="Unsubmit" onclick="unsubmit({{post.post_id}})" />
+         %end
+    % else:
+      autosaved
+    % end
+  </li>
+  <% end %>
+</ul>
+<script>
+async function unsubmit(post_id) {
+   const fd = new FormData();
+   fd.append('key', '{{key}}');
+   fd.append('onyen', '{{onyen}}');
+   fd.append('post_id', post_id);
+
+   let response = await fetch("{{get_url('unsubmit')}}", {method: 'post', body: fd});
+   if ( !response.ok) {
+      alert("HTTP-ERROR: " + response.status )
+   }
+   location.reload();
+}
+</script>
+% rebase('assessment.base')

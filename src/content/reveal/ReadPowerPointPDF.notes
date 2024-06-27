@@ -1,0 +1,4 @@
+%s/<p>▪<\/p>\n<p>\([a-zA-Z ]*\)<\/p>/ - \1  /gc
+
+
+rm $(ls -alts *.jpg | grep 70235 | awk '{print $10}')

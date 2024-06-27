@@ -1,0 +1,17 @@
+-- Create and populate the Students relation
+DROP TABLE IF EXISTS Students;
+CREATE TABLE Students (sid char(20), name char(20), login char(10), age integer, gpa real);
+INSERT INTO Students values ('50000', 'Dave',  'dave@cs', 19, 3.3);
+INSERT INTO Students values ('53666', 'Jones', 'jones@cs', 18, 3.4);
+INSERT INTO Students values ('53688', 'Smith', 'smith@cs', 18, 3.2);
+INSERT INTO Students values ('53650', 'Smith', 'smith@math', 19, 3.9);
+INSERT INTO Students values ('53831', 'Madayan', 'madayan@music', 11, 1.8);
+INSERT INTO Students values ('53832', 'Guldu', 'guldu@music', 12, 2.0);
+
+-- Display the Students relation
+SELECT 'The Students table:' as '';
+SELECT S.sid, S.name, S.login, S.age
+  FROM Students AS S;
+
+SELECT 'The Cardinality is the number tuples or rows' as '';
+SELECT 'The Degree is the number of attributes or columns' as '';

@@ -1,0 +1,155 @@
+<%
+from content.exams.fe_mothball_midwife_granite_27 import points_total, points_limit, points_max
+
+setInfo(
+        needsSubmitCode=True,
+        assessment_type='worksheet',
+        due='2023-04-25 11:00:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        max_segments=3,
+        maxpenalty=1.00, penalty=.20,
+       )
+dbs=['midterm2-nc-legislature-1.sqlite']
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+# Final Exam I/O Evaluations
+
+## Final Exam Prologue 
+
+**<font size="+1">This is the prologue from the final exam.</font>**
+You <font color="red" size="+1">don't</font> have 180 minutes to do this worksheet,
+you <font color="red" size="+1">don't</font> have to stay in full screen mode for this worksheet,
+there are <font color="red" size="+1">not</font> 110 points on this worksheet,
+etc.
+The <font color="red" size="+1">normal worksheet</font> grading applies: 50% minimum grade for worksheets handed in on time; a 75% or better gets full credit.
+
+The prologue applies to the exam and is here in this worksheet for you to read at your leisure!
+
+---
+
+% include('content/exams/fe-mothball-midwife-granite-27.prolog.itmd')
+
+<%
+  from math import ceil, log
+  from collections import namedtuple
+  sort_pages = [17, 18, 19, 20]
+%>
+## {{!linkable_header('Two Way Merge Sort')}}
+
+**Calculator:** You may use this box as a calculator.
+Just type in any expression that can be evaluated by a JavaScript eval.
+For example, `2 ** 0.5` will show you the result of the square root of 2
+in the red box to the right.
+Leaving the box empty or filled in will **NOT** affect your grade.  
+**NOTE:** Your input will be processed by the JavaScript eval function and returned with toPrecision of 3 digits such that 2500/13 will return 192 while 10/3 will return 3.33. Both with 3 significant digits.   
+Leaving the box empty or filled in will NOT affect your grade.
+
+{{!calculator(name=f'_calculator.twowaysort')}}
+
+---
+
+<%
+index = 0
+answer = ['1', f'{sort_pages[index]*2}', '1', f'{sort_pages[index]}', f'{ceil(log(sort_pages[index],2))+1}',
+          '8', f'{sort_pages[index]*2}', '8', f'{ceil(sort_pages[index]/8)}', '2']
+choices = [f'{x}' for x in range(100)] + ['N/A']
+%>
+
+**Note:** Assume a {{sort_pages[index]}} page file needs to be sorted and that 8 buffers are available for use.
+
+**Sort.Two.Way.Merge.Sort.{{index+1}}:** Complete the following table about sorting the {{sort_pages[index]}} page
+file using two way merge sort and at most 8 buffers.  
+If the pass doesn't get run select `N/A`.  
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+How many **buffers** are used for pass-0 of **two way merge sort**?,{answer[0]}
+How many **I/Os** are used for pass-0 of **two way merge sort**?,{answer[1]}
+What is the largest **run length** after pass-0 of **two way merge sort**?,{answer[2]}
+How many **runs** exist after pass-0 of **two way merge sort**?,{answer[3]}
+How many **passes** are required to sort using **two way merge sort**?,{answer[4]}
+''', symbols=choices, points=25, name=f'Sort.Two.Way.Merge.Sort.{index+1}')}}
+%include('viewAnswer', answer=answer[:5])
+
+
+**Sort.External.Merge.Sort.{{index+1}}:** Complete the following table about sorting the {{sort_pages[index]}} page
+file using external merge sort and at most 8 buffers.  
+If the pass doesn't get run select `N/A`.  
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+How many **buffers** are used for pass-0 of an **external merge sort**?,{answer[5]}
+How many **I/Os** are used for read and write pass-0 of an **external merge sort**?,{answer[6]}
+What is the largest **run length** after pass-0 of an **external merge sort**?,{answer[7]}
+How many **runs** exist after pass-0 of an **external merge sort**?,{answer[8]}
+How many **passes** are required to sort using **external merge sort**?,{answer[9]}''', symbols=choices, points=25, name=f'Sort.External.Merge.Sort.{index+1}')}}
+%include('viewAnswer', answer=answer[5:])
+
+---
+
+#### {{!linkable_header('Block Nested Loop Join')}}
+
+**Calculator:** You may use this box as a calculator.
+Just type in any expression that can be evaluated by a JavaScript eval.
+For example, `2 ** 0.5` will show you the result of the square root of 2
+in the red box to the right.
+Leaving the box empty or filled in will **NOT** affect your grade.  
+**NOTE:** Your input will be processed by the JavaScript eval function and returned with toPrecision of 3 digits such that 2500/13 will return 192 while 10/3 will return 3.33. Both with 3 significant digits.   
+Leaving the box empty or filled in will NOT affect your grade.
+{{!calculator(name=f'_calculator.bnl')}}
+
+---
+
+<%
+BNL_PAGES = namedtuple('PAGES_BNL', 'sailors reserves buffers')
+bnl_pages = [BNL_PAGES(sailors=500, reserves=1000, buffers=502),
+             BNL_PAGES(sailors=500, reserves=250, buffers=252),
+             BNL_PAGES(sailors=100, reserves=200, buffers=102),
+             BNL_PAGES(sailors=150, reserves=300, buffers=152),
+             ]
+
+%>
+
+Assume that Sailors is a file of {{bnl_pages[index].sailors}} pages,
+Reserves is a file of {{bnl_pages[index].reserves}} pages,
+and there are {{bnl_pages[index].buffers}} buffers.
+<%
+answer = [f'{bnl_pages[index].buffers-2}', '2', '1', '1',
+          f'{bnl_pages[index].reserves // (bnl_pages[index].buffers -2)}',
+          f'{bnl_pages[index].sailors  // (bnl_pages[index].buffers -2)}',
+          f'{bnl_pages[index].sailors + bnl_pages[index].reserves}']
+choices = [f'{x}' for x in range(503)]
+%>
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+How many buffers are used for the outer loop?,{answer[0]}
+How many buffers are used for the input and output of the inner loop?,{answer[1]}
+Assuming Sailors is the outer loop&#44; how many times is each Sailors page read in?,{answer[2]}
+Assuming Reserves is the outer loop&#44; how many times is each Reserves page read in?,{answer[3]}
+Assuming Sailors is the inner loop&#44; how many times is each Sailors page read in?,{answer[4]}
+Assuming Reserves is the inner loop&#44; how many times is each Reserves page read in?,{answer[5]}
+''', symbols=choices, points=25, name=f'Block.Nested.Loop.Join.{index+1}')}}
+%include('viewAnswer', answer=answer[:-1])
+
+
+**Optimal.Number.IOs:** Depending on which relation is the outer or inner loop,
+what is the optimal number of I/Os required to complete the BNL join?  
+% calculated_answer = answer[6]
+% answer2 = f'''
+If Sailors is the outer loop and Reserves is the inner loop,
+both relations are read a single time.  {calculated_answer}
+
+If Reserves is the outer loop, sailors is read twice,
+this is suboptimal {int(calculated_answer) + bnl_pages[index].sailors}
+
+Answer: {calculated_answer}'''
+{{!expression(calculated_answer, dict(m=1), points=25, name='Optimal.Number.IOs')}}
+%include('viewAnswer', answer=answer2)
+
+
+---
+
+{{pages}} 
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

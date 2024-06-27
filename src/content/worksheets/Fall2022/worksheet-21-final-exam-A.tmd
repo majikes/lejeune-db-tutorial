@@ -1,0 +1,128 @@
+<%
+setInfo(due="2021-11-24 00:00:00",
+        needsSubmitCode=False,
+        exceptions=dict(_003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        maxpenalty=0.75, penalty=.5,
+        )
+dbs=['states-A.sqlite', 'states-B.sqlite']
+%>
+# C Final Exam Review
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+
+```sql
+CREATE TABLE IF NOT EXISTS States
+           (abbrev char(2) PRIMARY KEY,
+            statename char(20),  -- May include territories
+            population integer)
+
+CREATE TABLE IF NOT EXISTS Politicians
+           (bioid char(20),
+            firstname char(20),
+            lastname char(20),
+            birthday date, -- YYYY-MM-DD format string
+            gender char(1),
+            PRIMARY KEY(bioid))
+
+CREATE TABLE IF NOT EXISTS Terms
+   (termid INTEGER PRIMARY KEY AUTOINCREMENT,
+    termtype char(20), -- Type of term elected; rep, sen, prez, viceprez
+    startdate date,
+    enddate date,
+    party char(20), -- Political party affiliation
+    how char(20),  -- Different ways to get into an office
+    bioid char(20),
+    -- Presidents & vice president aren't elected from districts or states
+    -- Senators aren't elected from districts
+    district integer,  -- Null for prez, viceprez, or sen
+    state char(2),     -- Null for prez and viceprez
+    FOREIGN KEY(bioid) REFERENCES Politicians(bioid))''')
+```
+
+---
+
+**List.States.Inverse:** List the state names in inverse alphabetical order.  
+% answer = '''
+SELECT statename
+  FROM States
+  ORDER BY statename DESC
+'''
+{{!sql(answer, dbs=dbs, points=20, name='List.States.Inverse')}}
+% include('viewAnswer')
+
+---
+
+**How.Many.Elected.NM.2021:** How many people were elected in any way
+from the state of New Mexico in 2021?  
+% answer = '''
+SELECT count(startdate) as thecount
+  FROM Terms
+  Where state='NM' and
+        startdate like '2021%'
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=20, name='How.Many.Elected.NM.2021')}}
+% include('viewAnswer')
+
+---
+
+**How.Many.Elections.NM.2021:** How many elections were held in New Mexico in 2021?  
+Another way to ask this is how many different dates were elections held in New Mexico in 2021?  
+% answer = '''
+SELECT count(DISTINCT startdate) 
+  FROM Terms
+  Where state='NM' and
+        startdate like '2021%'
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=20, name='How.Many.Elections.NM.2021')}}
+% include('viewAnswer')
+
+---
+
+**How.Many.Elections.Each.State.2021:** List each state name and how many elections were held in each state in 2021?  
+% answer = '''
+SELECT S.statename, count(DISTINCT T.startdate) 
+  FROM Terms T, States S
+  Where startdate like '2021%' AND
+        T.state = S.abbrev
+  GROUP BY S.abbrev
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=20, name='How.Many.Elections.Each.State.2021')}}
+% include('viewAnswer')
+
+---
+
+**List.States.More.One.Election:** List the state names.
+In addition, for each state that had more than one election in 2021 display the count and 
+for each state that had one or less elections, display null.  
+% answer = '''
+WITH S1 as (SELECT statename
+              FROM States),
+S2 as (SELECT S.statename, count(DISTINCT T.startdate) as e_count
+         FROM Terms T, States S
+        WHERE startdate like '2021%' AND
+              T.state = S.abbrev
+        GROUP BY S.abbrev
+        HAVING e_count>1)
+
+SELECT S1.statename, S2.e_count
+  FROM S1
+  LEFT JOIN S2
+  ON S1.statename = S2.statename
+'''
+{{!sql(answer, dbs=dbs, points=20, num_rows=10, sort=1, name='List.State.More.One.Election')}}
+% include('viewAnswer')
+
+---
+
+%end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

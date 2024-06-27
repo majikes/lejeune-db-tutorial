@@ -1,0 +1,79 @@
+<%
+setInfo(
+      due="2021-08-24 14:00:00",
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+)
+%>
+
+# Pre-chapter 1 worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**Not.Use:** When might it be good not to use a DBMS?  
+**A:** Never! You should always use a DBMS.   
+**B:** When security is provided by another department.  
+**C:** When your system never crashes.  
+**D:** For a specialized application with time sensitive performance requirements.  
+**E:** When there is only one user.  
+% answer = 'D'
+{{!select(answer, list('ABCDE'), points=25, name='Not.Use')}}
+% include('viewAnswer')
+
+**Independence:** There were two types of data independence mentioned in chapter 1,
+what are they?  
+**A:** Time and space independence.  
+**B:** Physical and logical independence.  
+**C:** Byte order and Unicode independence.  
+**D:** External and physical schema independence.  
+**E:** There's only one independence mentioned in chapter 1.  
+% answer = 'B'
+{{!select(answer, list('ABCDE'), points=25, name='Independence')}}
+%include('viewAnswer')
+
+**Data.Representation:** Which of the following plays an important role in _representing_&nbsp; information
+about the real world in a database?  
+**A:** The data definition language.  
+**B:** The data manipulation language.  
+**C:** The buffer manager.  
+**D:** The data model.  
+% answer = 'A'
+% answer2 = f'''
+The data definition is the create of the tables and it will describe real world information about the data
+The DML will be using queries.  We didn't talk about the buffer manager nor the data model.
+
+Answer: {answer}'''
+{{!select(answer, list('ABCD'), points=25, name='Data.Representation')}}
+%include('viewAnswer', answer=answer2)
+
+**Upgrade:** Let's assume you upgrade the operating system to use an new file system.
+Which layer(s) of the DBMS would be affected?  
+**A:** The conceptual database design  
+**B:** The logical schema  
+**C:** The physical schema  
+**D:** The external schema  
+**E:** All of the above  
+% answer = 'C'
+{{!select(answer, list('ABCDE'), points=25, name='Upgrade')}}
+%include('viewAnswer')
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

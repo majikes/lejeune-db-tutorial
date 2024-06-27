@@ -1,0 +1,93 @@
+<%
+setInfo(
+        due='2022-08-17 10:45:00',
+        needsSubmitCode=True,
+        assessment_type='worksheet',
+        exceptions=dict(_003=dict(needsSubmitCode=False),
+                        abz=dict(due='2022-08-18 00:00:00', needsSubmitCode=False),
+                        ianwash=dict(due='2022-08-18 00:00:00', needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        maxpenalty=0.75, penalty=.2)
+symbols = [x for x in 'ABCDEFGHIJ']
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# 01 Why databases
+
+
+
+% if 'questions' in pages:
+
+## Using a file system instead of a DBMS 
+
+**True.Or.False.1:** Even if the UNC computer system has large amounts of data,
+most likely, all the needed data to schedule students, professors, and classrooms **cannot** fit in main memory.  
+% choices = ['True', 'False', 'Sometimes', 'Neither of these']
+% answer = 'True'
+{{!select(answer, choices=choices, points=10, name='True.or.False.1')}}
+% include('viewAnswer')
+
+
+**True.Or.False.2:** When considering using a file versus a DBMS, writing specialized programs to answer each question a user may
+possibly want to ask about the data within a file such as what is the max, min, or max within a group is likely to be complex.
+This gets more complicated when taking into account that the file format may change, that other users may be using the file, and that the file may need to be updated.  
+% answer = 'True'
+{{!select(answer, choices=choices, points=10, name='True.or.False.2')}}
+% include('viewAnswer')
+
+
+**True.Or.False.3:** Operating systems offer password or certificate mechanisms for file security.
+This is sufficient for all possible applications.  
+% answer = 'False'
+{{!select(answer, choices=choices, points=10, name='True.or.False.3')}}
+% include('viewAnswer')
+
+
+**True.Or.False.4:** Applications accessing files don't have to worry about different users
+accessing the file at the same time, 
+deadlocks, or inconsistencies since the operating system takes care of that for you.  
+% answer = 'False'
+{{!select(answer, choices=choices, points=10, name='True.or.False.4')}}
+% include('viewAnswer')
+
+
+**True.Or.False.5:** Applications accessing files don't have to worry about restoring files after a system crash.    
+% answer = 'False'
+{{!select(answer, choices=choices, points=10, name='True.or.False.5')}}
+% include('viewAnswer')
+
+---
+
+## Advantages of a DBMS 
+
+**Matching:** Match the descriptions with the terms that describe the advantages of database management systems.
+
+ - **A.** Since DBMS support many common functions that are written generically to support many languages and that are important to many applications, increasing the velocity of application development.
+ - **B.** DBMS are simple software solutions  
+ - **C.** Ideally, application programs should **not** depend on or be concerned with the details of how the data is represented in storage nor depend on the fact that it could change.   
+ - **D.** Holding **all** data in main memory without needing to use storage device.    
+ - **E.** An example of this is verifying that a bank account has a balance greater than or equal to the amount being withdrawn ensuring the integrity of the bank ledger.  Another example is enforcing access controls that govern what data is visible to different classes of users.    
+ - **F.** The DBMS makes the user think the data is currently only being accessed by one user at time and protects the user from system failures.  
+ - **G.** Applications normally **must** integrate control over other applications that might be running at the same time.  This is just how application programming is done.    
+ - **H.** The use of sophisticated techniques to store and retrieve data efficiently, especially when large amounts of data means the use of external storage devices.  
+ - **I.** The compressing of data into very small B-trees.
+ - **J.** The administration of users and data into groups, understanding the nature of their use, to minimize redundancy and making retrieval efficient.
+
+% answer = ['C', 'H', 'E', 'J', 'F', 'A']
+{{!table(inputs=1, headings='Term,Answer', table=f'''
+Data independence,{answer[0]}
+Efficient data access,{answer[1]}
+Data integrity and security,{answer[2]}
+Data administration,{answer[3]}
+Concurrent access and crash recover,{answer[4]}
+Reduced application development time,{answer[5]}''',points=50, symbols=symbols, name='Matching')}}
+% include('viewAnswer')
+
+% end
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

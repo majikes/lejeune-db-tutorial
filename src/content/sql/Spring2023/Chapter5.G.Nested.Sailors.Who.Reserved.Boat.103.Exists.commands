@@ -1,0 +1,31 @@
+DROP TABLE IF EXISTS Reserves;
+CREATE TABLE Reserves (sid string, bid string, day date);
+INSERT INTO Reserves VALUES ('22', '101', '10/10/96');
+INSERT INTO Reserves VALUES ('58', '103', '11/12/96');
+
+SELECT 'The Reserves table:' as '';
+SELECT * FROM Reserves;
+
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid char(20), sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'dustin', 7, 45.0);
+INSERT INTO Sailors values ('31', 'lubber', 8, 55.5);
+INSERT INTO Sailors values ('58', 'rusty', 10, 35.0);
+
+SELECT 'The Sailors table:' as '';
+SELECT * FROM Sailors;
+
+SELECT 'Select Sailors who Reserved Boat 103:' as '';
+SELECT S.sname
+  FROM Sailors AS S, Reserves AS R
+ WHERE S.sid=R.sid AND
+       R.bid=103;
+
+SELECT 'Select Sailors who Reserved Boat 103 with EXISTS:' as '';
+SELECT S.sname
+  FROM Sailors AS S
+  WHERE EXISTS (SELECT R.sid
+                  FROM Reserves AS R
+                 WHERE R.bid=103 AND
+                       S.sid=R.sid);

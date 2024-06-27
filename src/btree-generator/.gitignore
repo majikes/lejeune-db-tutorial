@@ -1,0 +1,6 @@
+*.backup*
+*.png
+*.dot
+**examples**
+README.md
+pylintrc

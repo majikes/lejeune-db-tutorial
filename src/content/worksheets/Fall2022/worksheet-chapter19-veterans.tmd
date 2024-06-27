@@ -1,0 +1,49 @@
+<%
+setInfo(
+        due='2021-11-11 15:15:00',
+        needsSubmitCode=True,
+        exceptions=dict(_002=dict(due='2021-11-11 11:10:00'),
+                        gksrb32=dict(due='2021-11-13 00:00:00', needsSubmitCode=False),
+                        _003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        maxpenalty=0.75, penalty=.2,
+        )
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+# Veteran's Day
+
+% import re
+
+--- 
+
+## Questions
+
+
+% if 'questions' in pages:
+
+**What.Day:** What federal holiday is today?  
+% answer="Veteran's Day"
+{{!select(answer, choices=[answer], points=35, name='What.Day')}}
+% include('viewAnswer')
+
+
+**Give.Me.A.Monday.Off:** Why is this federal holiday on a weekday?  
+% answer =  "Veteran's day marks the end of WWI on '11th hour, of the 11th day of the 11th month'"
+{{!select(answer, choices=[answer], points=35, name='Give.Me.A.Monday.off')}}
+% include('viewAnswer')
+
+**Why.Should.I.Care:** Why should I care?  
+% answer =  "Travel the world.  What you have is not free."
+{{!select(answer, choices=[answer], points=30, name='Why.Should.I.Care')}}
+% include('viewAnswer')
+
+
+% end
+
+--- 
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

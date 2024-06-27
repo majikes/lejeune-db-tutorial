@@ -1,0 +1,20 @@
+Title: John To Dos
+
+# LA To Do
+
+Should make select questions start after a html break
+
+Provide a table property for:
+
+ - Allow inputs to have dashes in them like negative numbers
+ - During exam, more stringent CSS Javascript
+ - Put worksheet list in the database, not access file
+ - Add algorithm visualization https://github.com/gbishop/needsabettername https://gb.cs.unc.edu/~gb/tmp/algovis/build/
+
+Can we add Strassen's method to the class?
+ 
+Homework 04's pipe cutting code should be in homework 03
+Homework 04 should not use the same Prim as in the book and in the worksheets
+worksheet-08-C-MCM-review.tmd Update teh Matrix.A1 the expression has a name of Matrix.A4 or vice versa
+
+The .env admins should agree with the section 3 LAs

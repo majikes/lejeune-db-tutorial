@@ -1,0 +1,13 @@
+<h1>Welcome to Files and Databases, COMP 421</h1>
+
+% for concern_type, concerns in answers.items():
+  <p>&nbsp;</p>
+  <font size="+3">{{concern_type}}</font>
+     % for concern in concerns:
+        % if len(concern.value.strip()) < 5:
+           % continue
+        % end
+        <br/>{{concern.value.strip()}}
+     % end
+% end
+% rebase('assessment.base')

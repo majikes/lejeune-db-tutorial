@@ -1,0 +1,38 @@
+<%
+from content.exams.fe_dry_tube_kept_92 import points_total, points_limit, duration, points_max
+from content.exams.fe_dry_tube_kept_92 import exam, points_limit, maxpenalty, penalty, dbs
+
+from content.exams.fe_dry_tube_kept_92 import points_sql_queries, number_sql_queries
+from content.exams.fe_dry_tube_kept_92 import points_chapter_review, number_chapter_review
+from content.exams.fe_dry_tube_kept_92 import points_joins, number_joins
+from content.exams.fe_dry_tube_kept_92 import points_query_processing, number_query_processing
+from content.exams.fe_dry_tube_kept_92 import points_b_plus_trees, number_b_plus_trees
+
+from datetime import datetime
+
+setInfo(duration=duration,
+        assessment_type='fe',
+        exam=exam,
+        points_limit=points_limit,
+        points_total=points_total,
+       )
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# COMP 421 Final Exam Fall 2023 
+
+% include('content/exams/fe-dry-tube-kept-92.prolog.itmd')
+
+
+## {{!linkable_header('Questions')}} For a total of {{points_max}} points
+
+% include('content/exams/fe-dry-tube-kept-92.SQL_Queries.itmd')
+% include('content/exams/fe-dry-tube-kept-92.Query_processing.itmd')
+% include('content/exams/fe-dry-tube-kept-92.b_plus_tree.itmd')
+
+% if False:
+  % include('content/exams/fe-dry-tube-kept-92.chapter_review.itmd')
+  % include('content/exams/fe-dry-tube-kept-92.joins.itmd')
+% end
+
+% include('exams-submit.md')

@@ -1,0 +1,123 @@
+<%
+from content.exams.m2_equate_paint_shoulder_30 import points_total, points_limit, points_max
+setInfo(
+        needsSubmitCode=False,
+        assessment_type='worksheet',
+        due='2023-03-28  8:00:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        max_segments=3,
+        maxpenalty=1.00, penalty=.20,
+       )
+dbs=['midterm2-nc-legislature-1.sqlite']
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+# Midterm 2 schema worksheet
+
+## Midterm 2 Prologue 
+
+**<font size="+1">This is the prologue from the midterm.</font>**
+You don't have 75 minutes to do this worksheet,
+you don't have to stay in full screen mode for this worksheet,
+there are not 110 points on this worksheet,
+etc.
+The prologue applies to the exam and is here in this worksheet for you to read at your leisure!
+
+% include('content/exams/m2-equate-paint-shoulder-30.prolog.itmd')
+
+
+In the exam SQL section, you will write SQL queries for the North Carolina legislature schema at the beginning of the exam.
+Your queries will be tested immediately against **two** different databases.
+The second database has small modifications to prevent hard coding answers.
+If your queries output matches the expected output, the
+displayed answers will be outlined in green.
+You need green, highlighted output from the query of **both** databases to get any credit.
+Your actual exam score will be determined when your query is
+tested against a different database but **two** green feedbacks should mean that you are on track to receive full credit.
+
+---
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}}
+
+**<font scale="+1">NOTE:** These questions may say "North Carolina" Senate or "North Carolina" House of Representatives.
+All this data is taken from the North Carolina legislature so it is somewhat redundant.  
+Bottom line: You don't have to specify the state anywhere in your query.
+
+**Democratic.Senators.Republican.Representative:** Give an alphabetically ordered list of Democratic Senators who voted ‘Yea’ and Republican Representatives who voted ‘Nay’ in the voting for the bill titled ‘Extend ABC Permit Renewal Fee Deferral’.
+% answer = '''
+SELECT DISTINCT L.name
+  FROM Roll_calls R, Votes V, Legislators L, Bills B
+  WHERE B.bill_id = R.bill_id AND
+        R.roll_call_id = V.roll_call_id AND
+        V.legislator_id = L.legislator_id AND
+        B.title = 'Extend ABC Permit Renewal Fee Deferral' AND
+        ((V.vote_text = 'Yea' AND L.party = 'Democratic' AND L.role = 'Senator') OR
+         (V.vote_text = 'Nay' AND L.party = 'Republican' AND L.role = 'Representative'))
+  ORDER BY L.name
+'''
+{{!sql(answer, dbs=dbs, points=25, name='Democratic.Senators.Republican.Representative')}}
+% include('viewAnswer')
+
+--- 
+
+**Most.Subjects:** Which subject had the most North Carolina bills associated with it?  
+**NOTE:** I am guaranteeing that there is only one subject that had the most bills associated with it.
+
+On the test I might ask for the "subject(s) that had the most bills" and you should not make the assumption that there is only one subject that has the most bills associated with it!
+% answer = '''
+WITH TEMP_MAX AS (SELECT COUNT(*) as subject_count
+                    FROM Subject_names S, Bill_subjects BS, Bills B
+                   WHERE S.subject_id = BS.subject_id AND
+                         BS.bill_id = B.bill_id
+                   GROUP BY BS.subject_id)
+
+SELECT S.subject_name
+  FROM Subject_names S, Bill_subjects BS, Bills B
+ WHERE S.subject_id = BS.subject_id AND
+       BS.bill_id = B.bill_id
+ GROUP BY BS.subject_id
+HAVING count(*) = (SELECT MAX(subject_count)
+                     FROM TEMP_MAX)
+'''
+{{!sql(answer, dbs=dbs, points=25, sort=True, name='Most.Subjects')}}
+% include('viewAnswer')
+
+---
+
+**No.Eugenics:** Give an alphabetically ordered list of Republican bill sponsors who sponsored the bill with a title of “Human Life Nondiscrimination Act/No Eugenics”.
+%answer = '''
+SELECT DISTINCT L.name
+  FROM Sponsors S, Bills B, Legislators L
+ WHERE S.bill_id = B.bill_id AND
+       L.legislator_id = S.legislator_id AND
+       L.party = 'Republican' AND
+       B.title = 'Human Life Nondiscrimination Act/No Eugenics'
+  ORDER BY L.name
+'''
+{{!sql(answer, dbs=dbs, points=25, name='No.Eugenics')}}
+% include('viewAnswer')
+
+---
+
+**Vetoed:** Provide the alphabetically ordered list of districts from where legislators who sponsored bills that were ‘Vetoed’ (status = 'Vetoed') in February 2022 that are from either the House of Representatives or the Senate.  
+%answer = '''
+SELECT DISTINCT L.district
+  FROM Bills B, Sponsors S, Legislators L
+ WHERE B.bill_id = S.bill_id AND
+       S.legislator_id = L.legislator_id AND
+       B.status = 'Vetoed' AND
+       B.status_date LIKE '2022-02-%'
+ORDER BY L.district
+'''
+{{!sql(answer, dbs=dbs, points=25, name='Vetoed')}}
+% include('viewAnswer')
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

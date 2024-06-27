@@ -1,0 +1,11 @@
+-- Create and populate the Employees relation
+DROP TABLE IF EXISTS Employees;
+CREATE TABLE Employees (ssn char(11), name char(20), lot integer, PRIMARY KEY(ssn));
+INSERT INTO Employees values ('123-22-3666', 'Dave Davies', 1);
+INSERT INTO Employees values ('231-31-5368', 'John Jones', 5);
+INSERT INTO Employees values ('131-24-3650', 'Sarah Smith', 1);
+INSERT INTO Employees values ('223-32-6316', 'G. G. Guldu', 3);
+
+-- Display the Employees relation
+SELECT 'The Employees table:' as '';
+SELECT * FROM Employees;

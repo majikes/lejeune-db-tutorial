@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS S2;
+CREATE TABLE S2 (sid char(20), sname char(20), rating integer, age real);
+INSERT INTO S2 values ('28', 'yuppy',  9, 35.0);
+INSERT INTO S2 values ('31', 'Lubber', 8, 55.5);
+INSERT INTO S2 values ('44', 'guppy',  5, 35.0);
+INSERT INTO S2 values ('58', 'Rusty', 10, 35.0);
+
+SELECT 'The Sailors S2 table:' as '';
+SELECT * FROM S2;
+
+SELECT 'Projection of S2: sname,rating:' as '';
+SELECT sname, rating FROM S2;

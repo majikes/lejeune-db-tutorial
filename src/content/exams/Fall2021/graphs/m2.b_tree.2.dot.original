@@ -1,0 +1,124 @@
+digraph G
+{
+    splines=false
+    "block"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">6</td>
+                        <td port="connector1"></td>
+                        <td port="key1">15</td>
+                        <td port="connector2"></td>
+                        <td port="key2">24</td>
+                        <td port="connector3"></td>
+                        <td port="key3">30</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+    "block0"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">2*</td>
+                        <td port="connector1"></td>
+                        <td port="key1">3*</td>
+                        <td port="connector2"></td>
+                        <td port="key2">5*</td>
+                        <td port="connector3"></td>
+                        <td port="key3">_</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+    "block1"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">7*</td>
+                        <td port="connector1"></td>
+                        <td port="key1">14*</td>
+                        <td port="connector2"></td>
+                        <td port="key2">_</td>
+                        <td port="connector3"></td>
+                        <td port="key3">_</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+    "block2"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">16*</td>
+                        <td port="connector1"></td>
+                        <td port="key1">19*</td>
+                        <td port="connector2"></td>
+                        <td port="key2">20*</td>
+                        <td port="connector3"></td>
+                        <td port="key3">22*</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+    "block3"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">24*</td>
+                        <td port="connector1"></td>
+                        <td port="key1">27*</td>
+                        <td port="connector2"></td>
+                        <td port="key2">29*</td>
+                        <td port="connector3"></td>
+                        <td port="key3">_</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+    "block4"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">33*</td>
+                        <td port="connector1"></td>
+                        <td port="key1">34*</td>
+                        <td port="connector2"></td>
+                        <td port="key2">38*</td>
+                        <td port="connector3"></td>
+                        <td port="key3">39*</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+
+    "block":"connector0" -> "block0":"connector2"
+    "block":"connector1" -> "block1":"connector2"
+    "block":"connector2" -> "block2":"connector2"
+    "block":"connector3" -> "block3":"connector2"
+    "block":"connector4" -> "block4":"connector2"
+
+    "block1":"connector0" -> "block0":"connector4"
+    "block0":"connector4" -> "block1":"connector0"
+    "block2":"connector0" -> "block1":"connector4"
+    "block1":"connector4" -> "block2":"connector0"
+    "block3":"connector0" -> "block2":"connector4"
+    "block2":"connector4" -> "block3":"connector0"
+    "block4":"connector0" -> "block3":"connector4"
+    "block3":"connector4" -> "block4":"connector0"
+
+    {rank=same; "block"}
+    {rank=same; "block0" "block1" "block2" "block3" "block4"}
+}

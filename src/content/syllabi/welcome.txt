@@ -1,0 +1,82 @@
+https://uncch.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5837500b-e827-4e3d-a95d-b0430110454e
+
+Welcome to COMP 421 databases and files. In this class, you'll be learning databases,
+file storage, system structures and in their design.
+
+We will be using the 7th edition of Silberschatz "Database System Concepts".
+This is a new book for this class and so much of the class will be different than previous semesters.
+There is a Reading list button on the home page.
+SHOW THE HOME PAGE -> READING LIST
+Please refer to this as we will be skipping around the book somewhat.
+The first midterm will cover PART ONE of the book.
+The second midterm will be PART FIVE of the book.
+The final exam parts of PART TWO and PART THREE.
+Of course all midterms and exams are cumulative!
+
+I do expect you to read the chapters BEFORE we cover them in class.
+So you'll want to use the agenda on the home page to know what's coming up.
+SHOW THE HOME PAGE
+The agenda should be considered tentative as this is the first time using this book.
+But you can be assured that the agenda up to one week out is up to date.
+
+Along with the agenda, the grades page will let you know what work is outstanding.
+For worksheets, the due date is at the top of the worksheets,
+but the homework due dates are on the home page.
+
+Did you read the syllabus? 
+There is an Easter egg.  Did you find it?
+
+For COMP 421 there are "subsequent submissions" which is discussed on the syllabus.
+Essentially, for midterms, homeworks and worksheets, the work can be submitted multiple times
+as long as they are originally handed in on time.
+(The final exam can only be submitted once.)
+
+But be forewarned that each subsequent submission is weighted less than all previous submissions.
+Also, you must wait for the grader to run to get your results before you can resubmit.
+(The grader runs hourly)
+There is a limit of 10 submissions per worksheet, homework, or midterm.
+
+For COMP 421 there are no late assignments.
+You get extra opporunitites with subsequent submissions.
+But there are absolutely, positively no late assignments.
+
+SHOW THE GRADES PAGE
+So let's look at the grade page.
+You will be referring to this a lot as I do not use Canvas nor Sakai.
+The top legend has your weighted scores for your worksheets, homeworks, games, etc.
+Then each worksheet
+
+We will be doing homeworks in Python, which has been the process for the last few years.
+The programs are going to be very small and the syllabus has a recommendation for downloading Python and Jupyter notebooks.
+The syllabus has a demo assignment that you can use to become familar with Python and Jupyter.
+But hopefully learning Python will be very trivial for you.
+
+
+Also, on the classes before the midterm we will be doing SQL gamification.
+Think of it as a cross between Jeopardy and escape rooms.
+The details of the games will be discussed and ironed out in the first two classes.
+But hopefully this will be fun and educational.
+
+So a little bit about myself. My name is John Majikes.
+
+I've spent about 35 years in industry and worked for large corporations and startups.
+I've been responsible for hundreds of millions of dollars of annual revenue.
+And I've had hundreds of developers reporting to me and I'd be responsible for tens of thousands of lines of code.
+
+Late in my career, I decided to go back and get my Ph.D. and now I have my dream job.
+
+One last point about me, I am actively undergoing chemotherapy for Mantle Cell Leukemia.
+What this means is that I will wear a mask whenever I am within six feed of anyone.
+Luckily, most of my chemotherapy infusions occur during breaks and wellness days.
+But for Tuesday, January 16th and Tuesday April 9th clesses, I am scheduled to receive chemotherapy.
+For those two lectures, class will be remote.
+You can take the class synchronously via Zoom or via Panopto recording later that day.
+Any in-class worksheets willb e due by the end of the day, 11:59:59 PM.
+
+Again, tis is discussed on the syllabus.
+I am very open about my health situation.
+
+So stop by my office sometime, introduce yourself.
+Having been in industry for awhile, I can do mock interviews if you want to schedule one.
+But come by the office and we'll talk about databases or whatever.
+But welcome to databases!

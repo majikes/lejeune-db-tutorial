@@ -1,0 +1,6 @@
+*.sqlite
+Football.py.old
+m1.university.py
+*.tsv
+*.csv
+*.yaml

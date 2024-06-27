@@ -1,0 +1,3 @@
+Employees(ssn: string, name: string, lot: integer);<br/>
+Departments(did: integer, dname: string, budget: real);<br/>
+Works_In(ssn: string, did:integer, since: date);

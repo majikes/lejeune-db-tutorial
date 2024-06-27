@@ -1,0 +1,150 @@
+<%
+from content.exams.m2_equate_paint_shoulder_30 import points_total, points_limit, points_max
+setInfo(
+        needsSubmitCode=False,
+        assessment_type='worksheet',
+        due='2023-03-28  8:00:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        max_segments=3,
+        maxpenalty=1.00, penalty=.20,
+       )
+dbs=['midterm2-nc-legislature-1.sqlite']
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+# Midterm 2 schema worksheet
+
+## Midterm 2 Prologue 
+
+**<font size="+1">This is the prologue from the midterm.</font>**
+You don't have 75 minutes to do this worksheet,
+you don't have to stay in full screen mode for this worksheet,
+there are not 110 points on this worksheet,
+etc.
+The prologue applies to the exam and is here in this worksheet for you to read at your leisure!
+
+% include('content/exams/m2-equate-paint-shoulder-30.prolog.itmd')
+
+
+In the exam SQL section, you will write SQL queries for the North Carolina legislature schema at the beginning of the exam.
+Your queries will be tested immediately against **two** different databases.
+The second database has small modifications to prevent hard coding answers.
+If your queries output matches the expected output, the
+displayed answers will be outlined in green.
+You need green, highlighted output from the query of **both** databases to get any credit.
+Your actual exam score will be determined when your query is
+tested against a different database but **two** green feedbacks should mean that you are on track to receive full credit.
+
+---
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}}
+
+
+**Schema:** Query the system schema table to get the SQL commands used to create the database used for midterm 2.  
+% answer = '''
+SELECT sql
+  FROM sqlite_master
+ WHERE type='table'
+'''
+**NOTE**, you can use: `SELECT sql FROM sqlite_master WHERE type='table' `
+{{!sql(answer, dbs=dbs, points=16, sort=True, name='Schema')}}
+% include('viewAnswer')
+
+--- 
+
+For a refresher on North Carolina civics, 
+legislators are the members of the state bi-camel congress.
+That means they're a member of the NC Senate or House of Representatives.
+Therefore, their database role is either Senator or Representative.
+
+**Roles:** List the unique roles of legislators.  
+% answer = '''
+SELECT DISTINCT role
+  FROM Legislators
+'''
+{{!sql(answer, dbs=dbs, points=14, sort=True, name='Roles')}}
+% include('viewAnswer')
+
+---
+
+All legislators are members of a political party.
+The [North Carolina State Board of Elections](https://www.ncsbe.gov/) has [recognized four political parties](https://www.ncsbe.gov/registering/choosing-your-party-affiliation#:~:text=4%20Political%20Parties,Party%2C%20and%20the%20Republican%20Party.).
+
+**Party:** List the unique political parties of the North Carolina legislators.  
+%answer = '''
+SELECT DISTINCT party
+  FROM Legislators
+'''
+{{!sql(answer, dbs=dbs, points=14, sort=True, name='Party')}}
+% include('viewAnswer')
+
+---
+
+Legislators vote on bills.
+(See [this cute 1970s, Saturday morning cartoon about the difference between a federal bill and a law](https://www.youtube.com/watch?v=Otbml6WIQPo).)
+
+**Farm.Bill:** List the components of the bill titled `'North Carolina Farm Act of 2022'`.  
+**NOTE:** You can use the URL returned from the bill to see all the information about a bill!  
+%answer = '''
+SELECT *
+  FROM Bills
+ WHERE title = 'North Carolina Farm Act of 2022'
+'''
+{{!sql(answer, dbs=dbs, points=14, sort=True, name='Farm.Bill')}}
+% include('viewAnswer')
+
+---
+
+Bills need sponsors.
+The sponsor usually presents it to the House of Representatives or Senate which they are a member.
+
+**Sponsor.** List the name of the sponsors of the 2022 Farm bill, LegiScan bill id 1424653, alphabetically along with whether they are in the House of Representatives or the Senate.  
+%answer = '''
+SELECT name, role
+  FROM Legislators L, Sponsors S
+ WHERE S.bill_id = 1424653 AND
+       S.legislator_id = L.legislator_id
+ ORDER BY name
+'''
+{{!sql(answer, dbs=dbs, points=14, name='Sponsors')}}
+% include('viewAnswer')
+
+---
+
+There are many votes on bills.
+There's a first reading, second reading, and much more.
+The votes on the bills are called roll calls.
+
+**Appropriations.Votes:** List the dates and description of the votes held on the bill titled `'2021 Appropriations Act'`.  
+%answer = '''
+SELECT R.date, R.description
+  FROM Bills B, Roll_calls R
+ WHERE B.title = '2021 Appropriations Act' AND
+       R.bill_id = B.bill_id
+'''
+{{!sql(answer, dbs=dbs, sort=True, points=14, name='Appropriations.Votes')}}
+% include('viewAnswer')
+
+---
+
+With so many votes, so many legislators, etc it's hard to find things.
+So each bill comes with multiple subjects or keywords.
+For example, the appropriations bill comes with keywords like Tobacco, Utilities, Veterans, Real Estate, etc.
+
+**How.Many.Subjects:** How many unique subject names did the North Carolina legislature use?  
+%answer = '''
+SELECT COUNT(DISTINCT subject_name)
+  FROM Subject_names
+'''
+{{!sql(answer, dbs=dbs, sort=True, points=14, name='How.Many.Subjectss')}}
+% include('viewAnswer')
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

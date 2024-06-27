@@ -1,0 +1,68 @@
+<%
+setInfo(
+        due='2023-01-10 11:00:00',
+        assessment_type='worksheet',
+        needsSubmitCode=True,
+        exceptions=dict(_003=dict(needsSubmitCode=False, due='2023-05-31 00:00:00')),
+        pages=['questions', 'submit'],
+        maxpenalty=0.75, penalty=.2)
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# 01 Grading Worksheet 
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+% import string
+% letter_symbols = [x for x in string.ascii_uppercase[:10]]
+
+--- 
+
+## {{!linkable_header('Questions')}} 
+
+% if 'questions' in pages:
+### {{!linkable_header('Grading questions')}}
+
+For the following fill-in-the-blank-questions select
+the letter label for the word that best answers
+the following questions.
+
+<div class="row">
+   <div class="fourcolumns">
+     <br/>A LAs
+     <br/>B Gradescope
+     <br/>C John Majikes
+     <br/>D Sakai
+     <br/>E Automated system
+     <br/>F Zero minutes
+     <br/>G Mom
+     <br/>H DBMS
+     <br/>I Piazza
+     <br/>J Brooks building
+     <p/>
+   </div>
+   % answer = ['C', 'F', 'H', 'I']
+   <div class="threefourcolumns">
+      <p/>Grade.1: Who does the grading for the class?
+      <br/>{{!T(answer[0], points=5, name='Grade.1', symbols=letter_symbols)}}
+
+      <p/>Grade.2: How long after a due date and the submit button reset, are assignments accepted?
+      <br/>{{!T(answer[1], points=5, name='Grade.2', symbols=letter_symbols)}}
+
+      <p/>Grade.3: What is the name of the text book?
+      <br/>{{!T(answer[2], points=5, name='Grade.3', symbols=letter_symbols)}}
+
+      <p/>Grade.4: Where is a good place to ask questions?
+      <br/>{{!T(answer[3], points=5, name='Grade.4', symbols=letter_symbols)}}
+
+   </div>
+</div>
+% include('viewAnswer')
+ 
+---
+
+% end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

@@ -1,0 +1,65 @@
+<%
+setInfo(assessment_type='worksheet')
+%>
+
+# Chapter 14 Dense index
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+
+---
+
+For these sets of questions assume the following dense index.
+
+<img src="{{static('images/worksheet-14-01-dense.png')}}" style="float:none; width:45%"/>
+
+---
+
+<%
+fields = ['12121', 'Wu', 'Finance', '90000',
+          '22222', 'Einstein', 'Physics', '95000',
+          '32343', 'El Said', 'History', '60000',
+          '45565', 'Katz', 'Comp. Sci.', '75000']
+%>
+
+**ID.0** What is the value of `id0`  
+% answer = '12121'
+{{!select(answer, fields, points=20, name='ID.0')}}
+%include('viewAnswer')
+
+---
+
+**ID.1** What is the value of `id1`  
+% answer = '22222'
+{{!select(answer, fields, points=20, name='ID.1')}}
+%include('viewAnswer')
+
+---
+
+**ID.2** What is the value of `id2`  
+% answer = '32343'
+{{!select(answer, fields, points=20, name='ID.2')}}
+%include('viewAnswer')
+
+---
+
+**ID.3** What is the value of `id3`  
+% answer = '45565'
+{{!select(answer, fields, points=20, name='ID.3')}}
+%include('viewAnswer')
+
+---
+
+**True:** What is the search key of this instructor relation dense index?  
+% answer = 'The file pointers are based on ID'
+% choices = [answer, 'The file is unsorted', 'The file pointers are based on dept_name', 'The file pointers are based on salary', 'None of these']
+{{!select(answer, choices, points=20, name='True')}}
+%include('viewAnswer')
+
+
+% include('worksheet-submit.md')

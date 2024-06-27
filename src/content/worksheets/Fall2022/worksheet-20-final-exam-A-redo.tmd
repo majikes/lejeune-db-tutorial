@@ -1,0 +1,90 @@
+<%
+setInfo(due="2021-11-18 15:15:00",
+        needsSubmitCode=True,
+        exceptions=dict(_003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        )
+dbs=['books1.sqlite', 'books2.sqlite']
+%>
+# A Redo Final Exam Review 1
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+
+```sql
+   CREATE TABLE Authors (
+      login text primary key,
+      email text,
+      first_name text,
+      last_name text
+   )
+
+   CREATE TABLE Books (
+      id integer primary key autoincrement,
+      title text,
+      author text references authors(login),
+      language text,
+      created date
+  )
+```
+---
+
+**How.Many.Authors:** How many authors are in the databases?  
+% answer = '''
+SELECT COUNT(*)
+  FROM Authors
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=25, name='How.Many.Authors')}}
+% include('viewAnswer')
+
+---
+
+**List.Authors:** List the first name and last name of
+all the authors in alphabetical order by last name.  
+% answer = '''
+SELECT first_name, last_name
+  FROM Authors
+  ORDER BY last_name
+'''
+{{!sql(answer, dbs=dbs, points=25, name='List.Authors')}}
+% include('viewAnswer')
+
+---
+
+**List.Books:** List all the books that have a title 
+starting with the letter A, order by title.  
+% answer = '''
+SELECT title
+  FROM Books
+ WHERE title like 'A%'
+  ORDER BY title
+'''
+{{!sql(answer, dbs=dbs, points=25, name='List.Books')}}
+% include('viewAnswer')
+
+---
+
+**Author.Count:** List each author's first name, last name, and the number
+of books they wrote.  
+Note that the join is $Authors \bowtie_{Authors.login = Books.author} Books$  
+% answer = '''
+SELECT first_name, last_name, count(*)
+  FROM Books B, Authors A
+ WHERE A.login = B.author
+  GROUP BY A.login
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=25, name='Author.Count')}}
+% include('viewAnswer')
+
+---
+
+%end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

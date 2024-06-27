@@ -1,0 +1,83 @@
+<% setInfo(
+      due="2022-11-16 10:50:00",
+      needsSubmitCode=True,
+        assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False))
+)
+%>
+
+# Chapter 19 Boyce-Code Normal Form
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+<!-- https://www.javatpoint.com/dbms-boyce-codd-normal-form -->
+Let's assume you have the following **EMPLOYEE** table which is stolen from javatpoint.com:
+
+
+| **EMPL_ID** | **EMP_COUNTRY** | **EMP_DEPT**  | **DEPT_TYPE** | **EMP_DEPT_NO**  |
+|-------------|-----------------|---------------|---------------|------------------|
+|  264        |  India          |  Design       |  D394         |  293  |
+|  264        |  India          |  Test         |  D394         |  300  |
+|  364        |  UK             |  Stores       |  D283         |  232  |
+|  364        |  UK             |  Development  |  D283         |  549  |
+
+**FD.1:** Which of the following are functional dependencies?  
+% answer = ['True', 'False', 'False', 'True', 'True']
+% rightarrow = r'$\rightarrow$'
+{{!table(inputs=1, headings='Functional Dependency, True or False', table=f'''
+EMP_ID {rightarrow} EMP_COUNTRY,{answer[0]}
+EMP_ID {rightarrow} EMP_DEPT,{answer[1]}
+EMP_ID {rightarrow} EMP_DEPT_NO,{answer[2]}
+EMP_DEPT {rightarrow} DEPT_TYPE,{answer[3]}
+EMP_DEPT {rightarrow} {{DEPT_TYPE&#44; EMP_DEPT_NO}},{answer[4]}
+''', symbols=answer, points=50, name='FD.1')}}
+%include('viewAnswer')
+
+---
+
+So the potential keys are the functional dependencies above.
+
+**EMP_COUNTRY** table:
+
+
+| **EMPL_ID** | **EMP_COUNTRY** |
+|-------------|-----------------|
+|  264        |  India          |
+|  364        |  UK             |
+
+
+**EMP_DEPT** table:
+
+| **EMP_DEPT**  | **DEPT_TYPE** | **EMP_DEPT_NO**  |
+|---------------|---------------|------------------|
+|  Design       |  D394         |  293  |
+|  Test         |  D394         |  300  |
+|  Stores       |  D283         |  232  |
+|  Development  |  D283         |  549  |
+
+
+**EMP_DEPT_MAPPING** table:
+
+| **DEPT_TYPE** | **EMP_DEPT_NO**  |
+|---------------|------------------|
+|  D394         |  293  |
+|  D394         |  300  |
+|  D283         |  232  |
+|  D283         |  549  |
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

@@ -1,0 +1,72 @@
+<%
+setInfo(
+      due="2021-10-07 15:15:00",
+      needsSubmitCode=True,
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False)),
+)
+dbs = ['states-A.sqlite']
+%>
+
+# Midterm notes
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**Midterm.Notes**: I understand midterm notes / cheat sheet is single page (front and back) must be hand written.   True or false?  
+% answer = 'True'
+% choices = [answer, 'False']
+{{!select(answer, choices, points=20, name='Midterm.Notes')}}
+%include('viewAnswer')
+
+---
+
+**Notes.Taken**: I understand non-handwritten midterm notes will be taken from me during the exam.   True or false?  
+% answer = 'True'
+% choices = [answer, 'False']
+{{!select(answer, choices, points=20, name='Notes.Taken')}}
+%include('viewAnswer')
+
+---
+
+**Read.Title.Page**: Before the exam I know I should read the title page of each chapter.   True or false?  
+% answer = 'True'
+% choices = [answer, 'False']
+{{!select(answer, choices, points=20, name='Read.Title.Page')}}
+%include('viewAnswer')
+
+---
+
+**Bold.Type.Figures**: Before the exam I know I should read and understand all bold typed works and all figures.  True or false?  
+% answer = 'True'
+% choices = [answer, 'False']
+{{!select(answer, choices, points=20, name='Bold.Type.Figures')}}
+%include('viewAnswer')
+
+---
+
+**EOC.Review.Exercises**: Before the exam I know I should answer all review questions and exercises at the end of the chapter.  True or false?  
+% answer = 'True'
+% choices = [answer, 'False']
+{{!select(answer, choices, points=20, name='EOC.Review.Exercises')}}
+%include('viewAnswer')
+
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

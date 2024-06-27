@@ -1,0 +1,76 @@
+<%
+from datetime import datetime, date
+import json
+setInfo(
+      due="2023-03-23  8:00:00",
+      assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False)),
+)
+with open('content/worksheets/sailors.json', encoding='utf-8') as fid:
+    schema = json.load(fid)
+dbs = ['game-nuclear50.sqlite']
+%>
+
+# Nuclear game worksheet
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**Question.1**: Normally I give you the schema.
+List all the SQL statements used to create the tables in the schema.  
+**NOTE:** The web uses SQLITE v2 which uses table sqlite_master.  Most student uses SQLite3 which uses sqlite_schema.
+% answer = f'''
+SELECT sql
+  FROM sqlite_master
+ WHERE type='table'
+'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.1', sort=True)}}
+% include('viewAnswer')
+
+---
+
+**Question.2**: Using a UNION statement, list all the relations and the cardinality of the relation.  
+**NOTE:** Although SQL table names are case insensitive, you _must_ use the table names as reported in the schema for **Question.1**  
+% answer = f'''
+SELECT 'Badge_Readers', count(*) FROM Badge_Readers
+UNION
+SELECT 'Badges', count(*) FROM Badges
+UNION
+SELECT 'Companies', count(*) FROM Companies
+UNION
+SELECT 'Door_Opened', count(*) FROM Door_Opened
+UNION
+SELECT 'Drivers_License', count(*) FROM Drivers_License
+UNION
+SELECT 'Persons', count(*) FROM Persons
+UNION
+SELECT 'Incident_Reports', count(*) FROM Incident_Reports
+UNION
+SELECT 'Parts', count(*) FROM Parts
+UNION
+SELECT 'Rooms', count(*) FROM Rooms
+'''
+{{!sql(answer, dbs=dbs, points=10, name='Question.2', sort=True)}}
+% include('viewAnswer')
+
+---
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

@@ -1,0 +1,36 @@
+-- Create and populate the Students relation
+DROP TABLE IF EXISTS Students;
+CREATE TABLE Students (sid text, name char(20), login text, dob date, gpa real, PRIMARY KEY(sid));
+INSERT INTO Students values ('720111111', 'Sasha Alvie', 'saalvie@unc.edu', '2022-01-02', 3.5);
+INSERT INTO Students values ('720222222', 'Jamie Jones', 'jjjones@unc.edu', '2022-03-04', 3.8);
+INSERT INTO Students values ('720333333', 'Blake Bicks', 'bbbicks@unc.edu', '2022-05-06', 3.2);
+INSERT INTO Students values ('720444444', 'Drew Dragon', 'ddragon@unc.edu', '2022-07-08', 0.9);
+
+-- Display the Students relation
+SELECT 'The Students table:' as '';
+SELECT * FROM Students;
+
+-- Create and populate the Courses relation
+DROP TABLE IF EXISTS Courses;
+CREATE TABLE Courses (cid text, name char(20), credit integer, PRIMARY KEY(cid));
+INSERT INTO Courses values ('5671', 'COMP 421', 3);
+INSERT INTO Courses values ('5672', 'COMP 550', 3);
+
+-- Display the Courses relation
+SELECT 'The Courses table:' as '';
+SELECT * FROM Courses;
+
+-- Create and populate the Enrolled relation
+DROP TABLE IF EXISTS Enrolled;
+CREATE TABLE Enrolled (sid text, cid text, grade string, PRIMARY KEY(sid, cid),
+                       FOREIGN KEY(sid) REFERENCES Students(sid),
+											 FOREIGN KEY(cid) REFERENCES Courses(cid));
+INSERT INTO Enrolled values ('720111111', '5671', 'B');
+INSERT INTO Enrolled values ('720111111', '5672', 'A');
+INSERT INTO Enrolled values ('720222222', '5672', 'A');
+INSERT INTO Enrolled values ('720333333', '5671', 'C');
+INSERT INTO Enrolled values ('720444444', '5672', 'D');
+
+-- Display the Enrolled relation
+SELECT 'The Enrolled table:' as '';
+SELECT * FROM Enrolled;

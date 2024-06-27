@@ -1,0 +1,71 @@
+<%
+setInfo(
+      due="2021-10-19 15:15:00",
+      needsSubmitCode=True,
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False)),
+)
+dbs = ['sailors.sqlite']
+%>
+
+# Chapter 12 Conjunctions
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**Conjunction:** What is a logical conjunction?  
+% answer = 'C. The logical AND operator'
+% answer2 = f''' This is background information, I used
+https://en.wikipedia.org/wiki/Logical_conjunction
+
+Answer: {answer}'''
+% choices = ['A. The logical OR operator', 'B. Any logical operator', answer, 'D. None of these' ]
+{{!select(answer, choices, points=33, name='Conjunction')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**CNF:** Which of the following are in CNF, conjunctive normal form?  
+ **A.** WHERE NOT (sname='Albert' OR sname='John)  
+ **B.** WHERE (sname != 'Albert') AND (sname != 'John)  
+ **C.** WHERE (s1.rating > s2.rating) AND s2.sname='Bart'  
+ **D.** WHERE P.bioid=T.bioid AND T.termtype='rep' AND startdate like '2021%'  
+ **E.** WHERE P.bioid=T.bioid OR (T.termtype='rep' AND startdate like '2021%')  
+ **F.** WHERE P.bioid=T.bioid OR T.termtype!='rep' OR startdate < '2021-01-01'  
+% answer = 'B. C. D. and F.'
+% answer2 = f''' A is not because the NOT is applied to the OR
+E is not because there are AND terms applied within OR's 
+All others have ANDs connecting groups of ORs
+
+Answer: {answer}'''
+% choices = ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'All but A', 'All but E', 'B. C. and D.', answer]
+{{!select(answer, choices, points=33, name='CNF')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Selection.Condition:** What are the selection conditions of `WHERE P.bioid=T.bioid OR T.termtype!='rep' OR startdate < '2021-01-01'` ?  
+ **A.** P.bioid=T.bioid  
+ **B.** T.termtype!='rep'  
+ **C.** startdate &lt; '2021-01-01'  
+% answer = 'All of them'
+% choices = ['A.', 'B.', 'C.', 'A. and B.', 'B. and C.', answer, 'None of them']
+{{!select(answer, choices, points=34, name='Selection.Condition')}}
+% include('viewAnswer')
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

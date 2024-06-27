@@ -1,0 +1,175 @@
+<%
+from collections import namedtuple
+
+ALL_BOATS = namedtuple('ALL_BOATS', 'name field')
+all_boats = [ALL_BOATS(name='names', field='sname'),
+             ALL_BOATS(name='ages',  field='age'),
+             ALL_BOATS(name='ratings', field='rating'),
+             ALL_BOATS(name='sids', field='sid'),
+            ]
+PREZ_CONGRESS = namedtuple('PREZ_CONGRESS', 'desc field order')
+prez_congress = [PREZ_CONGRESS(desc='senator', field='Senator', order='chronological'),
+                 PREZ_CONGRESS(desc='house representative', field='Representative', order='chronological'),
+                 PREZ_CONGRESS(desc='senator', field='Senator', order='reverse chronological'),
+                 PREZ_CONGRESS(desc='house representative', field='Representative', order='reverse chronological'),
+                 ]
+
+STATE_POP = namedtuple('STATE_POP', 'type_pop congress_branch start')
+state_pop = [STATE_POP(type_pop='largest population', congress_branch='Senator', start=2016),
+             STATE_POP(type_pop='smallest population', congress_branch='Senator', start=2016),
+             STATE_POP(type_pop='largest population', congress_branch='Representative', start=2022),
+             STATE_POP(type_pop='smallest population', congress_branch='Representative', start=2020),
+                    ]
+MULTI_PREZ = namedtuple('MULTI_PREZ', 'desc fields order_desc order_fields')
+multi_prezs = [MULTI_PREZ(desc=['full name', 'party affiliation'],
+                         fields='P.full_name, T.party',
+                         order_desc='alphabetically by last name',
+                         order_fields='P.last_name ASC'),
+               MULTI_PREZ(desc=['full name', 'date of birth'],
+                         fields='P.full_name, P.birthday',
+                         order_desc='numerically by politician id',
+                         order_fields='P.pid ASC'),
+               MULTI_PREZ(desc=['first name', 'last name'],
+                         fields='P.first_name, P.last_name',
+                         order_desc='alphabetically by party affiliation',
+                         order_fields='T.party ASC'),
+               MULTI_PREZ(desc=['politician id', 'full name'],
+                         fields='P.pid, P.full_name',
+                         order_desc='alphabetically by their last name',
+                         order_fields='P.last_name ASC'),
+              ]
+%>
+
+## {{!linkable_header(name_sql_queries)}} {{points_sql_queries}} out of {{points_limit}} points
+
+In this section, you will write SQL queries.
+Your queries will be tested immediately against two different databases.
+If your queries output matches the expected output, the
+displayed answers will be outlined in green.
+You need green, highlighted output from the query of both databases to get any credit.
+Your actual score will be determined when your query is
+tested against a different database but **two** green feedbacks should mean that you are on track to receive full credit.
+
+---
+
+%include('content/exams/fe-root-necessary-serve-61.SQL_Queries.simple.itmd')
+
+<%
+for index in range(number_sql_queries):
+   if (section == '003') or (conflict_exam and index == number_sql_queries-1) or (not conflict_exam and ((member_number%(number_sql_queries-1) == index))):
+      if index == number_sql_queries -1:
+        include('viewAnswer', answer=f' Only seen by students at the conflict exam')
+      else:
+        include('viewAnswer', answer=f' Only seen by member number % {number_sql_queries-1} == {index}')
+      end
+%>
+
+  **All.Boats.{{index+1}}:** List the {{all_boats[index].name}} of all the sailors who reserved all the boats.  
+  % answer = f'''
+SELECT S.{all_boats[index].field}
+  FROM Sailors AS S
+ WHERE NOT EXISTS (SELECT B.bid
+                     FROM Boats AS B
+
+                   EXCEPT
+
+                   SELECT DISTINCT R.bid
+                     FROM Reserves AS R
+                    WHERE R.sid=S.sid);
+'''
+  {{!sql(answer, dbs=sailors_dbs, points=10, sort=True, name=f'All.Boats.{index+1}')}}
+  % include('viewAnswer')
+
+---
+
+  **State.Names.{{index+1}}:** List the following for the state names that alphabetically come {{'before' if index%2 == 0 else 'after'}} 'Missouri':  
+  1. The state name  
+  3. The state population  
+  **NOTE:** List the states in {{'reverse' if (index+1)%2 == 0 else ''}} alphabetically by state abbreviation.  
+  % answer = f'''
+SELECT state_name, state_population
+  FROM States
+ WHERE state_name {'<' if index%2 == 0 else '>'} 'Missouri'
+ ORDER BY state_abbreviation {'DESC' if (index+1)%2 == 0 else 'ASC'}
+'''
+  {{!sql(answer, dbs=politicians_dbs, points=10, name=f'State.Names.{index+1}')}}
+  % include('viewAnswer')
+
+
+  **State.Population.{{index+1}}:** List the following for the {{state_pop[index].congress_branch.lower()}}(s) who started their term after January 1st, {{state_pop[index].start}} who are from the state(s) with the {{state_pop[index].type_pop}}:  
+  1. Their first name  
+  2. Their last name  
+  3. Their political party  
+  % answer = f'''
+WITH P AS (SELECT {'MAX(state_population)' if 'largest' in state_pop[index].type_pop else 'MIN(state_population)'} as population
+             FROM States)
+
+SELECT DISTINCT P.first_name, P.last_name, T.party
+  FROM Politicians P, Terms T, States S, P
+ WHERE T.term_type='{state_pop[index].congress_branch}' AND
+       S.state_population=P.population AND
+       T.start_date > '{state_pop[index].start}-01-01' AND
+       P.pid = T.pid AND
+       T.sid = S.sid
+'''
+  {{!sql(answer, dbs=politicians_dbs, sort=True, points=10, name=f'State.Population.{index+1}')}}
+  % include('viewAnswer')
+
+
+
+  **President.And.Senate.{{index+1}}:** List two things about the Presidents of the United States:  
+  1. Their full name  
+  2. If they were a {{prez_congress[index].desc}}, the state name(s) they were a {{prez_congress[index].desc}} for.  If they weren't a {{prez_congress[index].desc}}, `Null`.  
+  **Note:** The approximately 45 presidents should be listed only once and by the date they first became president in {{prez_congress[index].order}} order.  
+   % answer = f'''
+WITH S AS (SELECT DISTINCT pid, state_name
+             FROM Terms T, States S
+            WHERE T.term_type='{prez_congress[index].field}' AND
+                  T.sid=S.sid)
+SELECT DISTINCT P.full_name, S.state_name
+  FROM Politicians P, Terms T
+  LEFT JOIN S ON S.pid=P.pid
+ WHERE T.term_type='President' AND
+       T.pid=P.pid
+ ORDER BY T.start_date {'ASC' if prez_congress[index].order=='chronological' else 'DESC'};
+'''
+  {{!sql(answer, dbs=politicians_dbs, points=10, name=f'President.And.Senate.{index+1}')}}
+  % include('viewAnswer')
+
+
+  **Multi.Term.President.{{index+1}}:** For all the presidents who served more than one term list:  
+  1. Their {{multi_prezs[index].desc[0]}}  
+  2. Their {{multi_prezs[index].desc[1]}}  
+  **NOTE:** List the information {{multi_prezs[index].order_desc}}  
+  % answer = f'''
+  -- HAVING GROUP BY
+SELECT {multi_prezs[index].fields}
+  FROM Politicians P, Terms T
+ WHERE T.term_type = 'President' AND
+       T.pid = P.pid
+ GROUP BY P.pid
+ HAVING count(*) > 1
+ ORDER BY {multi_prezs[index].order_fields}
+'''
+  {{!sql(answer, dbs=politicians_dbs, points=10, name=f'Multi.Term.President.{index+1}')}}
+  % include('viewAnswer')
+
+
+
+  **State.Names.Capitals.{{index+1}}:** List a single field relation that contains the set of state names and capitals.  
+  **Note:** This should produce only one column.
+Both Raleigh and North Carolina should appear in different rows but both in the first column.
+  % answer = f'''
+  -- UNION
+SELECT state_name FROM States
+  UNION
+SELECT state_capital FROM States
+'''
+  {{!sql(answer, dbs=politicians_dbs, sort=True, points=10, name=f'State.Names.Capitals.{index+1}')}}
+  % include('viewAnswer')
+
+  % end
+% end
+
+---
+

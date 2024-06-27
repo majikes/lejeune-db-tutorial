@@ -1,0 +1,82 @@
+<%
+setInfo(
+        due="2021-08-31 15:15:00",
+        pages=['questions', 'submit'],
+        maxpenalty=0.75,
+        penalty=.2,
+        exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+       )
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+# 03-A Chapter 3 worksheet: First practice with SQL
+
+% dbs=['worksheet-03.sqlite']
+
+I have created a _table_ Students using the following SQL commands.
+
+```
+create table if not exists Students
+(sid text,
+ name text,
+ login text,
+ age integer,
+ gpa real);
+
+insert into Students values ('53666', 'Jones', 'jones@cs', 18, 3.4);
+insert into Students values ('53688', 'Smith', 'smith@cs', 18, 3.2);
+insert into Students values ('53650', 'Smith', 'smith@math', 19, 3.9);
+```
+
+---
+
+% answer = '''SELECT * FROM Students'''
+Students: List the contents of the Students table.  
+{{!sql(answer, dbs=dbs, points=5, name='Students')}}
+% include('viewAnswer')
+
+% answer = '''SELECT sid, gpa FROM Students'''
+Id: List the sid and gpa for all students.
+{{!sql(answer, dbs=dbs, points=10, name='Id')}}
+% include('viewAnswer')
+
+GPA: List the grade point average for all students who are 18 years old.
+
+% answer = '''SELECT gpa FROM Students WHERE age=18'''
+{{!sql(answer, dbs=dbs, points=10, name='GPA')}}
+% include('viewAnswer')
+
+---
+
+Simpson: Add the following student to your table.
+
+- sid: 53655
+- name: Simpson
+- login: simpson@cs
+- age: 19
+- gpa: 3.1
+
+% answer = '''insert into Students values ('53655', 'Simpson', 'simpson@cs', 19, 3.1)'''
+{{!sql(answer, dbs=dbs, points=10, name='Simpson')}}
+% include('viewAnswer')
+
+<b style="background: palegreen;">Note:</b> My software can't tell if that worked because insert doesn't return anything.
+
+List: List the contents of the table again to see if you got it right.
+
+% answer = '''select * from Students'''
+{{!sql(answer, dbs=dbs, points=10, name='List')}}
+% include('viewAnswer')
+
+---
+
+% end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

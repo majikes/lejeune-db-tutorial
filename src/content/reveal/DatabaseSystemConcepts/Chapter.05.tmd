@@ -1,0 +1,1119 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+
+---
+
+## Outline
+
+ - Accessing SQL From a Programming Language
+ - Functions and Procedures
+ - Triggers
+ - Recursive Queries
+ - Advanced Aggregation Features
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch5.pdf
+
+---
+
+## Accessing SQL from a Programming Language
+
+A database programmer must have access to a general-purpose programming  language for at least two reasons
+
+ - Not all queries can be expressed in SQL, since SQL does not provide  the full expressive power of a general-purpose language.
+ - Non-declarative actions -- such as printing a report, interacting with a  user, or sending the results of a query to a graphical user interface -- cannot be done from within SQL. 
+
+ - We will only use Python interface to SQL.
+   - Most programming languages have interfaces
+   - Embedded SQL can be used for compile language
+
+Note:
+
+## Accessing SQL from a Programming Language (Cont.)
+
+ - A general-purpose program  -- can connect to and communicate with  a database server using a collection of functions
+ - Embedded SQL -- provides a means by which a program can interact  with a database server.  
+   - The  SQL statements are translated at compile time  into function  calls.  
+   - At runtime,  these function calls connect to the database  using an  API  that provides dynamic  SQL facilities. There are two approaches to accessing  SQL from a general-purpose  programming language
+
+
+
+
+Not covreing JDBC 
+
+## JDBC
+
+
+
+
+## JDBC
+
+ - <b>JDBC</b> is a Java API for communicating with database systems supporting  SQL.
+ - JDBC supports a variety of features for querying and updating data, and  for retrieving query results.
+ - JDBC also supports metadata retrieval, such as querying about relations  present in the database and the names and types of relation attributes.
+ - Model for communicating with the database:
+   - Open a connection
+   - Create a “statement” object
+   - Execute queries using the statement object to send queries and fetch  results
+   - Exception mechanism to handle errors
+
+
+
+## JDBC Code
+
+<p><b>public static void JDBCexample(String dbid, String userid, String passwd) </b></p>
+<p><b>{ </b></p>
+<p><b>try (Connection conn = DriverManager.getConnection(     </b></p>
+<p><b>"jdbc:oracle:thin:</b>@<b>db.yale.edu:2000:univdb", userid, passwd); </b></p>
+<p><b>Statement stmt = conn.createStatement();</b></p>
+<p><b>) </b></p>
+<p><b>{ </b></p>
+<p><b>… Do Actual Work ….</b></p>
+<p><b>}</b></p>
+<p><b>catch (SQLException sqle) { </b></p>
+<p><b>System.out.println("SQLException : " + sqle);</b></p>
+<p><b>}</b></p>
+<p><b>}</b></p>
+<p><b>NOTE: Above syntax works with Java 7, and JDBC 4 onwards. </b></p>
+<p><b>Resources opened in “try (….)” syntax (“try with resources”) are </b></p>
+<p><b>automatically closed at the end of the try block</b></p>
+
+
+
+## JDBC Code for  Older Versions of Java/JDBC
+
+<p><b>public static void JDBCexample(String dbid, String userid, String passwd) </b></p>
+<p><b>{ </b></p>
+<p><b>try { </b></p>
+<p><b>Class.forName ("oracle.jdbc.driver.OracleDriver"); </b></p>
+<p><b>Connection conn = DriverManager.getConnection(     </b></p>
+<p><b>"jdbc:oracle:thin:</b>@<b>db.yale.edu:2000:univdb", userid, passwd); </b></p>
+<p><b>Statement stmt = conn.createStatement(); </b></p>
+<p><b>… Do Actual Work ….</b></p>
+<p><b>stmt.close();</b></p>
+<p><b>conn.close();</b></p>
+<p><b>}</b></p>
+<p><b>catch (SQLException sqle) { </b></p>
+<p><b>System.out.println("SQLException : " + sqle);</b></p>
+<p><b>}</b></p>
+<p><b>}</b></p>
+<p><b>NOTE:  Class.forName is not required from JDBC 4 onwards. The try with </b></p>
+<p><b>resources syntax  in prev slide is preferred for Java 7 onwards. </b></p>
+
+
+
+## JDBC Code (Cont.)
+
+ - Update to database
+<p><b>try {</b></p>
+<p><b>stmt.executeUpdate(</b></p>
+<p><b>"insert into instructor values('77987', 'Kim', 'Physics', 98000)");</b></p>
+<p><b>} catch (SQLException sqle)</b></p>
+<p><b>{</b></p>
+<p><b>System.out.println("Could not insert tuple. " + sqle);</b></p>
+<p><b>}</b></p>
+ - Execute query and fetch and print results
+<p><b>ResultSet rset = stmt.executeQuery(</b></p>
+<p><b>"select dept_name, avg (salary)</b></p>
+<p><b>from instructor</b></p>
+<p><b>group by dept_name");</b></p>
+<p><b>while (rset.next()) {</b></p>
+<p><b>System.out.println(rset.getString("dept_name") + " " +</b></p>
+<p><b>rset.getFloat(2));</b></p>
+<p><b>}</b></p>
+
+
+
+## JDBC SUBSECTIONS       
+
+ - Connecting to the Database
+ - Shipping SQL Statements to the Database System
+ - Exceptions and Resource Management
+ - Retrieving the Result of a Query
+ - Prepared Statements
+ - Callable Statements
+ - Metadata Features
+ - Other Features
+ - Database Access from Python
+
+
+
+## JDBC Code Details       
+
+ - Getting result fields:
+   - <b>rs.getString(</b>“<b>dept_name</b>”<b>) and rs.getString(1) equivalent if </b>
+<p><b>dept_name is the first argument of select result.</b></p>
+ - Dealing with Null values
+<p><b>int a = rs.getInt(</b>“<b>a</b>”<b>);</b></p>
+<p><b>if (rs.wasNull()) Systems.out.println(</b>“<b>Got null value</b>”<b>);</b></p>
+
+
+
+## Prepared Statement
+
+ - PreparedStatement pStmt = conn.prepareStatement( 
+<p>"insert into instructor values(?,?,?,?)");</p>
+<p>pStmt.setString(1, "88877");</p>
+<p>pStmt.setString(2, "Perry");</p>
+<p>pStmt.setString(3, "Finance");</p>
+<p>pStmt.setInt(4, 125000);</p>
+<p>pStmt.executeUpdate();</p>
+<p>pStmt.setString(1, "88878");</p>
+<p>pStmt.executeUpdate();</p>
+ - WARNING: always use prepared statements when taking an input from 
+<p>the user and adding it to a query</p>
+   - NEVER create a query by concatenating strings
+   - "insert into instructor values(' " + ID + " ', ' " + name + " ', " + " ' + dept 
+<p>name + " ', " ' balance + ')“</p>
+   - What if name is “D'Souza”?
+
+
+
+## SQL Injection
+
+ - Suppose query is constructed using
+   - "select * from instructor where name = '" + name + "'"
+ - Suppose the user, instead of entering a name, enters:
+   - X' or 'Y' = 'Y
+ - then the resulting statement becomes:
+   - "select * from instructor where name = '" + "X' or 'Y' = 'Y" + "'"
+   - which is:
+ - select * from instructor where name = 'X' or 'Y' = 'Y'
+   - User could have even used
+ - X'; update instructor set salary = salary + 10000; --
+ - Prepared stament internally uses:
+<p>"select * from instructor where name = 'X\' or \'Y\' = \'Y'</p>
+   - <b>Always use prepared statements, with user inputs as parameters</b>
+
+
+
+## Metadata Features
+
+ - ResultSet metadata
+ - E.g.after executing query to get a ResultSet rs:
+   - ResultSetMetaData rsmd = rs.getMetaData();
+<p>for(int i = 1; i &lt;= rsmd.getColumnCount(); i++) {</p>
+<p>System.out.println(rsmd.getColumnName(i));</p>
+<p>System.out.println(rsmd.getColumnTypeName(i));</p>
+<p>}</p>
+ - How is this useful?
+
+
+## Metadata (Cont)
+
+ - Database metadata
+ - DatabaseMetaData dbmd = conn.getMetaData();
+<p>// Arguments to getColumns: Catalog, Schema-pattern, Table-pattern,</p>
+<p>// and Column-Pattern</p>
+<p>// Returns: One row for each column; row has a number of attributes</p>
+<p>// such as COLUMN_NAME, TYPE_NAME</p>
+<p>// The value null indicates all Catalogs/Schemas.  </p>
+<p>// The value “” indicates current catalog/schema</p>
+<p>// The value “%” has the same meaning as SQL <b>like</b> clause</p>
+<p>ResultSet rs = dbmd.getColumns(null, "univdb", "department", "%");</p>
+<p>while( rs.next()) {</p>
+<p>System.out.println(rs.getString("COLUMN_NAME"),</p>
+<p>rs.getString("TYPE_NAME");</p>
+<p>}</p>
+ - And where is this useful?
+
+
+
+## Metadata (Cont)
+
+ - Database metadata
+ - DatabaseMetaData dbmd = conn.getMetaData();
+<p>// Arguments to getTables: Catalog, Schema-pattern, Table-pattern,</p>
+<p>// and Table-Type</p>
+<p>// Returns: One row for each table; row has a number of attributes</p>
+<p>// such as TABLE_NAME, TABLE_CAT, TABLE_TYPE, ..</p>
+<p>// The value null indicates all Catalogs/Schemas.  </p>
+<p>// The value “” indicates current catalog/schema</p>
+<p>// The value “%” has the same meaning as SQL <b>like</b> clause</p>
+<p>// The last attribute is an array of types of tables to return.  </p>
+<p>//    TABLE means only regular tables</p>
+<p>ResultSet rs = dbmd.getTables (“”, "", “%", new String[] {“TABLES”});</p>
+<p>while( rs.next()) {</p>
+<p>System.out.println(rs.getString(“TABLE_NAME“));</p>
+<p>}</p>
+ - And where is this useful?
+
+
+
+## Finding Primary Keys
+
+ - DatabaseMetaData dmd = connection.getMetaData();
+<p>// Arguments below are:  Catalog, Schema, and Table</p>
+<p>// The value “”  for Catalog/Schema indicates current catalog/schema</p>
+<p>//  The value null indicates all catalogs/schemas</p>
+<p>ResultSet rs = dmd.getPrimaryKeys(“”, “”, tableName);</p>
+<p>while(rs.next()){</p>
+<p>// KEY_SEQ indicates the position of the attribute in </p>
+<p>// the primary key, which is required if a primary key has multiple</p>
+<p>// attributes</p>
+<p>System.out.println(rs.getString(“KEY_SEQ”),  </p>
+<p>rs.getString("COLUMN_NAME");</p>
+<p>}</p>
+
+
+
+## Transaction Control in JDBC
+
+ - By default, each SQL statement is treated as a separate transaction that 
+<p>is committed automatically</p>
+   - bad idea for transactions with multiple updates
+ - Can turn off automatic commit on a connection
+   - conn.setAutoCommit(false);
+ - Transactions must then be committed or rolled back explicitly
+   - conn.commit();     or
+   - conn.rollback();
+ - conn.setAutoCommit(true) turns on automatic commit.
+
+
+
+## Other JDBC Features
+
+ - Calling functions and procedures
+   - CallableStatement cStmt1 = conn.prepareCall("{? = call some 
+<p>function(?)}");</p>
+   - CallableStatement cStmt2 = conn.prepareCall("{call some 
+<p>procedure(?,?)}");</p>
+ - Handling large object types
+   - getBlob() and getClob() that are similar to the getString() method, but 
+<p>return objects of type Blob and Clob, respectively</p>
+   - get data from these objects by getBytes()
+   - associate an open stream with Java Blob or Clob object to update large 
+<p>objects</p>
+ - blob.setBlob(int parameterIndex, InputStream inputStream).
+
+
+
+## JDBC Resources
+
+ - JDBC Basics Tutorial
+   - https://docs.oracle.com/javase/tutorial/jdbc/index.html
+
+
+
+## SQLJ
+
+ - JDBC is overly dynamic, errors cannot be caught by compiler
+ - SQLJ: embedded SQL in Java
+   - #sql iterator deptInfoIter ( String dept name, int avgSal);
+<p>deptInfoIter iter = null;</p>
+<p>#sql iter = { select dept_name, avg(salary) from instructor</p>
+<p>group by dept name };</p>
+<p>while (iter.next()) {</p>
+<p>String deptName = iter.dept_name();</p>
+<p>int avgSal = iter.avgSal();</p>
+<p>System.out.println(deptName + " " + avgSal);</p>
+<p>}</p>
+<p>iter.close();</p>
+
+
+
+## ODBC
+
+
+
+
+## ODBC
+
+ - Open DataBase Connectivity (ODBC) standard 
+   - standard for application program to communicate with a database 
+<p>server.</p>
+   - application program interface (API) to 
+ - open a connection with a database, 
+ - send queries and updates, 
+ - get back results.
+ - Applications such as GUI, spreadsheets, etc. can use ODBC
+
+---
+
+## Python - Connect to a database
+
+ - Need to connection to the server
+ - Pass the name of the database file
+ - Use filename ':memory:' for an in-memory database
+```
+import sqlite3
+#
+conn = sqlite3.connect("tutorial.db")
+```
+
+---
+
+## Python - Cursor
+
+ - Cursor needed to execute any SQL statements
+```
+cursor = conn.cursor()
+```
+ - Cursor execute method to execute a single statement
+```
+cursor.execute('''SELECT * FROM table''')
+```
+ - Cursor fetchone or fetchall method to traverse over records in a database
+```
+rows = cursor.fetchall()
+```
+ - Cursor executemany method to execute an operation with many options
+ - See [Python sqlite3 tutorial](https://docs.python.org/3/library/sqlite3.html#sqlite3-tutorial) for examples
+
+
+---
+
+## SQL Injection
+
+```
+name = "X' or 'Y' = 'Y"
+cursor.execute(f"select * from instructor where name = '{name}'")
+```
+
+ - The resulting query becomes: `select * from instructor where name = 'X' or 'Y' = 'Y'"`
+ - What if `name = "X'; update instructor set salary = salary + 10000;`"
+ - Prepared statement internally uses:
+
+```
+cursor.execute("""select * from instructor where name = ?""",
+               name)
+```
+
+```
+cursor.execute("""select * from instructor where name = :name""",
+               dict(name=name))
+```
+
+
+ - **Always use prepared statements, with user inputs as parameters**
+
+
+---
+
+## Python -- Commit
+
+ - After altering the database, commit to close the transaction
+ - Can use the connection object or the cursor object
+
+```
+conn.commit()
+```
+
+```
+cursor.connection.commit()
+```
+
+Note: 
+
+do not use
+
+## Embedded SQL
+
+ - The SQL standard defines embeddings of SQL in a variety of programming languages such as C, C++, Java, Fortran, and PL/1, 
+ - A language to which SQL queries are embedded is referred to as a **host** **language**, and the SQL structures permitted in the host language comprise _embedded_ SQL.
+ - The basic form of these languages follows that of the System R embedding of SQL into PL/1.
+ - **EXEC SQL** statement is used in the host language to identify embedded SQL request to the preprocessor
+<p>EXEC SQL &lt;embedded SQL statement &gt;;</p>
+<p>Note:  this varies by language: </p>
+   - In some languages, like COBOL,  the semicolon is replaced with END-
+<p>EXEC </p>
+   - In Java embedding uses    # SQL { …. };
+
+
+
+## Embedded SQL (Cont.)
+
+ - Before executing any SQL statements, the program must first connect to 
+<p>the database.  This is done using:</p>
+<p>EXEC-SQL <b>connect to  </b><i>server</i><b> user</b><i> user-name </i><b>using</b><i> password</i>;</p>
+<p>Here, <i>server</i> identifies the server to which a connection is to be </p>
+<p>established.</p>
+ - Variables of the host language can be used within embedded SQL 
+<p>statements.  They are preceded  by a colon  (:) to distinguish from SQL </p>
+<p>variables (e.g.,  :<i>credit_amount )</i></p>
+ - Variables used as above must be declared within DECLARE section, as 
+<p>illustrated below. The syntax for declaring the variables, however, follows </p>
+<p>the usual host language syntax.</p>
+<p>EXEC-SQL BEGIN DECLARE SECTION}</p>
+<p>int<i> credit-amount </i>;</p>
+<p>EXEC-SQL END DECLARE SECTION;</p>
+
+
+
+## Embedded SQL (Cont.)
+
+ - To write an embedded SQL query, we use the 
+<p><b>declare </b><i>c</i><b> cursor for  &lt;SQL query&gt; </b></p>
+<p>statement.  The  variable <i>c</i> is used to identify the query</p>
+ - Example:
+   - From within a host language, find the ID and name of students who  
+<p>have completed more than the number of credits stored in variable </p>
+<p>credit_amount in the host langue</p>
+   - Specify the query in SQL as follows:
+<p>EXEC SQL</p>
+<p><b>declare </b><i>c</i><b> cursor for </b></p>
+<p><b>select </b><i>ID, name</i></p>
+<p><b>from </b><i>student</i></p>
+<p><b>where tot_cred</b><i> &gt; :credit_amount</i></p>
+<p>END_EXEC</p>
+
+
+
+## Embedded SQL (Cont.)
+
+ - The<b> open</b> statement for our example is as follows:
+<p>EXEC SQL <b>open</b><i> c</i> ;</p>
+<p>This statement causes the database system to execute the query and  to </p>
+<p>save the results within a temporary relation.  The query uses the value of </p>
+<p>the host-language variable <i>credit-amount</i> at the time the <b>open</b> statement </p>
+<p>is executed.</p>
+ - The fetch statement causes the values of one tuple in the query result to 
+<p>be placed on host language variables.</p>
+<p>EXEC SQL<b> fetch </b><i>c </i><b>into </b>:<i>si, :sn</i> END_EXEC</p>
+<p>Repeated calls to fetch get successive tuples in the query result</p>
+
+
+
+## Embedded SQL (Cont.)
+
+ - A variable called SQLSTATE in the SQL communication area (SQLCA) 
+<p>gets set to '02000' to indicate no more data is available</p>
+ - The <b>close</b> statement causes the database system to delete the 
+<p>temporary relation that holds the result of the query.</p>
+<p>EXEC SQL <b>close</b><i> c</i> ;</p>
+<p>Note: above details vary with language.  For example, the Java              </p>
+<p>embedding defines Java iterators to step through result tuples.</p>
+
+
+
+## Updates Through Embedded SQL
+
+ - Embedded SQL expressions for database modification (<b>update</b>, <b>insert</b>, 
+<p>and <b>delete</b>)</p>
+ - Can update tuples fetched by cursor by declaring that the cursor is for 
+<p>update</p>
+<p><b>EXEC SQL </b></p>
+<p><b>declare </b><i>c </i><b>cursor for</b></p>
+<p><b>select </b>*</p>
+<p><b>from </b><i>instructor</i></p>
+<p><b>where</b><i> dept_name</i> = 'Music'</p>
+<p><b>for update</b></p>
+ - We then iterate through the tuples by performing  <b>fetch</b> operations on the 
+<p>cursor (as illustrated earlier), and after fetching each tuple we execute the </p>
+<p>following code:</p>
+<p><b>update </b><i>instructor</i></p>
+<p><b>set</b><i> salary = salary</i> + 1000</p>
+<p><b>where current of </b><i>c</i></p>
+
+
+
+
+## Functions and Procedures
+
+ - Functions and procedures allow  “business logic”  to be stored in the database and executed from SQL statements.
+ - These can be defined either by the procedural component of SQL or  by an external programming language such as Python, Java, C, or C++.
+ - The syntax we present here is defined by the SQL standard.
+   - Most databases implement nonstandard versions of this syntax.
+
+
+
+## Declaring SQL Functions
+
+ - Define a function that, given the name of a department, returns the count of 
+<p>the number of instructors in that department.</p>
+<p><b>create function </b><i>dept_count</i> (<i>dept_name</i><b> varchar</b>(20))</p>
+<p><b>returns integer</b></p>
+<p><b>begin</b></p>
+<p><b>declare </b><i>d_count</i><b> integer;</b></p>
+<p><b>select count </b>(<i>* </i>) <b>into </b><i>d_count</i></p>
+<p><b>from </b><i>instructor</i></p>
+<p><b>where </b><i>instructor.dept_name = dept_name</i></p>
+<p><b>return </b><i>d_count;</i></p>
+<p><b>end</b></p>
+ - The function <i>dept_</i>count can be used to find the department names and 
+<p>budget of all departments with more that 12 instructors.</p>
+<p><b>select </b><i>dept_name, budget</i></p>
+<p><b>from</b><i> department</i></p>
+<p><b>where </b><i>dept_</i>count (<i>dept_name</i> ) &gt; 12</p>
+
+
+
+## Table Functions
+
+ - The SQL standard supports functions that can return tables as results; such 
+<p>functions are called <b>table functions</b></p>
+ - Example: Return all instructors in a given department
+<p><b>create function</b><i> instructor_of</i> (<i>dept_name</i><b> char</b>(20))</p>
+<p><b>returns table  </b>(</p>
+<p><i>ID </i><b>varchar</b>(5),</p>
+<p><i>name</i><b> varchar</b>(20),</p>
+<p><i>dept_name</i><b> varchar</b>(20),</p>
+<p><i>salary</i><b> numeric</b>(8,2))</p>
+<p><b>return table</b></p>
+<p>(<b>select</b><i> ID, name, dept_name, salary</i></p>
+<p><b>from</b><i> instructor</i></p>
+<p><b>where</b><i> instructor.dept_name = instructor_of.dept_name</i>)</p>
+ - Usage
+<p><b>select *</b></p>
+<p><b>from table </b>(<i>instructor_of</i> ('Music'))</p>
+
+
+
+## Language Constructs (Cont.)
+
+ - <b>For</b> loop
+   - Permits iteration over all results of a query
+ - Example:   Find the budget of all departments
+<p><b>declare </b><i>n  </i><b>integer default </b>0;</p>
+<p><b>for </b><i>r  </i><b>as</b></p>
+<p><b>select </b><i>budget </i><b>from </b><i>department                                                     </i></p>
+<p><b>where </b><i>dept_name = 'Music' </i></p>
+<p><b>do</b></p>
+<p><b>set </b><i>n </i>= <i>n </i>+ r.<i>budget</i></p>
+<p><b>end for</b></p>
+
+
+
+## External Language Routines
+
+ - SQL allows us to define functions in a programming language such as 
+<p>Java, C#, C or C++. </p>
+   - Can be more efficient than functions defined in SQL, and 
+<p>computations that cannot be carried out in SQL\can be executed by </p>
+<p>these functions.</p>
+ - Declaring external language procedures and functions
+<p><b>create procedure </b>dept_count_proc(<b>in</b><i> dept_name</i><b> varchar</b>(20),</p>
+<p><b>out </b>count <b>integer</b>)</p>
+<p><b>language </b>C</p>
+<p><b>external name </b>'/usr/avi/bin/dept_count_proc'</p>
+<p><b>create function </b>dept_count(<i>dept_name</i><b> varchar</b>(20))</p>
+<p><b>returns </b>integer</p>
+<p><b>language </b>C</p>
+<p><b>external name </b>'/usr/avi/bin/dept_count'</p>
+
+
+
+## Security with External Language Routines
+
+ - To deal with security problems, we can do on of the following:
+   - Use <b>sandbox</b> techniques
+ - That is, use a safe language like Java, which cannot be used to  
+<p>access/damage other parts of the database code.</p>
+   - Run external language functions/procedures in a separate process, 
+<p>with no access to the database process’ memory.</p>
+ - Parameters and results communicated via inter-process 
+<p>communication</p>
+ - Both have performance overheads
+ - Many database systems support both above approaches as well as direct 
+<p>executing in database system address space.</p>
+
+
+
+## Triggers
+
+ - A **trigger** is a statement that is executed automatically by the system as a side effect of a modification to the database.
+ - To design a trigger mechanism, we must:
+   - Specify the conditions under which the trigger is to be executed.
+   - Specify the actions to be taken when the trigger executes.
+ - Triggers introduced to SQL standard in SQL:1999, but supported even earlier using non-standard syntax by most databases.
+   - Syntax illustrated here may not work exactly on your database system; check the system manuals
+
+
+
+## Trigger to Maintain credits_earned value
+ - <b>create trigger </b><i>credits_earned</i><b> after update of </b><i>takes </i><b>on </b>(<i>grade</i>)
+<p><b>referencing new row as </b><i>nrow</i></p>
+<p><b>referencing old row as </b><i>orow</i></p>
+<p><b>for each row</b></p>
+<p><b>when </b><i>nrow.grade</i> &lt;&gt; 'F' <b>and </b><i>nrow.grade</i><b> is not null</b></p>
+<p><b>and </b>(<i>orow.grade</i> = 'F' <b>or </b><i>orow.grade</i><b> is null</b>)</p>
+<p><b>begin atomic</b></p>
+<p><b>update </b><i>student</i></p>
+<p><b>set </b><i>tot_cred</i>= <i>tot_cred</i> + </p>
+<p>(<b>select </b><i>credits</i></p>
+<p><b>from </b><i>course</i></p>
+<p><b>where </b><i>course</i>.<i>course_id</i>= <i>nrow.course_id</i>)</p>
+<p><b>where </b><i>student.id </i>= <i>nrow.id</i>;</p>
+<p><b>end</b>;</p>
+
+
+
+## Statement Level Triggers
+
+ - Instead of executing a separate action for each affected row, a single 
+<p>action can be executed for all rows affected by a transaction</p>
+   - Use     <b>for each statement      </b>instead of    <b>for each row</b>
+   - Use     <b>referencing old table</b>
+<p>or   <b>referencing new table</b></p>
+<p>to refer to </p>
+<p>temporary tables  (called <b><i>transition tables</i></b>) containing the affected </p>
+<p>rows</p>
+   - Can be more efficient when dealing with SQL statements that update 
+<p>a large number of rows</p>
+
+
+
+## When Not To Use Triggers
+
+ - Triggers were used earlier for tasks such as 
+   - Maintaining summary data (e.g., total salary of each department)
+   - Replicating databases by recording changes to special relations 
+<p>(called <b>change</b> or <b>delta</b> relations) and having a separate process that </p>
+<p>applies the changes over to a replica </p>
+ - There are better ways of doing these now:
+   - Databases today provide built in materialized view facilities to 
+<p>maintain summary data</p>
+   - Databases provide built-in support for replication
+ - Encapsulation facilities can be used instead of triggers in many cases
+   - Define methods to update fields
+   - Carry out actions as part of the update methods instead of 
+<p>through a trigger </p>
+
+
+
+## When Not To Use Triggers (Cont.)
+
+ - Risk of unintended execution of triggers, for example, when
+   - Loading data from a backup copy
+   - Replicating updates at a remote site
+   - Trigger execution can be disabled before such actions.
+ - Other risks with triggers:
+   - Error leading to failure of critical transactions that set off the trigger
+   - Cascading execution
+
+
+
+## Recursion in SQL
+
+ - SQL:1999 permits recursive view definition
+ - Example: find which courses are a prerequisite, whether directly or 
+<p>indirectly, for a specific course </p>
+<p><b>with recursive </b><i>rec_prereq</i>(<i>course_id</i>, <i>prereq_id</i>) <b>as </b>(</p>
+<p><b>select </b><i>course_id</i>, <i>prereq_id</i></p>
+<p><b>from </b><i>prereq</i></p>
+<p><b>union</b></p>
+<p><b>select </b><i>rec_prereq</i>.<i>course_id</i><b>, </b><i>prereq</i>.<i>prereq_id</i>, </p>
+<p><b>from </b><i>rec_rereq</i>, <i>prereq</i></p>
+<p><b>where </b><i>rec_prereq</i>.<i>prereq_id</i> = <i>prereq</i>.<i>course_id</i></p>
+<p>)</p>
+<p><b>select </b>∗</p>
+<p><b>from </b><i>rec_prereq</i>;</p>
+<p>This example view, <i>rec_prereq,</i> is called the <i>transitive closure</i> of the <i>prereq</i></p>
+<p>relation</p>
+
+
+
+## The Power of Recursion
+
+ - Recursive views make it possible to write queries, such as transitive 
+<p>closure queries, that cannot be written without recursion or iteration.</p>
+   - Intuition:  Without recursion, a non-recursive non-iterative program 
+<p>can perform only a fixed number of joins of <i>prereq</i> with itself</p>
+ - This can give only a fixed number of levels of managers
+ - Given a fixed non-recursive query, we can construct a database 
+<p>with a greater number of levels of prerequisites on which the </p>
+<p>query will not work</p>
+ - Alternative: write a procedure to iterate as many times as required
+   - See procedure <i>findAllPrereqs</i> in book
+
+
+
+## Example of Fixed
+
+<img src=".jpg"/>
+<p><b>-</b></p>
+<img src=".jpg"/>
+<p><b>Point Computation</b></p>
+<img src=".jpg"/>
+<img src=".jpg"/>
+
+
+
+---
+
+## Advanced aggregate ranking
+
+ - Ranking is done in conjunction with an order by specification. 
+ - Suppose we are given a relation<br/>
+_student_grades(ID, GPA)_<br/>
+giving the grade-point average of each student
+ - Find the rank of each student.
+```
+select ID, rank() over (order by GPA desc) as s_rank
+  from student_grades
+```
+ - An extra **order by** clause is needed to get them in sorted order
+```
+select ID, rank() over (order by GPA desc) as s_rank
+  from student_grades
+  order by s_rank
+```
+ - Ranking may leave gaps: e.g. if 2 students have the same top GPA, both have rank 1, and the next rank is 3
+   - **dense_rank** does not leave gaps, so next dense rank would be 2
+
+
+---
+
+# Ranking
+ - Ranking can be done using basic SQL aggregation, but resultant query is very inefficient
+```
+select ID, (1 + (select count(*) 
+                   from student_grades B
+                  where B.GPA > A.GPA)) as s_rank
+  from student_grades A
+ order by s_rank
+```
+
+
+---
+
+## Ranking (Cont.)
+
+ - Ranking can be done within partition of the data.
+ - “Find the rank of students within each department.”
+```
+select ID, dept_name,
+       rank () over (partion by dept_name order by GPA desc) as dept_rank
+  from dept_grades
+ order by dept_name, dept_rank
+```
+ - Multiple **rank** clauses can occur in a single **select** clause.
+ - Ranking is done _after_ applying **group by** clause/aggregation
+ - Can be used to find top-n results
+   - More general than the **limit** $n$ clause supported by many databases, since it allows top-n within each partition
+
+
+---
+
+## Ranking (Cont.)
+
+ - Other ranking functions:  
+   - **percent_rank** (within partition, if partitioning is done)
+   - **cume_dist** (cumulative distribution)
+ - fraction of tuples with preceding values
+   - **row_number** (non-deterministic in presence of duplicates)
+ - SQL:1999 permits the user to specify **nulls first** or **nulls last**
+```
+select ID,
+       rank() over (order by GPA desc nulls last) as s_rank
+  from student_grades
+```
+
+
+---
+
+## Ranking (Cont.)
+
+ - For a given constant $n$, the ranking the function **ntile**(n) takes the tuples in each partition in the specified order, and divides them into $n$ buckets with equal numbers of tuples.
+```
+select ID, ntile(4) over (order by GPA desc) as quartile
+  from student_grades
+```
+
+
+---
+
+## Windowing
+
+ - Used to smooth out random variations. 
+ - E.g., **moving average**: “Given sales values for each date, calculate for each date the average of the sales on that day, the previous day, and the next day”
+ - **Window specification** in SQL:
+   - Given relation `sales(date, value)`
+```
+select date, sum(value) over
+      (order by date between rows 1 preceeding and 1 following)
+  from sales
+```
+
+
+---
+
+## Windowing
+
+ - Examples of other window specifications:
+   - <b>between rows unbounded preceding and current</b>
+   - <b>rows unbounded preceding</b>
+   - <b>range  between </b>10<b> preceding and current row</b>
+ - All rows with values between current row value –10 to current value
+   - <b>range interval </b>10<b> day preceding</b>
+ - Not including current row
+
+
+---
+
+## Windowing (Cont.)
+
+ - Can do windowing within partitions
+ - E.g., Given a relation <i>transaction </i>(<i>account_number, date_time, value</i>), 
+<p>where value is positive for a deposit and negative for a withdrawal</p>
+   - “Find total balance of each account after each transaction on the 
+<p>account”</p>
+<p><b>select </b><i>account_number, date_time</i>,</p>
+<p><b>sum </b>(<i>value</i>) <b>over</b></p>
+<p>(<b>partition by </b><i>account_number</i></p>
+<p><b>order by </b><i>date_time</i></p>
+<p><b>rows unbounded preceding</b>)</p>
+<p><b>as </b><i>balance</i></p>
+<p><b>from </b><i>transaction</i></p>
+<p><b>order by </b><i>account_number, date_time</i></p>
+
+
+---
+
+<p><b>5.64</b></p>
+<p><b>Database System Concepts - 7</b><sup><b>th</b></sup><sup><b> </b></sup><b>Edition</b></p>
+<img src="®.jpg"/>
+<p><b>OLAP</b></p>
+
+
+---
+
+## Data Analysis and OLAP
+
+ - <b>Online Analytical Processing (OLAP)</b>
+   - Interactive analysis of data, allowing data to be summarized and 
+<p>viewed in different ways in an online fashion (with negligible delay)</p>
+ - Data that can be modeled as dimension attributes and measure attributes 
+<p>are called <b>multidimensional data</b>.</p>
+   - <b>Measure attributes</b>
+ - measure some value
+ - can be aggregated upon
+ - e.g., the attribute <i>number </i>of the <i>sales </i>relation
+   - <b>Dimension attributes</b>
+ - define the dimensions on which measure attributes (or aggregates 
+<p>thereof) are viewed</p>
+ - e.g., attributes <i>item_name, color, </i>and<i> size </i>of the <i>sales </i>relation
+
+
+---
+
+## Example sales relation 
+
+<img src="³.jpg"/>
+<p>...</p>
+<p>...</p>
+<p>...</p>
+<p>...</p>
+<p>...</p>
+<p>...</p>
+<p>...</p>
+<p>...</p>
+
+
+---
+
+## Cross Tabulation of 
+
+<img src="¶.jpg"/>
+<p><i>sales</i></p>
+<img src="·.jpg"/>
+<p><b>by </b></p>
+<img src="¸.jpg"/>
+<p><i>item_name </i></p>
+<img src="¹.jpg"/>
+<p><b>and </b></p>
+<img src="º.jpg"/>
+<p><i>color</i></p>
+ - The table above is an example of a <b>cross-tabulation</b> (<b>cross-tab</b>), also 
+<p>referred to as a <b>pivot-table</b>.</p>
+   - Values for one of the dimension attributes form the row headers
+   - Values for another dimension attribute form the column headers
+   - Other dimension attributes are listed on top
+   - Values in individual cells are (aggregates of) the values of the 
+<p>dimension attributes that specify the cell.</p>
+<img src="».jpg"/>
+
+
+---
+
+## Data Cube
+
+ - A <b>data cube</b> is a multidimensional generalization of a cross-tab
+ - Can have <i>n </i>dimensions; we show 3 below 
+ - Cross-tabs can be used as views on a data cube
+<img src="¾.jpg"/>
+
+
+---
+
+## Cross Tabulation With Hierarchy
+
+ - Cross-tabs can be easily extended to deal with hierarchies
+   - Can drill down or roll up on a hierarchy
+<img src="Á.jpg"/>
+
+
+---
+
+## Relational Representation of Cross
+
+<img src="Ä.jpg"/>
+<p><b>-</b></p>
+<img src="Å.jpg"/>
+<p><b>tabs</b></p>
+ - Cross-tabs can be represented 
+<p>as relations</p>
+   - We use the value <b>all</b> is used 
+<p>to represent aggregates.</p>
+   - The SQL standard actually 
+<p>uses null values in place of </p>
+<p><b>all</b> despite confusion with </p>
+<p>regular null values.</p>
+<img src="Æ.jpg"/>
+
+
+---
+
+## Extended Aggregation to Support OLAP
+
+ - The <b>cube</b> operation computes union of <b>group by</b>’s on every subset of the 
+<p>specified attributes</p>
+ - Example relation for this section
+<p><i>sales</i>(<i>item_name, color, clothes_size, quantity</i>)</p>
+ - E.g., consider the query
+<p><b>select </b><i>item_name, color, size, </i><b>sum</b>(<i>number</i>)</p>
+<p><b>from</b><i> sales</i></p>
+<p><b>group by cube</b>(<i>item_name, color, size</i>)</p>
+<p>This computes the union of eight different groupings of the <i>sales </i>relation:</p>
+<p>{ (<i>item_name, color, size</i>), (<i>item_name, color</i>), </p>
+<p>(<i>item_name, size</i>),           (<i>color, size</i>), </p>
+<p>(<i>item_name</i>),                   (<i>color</i>), </p>
+<p>(<i>size</i>),                              ( ) }</p>
+<p>where ( ) denotes an empty <b>group by </b>list.</p>
+ - For each grouping, the result contains the null value 
+<p>for attributes not present in the grouping. </p>
+
+
+---
+
+## Online Analytical Processing Operations
+
+ - Relational representation of cross-tab that we saw earlier, but with <i>null </i>in 
+<p>place of <b>all</b>, can be computed by</p>
+ - <b>select </b><i>item_name</i>, <i>color</i>, <b>sum</b>(<i>number</i>)
+<p><b>from </b><i>sales</i></p>
+<p><b>group by cube</b>(<i>item_name, color</i>)</p>
+ - The function <b>grouping()</b> can be applied on an attribute
+   - Returns 1 if the value is a null value representing all, and returns 0 in all 
+<p>other cases. </p>
+<p><b>select </b><i>item_name, color, size</i>, <b>sum</b>(<i>number</i>),</p>
+<p><b>grouping</b>(<i>item_name</i>) <b>as </b><i>item_name_flag</i>,</p>
+<p><b>grouping</b>(<i>color</i>) <b>as </b><i>color_flag</i>,</p>
+<p><b>grouping</b>(<i>size</i>) <b>as </b><i>size_flag</i>,</p>
+<p><b>from </b><i>sales</i></p>
+<p><b>group by cube</b>(<i>item_name, color, size</i>)</p>
+
+
+---
+
+## Online Analytical Processing Operations
+
+ - Can use the function <b>decode()</b> in the <b>select</b> clause to replace 
+<p>such nulls by a value such as <b>all</b></p>
+   - E.g., replace <i>item_name</i> in first query by 
+<p><b>decode</b>( <b>grouping</b>(item<i>_name</i>), 1, ‘all’, <i>item_name</i>)</p>
+
+
+---
+
+## Extended Aggregation (Cont.)
+
+ - The <b>rollup</b> construct generates union on every prefix of specified list of 
+<p>attributes </p>
+ - E.g., 
+<p><b>select </b><i>item_name</i>, <i>color</i>, <i>size</i>, <b>sum</b>(<i>number</i>)</p>
+<p><b>from </b><i>sales</i></p>
+<p><b>group by rollup</b>(<i>item_name, color, size</i>)</p>
+   - Generates union of four groupings:
+<p>{ (<i>item_name, color, size</i>), (<i>item_name, color</i>), (<i>item_name</i>), ( ) }</p>
+ - Rollup can be used to generate aggregates at multiple levels of a
+<p>hierarchy.</p>
+ - E.g., suppose table <i>itemcategory</i>(<i>item_name, category</i>) gives the category of 
+<p>each item. Then  </p>
+<p><b>select </b><i>category, item_name</i>, <b>sum</b>(<i>number</i>)</p>
+<p><b>from </b><i>sales, itemcategory</i></p>
+<p><b>where </b><i>sales.item_name = itemcategory.item_name</i></p>
+<p><b>group by rollup</b>(<i>category, item_name</i>)</p>
+<p>would give a hierarchical summary by <i>item_name</i> and by <i>category.</i></p>
+
+
+---
+
+## Extended Aggregation (Cont.)
+
+ - Multiple rollups and cubes can be used in a single group by clause
+   - Each generates set of group by lists, cross product of sets gives overall 
+<p>set of group by lists</p>
+ - E.g., 
+<p><b>select </b><i>item_name, color, size</i>, <b>sum</b>(<i>number</i>)</p>
+<p><b>from </b><i>sales</i></p>
+<p><b>group by rollup</b>(<i>item_name</i>), <b>rollup</b>(<i>color, size</i>)</p>
+<p>generates the groupings </p>
+<p>{<i>item_name, ()} X {(color, size), (color), ()} </i></p>
+<p>= { (<i>item_name, color, size</i>), (<i>item_name, color</i>), (<i>item_name</i>), </p>
+<p>(<i>color, size</i>), (<i>color</i>), ( ) }</p>
+
+
+---
+
+## Online Analytical Processing Operations
+
+ - <b>Pivoting</b>: changing the dimensions used in a cross-tab is called 
+ - <b>Slicing</b>: creating a cross-tab for fixed values only
+   - Sometimes called <b>dicing</b>, particularly when values for multiple 
+<p>dimensions are fixed.</p>
+ - <b>Rollup</b>: moving from finer-granularity data to a coarser granularity 
+ - <b>Drill down</b>: The opposite operation - that of moving from coarser-
+<p>granularity data to finer-granularity data</p>
+
+
+---
+
+## OLAP Implementation
+
+ - The earliest OLAP systems used multidimensional arrays in memory to 
+<p>store data cubes, and are referred to as <b>multidimensional OLAP (MOLAP)</b></p>
+<p>systems.</p>
+ - OLAP implementations using only relational database features are called 
+<p><b>relational OLAP (ROLAP)</b> systems</p>
+ - Hybrid systems, which store some summaries in memory and store the 
+<p>base data and other summaries in a relational database, are called <b>hybrid </b></p>
+<p><b>OLAP (HOLAP)</b> systems.</p>
+
+
+---
+
+## OLAP Implementation (Cont.)
+
+ - Early OLAP systems precomputed <i>all</i> possible aggregates in order to 
+<p>provide online response</p>
+   - Space and time requirements for doing so can be very high
+ - 2<sup>n</sup><sup> </sup>combinations of <b>group by</b>
+   - It suffices to precompute some aggregates, and compute others on 
+<p>demand from one of the precomputed aggregates</p>
+ - Can compute aggregate on (<i>item_name, color</i>) from an aggregate 
+<p>on (<i>item_name, color, size</i>) </p>
+   - For all but a few “non-decomposable” aggregates such as 
+<p><i>median</i></p>
+   - is cheaper than computing it from scratch 
+ - Several optimizations available for computing multiple aggregates
+   - Can compute aggregate on (<i>item_name, color</i>) from an aggregate on 
+<p>(<i>item_name, color, size</i>)</p>
+   - Can compute aggregates on (<i>item_name, color, size</i>), 
+<p>(<i>item_name, color</i>) and (<i>item_name</i>) using a single sorting </p>
+<p>of the base data</p>
+
+
+---
+
+## End of Chapter 5
+
+

@@ -1,0 +1,97 @@
+# Relational Algebra
+
+<%
+setInfo(
+due="2020-08-27 23:59:59",
+penalty=1,
+maxpenalty=1,
+exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+)
+%>
+
+27 August 2020
+
+Due by midnight.
+
+## Instructions
+
+**Don't PANIC!**
+
+We will use a relational algebra calculator for this worksheet. Please go to: [https://dbis-uibk.github.io/relax/calc/local/uibk/local/0](https://dbis-uibk.github.io/relax/calc/local/uibk/local/0).
+Next, click on 'Select DB' and then select: UIBK - PS Databse Systems - Exercise Sheet 5 (Pizza).
+
+On the center of the screen you will find a text box; To the left of it, the schema of the currently loaded dataset. Make sure you see the following relations: Person, Frequents, Eats, Serves.
+
+The icons, above the text box, resemble the symbols learned in class. Along with some others we won't need for the time being. Hover over them to see sample usage.
+
+You will find the editor somewhat particular. Here are some notes:
+
+1. Names are case sensitive.
+2. Refer to attributes with dot (e.g. Relation.attribute).
+3. Make sure to space operations, conditions and parenthesis. (e.g. pi a,b(R join S) will throw an error; pi a,b (R join S) will not).
+4. The editor will throw an error without a query.
+5. You can assign relations to variables. (e.g. new_R = pi a (R))
+6. Assignments do not count as queries. Thus an error will appear if you just run new_R = pi a (R).
+7. Answer all questions by creating a relation that contains exactly the information you need. For example, if the question asks for pizzerias, your resulting relation should only contain pizzerias.
+
+Now, let's do some algebra over relations!
+
+### {{next()}} Who are the people over 29?
+
+A) Cal, Amy
+
+B) Cal, Eli
+
+C) Cal, Eli, Hil
+
+D) Cal, Eli, Hil, Gus
+
+{{!select('C', list('ABCD'), points=2)}}
+
+### {{next()}} What pizzerias are frequented by people between the ages of 20 and 24?
+
+A) Pizza Hut, Little Caesars, Dominos, Chicago Pizza
+
+B) Pizza Hut, Little Caesars, New York Pizza, Chicago Pizza
+
+C) Pizza Hut, Straw Hat, Dominos, Chicago Pizza
+
+D) Pizza Hut, Dominos, Chicago Pizza
+
+{{!select('A', list('ABCD'), points=3)}}
+
+### {{next()}} What pizza does Ian eat that Eli does not?
+
+A) Mushroom
+
+B) Supreme
+
+C) Cheese
+
+D) Pepperoni
+
+{{!select('D', list('ABCD'), points=4)}}
+
+### {{next()}} What is the price of the pizzas both Hil and Gus get at the places both frequent?
+
+A) 9.75, 9.25
+
+B) 12, 12, 9.5
+
+C) 12, 12, 9
+
+D) 9, 12
+
+{{!select('D', list('ABCD'), points=6)}}
+
+### {{next()}} What pizzerias serve pizzas between $8.2 and $9 that all people over 32 frequent?
+
+A) Pizza Hut, Little Caesars
+
+B) New York Pizza, Chicago Pizza
+
+C) Straw Hat, Dominos, Chicago Pizza
+
+D) Pizza Hut, Dominos, Chicago Pizza
+
+{{!select('B', list('ABCD'), points=5)}}

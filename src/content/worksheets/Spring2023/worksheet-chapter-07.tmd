@@ -1,0 +1,72 @@
+<%
+setInfo(
+      due="2023-02-25  0:00:00",
+			pages=['questions', 'submit'],
+      assessment_type='worksheet',
+      penalty=1,
+      maxpenalty=1,
+)
+%>
+
+# Chapter 7 worksheet
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+For this question we'll be looking at the string
+
+> https://comp421.cs.unc.edu/grades
+
+
+**URI:** Match the definitions in the first column of the table to the pull down in the second column of the table:
+<%
+answer = ['comp421.cs.unc.edu',
+          'https://comp421.cs.unc.edu/grades',
+          'https',
+          'grades',
+          'https'
+          ]
+%>
+{{!table(inputs=1, headings='Definition or term, Letter', table=f'''
+Host name,{answer[0]}
+Uniform Resource Identifier,{answer[1]}
+Protocol,{answer[2]}
+Endpoint path,{answer[3]}
+Hypertext Transfer Protocol Secure,{answer[4]}''', symbols=answer, name='URI', points=34)}}
+%include('viewAnswer')
+
+**METHOD:** Which of the following is **NOT** a HTTP RESTful API method?  
+ **A:** GET  
+ **B:** SELECT  
+ **C:** PUT  
+ **D:** None of them  
+%answer = 'B'
+{{!select(answer, 'ABCD', name='METHOD', points=33)}}
+% include('viewAnswer')
+
+**OK:** Which code below has a HTTP response status of OK?  
+ **A:** 0  
+ **B:** -1  
+ **C:** 200  
+ **D:** 403  
+ **E:** None of them  
+%answer = 'C'
+{{!select(answer, 'ABCDE', name='OK', points=33)}}
+%include('viewAnswer')
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

@@ -1,0 +1,119 @@
+<%
+setInfo(due="2021-09-23 14:46:00",
+        needsSubmitCode=True,
+        pages=['questions', 'submit'],
+        )
+dbs=['sailors.sqlite']
+%>
+# Midterm 1 C Sailors
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+
+```sql
+  CREATE TABLE Sailors
+      (sid integer primary key,
+       sname text,
+       rating integer,
+       age integer)
+
+  CREATE TABLE Boats
+      (bid integer primary key,
+       bname text,
+       color text)
+
+  CREATE TABLE Reserves
+      (sid integer,
+       bid integer,
+       day text,
+       primary key (sid, day)
+       foreign key (sid) references Sailors(sid)
+       foreign key (bid) references Boats(bid))
+
+```
+
+% # https://www.cs.ubc.ca/~laks/cpsc304/Basic-SQL-Tutorial-Sol.pdf 
+---
+
+**Albert:** Find the color of boats reserved by Albert.  
+% answer = '''
+SELECT DISTINCT color
+FROM Sailors s, Boats b, Reserves r
+WHERE r.sid=s.sid AND r.bid=b.bid AND
+ sname='Albert' '''
+{{!sql(answer, dbs=dbs, sort=1, points=20, name='Albert')}}
+% include('viewAnswer')
+
+---
+
+**Eight.103** Find all sailor id's of sailors who have a rating of at least 8 or reserved boat 103.  
+% answer = '''
+SELECT s.sid
+  FROM Sailors s
+ WHERE rating>=8
+
+UNION
+
+SELECT r.sid
+  FROM Reserves r
+ WHERE bid=103
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=20, name='Eight.103')}}
+% include('viewAnswer')
+
+---
+
+**No.Boat.storm**: Find the names of sailors who have not reserved a boat whose name contains the string "lake".
+Order the names in ascending order.  
+% answer = '''
+SELECT s1.sname
+FROM Sailors s1
+WHERE s1.sid NOT IN
+ (SELECT s2.sid
+  FROM Reserves r, Sailors s2, Boats b
+   WHERE r.sid=s2.sid AND r.bid=b.bid AND b.bname LIKE '%lake%')
+   ORDER BY s1.sname
+'''
+{{!sql(answer, dbs=dbs, points=20, name='No.Boat.storm')}}
+% include('viewAnswer')
+
+---
+
+**Sailor.20.thunder**: Find the sailor id's of sailors with age over 20 who have not reserved a boat whose name ends with the letter e.  
+% answer = '''
+SELECT s.sid
+FROM Sailors s
+WHERE s.age>20 AND s.sid NOT IN
+ (SELECT r.sid
+  FROM Reserves r, Boats b
+   WHERE r.bid=b.bid AND bname LIKE '%e')
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=20, name='Sailor.20.thunder')}}
+% include('viewAnswer')
+
+---
+
+**Two.boats**: Find the names of sailors who have reserved at least two boats.  
+% answer = '''
+SELECT DISTINCT s.sname
+FROM Sailors s, Reserves r1, Reserves r2
+WHERE s.sid=r1.sid AND s.sid=r2.sid AND
+ r1.bid!= r2.bid 
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=20, name='Two.boats')}}
+% include('viewAnswer')
+
+
+%end 
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

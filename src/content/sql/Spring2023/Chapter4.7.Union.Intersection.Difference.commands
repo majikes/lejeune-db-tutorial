@@ -1,0 +1,35 @@
+DROP TABLE IF EXISTS S1;
+CREATE TABLE S1 (sid char(20), sname char(20), rating integer, age real);
+INSERT INTO S1 values ('22', 'Dustin', 7, 45.0);
+INSERT INTO S1 values ('31', 'Lubber', 8, 55.5);
+INSERT INTO S1 values ('58', 'Rusty', 10, 35.0);
+
+SELECT 'The Sailors S1 table:' as '';
+SELECT * FROM S1;
+
+DROP TABLE IF EXISTS S2;
+CREATE TABLE S2 (sid char(20), sname char(20), rating integer, age real);
+INSERT INTO S2 values ('28', 'yuppy',  9, 35.0);
+INSERT INTO S2 values ('31', 'Lubber', 8, 55.5);
+INSERT INTO S2 values ('44', 'guppy',  5, 35.0);
+INSERT INTO S2 values ('58', 'Rusty', 10, 35.0);
+
+SELECT 'The Sailors S2 table:' as '';
+SELECT * FROM S2;
+
+SELECT 'S1 union S2' as '',
+       'Why is there only one Rusty' as '';
+SELECT * FROM S1
+ UNION 
+SELECT * FROM S2;
+
+SELECT 'S1 Interesect S2' as '';
+SELECT * FROM S1
+ INTERSECT 
+SELECT * FROM S2;
+
+SELECT 'S1 Difference S2' as '';
+SELECT * FROM S1
+ EXCEPT 
+SELECT * FROM S2;
+

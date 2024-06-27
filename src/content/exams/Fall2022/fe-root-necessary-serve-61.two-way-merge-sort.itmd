@@ -1,0 +1,55 @@
+#### {{!linkable_header(name_sorting)}} {{points_sorting}} out of the {{points_evaluation}} {{name_evaluation.lower()}} points out of {{points_limit}} total points
+
+**Calculator:** You may use this box as a calculator.
+Just type in any expression that can be evaluated by a JavaScript eval.
+For example, `2 ** 0.5` will show you the result of the square root of 2
+in the red box to the right.
+Leaving the box empty or filled in will **NOT** affect your grade.
+{{!calculator(name=f'_calculator.twowaysort')}}
+
+---
+
+<%
+for index in range(number_sorting):
+  if (section == '003') or (conflict_exam and index == number_sorting-1) or (not conflict_exam and ((member_number%(number_sorting-1) == index))):
+      if index == number_sorting -1:
+        include('viewAnswer', answer=f' Only seen by students at the conflict exam')
+      else:
+        include('viewAnswer', answer=f' Only seen by member number % {number_sorting-1} == {index}')
+      end
+
+answer = ['1', f'{pages[index]*2}', '1', f'{pages[index]}', f'{ceil(log(pages[index],2))+1}',
+          '8', f'{pages[index]*2}', '8', f'{ceil(pages[index]/8)}', '2']
+choices = [f'{x}' for x in range(100)] + ['N/A']
+%>
+
+**Note:** Assume a {{pages[index]}} page file needs to be sorted and that 8 buffers are available for use.
+
+**Sort.Two.Way.Merge.Sort.{{index+1}}:** Complete the following table about sorting the {{pages[index]}} page
+file using two way merge sort and at most 8 buffers.  
+If the pass doesn't get run select `N/A`.  
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+How many **buffers** are used for pass-0 of **two way merge sort**?,{answer[0]}
+How many **I/Os** are used for pass-0 of **two way merge sort**?,{answer[1]}
+What is the largest **run length** after pass-0 of **two way merge sort**?,{answer[2]}
+How many **runs** exist after pass-0 of **two way merge sort**?,{answer[3]}
+How many **passes** are required to sort using **two way merge sort**?,{answer[4]}
+''', symbols=choices, points=5, name=f'Sort.Two.Way.Merge.Sort.{index+1}')}}
+%include('viewAnswer', answer=answer[:5])
+
+
+**Sort.External.Merge.Sort.{{index+1}}:** Complete the following table about sorting the {{pages[index]}} page
+file using external merge sort and at most 8 buffers.  
+If the pass doesn't get run select `N/A`.  
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+How many **buffers** are used for pass-0 of an **external merge sort**?,{answer[5]}
+How many **I/Os** are used for pass-0 of an **external merge sort**?,{answer[6]}
+What is the largest **run length** after pass-0 of an **external merge sort**?,{answer[7]}
+How many **runs** exist after pass-0 of an **external merge sort**?,{answer[8]}
+How many **passes** are required to sort using **external merge sort**?,{answer[9]}''', symbols=choices, points=5, name=f'Sort.External.Merge.Sort.{index+1}')}}
+%include('viewAnswer', answer=answer[5:])
+
+---
+
+  % end  # section == 003 or member_number%number_sorting == index
+% end  # for index in range(number_sorting)

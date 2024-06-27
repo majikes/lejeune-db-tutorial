@@ -1,0 +1,100 @@
+<%
+setInfo(
+        due="2021-09-04 00:00:00",
+        pages=['questions', 'submit'],
+        penalty=.2,
+        maxpenalty=0.75,
+        exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+       )
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+# {{!linkable_header('Chapter 2 & 3')}}
+
+% if 'questions' in pages:
+
+### The schema for this worksheet is as follows:
+
+<font color=blue>Bakers(chef_id: string, name: string, restaurant: string, rank: integer, favorite_cookie: string)
+
+Restaurants(restaurant: string, cuisine: string, rating: real, owner_name: string)
+
+Cookies(cookie: string, shape: string, price: real, spice_level: integer)</font>
+
+<b>Note:</b> For each, assume that the primary key is the first attribute in the list.
+
+---
+
+<div class="row">
+ <div class="twocolumns">
+   <br/><b>A</b> chef_id
+   <br/><b>B</b> name
+   <br/><b>C</b> restaurant
+   <br/><b>D</b> rank
+   <br/><b>E</b> favorite_cookie
+   <br/><b>F</b> All of them could be a foreign key
+   <br/><b>G</b> None of them could be a foreign key
+ </div>
+ <div class="twocolumns">
+  % answer = 'C'
+  % answer2 = f''' Only restaurant appears as a field in the other tables
+  Answer: {answer}'''
+  Foreign: Which field of "Bakers" could be used as a foreign key? <br />
+  {{!select(answer, 'ABCDEFG', points=5, name='Foreign')}}
+  % include('viewAnswer', answer=answer2)
+ </div>
+</div>
+---
+
+Label: Given this SQL statement, match the parts of the statement to their label:
+```sql
+SELECT B.name, C.spice_level 
+  FROM Bakers B, Cookies C
+  WHERE B.favorite_cookie=C.cookie AND 
+        C.spice_level>5
+```
+
+% answer = '='
+**Note:** This question is ambiguous. The grader will accept any answer.  
+Label.1: Which of the following symbol of the query performs a join of two tables with a common attribute?  
+{{!select('=', ['B','spice_level','FROM','WHERE','='], points=5, name='Label.1')}}  
+% include('viewAnswer')
+
+% answer = 'B'
+**Note:** This question is ambiguous. The grader will accept any answer.  
+Label.2: Which of the following symbols of the query references a relation by another name?  
+{{!select('B', ['B','spice_level','FROM','WHERE','='], points=5, name='Label.2')}}  
+% include('viewAnswer')
+
+% answer = '2'
+Label.3: What will be the arity of the view produced by this query? (Hint: The answer is an integer.)  
+{{!expression('2', dict(), points=5, name='Label.3')}}  
+% include('viewAnswer')
+
+---
+
+% answer = 'True'
+**Note:** This question is ambiguous. The grader will accept any answer.  
+Key: The set {restaurant, rank} may be a candidate key for Bakers.  
+{{!select(answer, ['True','False'], points=5, name='Key')}}
+% include('viewAnswer')
+
+---
+
+% answer = '5'
+Count: How many distinct tuples are in a relation instance with cardinality 5 and degree 3?  
+{{!select('5', ['3','5','15','not enough info'], points=5, name='Count')}}
+% include('viewAnswer')
+
+---
+
+% end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end
+

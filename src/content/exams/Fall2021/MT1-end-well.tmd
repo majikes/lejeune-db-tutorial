@@ -1,0 +1,260 @@
+<%
+setInfo(
+   duration=75,
+   due='2021-09-28 15:15:00',
+   exceptions=dict(),
+   pages=['questions', 'submit'],
+   exam=0)  # Need to set to 1
+%>
+
+% even_questions = (question_pool_number // 2) * 2 == question_pool_number
+{{even_questions}}
+
+# Comp 521 Midterm 1
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('midterms-dont-panic.md')
+
+---
+
+% include('green-highlight.md')
+
+---
+
+% if 'questions' in pages:
+
+
+## {{!linkable_header('Questions')}}
+
+% include('content/exams/MT1-end-well.schema.itmd')
+
+---
+
+#### Question 4:
+What is the size of the relational algebra result? <small>(2 points each, 16 total)</small>
+
+Consider the relation \(A\) with degree \(A_d > 0\) and cardinality  \(A_c > 0\). \(A\)
+has a column named \(x\) of type integer and possibly many other columns.
+
+For each of the expressions in parts 4.1 through 4.4 below you are to choose
+the best description of the size of result, \(C\)
+
+<div class="row">
+ <div class="twocolumns">
+   Which expression best describes the <b>cardinality</b> of C?
+   <ol style="list-style:lower-alpha">
+    <li>\(C_c = 0\)</li>
+    <li>\(C_c = 1\)</li>
+    <li>\(C_c = A_c\)</li>
+    <li>\(1 <= C_c <= A_c\)</li>
+    <li>\(0 <= C_c <= A_c\)</li>
+    <li>\(0 <= C_c < 5\)</li>
+   </ol>
+ </div>
+ <div class="twocolumns">
+   Which expression best describes the <b>degree</b> of C?
+   <ol style="list-style:upper-alpha">
+    <li>\(C_d = 0\)</li>
+    <li>\(C_d = 1\)</li>
+    <li>\(C_d = A_d\)</li>
+    <li>\(1 <= C_d <= A_d\)</li>
+    <li>\(0 <= C_d <= A_d\)</li>
+    <li>\(0 <= C_d < 5\)</li>
+   </ol>
+ </div>
+</div>
+
+<div class="row">
+ <div class="twocolumns">
+  <h5>Question 4.1: \(C = \pi_x A\)</h5>
+  %answer = ['d', 'B']
+Cardinality: {{!inp.select(answer[0], list('abcdef'), points=2, name='Question_4.1c')}}<br />
+Degree: {{!inp.select(answer[1], list('ABCDEF'), points=2, name='Question_4.1d')}}<br />
+  % include('viewAnswer')
+ </div>
+ <div class="twocolumns">
+  <h5>Question 4.2 \(C = \sigma_{x<5} A\) </h5>
+  %answer = ['e', 'C']
+Cardinality: {{!inp.select(answer[0], list('abcdef'), name='Question_4.2c', points=2)}} <br />
+Degree: {{!inp.select(answer[1], list('ABCDEF'), name='Question_4.2d', points=2)}}<br />
+  % include('viewAnswer')
+ </div>
+</div>
+
+<div class="row">
+ <div class="twocolumns">
+  <h5>Question 4.3 \(C = \pi_x \sigma_{x<5} A\)</h5>
+  %answer = ['e', 'B']
+Cardinality: {{!inp.select(answer[0], list('abcdef'), points=2, name='Question_4.3c')}} <br />
+Degree: {{!inp.select(answer[1], list('ABCDEF'), points=2, name='Question_4.3d')}} <br />
+  % include('viewAnswer')
+ </div>
+ <div class="twocolumns">
+  <h5>Question 4.4 \(C = \sigma_{x<5} \pi_x A\)</h5>
+  %answer = ['e', 'B']
+Cardinality: {{!inp.select(answer[0], list('abcdef'), points=2, name='Question_4.4c')}} <br />
+Degree: {{!inp.select(answer[1], list('ABCDEF'), points=2, name='Question_4.4d')}} <br />
+  % include('viewAnswer')
+</p>
+ </div>
+</div>
+
+## Database info 
+
+You are to write a single SQL query to answer each question. You will not
+write any Python code below. 
+
+The schema of the database is below. It represents book reading activity on
+Tar Heel Reader over a short period.  
+
+The **ip** address is assumed to correspond to a single location. For
+reasons you'll learn in Comp 431 they sometimes don't but for the purposes of
+the exam assume they do. 
+
+<pre>
+create table Reads ( -- a record for each book that was read
+    time date,       -- time the book was read
+    ip integer,      -- ip of the computer
+    bid integer,     -- book id
+    foreign key (bid) references Books,
+    foreign key (ip) references Locations)
+
+create table Books (
+    bid integer primary key,
+    title text,
+    aid integer,           -- author id
+    reviewed integer,      -- 1 if the book is reviewed, 0 otherwise
+    foreign key (aid) references Authors)
+
+create table Locations (
+    ip integer primary key, -- ip address of the computer
+    country text)           -- country determined from the ip address
+
+create table Authors (
+    aid integer primary key,
+    login text,    -- user id like Gary
+    birthday text) -- month and day of the author's birthday like May 29
+</pre>
+
+I'll dump the first few rows of each table so you can get a better idea of
+the contents. 
+
+### Reads
+<pre>
+(time, ip, bid)
+
+('2017-10-01 00:06:48', 3023614022, 124363)
+('2017-10-01 00:07:35', 3023614022, 124884)
+('2017-10-01 00:07:53', 3023614022, 124366)
+</pre>
+
+### Books
+<pre>
+(bid, title, aid, reviewed)
+
+(148, 'Lullaby', 9, 1)
+(171, 'Balloons Everywhere!', 14, 1)
+(202, 'Baa Baa Black Sheep', 61, 1)
+</pre>
+<h3>Authors</h3>
+<pre>
+(aid, login, birthday)
+
+(1, 'Gary', 'May 29')
+(2, 'DLM', 'February 24')
+(5, 'Jenny', 'January 18')
+</pre>
+
+### Locations
+<pre>
+(ip, country)
+
+(32591211, 'United States')
+(40693121, 'United States')
+(60836422, 'Canada')
+</pre>
+% dbs = ['thrlogs.sqlite', 'thrlogs2.sqlite']
+
+## More questions
+
+#### Question 5: (8 points)
+How many different ip addresses read books?  
+% answer = '''
+select count(distinct ip) 
+  from Reads R
+'''
+{{!inp.sql(answer, dbs=dbs, points=8, name='Question_5')}}
+% include('viewAnswer')
+
+#### Question 6. (10 points) Which countries read books?
+
+<p>List the country names in alphabetical order. Note: ip addresses may be
+included in the Locations table that never actually read a book.</p>
+% answer = '''
+select distinct L.country from Reads R, Locations L
+where R.ip = L.ip order by L.country'''
+{{!inp.sql(answer, dbs=dbs, points=10, name='Question_6')}}
+% include('viewAnswer')
+
+#### Question 7. (12 points) Which authors have written more than 10 reviewed books?
+List the author login and number of books. List them with the largest count
+first; in case of ties on count put them in alphabetical order by login.
+Only include books with the reviewed flag equal 1.
+% answer = '''
+select A.login, count(*) as bookcount
+from Authors A, Books B
+where A.aid = B.aid and B.reviewed = 1
+group by A.aid
+having bookcount > 10
+order by bookcount desc, A.login asc'''
+{{!inp.sql(answer, dbs=dbs, points=12, name='Question_7')}}
+% include('viewAnswer')
+
+#### Question 8: (12 points) What was the maximum number of times any book was read?
+{{!inp.sql('''
+select count(*) as c
+  from Reads R
+  group by R.bid
+  order by c desc
+  limit 1
+''', dbs=dbs, points=12, name='Question_8')}}
+
+#### Question 9. (12 points) Which book(s) were read in the most different countries?
+List the login of the author, title of the book, and number of countries. In
+case of a tie for max list them all.
+% answer = '''
+with CountryCounts as (
+  select R.bid, count(distinct country) as countries 
+  from Reads R, Locations L 
+  where R.ip = L.ip 
+  group by R.bid)
+select A.login, B.title, C.countries
+from Authors A, Books B, CountryCounts C
+where A.aid = B.aid and B.bid = C.bid and C.countries = (select max(countries) from CountryCounts)'''
+{{!inp.sql(answer, dbs=dbs, points=12, name='Question_9')}}
+% include('viewAnswer')
+
+#### Question 10. (12 points) Which books were read at least 5 times by the same ip address?
+For each book, list the title, the number of times it was read by the same
+ip address and the country corresponding to that ip address.  Order your result
+by title in alphabetical order, then by count in decreasing order and then by
+country in alphabetical order. Hint: you can group by more than one value.
+% answer = '''
+select B.title, count(*) as c, L.country
+  from Books B, Reads R, Locations L
+  where B.bid = R.bid and R.ip = L.ip
+  group by R.ip, B.bid
+  having c >= 5
+  order by B.title, c desc'''
+{{!inp.sql(answer, dbs=dbs, points=12, name='Question_10')}}
+% include('viewAnswer')
+
+%end
+
+---
+
+% if 'submit' in pages:
+ % include('exams-pledge.md')
+ % include('submit.md')
+%end

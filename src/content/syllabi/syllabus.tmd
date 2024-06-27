@@ -1,0 +1,697 @@
+# COMP 421 Syllabus
+% from config import first_day_of_classes, last_day_of_classes, midterm1_time, midterm2_time, final_exam_time, conflict_final_exam_time, welcome_video_hexcode, remote_classes, game1_time, game2_time
+% from datetime import datetime, timedelta
+
+<img src="{{LOGO}}" style="float:right; right:0;"/>
+## {{!linkable_header('Catalog Description')}}
+
+**COMP 421. Files and Databases.** 3 Credits.  
+
+Welcome to COMP 421 where we will learn about
+placement of data on secondary storage.
+We will look at file database organization along with 
+database history, practice, major models, system structure, and design.
+
+## {{!linkable_header('General Course Info')}}
+
+Term: Spring 2024  
+Course Number: COMP 421  
+Section 001 T TH 2:00 PM - 3:15 PM
+Coker Hall 201
+
+## {{!linkable_header('Instructor Info')}}
+
+Name: John Majikes <audio controls><source src="{{static('images/JohnMajikes.m4a')}}"/></audio><br/>
+Office: 150 Sitterson.  
+Email: [jmajikes@cs.unc.edu](mailto: jmajikes@cs.unc.edu)  
+Phone: 919-590-6093  
+Website: [https://cs.unc.edu/~jmajikes](https://cs.unc.edu/~jmajikes)  
+Office hours: [you can book me service](https://jmajikes.youcanbook.me/)
+
+See the [help page]({{get_url('syllabi', page_name='help')}}) for more information on the instructor and assistants office hours.
+
+#### {{!linkable_header('About me')}}
+
+A little bit about me:
+I worked in industry for 35+ years and pursued my PhD late in life.
+I worked at IBM, Oracle, and a startup (see my [cv](#https://www.cs.unc.edu/~jmajikes/cv.htm)).
+I've worked as a dishwasher, cop, and have been a USA Olympic cycling coach.
+Ask me about meeting the Grateful Dead's [Jerry Garcia](https://en.wikipedia.org/wiki/Jerry_Garcia) backstage;
+not allowing [Graham Nash](https://en.wikipedia.org/wiki/Graham_Nash) into his own concert;
+or cycling in a charity event with Tour de France winning cyclist [George Hincapie](https://en.wikipedia.org/wiki/George_Hincapie).
+Ask me about riding my bike from Raleigh to Richmond, from Boone to Lillington, across parts of Arizona, California, Montana, Maryland, Nevada or 100 miles out-and-back in Death Valley!
+
+
+I got my PhD out of an interest in, and got to work on the development of, the [Artificial Pancreas](https://newsroom.uvahealth.com/2020/01/02/fda-approves-uva-developed-artificial-pancreas/).
+Ask me how I worked at IBM but yet was able to be at the table when the FDA, NIH, and JDRF kicked off the research 
+resulting in the [Medtronic 670G](https://www.jdrf.org/press-releases/jdrf-celebrates-fda-approval-of-artificial-pancreas-system/).
+My actual PhD was in [computers training dogs](https://www.youtube.com/watch?v=ccilNPMIXKE) out of the hopes of creating a harness that would train Diabetic Alert Dogs.
+That research seems a long time ago.
+
+My teaching computer science is based on the idea that students learn best when given
+opportunities to practice-and-try.
+Reading a book is required, but nothing replaces the hands-on struggle of learning a language by applying what you learn.
+Learning a computer language is no different than learning a foreign language;
+read the book but the results come from struggling and applying the information learned.
+
+A [welcome video]({{get_url('panopto', hexcode=welcome_video_hexcode)}}) is available
+and a worksheet bonus given for watching the video **before** 8:00 AM the first day of classes.
+
+Lastly, I am actively undergoing chemotherapy for [Mantle Cell Leukemia](https://www.ncbi.nlm.nih.gov/books/NBK536985/).
+What this means is that I will wear a mask when within six feet of anyone.
+Luckily, most of my chemotherapy infusions occur during breaks and wellness days.
+But just before the lectures on {{remote_classes[0].strftime('%A, %B %d')}} and {{remote_classes[1].strftime('%A, %B %d')}}
+I will be receiving chemotherapy infusions.
+For those two lectures classes will be remote.
+You can take those classes synchronously via Zoom or via Panopto recording later that day.
+Any in-class activities on those days will be due by the end of the day, 11:59:59 PM.
+Please see me if you have any questions about my cancer, my chemotherapy treatments, or how this might impact your learning.
+I am very open about my health situation.
+
+## {{!linkable_header('Textbook, Class discussion site, Required browser, Course Care')}}
+
+<img src="{{static('images/DatabaseSystemConceptsSilberschats.png')}}" style="float:right; width:15%; right:  0;"/>
+
+We will use the textbook [Database System Concepts](https://unc.bncollege.com/c/Database-System-Concepts/p/MBS_1985388_used?currentCampus=8202&currentTerm=8202_1_23_F&currentCourse=8202_1_23_F_245_421_1&rental=true)
+Seventh Edition by Silberschatz, Koth, and Sudarsham,
+McGraw-Hill Higher Education $\copyright$ 2020, ISBN 13 : 9780078022159
+
+We will use [Piazza]({{PIAZZA}}) for questions and announcements.
+You will need to sign up (use access code `{{PIAZZA_ACCESS_CODE}}`) and check Piazza regularly.
+Please read the [section on Piazza](#piazza) as it may be helpful and there are worksheet bonuses for [Piazza]({{PIAZZA}}).
+
+We will use web-based, Chrome, software in class.
+Using Safari or other web-based browsers have been shown to have incompatibilities.
+
+Lastly, you will want to sign up for [Course Care](https://course.care) for LA/TA office hours.
+The steps for this are described on the [help page]({{get_url('syllabi', page_name='help')}}).
+The Course Care enrollment code is `{{COURSE_CARE_CODE}}`.
+
+---
+
+## {{!linkable_header('Course learning objectives')}}
+
+<!-- taken from SIGCse Data Management https://csed.acm.org/knowledge-areas-data-management-dm-sigcse-2022-version/ -->
+
+COMP 421 does not teach how to build a database management system (DBMS)!
+It teaches how to use a DBMS and how a DBMS works.
+
+
+Modular learning objectives:
+
+  - Use relational algebra to describe the relationship between database tables.  
+  - Build on your relational algebra skills to construct Structured Query Language (SQL) commands to create, insert, update, and retrieve data in a relational database.  
+  - Model enterprise data using E-R models, relational model, and normalization theory to create an database.  
+  - Analyze, create and differentiate between the use of indices (B$^+$-trees and hashes).  
+  - Demonstrate your knowledge of indices to efficiently sort and join relations.  
+  - Demonstrate your understanding of the E-R model, relational model, and normalization theory to create an efficient database.
+
+
+The material covered in COMP 421 can be broken into three areas of emphasis. The first area includes database foundation material such as the relational model, relational algebra, and E-R model. The second area of emphasis is database application programming and includes among others the topics of Structured Query Language (SQL), integrating databases into programs, web-based database usage, and active databases. The third area of emphasis is the systems side of databases, which includes database indexing, efficient query evaluation, the transaction-based model, concurrency, and security.
+
+COMP 421 also reinforces skills that were learned in early CS classes.
+One of those skills is the _iterative development and debugging_ process.
+In this course, do **not** expect to immediately code a long SQL query,
+get an unexpected response,
+and understand what went wrong!
+Do **not** fill out an entire B+ Tree, get an error, and expect to understand what is wrong!
+You must iteratively develop answers, test their validity, and move to more complex solutions.
+
+This secondary or tertiary skill of iterative development and debugging
+is key in most technical skills development.
+
+## {{!linkable_header('Target Audience')}}
+
+Computer science undergraduate majors.
+
+## {{!linkable_header('Prerequisites')}}
+
+COMP [210](https://catalog.unc.edu/search/?P=COMP%20210),
+[211](https://catalog.unc.edu/search/?P=COMP%20211),
+and [301](https://catalog.unc.edu/search/?P=COMP%20301); 
+or COMP [401](https://catalog.unc.edu/search/?P=COMP%20401), [410](https://catalog.unc.edu/search/?P=COMP%20410), and [411](https://catalog.unc.edu/search/?P=COMP%20411); 
+a grade of C or better is required in all prerequisite courses.
+
+---
+
+## {{!linkable_header('Course Assignments')}}
+
+#### {{!linkable_header('Web-based assessments')}}
+
+We will use web-based, Chrome, software for all worksheets, games, midterms and the final exam.
+Using Safari or other web-based browsers have been shown to have incompatibilities that will invalidate your work.
+The first worksheet, [a demo worksheet]({{get_url('worksheets', key='worksheet-00-demo')}}), is available for you to play with.
+It will be due before the end of the first week of class.
+If you complete the worksheet demo **before** 8:00 AM the first day of class, you will receive a [worksheet bonus](#worksheet-bonus).
+
+Note that the browser-based assessments have some security and safety features built-in.
+Do **NOT** copy/paste answers to your friends, from an external website or any other non-class source as this is a violation of the [Honor Code](#honor-code).
+You are encouraged to collaborate with others on games and worksheets but your work must be typed in by yourself.
+Of course, you should **NOT** collaborate on midterms or exams.
+
+The web-based assessments also provides green highlights for correct answers to non-multiple choice questions.
+In this way, you get positive encouragement that you understand the material.
+The down-side is that there is no partial credit.
+See the section on [subsequent submissions](#subsequent-submissions) for how you can improve your score
+after your initial submission is graded.
+
+There is a pledge at the bottom of each web-based assessment near the submit button.
+Until you enter your name, you cannot submit your work.
+This feature is meant to limit inadvertent submissions.
+Do **not** put your name on your work and pledge that the work is your own until you are ready to submit it.
+
+Web-based assessments also have a five to ten minute autosave feature.
+
+Please see the [demo worksheet]({{get_url('worksheets', key='worksheet-00-demo')}}) for examples of the web-based, correct-answer, green highlights.
+
+### {{!linkable_header('Worksheets')}}
+
+Web-based worksheets are a way to reward coming to class, coming to class prepared, and for class participation.
+For any worksheet submitted on-time, scores of 75% or better will receive a score of 100%.
+For any worksheet submitted on-time, the minimum grade is 50%.
+
+For the in-class or pre-class worksheets, you will be given 15 second warning to submit your work.
+Handing them in on time allows you to get credit for the work
+and to be available for [subsequent submission](#subsequent-submissions).
+Remember, in COMP 421 there are no late assignments.
+You hand it in on time or you don't hand it in.
+
+<!--
+As this is a computer grading system, it is somewhat difficult to _unsubmit_ a worksheet or any assignment.
+You will be given grace on any two assignments that you want to unsubmit before the due time.
+But you should consider that only the first submission of all assignments will be the one craded.
+-->
+
+Lastly, there are [worksheet bonuses](#worksheet-bonus).
+Therefore I hope you see worksheets as a low-stakes bonus for coming to class prepared.
+
+
+### {{!linkable_header('Games')}}
+
+This semester will be doing gamification.
+Please check the [agenda]({{get_url('root')}}#exam-review-/-game) for actual dates,
+but the two games will be before each of the two midterms (see [key dates](#key-dates) for more information).
+
+The web-based games will be in the form of multiple game segments.
+Each game segment will be a few short, word-based questions that requires a SQL query or other answer.
+Immediately after submitting one segment, the next segment will appear.
+Because of the automatic moving to the next segment, [subsequent submissions](#subsequent-submissions) are not accepted for games.
+
+Gamification is such that **a portion of the class**, will receive bonus points for different criteria.
+For example, a portion of the class with the shortest time between getting and submitting a correct game segment will receive a bonus.
+You must get all questions correct to be eligible for a game bonus.
+Each student can receive at most one bonus per game.
+
+For example, let's assume a student has a hard time with the first game segment and takes a long time to answer.
+No problem!!!
+For the second game segment each students gets a newly reset clock.
+So given multiple game segments there are multiple possibilities for bonus points.
+
+Games will be very similar to worksheets in that the [web-based technology](#web-based-assessments)'s
+green-light confirmation will be given for correct game answers.
+For any game segment submitted during class, the minimum grade is 50%.
+For any game segment submitted during class correctly answering 75% or better of the questions will receive a score of 100%.
+I hope you see games as a fun, low-stakes way to show your mastery of the material.
+
+Similar to in-class worksheets, games are done in-class.
+Neither late nor [subsequent submissions](#subsequent-submissions) will be accepted.
+
+### {{!linkable_header('Homeworks')}}
+
+There will be five homework assignments that allow demonstration of knowledge of the material.
+In general, two homeworks will be due before midterm one;
+two will be due before midterm two;
+and one will be due before the final exam.
+Unfortunately, if you have some emergency that is totally out of your control, 
+please contact me as soon as possible because once the grader is run and answers are generally available, no late submissions will be accepted.
+Homeworks will be done using [Python](https://www.python.org/) and [Jupyter Notebooks](https://jupyter.org/).
+
+Please see the [zeroth homework]({{get_url('homeworks', key='A0')}}) which is due Tuesday, Jan 16th 11:59:59 PM.
+If you submit it before 8:00 AM the first day of class, you will receive a [worksheet bonus](#worksheet-bonus).
+
+For those who have very little experience with Python,
+I would recommend _looking_ at the code in [tutorialpoint's SQLite -Python tutorial](https://www.tutorialspoint.com/sqlite/sqlite_python.htm) or some other tutorial of your choosing.
+The amount of Python programming will be limited to querying the database,
+printing data,
+reading/writing files, etc.
+Since this will be done as part of homeworks,
+you will have ample time to pick up Python as-you-go.
+
+If you do not have Jupyter Notebooks installed from another class,
+you may want to [install Miniconda and Jupyter Notebooks using the COMP 116 instructions](https://comp116.cs.unc.edu/syllabi/setup_instructions#install-anaconda-on-your-own-machine) as it has detailed instructions and video tutorials.
+(NOTE: Do not install the COMP 116 fetcher.  Just used the COMP 116 detailed instructions for Jupyter Notebook installation.)
+Or you can Miniconda install using the following download links:
+
+- [Windows version](https://repo.anaconda.com/miniconda/Miniconda3-py39_23.5.2-0-Windows-x86_64.exe)  
+- [MacBook OSx x86 version](https://repo.anaconda.com/miniconda/Miniconda3-py39_23.5.2-0-MacOSX-x86_64.sh)  
+- [MacBook OSx ARM version](https://repo.anaconda.com/miniconda/Miniconda3-py39_23.5.2-0-MacOSX-arm64.sh)  
+- [Linux version](https://repo.anaconda.com/miniconda/Miniconda3-py39_23.5.2-0-Linux-x86_64.sh)  
+
+The Minicoda version takes much less space than the full Anaconda.
+And you simply have to add Jupyter notebooks after installing the above links by entering the following command from the terminal/command prompt: `conda install numpy jupyter matplotlib pandas ipython`
+
+**<font color="red">WARNING</font>**: The submit button will not work with JupyterLabs.  Do **NOT** use JupyterLabs.  
+If you have any problems installing the software, please schedule time with one of the LAs during 
+office hours
+(see the [help page]({{get_url('syllabi', page_name='help')}}).)
+
+Similar to the web-based assessments, for Jupyter notebook homework questions there is a checker that tells you if your
+answer _appears correct_ or is incorrect.
+There is also have a five second autosave feature.
+
+
+### {{!linkable_header('Exams')}}
+
+The largest portion of your grade will be the two web-based midterms and final exam.
+Given that there is [grading feedback](#grading-feedback),
+there is no traditional partial credit on exams.
+
+For midterms and final exam you will be allowed to bring in:<ul>
+ <li> One 8.5 x 11 inches sheet of handwritten notes, both sides<ul>
+   <li> All notes **must** be handwritten </li>
+   <li> **NO** computer output </li></ul>
+ <li> Your personal computer running Chrome<ul>
+   <li> No other webpages open </li>
+   <li> No other internet capable devices, no internet capable calculators </li>
+   <li> This means no phones, no headphones </li></ul>
+ </ul>  
+
+Similar to homeworks, after the exam has been graded and incorrect answers identified,
+a subsequent submission can be made.
+See [subsequent submissions](#subsequent-submissions) for more information submission weighting.
+In general, exams will be graded the same day and subsequent submissions can be done then.
+Subsequent submissions for midterm 1 must be completed by {{(midterm1_time + timedelta(days=14)).strftime('%a, %b %d')}} 11:59:59 PM.
+Subsequent submissions for midterm 2 must be completed by {{(midterm2_time + timedelta(days=14)).strftime('%a, %b %d')}} 11:59:59 PM.
+
+See [Key Dates](#key-dates)  and [Grading Criteria](#grading-criteria) for more information.
+
+<!--
+As this is a computer grading system, it is somewhat difficult to _unsubmit_ an exam or any assignment.
+You will be given grace on any two assignments that you want to unsubmit.
+But you should consider that only the first submission of any assignment will be graded.
+-->
+
+---
+
+
+## {{!linkable_header('Key Dates')}}
+
+First day of classes {{first_day_of_classes.strftime('%A, %B %d')}}th  
+Game 1 {{game1_time.strftime('%a, %b %d')}}  
+Midterm 1 {{midterm1_time.strftime('%a, %b %d')}}  
+Midterm 1 subsequent submission due {{(midterm1_time+timedelta(days=14)).strftime('%a, %b %d')}} 11:59:59 PM  
+Game 2 {{game2_time.strftime('%a, %b %d')}}  
+Midterm 2 {{midterm2_time.strftime('%a, %b %d')}}  
+Midterm 2 subsequent submission due {{(midterm2_time+timedelta(days=14)).strftime('%a, %b %d')}} 11:59:59 PM  
+Homework, worksheet subsequent submission due {{last_day_of_classes.strftime('%b %d')}} 11:59:59 PM 
+Last day of classes {{last_day_of_classes.strftime('%b %d')}}  
+Final Exam {{final_exam_time.strftime('%a, %b %d %I:%M %p')}}  Conflict Tues, Dec 12, 8:00 AM
+
+## {{!linkable_header('Grading Criteria')}}
+
+[Games](#games) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{percentage.games}}%  
+[Worksheets](#worksheets) &nbsp;&nbsp;{{percentage.worksheets}}%  
+[Homeworks](#homeworks) {{percentage.homeworks}}%  
+[Midterm 1](#exams) &nbsp;&nbsp;{{percentage.midterm1}}%  
+[Midterm 2](#exams) &nbsp;&nbsp;{{percentage.midterm2}}%  
+<u>[Final Exam](#exams) {{percentage.fe}}%</u>  
+Total &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sum(percentage)}}%
+
+<style>pre,code { background-color: white; font-size: 1em; }</style>
+```text
+90  ≤ A- < 95    95  ≤ A  ≤ {{sum(percentage)}}
+80  ≤ B- < 83⅓   83⅓ ≤ B  < 86⅔  86⅔ ≤ B+ < 90
+70  ≤ C- < 73⅓   73⅓ ≤ C  < 76⅔  76⅔ ≤ C+ < 80
+                 60  ≤ D  < 65   65  ≤ D+ < 70
+                       F  < 60
+```
+
+### {{!linkable_header('Grade rounding')}}
+
+Note that the total percentage for the class assessments is more than 100%.
+There is a total of 101% for the class.
+Therefore there is no grade rounding.
+A 94.9 is an A-.
+Technically a 94.9 out of 101 is a 93.9.
+If you truly want to round your grade up, 
+attend class regularly, hand in worksheets on-time,
+plan to have time after assessments for subsequent submissions,
+and participate in class to get [worksheet bonuses](#worksheet-bonus).
+Regular attendance, class participation, and on-time submissions,
+not grade grubbing, should be used to improve your grade.
+
+## {{!linkable_header('Grading')}}
+
+You will get instant feedback on the correctness of your most of your answers.
+The Chrome browser will change input boxes <font color="green">green</font> to indicate correctness.
+<font color="green">Green</font> highlight should just assist you.
+The checker cells for Python Jupyter notebook homeworks will tell you if your answer _appears correction_.
+
+During an exam, if you believe your answer is correct and the input box did not turn <font color="green">green</font>,
+continue on.
+During homeworks or worksheets, if you believe your answer is correct and the input box did not turn <font color="green">green</font>,
+go to [office hours]({{get_url('syllabi', page_name='help')}}).
+
+Note that single, HTML-select pull-downs are simply multiple choice questions.
+There is no instant feedback on multiple choice questions.
+
+My computer and I will do all grading.
+The teaching assistants' sole function is helping you learn. 
+So please don't complain to them if you have a problem with the grade.
+Bring all grading issues to the assistants for regrade requests.
+If they agree with your claim, **they** will contact me for the regrade request.
+Due to the size of the classes,
+I rely on the assistants to triage all regrade requests.
+I will not even answer emails from students about regrade requests.
+Feedback and correct answers will be available on the [feedback page]({{get_url('feedback')}}).
+No traditional partial credit will be given.
+
+All scores on worksheets, homeworks, and exams will be normalized to percentages and then averaged.
+In other words, homework 1 might have 100 points and homework 2 might have 110 points, 
+but they are normalized to percentages and averaged together to get the homework points that contribute to your numeric total points.
+Numeric total points will be translated to letter grades with the following ranges.
+Note that a 94.9999 is less than a 95;
+don't assume anything will be rounded (see [grade rounding](#grade-rounding)).
+
+---
+
+### {{!linkable_header('Subsequent Submissions')}}
+
+Think of subsequent submissions as a way to get partial credit on take-home worksheets, homeworks, and midterms.
+After submitting an assessment on time (there is no subsequent submissions for late work), it is possible to make a subsequent submission after the grader has been run.
+Each subsequent submission is incrementally weighted less than the previous submissions and
+must have a greater score than all previous submissions to improve the overall assessment score.
+There is a limit of ten (10) submissions for each assessment.
+Subsequent submissions are not available for games and the final exam.
+
+For midterms, the grader is not run until all students have taken the midterm
+which with [midterm makeups]({{get_url('syllabi', page_name='syllabus')}}#midterm-makeups) could be as late as 4:00 PM the day following the midterm.
+Subsequent submissions **are not** available until after the grader has been run against the original submission.
+
+Subsequent submissions for homeworks and worksheets must be completed by {{last_day_of_classes.strftime('%a, %b %d')}} 11:59:59 PM.
+There are only two weeks available for midterm subsequent submissions.
+Therefore for midterm 1, subsequent submissions must be completed by {{(midterm1_time + timedelta(days=14)).strftime('%a, %b %d')}} 11:59:59 PM.
+For midterm 2, subsequent submissions must be completed by {{(midterm2_time + timedelta(days=14)).strftime('%a, %b %d')}} 11:59:59 PM.
+**There are no subsequent submissions on the final exam!**
+
+As an example, assume a homework's first submission is 75%.
+The grade for the assessment could be improved by a subsequent submission of 100%.
+But the second submission will only add (100%-75%)/2 or 12.5% for an overall assessment value of 87.5%.
+
+In general the overall score of an assessment with $n$ submissions in a Python list $P$:
+
+Overall_score = $P[0] +$
+$\frac{max(0, P[1] - max(P[:1]))}{2} +$
+$\frac{max(0, P[2] - max(P[:2]))}{3} +$
+$\dots +$ 
+$\frac{max(0, P[n-1] - max(P[:n-1]))}{n}$
+
+As an example, assume an exam is submitted in class,
+the grader runs that evening,
+and the initial grade is 60%.
+Before the submission deadline, assume subsequent submissions of 40%, 80% then 100% are made.
+The Python list of scores is $P = [60, 40, 80, 100]$.
+
+overall_score = $P[0] +$
+$\frac{max(0, P[1] - max(P[:1]))}{2} +$
+$\frac{max(0, P[2] - max(P[:2]))}{3} +$
+$\frac{max(0, P[3] - max(P[:3]))}{4}$  
+overall_score = $60 +$
+$\frac{max(0, 40 - max([60]))}{2} +$
+$\frac{max(0, 80 - max(P[60, 40]))}{3} +$
+$\frac{max(0, 100 - max(P[60, 40, 80]))}{4}$  
+overall_score = $60 + \frac{0}{2} + \frac{20}{3} + \frac{20}{4} = 71.7$
+
+---
+
+### {{!linkable_header('Midterm makeups')}}
+
+Also there will be **no makeup midterms** after 4:00 PM the day following a midterm.
+If you miss a test with a Dean's excuse, a medical diagnosis of an illness, or an instructor approved absence
+you may complete the test **before** 4:00 PM the day following the test.
+If you miss a test with a Dean's excuse, medical diagnosis of an illness,
+or an instructor approved absence
+but cannot make up the test before 4:00 PM the day following a test,
+the weight of the next midterm or final exam will simply be
+increased by the weight of the missed midterm.
+If you miss a midterm without an excuse, you receive a zero for the test.
+
+The course final is given in compliance with UNC final exam regulations and
+according to the UNC [Final Exam calendar](https://registrar.unc.edu/academic-calendar/final-examination-schedule-fall/).
+
+
+---
+
+### {{!linkable_header('Worksheet bonus')}}
+For insightful raised hand / answered question in class or 
+for each insightful [Piazza post marked as a good notes](#piazza),
+a worksheet bonus of up to 50% will be added to the lowest worksheet score. 
+An email confirmation will be sent of each worksheet bonus given and the bonus will be reflected on the [grades page]({{get_url('grades')}}).
+Please see [section Piazza](#piazza) for more information on what is a good [Piazza]({{PIAZZA}}) post.
+
+Note that although bonuses for good [Piazza]({{PIAZZA}}) posts are for correct, helpful posts, bonuses for answering questions (correctly or incorrectly) in class. The bonus is given when the instructor feels an honest attempt was made to answer the question, participate in class, or help other students on [Piazza]({{PIAZZA}}).
+
+If you feel you should have received a bonus, please bring it to the instructor's or assistants' attention as soon as possible.
+Realize that there are approximately 100 students, so please notify me via email within one week from when the bonus should have been received.
+As an Easter egg for reading the syllabus before class starts, if you fill out the [demo worksheet]({{get_url('worksheets', key='worksheet-00-demo')}}) before 8:00 AM the first day of class, you will receive a worksheet bonus.
+
+Lastly, the instructors will do their best to round-robin who gets called on in class. But understand there are hundreds of students and this is a best attempt.
+
+Bonuses are meant to encourage and reward participation in class and [Piazza]({{PIAZZA}}).
+
+---
+
+## {{!linkable_header('Piazza')}}
+
+[Piazza]({{PIAZZA}}) is a great place to have a discussion about a subject from class.
+You will need to sign up (use access code `{{PIAZZA_ACCESS_CODE}}`) and check it regularly.
+Here are some tips to create good piazza posts.
+You may want to watch [this cute video](https://youtu.be/tVqWcrMPxfY) on why it's good to post well.
+
+ - Why?  To teach one another
+ - Post early
+ - Read others posts before making your own
+ - Write clearly and concisely
+ - Refer to others posts.  Use a URL hyperlink where possible.
+ - Explain why.  Don't just state something that you believe is obvious.
+ - Be respectful.  Say what you mean without being mean!
+
+The COMP 421 Piazza site is [here]({{PIAZZA}}) with a access code is `{{PIAZZA_ACCESS_CODE}}`.
+
+---
+
+## {{!linkable_header('How to succeed in this course')}}
+
+Regardless of your definition of success,
+I hope you succeed in this course.
+Whether success means a good grade or being prepared for that job interview question,
+I have found that there are three things that increase the chances of success in the class.
+
+1. Come to class prepared:  
+You should have completed the reading assignments from the [agenda]({{get_url('root')}}#agenda)
+before coming to class.
+This does not mean to read for complete understanding.
+It does mean to read to understand the high level concepts.
+Coming to class knowing what you don't know is an advantage.
+You will able ask intelligent questions.
+
+2. Don't fall behind:  
+After reading and covering a subject in class, if you don't understand the material,
+get help at [office hours]({{get_url('syllabi', page_name='help')}}) early.
+There are much shorter lines and there will be more time to discuss things more thoroughly.
+Waiting until just before the midterm to get help is just problematic.
+
+3. Be formal and precise:  
+Read questions, answer questions, and check your work;
+you need to do all three.
+Please embrace the mathematical notation.
+Be precise with your answers.
+
+
+Please visit the [reading assignments page]({{get_url('syllabi', page_name='reading')}}) soon.
+
+---
+
+## {{!linkable_header('Course Policies and Honor Code')}}
+
+Before my course policy, this is my life policy:
+I assume my mother's watching me.
+Whether that's in the classroom, at the meeting, in the discussion, or at the grocery store.
+How would my mother perceive my behavior?
+Therefore when you argue a point, ask a question, or whatever, just assume that someone you love and respect is listening to you.
+You want them to be proud and not embarrassed by your behavior.
+Please call me out when you perceive I have strayed from this policy.
+My mother will appreciate it as I fail often and she needs the help!
+
+For this class, my policy is Be Prepared.
+(See [How to succeed in this course](#how-to-succeed-in-this-course) for more information.)
+Because, as a practical matter, we can't always be prepared, when you aren't prepared just own it.
+Ask for help as soon as you start to fall behind.
+Then catch up, regroup, and come prepared the next time.
+
+#### {{!linkable_header('Honor Code')}}
+
+As in life, collaboration is encouraged on homeworks.
+Of course, whatever you hand in must be your own writing/typing.
+Since midterms and the final exam will test whether you understand the homework assignments,
+no collaboration of any kind is allowed.
+So you violate the honor code and do yourself a disservice if you just copy the answers on homeworks, the midterms, or exams.
+
+Examples of using Google&reg;/Stack Overflow&reg;/ChatGpt&reg; for collaboration on homeworks and worksheets
+(never on midterms and exams!) would be to further understand the question,
+to understand how to structure an answer,
+or to see another's way of attacking a problem.
+Copying code is prohibited!
+Cutting and pasting code from sources outside of the COMP 421 website is prohibited.
+Collaboration implies getting help and then **writing the code yourself!**
+
+Regardless of where the collaboration came from, acknowledge the collaboration on the worksheet or homework honor code pledge!
+
+Examples of violations of the honor code are below.
+Of course, these are not the only violations, but over the years students have questioned what is a violation and this list is helpful for a good understanding of what is a violation of the honor code.
+
+ - Giving students answers, especially on exams but also on worksheets and  homeworks.
+For example, posting the answers directly or indirectly on Piazza, Discord,      GroupMe or other bulletin boards.
+This is not collaboration!
+ - Using Slack, Zoom chat, or other messaging services during exams.
+ - Giving information about the assessment or answers to other students even  after the assessment is completed.
+Remember, not all students take the exam at the same time.
+Students may have accommodations or deferrals.
+ - Switching screens during midterms or exams, leaving the browser during the midterms or exams, or using Google&reg;/Chegg&reg;/ChatGpt&reg to solicit answers during a midterm or exam.
+ - Copying and pasting code from **anywhere** outside the COMP 421 website into a worksheet, homework or exam.  You write the answer yourself!
+
+If you are in doubt as to whether you are using an online support platform appropriately in this course,
+I encourage you to discuss your situation with me.
+
+Good scholarship requires that resources and collaboration be acknowledged.
+Thus, if you collaborate on the solution of a problem set, I expect that you list your collaborators at the bottom of the page.
+Collaboration on midterms and the final exam,
+copying answers on the midterms and the final,
+or any outside help on the midterms and the final
+are a violation of the [Honor Code](https://catalog.unc.edu/policies-procedures/honor-code).
+
+
+All exams will be, **closed-book**, using the Google Chrome web-based.
+You may **NOT** use your book but
+may use one $8 \times 11$ handwritten on both sides  _cheat sheets_.
+You must not access anything else on your computer or any other internet sites during the
+exam.
+
+**Honor code violations will be prosecuted.**
+
+### {{!linkable_header('Acceptable Use')}}
+
+By attending the University of North Carolina at Chapel Hill,
+you agree to abide by the University of North Carolina at Chapel Hill policies related to the       acceptable use of IT systems and services.
+The [Acceptable Use Policy (AUP)](https://policies.unc.edu/TDClient/2833/Portal/KB/ArticleDet?      ID=131247) sets the expectation that you will use the University’s technology resources responsibly, consistent with the University’s mission.
+
+For example, the reason for requiring each submission to wait for the grader to run
+for [subsequent submissions](#subsequent submissions) is due to previous students' multiple, identical submissions that caused grading delays.
+Your behavior has ramifications on the rest of this class and classes in future semesters!
+Please do not abuse the systems.
+
+### {{!linkable_header('Privacy Information')}}
+
+UNC-Chapel Hill is committed to fulfilling its responsibilities of transparency as a state-sponsored institution of higher learning, protecting certain types of information and using information Carolina collects only for appropriate purposes.
+Read more about [data security and privacy on the ITS website](https://www.unc.edu/about/privacy-statement/).
+
+---
+
+
+#### {{!linkable_header('Attendance Policy')}}
+
+
+No right or privilege exists that permits a student to be absent from any class meetings, except for these University Approved Absences:  
+ 1. Authorized University activities  
+ 2. Disability/religious observance/pregnancy, as required by law and approved by [Accessibility Resources and Service](https://ars.unc.edu/)    and/or the [Equal Opportunity and Compliance Office (EOC)](https://ars.unc.edu/)  
+ 3. Significant health condition and/or personal/family emergency as approved by the [Office of the Dean of Students](https://odos.unc.edu/),    [Gender Violence Service Coordinators](https://womenscenter.unc.edu/resources/gender-violence-services/), and/or the [Equal Opportunity and      Compliance Office (EOC)](https://eoc.unc.edu/what-we-do/accommodations/).
+
+I will **NOT** formally be taking attendance.
+But I can track your attendance because of the in-class worksheets.
+This is due to the fact that in order to submit in-class worksheets,
+they have to be submitted during the in-class activity.
+For example, a worksheet given at the start of lecture will
+have it's _submit button_ removed so that those who come late
+will be unable to submit the work.
+Some classes will have two or three in-class worksheets / activities and
+all will only be accepted for credit during the activity.
+This is an indirect way attendance can be tracked.
+
+
+Therefore, attending class in-person is imperative to your success
+(see [How to succeed in this class](#how-to-succeed-in-this-class)).
+Please communicate with me early about potential absences so that adjustments can be made to in-class activities.
+Please be aware that you are bound by the [Honor Code](http://catalog.unc.edu/policies-procedures/honor-code/) when making a request for a       University approved absence.
+Even requests for absences for unapproved absences like job interviews, club activities, etc are bound by the Honor Code.
+ 
+
+
+### {{!linkable_header('Attendance')}}  
+
+I will **NOT** formally be taking attendance.
+But I can track your attendance because of the in-class worksheets.
+This is due to the fact that in order to submit in-class worksheets,
+they have to be submitted during the in-class activity.
+For example, a worksheet given at the start of lecture will
+have it's _submit button_ removed so that those who come late
+will be unable to submit the work.
+Some classes will have two or three in-class worksheets / activities and
+all will only be accepted for credit during the activity.
+This is an indirect way attendance can be tracked.
+
+
+Therefore, attending class in-person is imperative to your success
+(see [How to succeed in this class](#how-to-succeed-in-this-class)).
+Please communicate with me early about potential absences so that adjustments can be made to in-class activities.
+Please be aware that you are bound by the [Honor Code](http://catalog.unc.edu/policies-procedures/honor-code/) when making a request for a       University approved absence.
+Even requests for absences for unapproved absences like job interviews, club activities, etc are bound by the Honor Code.
+ 
+
+
+## {{!linkable_header('Accommodations, Resources, and Services')}}
+
+Academic accommodations and associated resources and services
+are designed to provide equal access to courses and programs.
+Accommodations are evaluated and granted individually based on
+the functional limitations  specified in the documentation
+submitted by the students.
+
+[Accessibility Resources and Service](https://ars@unc.edu) receives requests for accommodations, and through the Student and Applicant Accommodations Policy determines eligibility and identifies reasonable accommodations for students with disabilities and/or chronic medical conditions to mitigate or remove the barriers experienced in accessing University courses, programs and activities.
+
+ARS also offers its Testing Center resources to students and instructors to facilitate the implementation of testing accommodations.
+
+Faculty and instructors with any concerns or questions about accommodations and/or their implementation, are invited to reach out to ARS to discuss.
+
+For more information see the [Accessibility Resources and Service website](https://ars.unc.edu/accommodations).
+
+## {{!linkable_header('Counseling and Psychological Services')}}
+
+UNC-Chapel Hill is strongly committed to addressing the mental health needs of a diverse student body.
+The Heels Care Network website is a place to access the many mental health resources at Carolina.
+[CAPS](https://caps.unc.edu/) is the primary mental health provider for students, offering timely access to consultation and connection to clinically appropriate services.
+At **CAPS**, you'll find concern, empathy, acceptance and support for whatever issue you may be facing.
+
+Go to the [CAPS website](https://caps.unc.edu/) or visit their facilities on the third floor of the Campus Health building for an initial evaluation to learn more.
+Students can also call CAPS 24/7 at 919-966-3658 for immediate assistance.
+
+
+## {{!linkable_header('Title IX Resources')}}
+
+Any student who is impacted by discrimination, harassment, interpersonal
+relationship violence, sexual violence, sexual exploitation, or stalking is
+encouraged to [seek resources on campus or in the community](https://eoc.unc.edu/resources-for-preventing-and-responding-to-sexual-or-interpersonal-violence/).
+Please contact any of the following to discuss your specific needs:
+
+- Director of Title IX Compliance (Adrienne Allison – [Adrienne.allison@unc.edu](mailto:Adrienne.allison@unc.edu))
+- Report and Response Coordinators in the [Equal Opportunity and Compliance Office](https://eoc.unc.edu/) contact:
+[reportandresponse@unc.edu](mailto: reportandresponse@unc.edu) 919-445-2759
+- Counseling and Psychological Services [caps.unc.edu](https://caps.unc.edu) (confidential)
+- Gender Violence Services Coordinators [gvsc@unc.edu](mailto: gvsc@unc.edu) (confidential) 
+
+Additional resources are
+available at [safe.unc.edu](http://safe.unc.edu).
+
+## {{!linkable_header('Disclaimer')}}
+
+The professor reserves to right to make changes to the syllabus, including
+dates. These changes will be announced as early as possible.

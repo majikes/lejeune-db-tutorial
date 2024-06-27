@@ -1,0 +1,31 @@
+# Assignment 1
+
+<%
+setInfo(
+due="2020-09-08 23:59:59",
+penalty=0.02,
+maxpenalty=0.5,
+)
+%>
+
+**Due on 8 September by midnight.**
+
+This assignment will give you exercise working with Python, SQL, and relational algebra.
+
+Download this [zip file](<{{static('extra/A1.zip')}}>) and unpack it. It will create
+a folder named `A1`. Use `jupyter notebook` to open the `A1.ipynb1` file inside. You
+are to work in this notebook to answer the prompts. There is no need to create a new
+notebook, simply open and work in this one.
+
+Each question will instantly tell you if your answer appears correct. You may attempt
+each question as many times as you wish.
+
+There are lots of tutorials online for Python and Jupyter Notebook. I encourage you to
+dive in; it will look great on your resume and will build your confidence.
+
+> _The answer to the question "Can you program in whatever?" is "Yes!"_
+
+When you are done, save the notebook, and quit Jupyter. Then upload the `A1.ipynb` file here: {{!upload(name="notebook", accept=".ipynb")}}.
+
+You may submit the assignment multiple times before the deadline and receive your best
+score. I hope to get the grader working soon to give you automatic feedback.

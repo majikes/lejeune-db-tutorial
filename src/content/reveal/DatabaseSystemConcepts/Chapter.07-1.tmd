@@ -1,0 +1,496 @@
+e--
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+---
+
+### Today's class
+
+Chapter 7:  Normalization
+
+- By the end of class you should know
+  - Features of Good Relational Design
+  - Functional Dependencies
+  - Decomposition Using Functional Dependencies
+  - Normal Forms
+
+Note:
+
+Today we will cover 7.1 through 7.3
+
+---
+
+### Features of Good Relational Designs
+
+- Suppose we combine _instructor_ and _department_ into <i>in_dep</i>
+  - Represents the natural join on the relations _instructor_ and _department_<br/>
+<img src="{{HTTPS_FQDN}}/static/images/Chapter.07.In_Dept_Relation.jpg" style="width:50%"/>
+  - There is repetition of information
+  - Need to use null values (if we add a new department with no instructors)
+
+
+
+---
+
+### Decomposition
+
+- The only way to avoid the repetition-of-information problem in  the i<i>n_dep</i> schema is to decompose it into two schemas – instructor and _department_ schemas.
+- Not all decompositions are good.  Suppose we decompose
+  <br/>{{TAB}}<i>employee(ID, name, street, city, salary)</i> 
+  <br/><b>into</b>
+  <br/>{{TAB}}<i>employee1</i> (<i>ID</i>, <i>name</i>) 
+  <br/>{{TAB}}<i>employee2</i> (<i>name</i>, <i>street, city, salary</i>) 
+  - What if two employees have the name John Smith?
+- The next slide shows how we lose information 
+  - If cannot reconstruct the original <i>employee</i> relation
+  - Then it's called a <b>lossy decomposition</b>.
+
+Note:
+
+Loss-y decomposition is when you loss information
+
+---
+
+### A Lossy Decomposition
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.07.LossyDecomposition.png" style="width:70%"/>
+</figure>
+
+
+---
+
+### Lossless Decomposition
+
+- Let $R$ relation schema
+  - Let $R_1$ and $R_2$ form a decomposition of $R$
+  - That is $R = R_1 \cup R_2$
+- The decomposition is a **lossless decomposition** if
+  - No loss of info by replacing $R$ with $R_1 \cup R2$
+- $\Pi_{R_1}(r)$ $\bowtie$ $\Pi_{R_2}(r) = r$
+  - $r = \Pi R_1(r) \Pi R_2(r)$
+- A lossy decomposition<br/> 
+ $r \subset \Pi_{R_1}(r)$ $\bowtie$ $\Pi_{R_2}(r) = r$
+
+
+---
+
+### Example of Lossless Decomposition 
+
+- Decomposition of $R = (A, B, C)$ with $R_1 = (A, B)$ $R_2 = (B, C)$
+
+<img src="{{HTTPS_FQDN}}/static/images/Chapter.07.Example.LosslessDecomposition.jpg" style="width:75%"/>
+
+
+---
+
+### Normalization Theory
+
+- Decide whether a particular relation $R$ is in “good” form.
+- In the case that a relation $R$ is not in “good” form,  decompose it into set of relations {$R_1, R_2, \dots R_n$} such  that 
+  - Each relation is in good form 
+  - The decomposition is a lossless decomposition
+- Our theory is based on:
+  - functional dependencies
+  - multivalued dependencies
+
+
+---
+
+### Functional Dependencies
+
+- There are constraints (rules) on the data  in the real world.
+- For example, some of the university constraints are:
+  - Students &amp; instructors are uniquely ID.
+  - Each student &amp; instructor has only one name.
+  - Each instructor &amp; student is (primarily) associated with only one department.
+  - Each department has only one value for its budget, and only one associated building.
+
+
+---
+
+### Functional Dependencies (Cont.)
+
+- A relation instance that satisfies all such real-world constraints is called a <b>legal instance </b>of the relation;
+- A legal instance of a database is one where all the relation  instances are legal instances
+- Constraints on the set of legal relations.
+- Require that the value for a certain set of attributes  determines uniquely the value for another set of attributes.
+- A functional dependency is a generalization of the notion of a  <i>key.</i>
+
+
+---
+
+### Functional Dependencies Definition 
+
+- Let $R$ be a relation schema 
+<br/>{{TAB}}$\alpha \subseteq R$ and $\beta \subseteq R$
+- The <b>functional dependency</b> 
+<br/>{{TAB}}$\alpha \rightarrow \beta$
+<br/><b>holds on</b> $R$ if and only if for any legal relations $r(R)$, whenever any two tuples <i>t</i>1 and <i>t</i>2 of <i>r</i> agree on the attributes $\alpha$, they also agree on the attributes $\beta$<i>. </i>That is, 
+<br/>{{TAB}}<i>t</i>1[$\alpha$] = <i>t</i>2 [$\alpha$]   ⇒ <i>t</i>1[$\beta$]  = <i>t</i>2 [$\beta$] 
+- Example:  Consider <i>r</i>(A<i>,B </i>) with the following instance of <i>r.</i>
+  <table border="1">
+   <tr><th>A</th><th>B</th></tr>
+   <tr><td>1</td><td>4</td></tr>
+   <tr><td>1</td><td>5</td></tr>
+   <tr><td>3</td><td>7</td></tr>
+  </table>
+- On this instance, <i>B</i> →<i> A</i> hold;  <i>A</i> →<i> B</i> does <b>NOT</b> hold
+
+---
+
+### Closure of a Set of Functional Dependencies
+
+- Given a set <i>F</i> set of functional dependencies, there are  certain other functional dependencies that are logically  implied by <i>F</i>.
+  - If $A \rightarrow B$ and $B \rightarrow C$, then we can infer that $A \rightarrow C$
+  - etc.
+- The set of <b>all</b> functional dependencies logically implied by <i>F</i> is the <b>closure</b> of <i>F</i>.
+- We denote the <i>closure </i>of <i>F</i> by <b><i>F</i></b><sup><b><i>+</i></b></sup><i>.</i>
+
+
+---
+
+### Keys and Functional Dependencies
+
+- $K$ is a superkey for relation schema $R$ if and only if $K \rightarrow R$
+- $K$ is a candidate key for $R$ if and only if 
+  - $K \rightarrow R$, and
+  - for no $\alpha \subset K$, $\alpha \rightarrow R$
+- Functional dependencies allow us to express constraints that cannot be expressed using superkeys.  Consider the schema:
+<br/>{{TAB}}<i>in_dep</i> (<i>ID, name, salary, dept_name, building, budget </i>)<i>.</i>
+<br/>We expect these functional dependencies to hold:
+<br/>{{TAB}}<i>dept_name</i> $\rightarrow$  <i>building</i>
+<br/>{{TAB}}<i>ID</i> $\rightarrow$ <i> building</i>
+<br/>but would not expect the following to hold:
+<br/>{{TAB}}<i>dept_name</i> $\rightarrow$ <i>salary</i>
+
+
+---
+
+### Use of Functional Dependencies
+
+- We use functional dependencies to:
+  - To test relations to see if they are legal under a given set of functional dependencies. 
+    - If a relation <i>r</i> is legal under a set <i>F</i> of functional dependencies, we say that <i>r</i><b> satisfies</b><i> F.</i>
+  - To specify constraints on the set of legal relations
+    - We say that <i>F</i><b> holds on</b><i> R</i> if all legal relations on <i>R</i> satisfy the set of functional dependencies <i>F.</i>
+- **Note**: A specific instance of a relation schema may satisfy a functional dependency even if the functional dependency does  not hold on all legal instances.  
+  - For example, a specific instance of _instructor_ may, by chance, satisfy
+<br/>{{TAB}}<i>name</i> $\rightarrow$ <i>ID</i>
+
+
+---
+
+### Trivial Functional Dependencies
+
+- <i>A </i>functional dependency is <b>trivial</b> if it is satisfied by all  instances of a relation
+  - Example<i>:</i>
+    - <i>ID, name</i> $\rightarrow$ <i>ID</i>
+    - <i>name</i> $\rightarrow$ <i>name</i>
+  - In general, $\alpha \rightarrow \beta$ is trivial if $\beta \subseteq \alpha$
+
+
+---
+
+### Lossless Decomposition
+
+- We can use functional dependencies to show when certain  decomposition are lossless.  
+- For the case of $R = (R_1, R_2)$, we require that for all possible relations $r$ on schema $R$
+<br/>{{TAB}}$r = \Pi R_1(r)$ $\bowtie$ $\Pi R_2(r)$
+- A decomposition of $R$ into $R_1$ and $R_2$ is lossless decomposition if at least one of the following dependencies is in $F^+$:
+  - $R_1 \cap R_2 \rightarrow R_1$
+  - $R_2 \cap R_2 \rightarrow R_2$
+- The above functional dependencies are a sufficient condition  for lossless join decomposition; the dependencies are a  necessary condition only if all constraints are functional  dependencies
+
+
+---
+
+### Example
+
+- $R = (A, B, C)$<br/> $R = (A \rightarrow B, B \rightarrow C)$
+- $R_1 = (A, B)$, $R_2 = (B, C)$
+  - Lossless decomposition: <br />$R_1 \cap R_2$ = { $B$ } and $B \rightarrow BC$
+- $R_1 = (A, B)$, $R_2 = (A, C)$
+  - Lossless decomposition:<br />$R_1 \cap R_2 =$ { $A$ } and $A \rightarrow AB$
+- <i>Note</i>
+  - $B \rightarrow BC$<br/>is a shorthand notation for
+  - $B \rightarrow \{B, C\}$
+
+
+---
+
+### Dependency Preservation
+
+- Testing functional dependency constraints each time the  database is updated can be costly
+- It is useful to design the database in a way that constraints can  be tested efficiently.  
+- If testing a functional dependency can be done by considering  just one relation, then the cost of testing this constraint is low
+- When decomposing a relation it is possible that it is no longer  possible to do the testing without having to perform a Cartesian  Produced.
+- A decomposition that makes it computationally hard to enforce  functional dependency is said to be NOT <b>dependency </b> <b>preserving</b>.
+
+
+---
+
+### Dependency Preservation Example
+
+- Consider a schema:
+<br/>{{TAB}}<i>dept_advisor(s_ID, i_ID, department_name</i>)
+- With function dependencies:
+<br/>{{TAB}}<i>i_ID</i> →<i> dept_name</i>
+<br/>{{TAB}}<i>s_ID, dept_name</i> →<i> i_ID</i><
+- In the above design we are forced to repeat the department  name once for each time an instructor participates in a  <i>dept_advisor</i> relationship.  
+- To fix this, we need to decompose <i>dept_advisor</i>
+- Any decomposition will not include all the attributes in
+<br/>{{TAB}}<i>s_ID, dept_name</i> →<i> i_ID</i>
+- Thus, the composition NOT be dependency preserving 
+
+
+---
+
+### Boyce-Codd Normal Form
+
+- A relation schema <i>R</i> is in BCNF with respect to a set <i>F</i> of  functional  dependencies if for all functional dependencies in $F^+$ of the form 
+<br/>{{TAB}}$\alpha \rightarrow \beta$
+<br />where $\alpha \subseteq R$ and $\beta \subseteq R$, at least one of the following holds:
+  - $\alpha \rightarrow \beta$ is trivial (i.e., $\beta \subseteq \alpha$)
+  - $\alpha$ is a superkey for $R$
+
+Note:
+
+page 314:
+
+BCNF for $\alpha \rightarrow \beta$ either is true:  
+ - $\alpha \rightarrow \beta$ is a trivial dependency
+ - $\alpha$ is a superkey
+
+---
+
+### Boyce-Codd Normal Form (Cont.)</b></p>
+
+- Example schema  that is <b><i>not</i></b> in BCNF:
+<br/>{{TAB}}<i>in_dep</i> (<i>ID, name, salary, dept_name, building, budget </i>)
+<br/>because :
+   - <i>dept_name</i> $\rightarrow$ <i>building, budget</i>
+     - holds on <i>in_dep</i>
+     - but <i>dept_name</i> is not a superkey
+- Better to decompose <i>in_dept</i> into _instructor_ and _department_ 
+   - <i>instructor</i> is in BCNF
+   - <i>department</i> is in BCNF
+
+Note:
+
+Department is not a superkey because a department could have many instructors with different ID's and names.
+
+Make <code>in_dep(instructor, department)</code> is a better decomposition
+
+---
+
+### Decomposing a Schema into BCNF
+
+- Let $R$ be a schema $R$ that is not in BCNF.  Let $\alpha \rightarrow \beta$ be the FD that causes a violation of BCNF.
+- We decompose/replace $R$ into two schemas:
+  - ($\alpha \cup \beta$)
+  - ($R - ( \beta - \alpha )$)
+- In our example of <i>in_dep</i>, 
+  - $\alpha =$ {<i>dept_name</i>}
+  - $\beta =$ {<i>building, budget</i>}
+  - <i>in_dep</i> = ($\alpha \cup \beta$) = ( <i>dept_name, building, budget</i> )
+  - ( $R - ( \beta - \alpha)$ ) = ( <i>ID, name, dept_name, salary</i> )
+
+Note:
+
+Page 313 7.3 to page 314
+
+---
+
+### Check Decomposition Example
+
+- $R = (A, B, C)$
+<br />$F = (A \rightarrow B, B \rightarrow C)$
+- $R_1 = (A, B)$, $R_2 = (B, C)$
+  - Lossless-join decomposition:
+<br/>{{TAB}}$R_1 \cap R_2 = ${ $B$ }
+and $B \rightarrow BC$
+  - Dependency preserving
+- $R_1 = (A, B)$, $R_2 = (A, C)$
+  - Lossless-join decomposition:
+<br/>{{TAB}}$R_1 \cap R_2 = $ { $A$ } and $A \rightarrow AB$
+  - Not dependency preserving 
+<br/>(cannot check $B \rightarrow C$ without computing $R_1 \bowtie R_2$)
+
+Note:
+
+Let's check a relation of tuple A, B C and  
+Functional dependency of $A \rightarrow B$, $B \rightarrow C$  
+
+<font color='red'>Need to find in the book!!!</font>
+
+---
+
+### BCNF and Dependency Preservation
+
+- It is not always possible to achieve both BCNF and  dependency preservation 
+- Consider a schema:
+<br/>{{TAB}}<i>dept_advisor(s_ID, i_ID, department_name</i>)
+- With function dependencies:
+<br/>{{TAB}}<i>i_ID</i> →<i> dept_name</i>
+<br/>{{TAB}}<i>s_ID, dept_name</i> →<i> i_ID</i>
+- <i>dept_advisor</i> is not in BCNF 
+<br/>{{TAB}}<i>i_ID</i> is not a superkey.
+- Any decomposition of <i>dept_advisor</i> will not include all the attributes in
+<br/>{{TAB}}<i>s_ID, dept_name</i> →<i> i_ID</i>
+- Thus, the composition is NOT be dependency preserving
+
+
+---
+
+### Third Normal Form
+
+- A relation schema $R$ is in <b>third normal form (3NF)</b> if for all $\alpha \rightarrow \beta$ in $F^+$ at least one of the following holds:
+  1. $\alpha \rightarrow \beta$ is trivial ($\beta \subseteq \alpha$)
+  1. $\alpha$ is a superkey for $R$
+  1. Each attribute in $\beta - \alpha$ is contained in a $R$ candidate key
+    - Each attribute may be in a different candidate key
+- If a relation is in BCNF it is in 3NF
+  - Since in BCNF condition one or two must hold
+- Three is minimal relaxation of BCNF
+  - Ensures dependency preservation
+
+Note:
+
+Page 317 Section 7.3.2
+
+---
+
+### 3NF Example
+
+- Consider a schema:
+<br/>{{TAB}}<i>dept_advisor(s_ID, i_ID, dept_name</i>)
+- With function dependencies:
+<br/>{{TAB}}<i>i_ID</i> →<i> dept_name</i>
+<br/>{{TAB}}<i>s_ID, dept_name</i> →<i> i_ID</i>
+- Two candidate keys =  {<i>s_ID, dept_name</i>}, {<i>s_ID, i_ID</i> }
+- We have seen before that <i>dept_advisor</i> is not in BCNF
+- $R$ however, is in  3NF
+  - <i>s_ID, dept_name</i> is a superkey
+  - <i>i_ID</i> $\rightarrow$ <i>dept_name</i> and <i>i_ID</i> is NOT a superkey, but:
+     - { <i>dept_name</i>} – {<i>i_ID</i> } = {<i>dept_name</i>} and
+     - <i>dept_name</i> is contained in a candidate key
+
+Note:
+
+Needs more work
+
+---
+
+### Redundancy in 3NF
+
+- Consider the schema R below, which is in 3NF :
+  - R = (J, K, L)
+  - F = { JK $\rightarrow$ L, L $\rightarrow$ K}
+  - And and instance table:<figure>
+<img src="{{HTTPS_FQDN}}/static/images/Chapter.07.Redundancy.in.3NF.png" style="width:25%"/>
+<figcaption>Instance of R</figcaption>
+</figure>
+- What is wrong with the table?
+  - {{FRAG}} Repetition of $l_1$
+  - {{FRAG}} The need to use null values
+    - $(l_2, k_2)$ has no relationship to $J$
+
+
+---
+
+### Comparison of BCNF and 3NF
+
+- Advantages to 3NF over BCNF.  It is always possible to  obtain a 3NF design without sacrificing losslessness or  dependency preservation. 
+- Disadvantages to 3NF. 
+  - We may have to use null values to represent some of the  possible meaningful relationships among data items.
+  - There is the problem of repetition of information
+
+Note:
+
+In the real world, in my opinion, most databases are in 3NF
+
+---
+
+### Goals of Normalization
+
+- Let $R$ be a relation scheme with a set $F$ of functional  dependencies.
+- Decide whether a relation scheme $R$ is in “good” form
+- In the case that a relation scheme $R$ is not in “good” form
+  - Decompose it into a set of relation scheme { $R_1$, $R_2$ $\dots$ $R_n$ } such that 
+    1. Each relation scheme is in good form 
+    2. The decomposition is a lossless decomposition
+    3. Preferably, the decomposition should be dependency preserving.
+
+
+---
+
+### How good is BCNF?
+
+- There are database schemas in BCNF that do not seem to  be sufficiently normalized 
+- Consider a relation 
+<br/>{{TAB}}<i>inst_info (ID, child_name, phone)</i>
+  - where an instructor may have more than one phone and  can have multiple children
+  - Instance of <i>inst_info</i><table border="1">
+<tr><th>ID</th><th>child_name</th><th>phone</th></tr>
+<tr><td>99999</td><td>David</td><td>512-555-1234</td></tr>
+<tr><td>99999</td><td>David</td><td>512-555-4321</td></tr>
+<tr><td>99999</td><td>William</td><td>512-555-1234</td></tr>
+<tr><td>99999</td><td>William</td><td>512-555-4321</td></tr>
+</table>
+
+Note:
+
+Section 7.3.4 page 319
+
+---
+
+### How good is BCNF? (Cont.)
+
+- There are no non-trivial functional dependencies and therefore the relation is in BCNF 
+- Insertion anomalies
+<br/>99999, David, 981-992-3443 to instructor 9999 Need to add two tuples:
+  - (99999, David, 981-992-3443)
+  - (99999, William, 981-992-3443)
+
+
+---
+
+### How good is BCNF? (Cont.)
+
+- It is better to decompose <i>inst_info</i> into:
+  - <i>inst_child</i>
+  - <i>inst_phone</i>
+- This suggests the need for higher normal forms, such as Fourth Normal Form (4NF)
+    - <div class="row">
+ <div class="twocolumns">
+   <table>
+    <tr><th>ID</th><th>child_name</tr>
+    <tr><td>99999</td><td>David</td></tr>
+    <tr><td>99999</td><td>William</td></tr>
+   </table>
+  </div>
+  <div class="twocolumns">
+   <table>
+    <tr><th>ID</th><th>phone</th></tr>
+    <tr><td>99999</td><td>512-555-1234</td></tr>
+    <tr><td>99999</td><td>512-555-4321</td></tr>
+   </table>
+  </div>
+</div>
+
+
+---
+
+### Chapter 7.1 through 7.3 Epilogu
+
+- Should know how to tell if a schema is "good"
+  - Should be able to tell how good!
+- Should know what a functional dependency is
+  - How to decompose relations with FD
+- Should know BCNF and 3NF

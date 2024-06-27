@@ -1,0 +1,38 @@
+-- Create and populate the Students relation
+DROP TABLE IF EXISTS Students;
+CREATE TABLE Students (sid char(20), name char(20), login char(10), age integer, gpa real);
+INSERT INTO Students values ('50000', 'Dave',  'dave@cs', 19, 3.3);
+INSERT INTO Students values ('53666', 'Jones', 'jones@cs', 18, 3.4);
+INSERT INTO Students values ('53688', 'Smith', 'smith@cs', 18, 3.2);
+INSERT INTO Students values ('53650', 'Smith', 'smith@math', 19, 3.9);
+INSERT INTO Students values ('53831', 'Madayan', 'madayan@music', 11, 1.8);
+INSERT INTO Students values ('53832', 'Guldu', 'guldu@music', 12, 2.0);
+
+-- Display the Students relation
+SELECT 'The Students table:' as '';
+SELECT * FROM Students;
+
+-- Create and populate the Enrolled relation
+DROP TABLE IF EXISTS Enrolled;
+CREATE TABLE Enrolled (sid char(20), cid char(20), grade char(2));
+INSERT INTO Enrolled values ('53688', 'Carnatic101', 'C');
+INSERT INTO Enrolled values ('53688', 'Reggae203', 'B');
+INSERT INTO Enrolled values ('53650', 'Topology112', 'A');
+INSERT INTO Enrolled values ('53666', 'History105', 'B');
+
+-- Display the Enrolled relation
+SELECT 'The Enrolled table:' as '';
+SELECT * FROM Enrolled;
+
+-- Display the students who are exactly 18 years old
+SELECT 'Student exactly age 18' as '';
+SELECT * 
+  FROM Students AS S
+WHERE S.age=18;
+
+-- Display the students who earned an A
+SELECT 'Student names that earned an A and the course id' as '';
+SELECT S.name,E.cid
+  FROM Students AS S, Enrolled AS E
+ WHERE S.sid=E.sid AND
+       E.grade='A';

@@ -1,0 +1,111 @@
+<%
+setInfo(due="2021-09-23 14:22:00",
+        needsSubmitCode=True,
+        pages=['questions', 'submit'],
+        )
+dbs=['states-A.sqlite']
+%>
+# Midterm 1 A Aggregate operators
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+
+```sql
+  CREATE TABLE IF NOT EXISTS States
+             (abbrev char(2) PRIMARY KEY,
+              statename char(20),  -- May include territories
+              population integer)
+
+  CREATE TABLE IF NOT EXISTS Politicians
+             (bioid char(20),
+              firstname char(20),
+              lastname char(20),
+              birthday date, -- YYYY-MM-DD format string
+              gender char(1),
+              PRIMARY KEY(bioid))
+  CREATE TABLE IF NOT EXISTS Terms
+             (termid INTEGER PRIMARY KEY AUTOINCREMENT,
+              termtype char(20), -- Type of term elected; rep, sen, prez, viceprez
+              startdate date,
+              enddate date,
+              party char(20), -- Political party affiliation
+              how char(20),  -- Different ways to get into an office
+              bioid char(20),
+              -- President & vice president aren't elected from districts or states
+              -- Senators aren't elected from districts
+              district integer,  -- Null of prez, viceprez, or sen
+              state char(2),    -- Null for prez and viceprez
+              FOREIGN KEY(bioid) REFERENCES Politicians(bioid))''')
+```
+---
+
+**Not.Aggregate:** Which of the following is **not** a SQL aggregate?  
+% answer = 'D. STD'
+% choices = ['A. COUNT', 'B. SUM', 'C. AVG', answer, 'E. MAX', 'F. MIN', 'G. All of the above', 'H. None of the above']
+{{!select(answer, choices, points=5, name='Not.Aggregate')}}
+% include('viewAnswer')
+
+---
+
+**Use.Aggregate:** Which is **not** true of aggregates?  
+% answer = 'E. None of the above'
+% choices = ['A. They can be used in subqueries', 'B. They can be used in the select list of fields', 'C. They can be in conjunction with HAVING', 'D. All of the above', answer]
+{{!select(answer, choices, points=5, name='Use.Aggregate')}}
+% include('viewAnswer')
+
+---
+
+**Average**: What is the average population of all the states?  
+% answer = '''
+SELECT AVG(population) FROM States'''
+{{!sql(answer, dbs=dbs, sort=1, points=10, name='Average')}}
+% include('viewAnswer')
+
+---
+
+**Above.Average**: Which states have a population greater than the average of all the states?  
+% answer = '''
+SELECT S1.statename
+ FROM States S1
+ WHERE S1.population > (SELECT AVG(S2.population) from States S2)'''
+{{!sql(answer, dbs=dbs, sort=1, points=20, name='Inner.Join')}}
+% include('viewAnswer')
+
+---
+
+**How.Many.States**: How many states are there?  
+% answer = '''SELECT COUNT(*) FROM States'''
+{{!sql(answer, dbs=dbs, sort=1, points=15, name='How.Many.States')}}
+% include('viewAnswer')
+
+---
+
+**Total.Population**: What is the total population of the United States (according to this database)?  
+% answer = '''SELECT SUM(population) FROM States'''
+{{!sql(answer, dbs=dbs, sort=True, points=15, name='Total.Population')}}
+% include('viewAnswer')
+
+---
+
+**Below.Average**: List each state that is below the average state population and give that state's amount below the average.  
+% answer = '''
+SELECT S1.statename, S3.average - S1.population
+ FROM states S1, (SELECT AVG(S2.population) as average
+                    FROM States S2) as S3
+ WHERE S1.population < S3.average'''
+{{!sql(answer, dbs=dbs, points=25, sort=1, name='Non-election')}}
+% include('viewAnswer')
+
+%end 
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

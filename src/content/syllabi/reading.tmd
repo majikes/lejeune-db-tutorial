@@ -1,0 +1,153 @@
+# Database System Concepts 7th ed
+
+[SQL Skills (if Mastered) Will Get You Better Data Science Opportunities](https://towardsdatascience.com/sql-skills-if-mastered-will-get-you-better-data-science-opportunities-9f912d4f88d3)
+
+Chapter 1
+ - Database-system applications  
+ - Purpose of database systems  
+ - View of data  
+     - Physical, logical, view level  
+     - Logical Schema, physical schema, instance  
+ - Database languages  
+ - Database Design  
+ - Database Engine  
+   - Storage, query processor, transaction management, etc  
+ - Database Architecture  
+ - Database Users and Administrators  
+ - History of database systems  
+
+Chapter 2
+ - Structure of Relational Databases  
+   - relations unordered  
+   - Attribute domains, atomic, null  
+ - Database schema  
+   - Keys and superkeys, foreign keys, referencing    
+ - Keys  
+ - Schema Diagrams  
+ - Relational Query Languages  
+     - Relational algebra (not tuple calculus or relational calculus)  
+ - The relational algebra  
+     - select \sigma  
+     - project \Pi  
+     - union \cup  
+     - rename \rho  
+  
+Chapter 3  
+ - SQL Query Language  
+ - DDL DML  
+   - data types, create table  
+   - updates to tables (insert delete, alter)  
+ - SQL Queries  
+   - Select, from, where clause  
+     - Where clause predicates  
+   - Rename operation  
+   - String operations (like, concat, case, find)  
+ - Set operations  
+   - Union, intersect, except (ALL)  
+   - Not supported in SQLite: some, all, unique  
+   - Empty, exists, not exists, division  
+ - Null Values  
+ - Aggregates  
+   - Min, max, avg, sum, count  
+   - group by  
+   - having  
+ - Nested subqueries  
+   - within from, where, select clause  
+   - with clause   
+ - Modification of the database  
+   - delete, insert, update  
+   - case statement  
+  
+Chapter 4 (Partially)
+ - Joins  
+   - Natural joins and why they can be dangerous  
+   - Outer joins  
+     - Only left outer joins will be covered  
+     - Right and full joins are not available in many SQL products  
+   - Important to know the differences and when to use them  
+ - Views  
+   - Hides some information from users  
+   - **SKIP** 4.2.3 and 4.2.4. Recursive, depend, direct depend definitions and view expansion not required  
+ - Transactions  
+   - commit and rollback, all or nothing  
+ - Integrity constraints  
+   - not null, primary key, unique, and check  
+   - referential integrity, cascade  
+   - **SKIP** assertions  
+ - SQL data types and schema  
+   - built in data types, large objects   
+ - Index definition in SQL  
+   - simple overview of index  
+ - **SKIP** Authorization  
+   - Read, insert, update, delete  
+   - Grant and revoke   
+
+Chapter 5 Mostly skipped
+ - Accessing SQL from a Programming Language  
+    - Only covering Python   
+    - Book covers 5.1.1 JDBS (not used in class) 
+    - 5.1.2 Python will be supplemented with classroom slides  
+ - **SKIP** Functions and procedures  
+ - **SKIP** Triggers  
+     Don't cover triggers  
+ - **SKIP** Recursive Queries  
+     Don't cover recursive queries  
+ - Advanced Aggregation Features  
+   - Only cover ranking  
+
+Chapter 9 -- Possible
+ - APIs 
+
+Chapter 12 Physical Storage Systems  
+ - Overview of physical storage  
+ - Disk storage interfaces  
+ - Magnetic disk, flash memory, RAID, Magnetic tape  
+   - **Only cover** RAID 0 and 1  
+ - **SKIP** 12.6 Disk-bock access  
+
+Chapter 13 Data Storage Structures
+ - Database Storage Architecture  
+ - File Organization  
+ - Organization of Records in Files  
+ - Data-Dictionary Storage  
+ - Database Buffers  
+ **SKIP**:  
+  - Storing Large Objects
+  - Column-Oriented Storage  
+  - Heap File Organization  
+  - Multitable clustering  
+  - Partitioning  
+
+Chapter 14. Indexing
+  - Basic Concepts
+  - Ordered Indices
+  - $B^+$-Tree Index Files
+    - **SKIP** 14.4.6 Indexing on Flash Storage and 14.4.7 Indexing on Main Memory
+  - $B^+$-Tree Extensions
+  - Hash Indices
+  - Multiple-Key Access
+  - Creation of Indices
+  - **SKIP** Write-Optimized Indices
+  - **SKIP** Spatial and Temporal Data
+  - **SKIP** Log Structured Merge (LSM) trees
+
+Chapter 15. Query Processing
+  - Read up to 15.5.5.1 on Hash Join
+  
+Chapter 6  
+ - Design Phases  
+ - Entity-Relationship model  
+ - Complex Attributes  
+ - Mapping Cardinalities  
+  - We will not cover cardinality limits on relationships
+  - Primary key  
+ - Only up to 6.6
+
+Chapter 7  - Normalization Theory up to and including 7.4   
+ - **Skip**  7.3.4 Higher Normal Forms  
+
+Chapter 8 -- Skip
+
+Chapter 17 Transactions
+ - Read up through 17.7  
+ - Not cover transaction isolation levels, Transaction Definition, nor Testing

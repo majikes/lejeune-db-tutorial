@@ -1,0 +1,699 @@
+---
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+
+---
+
+### Chapter 3: Introduction to SQL
+#### Part II
+
+- By the end of class you should know:
+  - Null Values
+  - Aggregate Functions
+  - Nested Subqueries
+  - Modification of the Database
+- If no questions are asked, today's class will go fast
+  - You need to ask questions if you don't understand!
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch3.pdf
+
+https://www2.cs.sfu.ca/CourseCentral/354/jpei/2021/introductionSQL.pdf
+
+---
+
+### Null Values
+
+- Attributes may have null value, denoted by **null**
+  - **null** signifies unknown value or value does not exist.
+  - Result of any arithmetic expression involving **null** is **null**
+    - Example:  5 + <b>null</b> returns <b>null</b>
+- The predicate <b>is null</b> can be used to check for null values.
+  - Example: Find all instructors whose salary is null<i>.</i>
+```
+select name
+  from instructor
+ where salary is null
+```
+- The predicate **is not null** returns
+  - True if the value is **not null**
+  - False otherwise
+- [Seems pretty straightfoward!?]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.null.values)
+
+Note:
+
+NULL seems to give people a hard time.
+
+I believe it's due to the fact that they don't plan on Null
+
+---
+
+### Null Values (Cont.)
+
+- SQL [treats as **unknown** the result of any comparison involving a null value]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.null)
+   - Excludes comparison of **is null** and **is not null**
+   - Example: `5 < null` or ` null != null` or `null = null`
+- The predicate in a **where** clause can involve Boolean operations
+   - **and**:
+     - `true and unknown` = `unknown`
+     - `false and unknown` = `false`
+     - `unknown and unknown` = `unknown`
+   - **or**:
+     - `unknown or true` = `true`
+     - `unknown or false` = `unknown`
+     - `unknown or unknown` = `unknown`
+- Result of **where** clause predicate is treated as `false` if it evaluates to `unknown`
+
+Note:
+
+It's important to know what the result of any null logical comparison is!
+
+Use the below with things like 
+``` 
+select "5<null" as '';
+SELECT null and 1;
+```
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.03.null
+
+---
+
+### Today
+
+- Pick up at Aggregates
+- Any questions on Null values?
+
+
+---
+
+### Aggregate Functions
+- These functions operate on the multiset of values of a column of a relation, and return a value
+  - **avg**: average value
+  - **min**: minimum value
+  - **max**: maximum value
+  - **sum**: sum of values
+  - **count**: number of values
+- Many ways to specify an input multiset
+
+Note:
+
+Trick here is what is a multiset
+
+---
+
+### Aggregate Functions Examples
+
+- Find the average instructor salary of instructors in the Computer Science department 
+```
+select avg(salary) from instructor where dept_name = 'Comp. Sci'
+```
+- Find the total number of instructors who teach a course in the Spring 2018 semester
+```
+select count(distinct ID)
+  from teaches
+ where semester = 'Spring' and
+       year = 2018
+```
+- Find [the number of tuples in the <i>course </i>relation]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.aggregates)
+```
+select count(*) from course
+```
+
+Note:
+
+BEFORE going onto group by check for questions
+
+https://comp421.cs.unc.edu/pages/worksheets/worksheet-03-02-aggregates
+
+https://comp421.cs.unc.edu/worksheets/worksheet-03-02-aggregates?onyen=student1
+
+
+---
+
+### Aggregate Functions Group By
+
+- Find the [average instructor salary for each department]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.Figure.3.14.group.by)
+```
+select dept_name, avg(salary) as avg_salary
+  from instructor
+ group by dept_name
+  ```
+<div class="row">
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.03.Figure.3.13.Instructors.Grouped.png" style="width:100%"/>
+   <figcaption>Figure 3.13</figcaption> 
+  </figure>
+ </div>
+ <div class="twocolumns">
+  <figure style="border: 0">
+   <img src="{{HTTPS_FQDN}}/static/images/Chapter.03.Figure.3.14.Group.By.png" style="width:100%"/>
+   <figcaption>Figure 3.14</figcaption> 
+  </figure>
+ </div>
+</div>
+
+Note:
+
+Group by makes the aggregates more powerful
+
+Average salary in all departments
+
+CS (75,000 + 65,000 + 92,000) = 77,333
+
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.03.Figure.3.14.group.by
+
+---
+
+### Aggregation (Cont.)
+
+- Attributes in **select** clause outside of aggregate functions must appear in **group by** list
+  - [Note that SQLite executes erroneous query with no error message]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.aggregates.erroneous.SQLite)
+```
+select dept_name, ID, avg(salary)
+ from instructor
+group by dept_name
+```
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.03.aggregates.erroneous.SQLite
+
+This command window shows the problems with SQLite and group by  
+Also covered on next slide  
+
+---
+
+### Aggregate Functions - Having Clause
+
+- Find [the names and average salaries of all departments whose average salary is $\gt$ $42,000]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.group.by.having)
+- Where and having clauses are similar except
+  - **Having** clause applied _after_ the formation of groups
+  - **Where** clause applied _before_ the formation of groups
+```
+select dept_name, avg(salary) as avg_salary
+  from instructor
+ group by dept_name
+having avg(salary) > 42000
+```
+
+- Any questions on aggregates, group by, or having?
+
+Note:
+
+So we started with simple aggregates, added group by and then added having
+
+
+---
+
+### Nested Subqueries
+
+- SQL provides a mechanism for the nesting of subqueries.
+  - A **subquery** is a **select-from-where** expression nested within another query.
+  - The nesting can be done in the following SQL query
+```
+select A1, A2, ..., An
+  from R1, R2, ..., Rn
+ where P
+```
+  - **From clause**: $R1$ can be replaced by any valid subquery
+  - **Where clause**: $P$ can be replaced with an expression of the form: `B operation subquery`
+  - **Select clause**: $A1$ can be replaced by a subquery that generates a single value
+
+Note:
+
+It's important to realize where you can put subqueries.
+
+Put them after the from clause  
+Put them in the where it's part of an operation's operand  
+Put them in select clause if it produces a single value
+
+---
+
+### Set Membership
+
+- Find [courses offered in Fall 2017 and in Spring 2018]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.subquery.in.where)
+```
+select course_id
+  from section
+ where semester = 'Fall' and year = 2017 and
+       course_id in (select course_id
+                       from section
+                      where semester='Spring' and year=2018) 
+```
+- Find courses offered in Fall 2017 but not in Spring 2018
+```
+select course_id
+  from section
+ where semester = 'Fall' and year = 2017 and
+       course_id not in (select course_id
+                           from section
+                          where semester='Spring' and year=2018) 
+```
+
+Note:
+
+I commend you to indent and use iterative development
+
+---
+
+### Set Membership (Cont.)
+
+- [Instructor names that are neither “Mozart” nor Einstein”]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.subquery.membership.subquery)
+```
+select distinct name
+  from instructor
+ where name not in ('Mozart', 'Einstein')
+```
+- Find the total number of students who have taken course sections taught by the instructor with ID 10101
+   - The query can be written in a much simpler manner.
+   - The formulation above is simply to illustrate SQL features
+```
+select count(distinct ID) 
+  from takes
+ where (course_id, sec_id, semester, year) in
+       (select course_id, sec_id, semester, year
+          from teaches
+         where teaches.ID = 10101)
+```
+
+
+---
+
+### Set Comparisons not in SQLite
+
+
+- **some** clause not supported in older versions SQLite!
+   - $=$ **some** $\equiv$ **in**
+   - $\ne$ **some** $\equiv$ **not in**
+
+- **all** not supported in  older versions SQLite!
+   - $\ne$ **all** $\equiv$ **not in**
+
+---
+
+### Test for Empty Relations
+- The **exists** construct returns **true** if subquery is nonempty.
+  - $\text{exists} \Leftrightarrow r \ne \emptyset$
+  - $\text{not exists} \Leftrightarrow r = \emptyset$
+
+- Find [all courses taught in both the Fall 2017 semester and in the Spring 2018 semester]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.exists)
+```
+select course_id
+  from section as S
+ where S.semester = 'Fall' and 
+       S.year = 2017 and
+       exists (select * 
+                 from selection as T
+                where T.semester = 'Spring' and
+                      T.year = 2018 and
+                      T.course_id = S.course_id)
+```
+
+Note:
+
+p 101
+
+---
+
+{{HIDDEN}}
+
+### Next
+
+- Any questions on 
+  - aggregates
+  - null
+  - select, from, where, having
+- We will pick up on not exists 
+
+---
+
+### Use of _not exists_ clause
+
+- All [students who have taken all the computer science courses]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.sql.relational.division)
+```
+select distinct S.ID, S.name
+  from student as S
+ where not exists (select course_id
+                      from course
+                     where dept_name = 'Comp. Sci'
+                   except
+                   select T.course_id
+                     from takes as T
+                     where S.id = T.id)
+```                     
+  - $X – Y = \emptyset \iff X \subset Y $
+  - Cannot write this query using = all and its variants
+  - SQL Relational Division
+    - First nested query lists all courses offered in Biology
+    - Second lists all courses a particular student took
+
+Note:
+
+SQL division is when you want to know X who did ALL of Y
+
+SQL division has three parts.
+- The select part returned
+- The all selection
+- The number this one did
+
+Hopefully https://comp421.cs.unc.edu/sql/interpreter/Chapter.03.sql.relational.division will help
+
+{{HTTPS_FQDN}}/pages/worksheets/worksheet-03-03-division
+{{HTTPS_FQDN}}/worksheets/worksheet-03-03-division
+
+---
+
+### Test for Absence of Duplicate Tuples
+
+- **unique** construct tests subquery for duplicate result.
+- **unique** construct evaluates to “true” if subquery contains no duplicates.
+- Find all courses that were offered only most once in 2017
+  - [Done in SQLite by test count = 1]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.sql.unique.construct)
+```
+select T.course_id
+  from course as T
+ where unique (select count(R.course_id)
+                from section as R
+                where T.course_id = R.course_id and R.year = 2017)
+ ;-- equivalent for SQLite
+select T.course_id 
+  from course as T
+ where 1 >= (select count(R.course_id)
+               from section as R
+              where T.course_id = R.course_id and R.year = 2017)
+```
+
+
+---
+
+### Subqueries in the From Clause
+
+- [A subquery expression to be used in the **from** clause]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.with.clause.max_budge)
+  - List department and their average salary for the departments with an average salary is greater than $42,000
+```
+select dept_name, avg_salary
+  from (select dept_name, avg(salary) as avg_salary
+          from instructor
+         group by dept_name)
+ where avg_salary > 42000
+```
+- Do not need to use the **having** clause
+  - Another way to write above query
+```
+select dept_name, avg_salary
+  from (select dept_name, avg(salary) as avg_salary
+          from instructor
+         group by dept_name) 
+ where avg_salary > 42000
+```
+
+
+---
+
+### With Clause
+
+- The **with** clause provides a way of defining a temporary relation
+  - Available only in query that use the **with** clause
+- Find [all departments with the maximum budget]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.from.clause.subquery)
+
+```
+with max_budget(value) as (select max(budget)
+                             from department)
+--                             
+select D.dept_name
+  from department as D, max_budget as M
+ where D.budget = M.value
+```
+
+Note:
+
+Explain how if there was only one department with the max budget you don't need the temp
+
+
+
+---
+
+### Complex Queries using With Clause
+
+- Find [all departments where the total salary is greater than the average of the total salary at all departments]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.from.multiple.subquery)
+
+``` 
+with dept_total(dept_name, value) as (select dept_name, sum(salary)
+                                        from instructor
+                                       group by dept_name),
+--
+   dept_total_avg(value) as (select avg(value)
+                               from dept_total)
+--
+select dept_name
+  from dept_total, dept_total_avg
+ where dept_total.value > dept_total_avg.value
+```
+
+Note:
+
+Point out the SQL comments above
+
+Point out the comma separating the temporary files
+
+---
+
+### Scalar Subquery
+
+- Scalar query returns a single value
+  - Scalar subquery can be used in the select clause
+- List [all departments along with the number of instructors in each department]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.scalar.subquery)
+```
+select dept_name, (select count(*)
+                     from instructor I
+                     where D.dept_name = I.dept_name) as num_instructors
+  from department D
+```
+  - Runtime error if subquery result more than one tuple
+
+Note:
+
+This is dangerous unless you know for sure that only one value will be returned!
+
+---
+
+### Modification of the Database
+
+- Three main ways to modify the data
+  - Deletion of tuples from a given relation.
+  - Insertion of new tuples into a given relation
+  - Updating of values in some tuples in a given relation
+
+
+---
+
+### Deletion
+
+- Delete [all instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.delete)
+```
+delete from instructor
+```
+- Delete all instructors from the Finance department
+```
+delete from instructor where dept_name = 'Finance'
+```
+- Delete all instructors associated with departments in the Watson buillding
+```
+delete from instructor
+ where dept_name in (select dept_name
+                       from department
+                      where building = 'Watson')
+```
+
+
+---
+
+### Deletion (Cont.)
+
+- Delete [all instructors whose salary is less than the average salary of instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.delete.average)
+   - Problem: As tuples deleted from _instructor_, the average salary changes
+   - Solution used in SQL:
+     1. First, compute **avg**(salary)
+     2. Find all tuples to delete in subquery
+     2. Delete all tuples above static average
+```
+delete from instructor
+ where salary < (select avg(salary) 
+                   from instructor)
+```
+
+
+---
+
+### Insertion
+
+- Add [a new tuple to _course_]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.insert.simple)
+```
+insert into course
+             values('CS-421', 'Database Systems', 'Comp. Sci.', 3)
+```
+- or safer by explicitly stating fields
+```
+insert into course (course_id, title, dept_name, credits)
+             values('CS-421', 'Database Systems', 'Comp. Sci.', 3)
+```
+- Add a new tuple to _student_ with <i>tot_creds</i> set to null
+```
+insert into student
+             values('3003', 'Green', 'Finance', null)
+```
+
+
+---
+
+### Insertion (Cont.)
+
+- [Make each student in the Finance department who has earned more than 100 credit hours an instructor in the Finance department with a salary of $18,000.]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.insert.subquery)
+```
+insert into instructor
+   select ID, name, dept_name, 18000
+     from student
+    where dept_name = 'Finance' and
+          tot_cred > 100
+```
+  - The **select from where** statement is evaluated fully before any of its results are inserted into the relation.
+  - Otherwise queries like the following would cause problems
+```
+insert into table1 select * from table1
+```
+
+Note:
+
+Subqueries are evaluated in the following order  
+1. The from clause  
+2. The where clause  
+3. The group by clause  
+4. The having clause  
+5. The select clause   
+6. The order by clause  
+
+---
+
+### Updates
+
+- [Give a 5% salary raise to all instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.update.percentage)
+```
+update instructor
+   set salary = salary * 1.05
+```
+- Give a 5% salary raise to those instructors who earn less than 70000
+```
+update instructor
+   set salary = salary * 1.05
+ where salary < 70000
+```
+- Give a 5% salary raise to instructors whose salary is less than average
+```
+update instructor
+   set salary = salary * 1.05
+ where salary < (select avg(salary)
+                   from instructor)
+```
+
+
+---
+
+### Updates (Cont.)
+
+- Increase salaries of instructors whose salary is over $90,000 by 3%, and all others by a 5% 
+  - Write two **update** statements:
+```
+update instructor
+   set salary = salary * 1.03
+ where salary > 90000;
+update instructor
+   set salary = salary * 1.05
+ where salary <= 90000
+```
+  - The order is important
+  - Can be done better using the **case** statement
+
+Note:
+
+Ask students why the order is important.  
+ - What should the raise be for someone making 89,999?
+ 
+---
+
+### Case Statement for Conditional Updates
+
+- Same query as before but with [case statement]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.case)
+```
+update instructor
+   set salary = case
+                   when salary <= 90000 then salary * 1.05
+                   else salary * 1.03
+                end
+```
+
+---
+
+### Updates with Scalar Subqueries
+
+- [Recompute and update tot_creds value]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.update.scalar) for all students
+```
+update student S
+    set tot_cred = (select sum(credits)
+                      from takes, course
+                     where takes.course_id = course.course_id and
+                           S.ID= takes.ID and
+                           takes.grade <> 'F' and
+                           takes.grade is not null)
+```
+- Sets <i>tot_creds</i> null for students who have not taken any course
+
+---
+
+### Updates with Scalar Subqueries 
+
+- Instead of **sum**(_credits_) only when not Null
+- Set to zero otherwise
+- Use:
+```
+update student
+    set tot_cred = (select
+                     case
+                      when sum(credits) is not null then sum(credits)
+                      else 0
+                     end  
+                      from takes, course
+                     where takes.course_id = course.course_id and
+                           student.ID= takes.ID and
+                           takes.grade <> 'F' and
+                           takes.grade is not null)
+```
+
+Note:
+
+SQLite does not support the rename on Update
+
+UPDATE Student S SET should be UPDATE Student SET
+
+---
+
+### Chapter 3 Part II Epilogue
+
+- We have covered a lot. 
+  - Each slide was packed with information
+- You should have learned advanced SQL commands
+  - What null means and how it's used
+  - Several very common aggregate commands
+  - Nested subqueries and when to use them
+  - How to update data
+- Post chapter 3 worksheet due before 8:00 AM next class
+- Pre-class chapter 4 worksheet due before 8:00 AM next class
+ 

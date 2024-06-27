@@ -1,0 +1,84 @@
+<% setInfo(
+      due="2023-04-04 10:55:00",
+      needsSubmitCode=True,
+        assessment_type='worksheet',
+			pages=['questions'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False))
+)
+%>
+
+# Chapter 14 B tree
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+Let's assume you have this query:
+
+```sql
+SELECT S.sname
+  FROM Sailors
+ WHERE S.rating > 5
+```
+
+
+The schema for Sailors is:
+
+```sql
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY,
+     sname TEXT,
+     rating INTEGER,
+     age INTEGER)
+```
+
+---
+
+Assume the following:
+
+Schema has `rname` added to the reserves.
+
+```
+Sailors (sid: integer, sname: string, rating: integer, age: real)
+Reserves (sid: integer, bid: integer, day: dates, rname: string)
+```
+
+The Sailors table has a cardinality of 40,000. Each tuple is 50 bytes, 80 tuples per page, 500 pages.
+
+You may assume that ratings go from 1 to 10 inclusively and uniformly.
+
+---
+
+**No.Index.No.Sorting:** How many I/Os is required to read the sailors who have a rating **greater than 5** assuming there is no index and the file is not sorted?  
+% answer = '500'
+% answer2 = f'''Since there is no sorting and no index,
+you have to read the entire file, {answer} pages.
+
+Answer: {answer}'''
+% choices = ['250', '1.2', answer, '1.2', 'log_2(500)', 'less than 55 I/Os', 'less than 10 I/Os', 'less than 4 I/Os']
+{{!select(answer, choices=choices, points=25, name='No.Index.No.sorting')}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**B+.Tree:** How many I/Os is required to read the sailors who have a rating **equal to 5** assuming that there is a B+ tree index on rating which has a height of 2 and the data entries are in Alternate 1 format?  
+% answer = 'less than 55 I/Os'
+% answer2 = f'''Since it is an equity search and we have a B+ tree on rating,
+we can use the B+tree.   With height of 2, there are three I/Os.
+Once we get to the data leaf, there are 1/10 of the 500 pages to go through.
+At most 50 pages to read the data where rating=5
+3 I/Os + 50 I/Os = 53 I/Os
+
+Answer: {answer}'''
+{{!select(answer, choices, points=50, name='B+.Tree')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+% end

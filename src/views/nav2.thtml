@@ -1,0 +1,12 @@
+    <nav>
+      <ul>
+        <% if defined('onyen') and onyen_is_admin(onyen): %>
+           <li><a href="{{get_url('roll')}}" target="_blank">Class roll</a></li>
+           <li><a href="{{get_url('submittable')}}" target="_blank">Submittable assessments (prof only access)</a></li>
+           <li><a href="{{get_url('assessments')}}" target="_blank">All assessment permissions (prof only access)</a></li>
+           <li><a href="{{get_url('worksheet_bonus')}}" target="_blank">Worksheet bonus</a></li>
+           <li><a href="{{get_url('submitcode')}}" target="_blank">Display Submit Code</a></li>
+           <li><a href="{{get_url('list_sql_interpreters')}}" target="_blank">SQL Interpreters</a></li>
+        % end
+      </ul>
+    </nav>

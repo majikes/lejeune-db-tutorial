@@ -1,0 +1,80 @@
+<%
+setInfo(
+        due='2021-11-04 14:54:00',
+        exam=False,
+        needsSubmitCode=True,
+        exceptions=dict(_003=dict(needsSubmitCode=False, duration=999)),
+        pages=['questions', 'submit'],
+        maxpenalty=0.75, penalty=.2,
+        )
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+# Mock Midterm C
+
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+--- 
+
+## Questions
+
+% if 'questions' in pages:
+
+**Clustered:** Which of the following best describes the difference
+between a non-clustered and clustered index?  
+**A** A clustered index is always in sorted order.  
+**B** A clustered index is sorted or close to sorted order.  
+**C** An unclustered index is never sorted.  
+**D** An unclustered index is sorted nightly.  
+**E** An unclustered index is an index that is not clustered.  
+**F** None of these  
+% answer = 'B and E'
+% answer2 = f'''p 277 says a customered index is the same or close
+to the ordering of data entries.  Otherwise it's unclustered.
+
+A clustered index is not strictly always sorted.
+A unclustered index may have been bulk loaded so it might have once been sorted.
+There is no talk of nightly sortings.
+Answer: {answer}'''
+% choices = ['A, B, C, and E', 'A, B, D, and E', answer, 'A, B, and E', 'A', 'B', 'C', 'D', 'E', 'F', 'A and C', 'A and D', 'A and E', 'B and C', 'B and D', 'B and E' ]
+{{!select(answer, choices, points=10, name='Clustered')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Projections:** When reviewing projections in query evaluations,
+what is the main approach?  
+**A** To eliminate I/O by sorting elements.  
+**B** To drop certain unneeded fields  
+**C** To remove duplications  
+**D** None of these  
+% answer = 'B'
+% answer2 = f'''p 401 12.3.2 Projects are meant to drop fields of the
+input.  Most students may not know that projections are the SELECT
+fields portion of a query.
+Answer: {answer}'''
+% choices = ['A, B, and C', 'A and B', 'A and C', answer, 'B and C', 'A', 'B', 'C', 'D']
+{{!select(answer, choices, points=10, name='Projections')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Query.Evaluation.Plan:** A query evaluation plan always finds the absolute least expensive plan.  
+% answer = 'False'
+% answer2 =f'''Evaluation never tries to get the best plan
+Answer: {answer}'''
+{{!select(answer, ['True', 'False', 'Maybe', 'None of the above'], points=10, name='Query.Evaluation.Plan')}}
+%include('viewAnswer', answer=answer2)
+
+% end
+
+---
+
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

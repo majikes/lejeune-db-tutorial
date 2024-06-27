@@ -1,0 +1,328 @@
+---
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+---
+
+### Chapter 14-2:  Indexing Part II
+
+- Should know basic concepts of $B^+$-trees
+  - $B^+$-Tree Terminology and Layout
+- Today you will learn
+  - How to insert and delete into a B$^+$ tree
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch14.pdf
+
+---
+
+### Updates on B$^+$-Trees
+#### Insertion
+
+- Assume record already added to the file.  Let:
+  - $pr$ be pointer to the record
+  - $v$ be the search key value of the record
+1. Find leaf node where the search-key value would appear
+   1. If room in the leaf node, insert ($v, pr$) pair in the leaf node
+   2. Otherwise  
+      A. Split the leaf node with the new ($v, pr$) entry  
+      B. Next slide to explain how to split  
+      C. Propagate updates to parent nodes  
+
+---
+
+### Updates on B$^+$-Trees
+#### Insertion (Cont.)
+
+- Splitting a leaf node:
+    1. Sort the now $n$ keys
+    2. First $\lceil n/2 \rceil$ in first node; $n - \lceil n/2 \rceil$ in new node, $p$
+    3. Let $k$ be least key value in $p$.  Insert(k,p) in split node's parent
+       - If parent full, split and <b>propagate</b> split
+       - Continue propagate until parent node not full
+       - Worst case root split; increasing tree height
+- After Adams insert in node Brandt, Califieri and Crick<br/><figure><img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.13.Splitting.A.Leaf.Node.png" style="width:35%"/>
+ <figcaption>Figure 14.13 Split of leaf node on insertion of "Adams"</figcaption> 
+</figure>
+
+Note:
+
+Right split leaf is never larger than original node
+
+If root split, height increased
+
+---
+
+### B$^+$-Tree Insertion
+
+<figure><img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.14.Insertion.Of.Adams.IntoB+-tree.png" style="width:75%"/>
+ <figcaption>Figure 14.14 Insertion of "Adams" into the B+-tree"</figcaption> 
+</figure>
+
+---
+
+### B$^+$-Tree Insertion
+
+
+<figure><img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.15.Insertion.Of.Lamport.Into.B+-tree.png" style="width:75%"/>
+ <figcaption>Figure 14.15 Insertion of "Lamport" into the B+-tree"</figcaption> 
+</figure>
+
+Note:
+
+{{HTTPS_FQDN}}/pages/worksheets/worksheet-14-04-B-plus-insert
+
+{{HTTPS_FQDN}}/worksheets/worksheet-14-04-B-plus-insert
+
+---
+
+{{HIDDEN}}
+
+### Insertion in B$^+$-Trees (Cont.)
+
+- Splitting a non-leaf node: when inserting (k,p) into an already full internal node N
+    - Node N to in-memory area M
+      - Space for $n+1$ pointers and $n$ keys
+    - Insert (k,p) into M 
+    - Copy $P_1$,$K_1$, $\dots$, $K_{\lceil n/2 \rceil}$, $P_{\lceil n/2 \rceil}$ from M back into node N
+    - Copy $P_{\lceil n/2 \rceil +1},K_{\lceil n/2 \rceil+1}$, $\dots$, $K_n,P_{n+1}$ from M into newly allocated node $N^\prime$
+    - Insert ($K_{\lceil n/2 \rceil}, N^\prime$ ) into parent N
+- Example inserting Califieri into Adams, Brandt, Crick<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.B+-tree.pseudocode.nodes.png" style="width:75%"/>
+ <figcaption>Example of splitting non-leaf node</figcaption>
+</figure>
+- <b>Read pseudocode p 643 Figure 14.16</b>
+
+---
+
+### Updates on B$^+$-trees
+#### Deletion
+
+- Let $V$ be search key value; $Pr$ be the record pointer.
+  - Remove ($Pr, V$) from the leaf node 
+  - If leaf now $\lt \lceil n/2 \rceil$ entries: **merge sibling**
+    - Merge with left sibling if sum $\lt n$ entries
+      - Merge with right sibling if sum $\lt n$ entries
+      - Otherwise redistribute (next slide)
+    - Merge key-value, pointer pairs into sibling, delete right
+    - Let $R$ pointer to deleted node
+    - From parent delete the pair ($K_{i-1}, P_i$) where $P_i := R$
+    - Recursively apply delete until no merge required
+
+
+---
+
+### Updates on B$^+$-trees
+#### Deletion Redistribute
+
+- Redistribute pointers
+  - Redistribute pairs between node and sibling(s)
+    - All must have $\lceil n/2 \rceil$
+    - Update leaf's parent search-key value
+- Deletions may cascade upwards $\lceil n/2 \rceil \le$ node $\lt n$
+- If root node has only one pointer after deletion
+  - Delete root; child becomes the root.
+
+---
+
+### Examples of B$^+$-tree Deletion
+
+- Deleting “Srinivasan” causes <b>merging</b> of under-full leaves
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.18.Deletion.of.Srinivasan.from.the.b-tree.png" style="width:75%"/>
+ <figcaption>Figure 14.18 Deletion of "Srinivasan"</figcaption>
+</figure>
+
+
+
+---
+
+### Examples of B$^+$-tree Deletion
+
+- Deleting "Singh" and "Wu"
+  - Leaf containing Singh and Wu became underfull
+    - **merge** Kim from its left sibling
+  - Search-key value in the parent changes as a result
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.19.Deletion.of.Singh.and.Wu.from.the.B+tree.png" style="width:65%"/>
+ <figcaption>Figure 14.19 Deletion of "Singh" and "Wu"</figcaption>
+</figure>
+
+
+
+---
+
+### Example of B$^+$-tree Deletion (Cont.)
+
+- Deletion of "Gold" <figure>
+  - Node Gold, Katz underfull $\rightarrow$  merged with sibling 
+  - Parent underfull $\rightarrow$ merged with sibling
+    - Value separating two nodes in parent pulled down when merging
+- Root node then has only one child, and is deleted
+  - Gold is in index but not in leaves
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.20.Deletion.of.Gold.from.the.B+tree.png" style="width:50%"/>
+ <figcaption>Figure 14.20 Before and after deletion of "Gold"</figcaption>
+</figure>
+
+
+---
+
+### Complexity of Updates
+
+- Cost (I/Os) of insertion and deletion of a single entry proportional to height of the tree
+  - With $K$ entries and max fanout $n$, worst case complexity is  $O(\log_{\lceil n/2 \rceil} (K))$
+- In practice, number of I/O operations is less:
+  - Internal nodes tend to be in buffer
+  - Splits/merges rare, most insert/delete only affect a leaf 
+- Average node occupancy depends on insertion order
+
+
+---
+
+{{HIDDEN}}
+
+### Non-Unique Search Keys
+
+- Alternatives to scheme described earlier
+  - Buckets on separate block (bad idea)
+  - List of tuple pointers with each key
+    -  Extra code to handle long lists
+    -  Deletion of a tuple can be expensive if there are many 
+<p>duplicates on search key (why?)</p>
+  - Worst case complexity may be linear!
+    -  Low space overhead, no extra cost for queries
+  - Make search key unique by adding a record-identifier
+    -  Extra storage overhead for keys
+    -  Simpler code for insertion/deletion
+    -  Widely used
+
+
+---
+
+### B$^+$-tree File Organization
+
+- B$^+$-Tree File Organization:
+  - leaf nodes in a B$^+$-tree file organization store records, instead of pointers
+  - Helps keep data records clustered even when there are insertions/deletions/updates
+- Leaf nodes are still required to be half full
+  - Since records are larger than pointers, the maximum number of records that can be stored in a leaf node is less than the number of pointers in a non-leaf node.
+- Insertion and deletion are handled in the same way as insertion and deletion of entries in a B$^+$-tree index.
+
+
+---
+
+{{HIDDEN}}
+
+### B$^+$-Tree File Organization (Cont.)
+
+- Good space utilization important since records use more space than pointers.
+- To improve space utilization, involve more sibling nodes in redistribution during splits and merges
+    - Involving 2 siblings in redistribution (to avoid split / merge where possible) results in each node having at least entries
+<p>Example of B$^+$-tree File Organization</p>
+<p></p>
+<p></p>
+<p>3</p>
+<p>/</p>
+<p>2<i>n</i></p>
+
+
+---
+
+### Other Issues in Indexing
+
+- **Record relocation and secondary indices**
+  - If a record moves, all secondary indices that store record pointers have to be updated
+  - Node splits in B$^+$-tree file organizations become very expensive
+    -  **Solution**: use search key of B$^+$-tree file organization instead of record pointer in secondary index
+       - Add record-id if B$^+$-tree file organization search key is non-unique
+       - Extra traversal of file organization to locate record
+         - Higher cost for queries, but node splits are cheap
+
+
+---
+
+### Indexing Strings
+
+- Variable length strings as keys
+  - Variable fanout
+  - Use space utilization as criterion for splitting, not number of pointers
+- **Prefix compression**
+  - Key values at internal nodes can be prefixes of full key
+    -  Keep enough characters to distinguish entries in the subtrees separated by the key value
+  - E.g. “Silas” and “Silberschatz” can be separated by “Silb”
+  - Keys in leaf node can be compressed by sharing common prefixes
+
+
+---
+
+### Bulk Loading and Bottom-Up Build
+
+- Inserting entries one-at-a-time requires $\ge 1$ IO per entry 
+    - Assuming leaf level does not fit in memory
+    - Can be very inefficient for large number inserts (**bulk loading**)
+- Efficient alternative 1:
+    - Sort entries first
+    - Insert in sorted order
+    - Much improved IO, but leaf nodes half full
+- Efficient alternative 2: **Bottom-up B$^+$-tree construction**
+    - Sort entries
+    - Create tree from bottom
+    - Implemented as **bulk-load utility**
+
+
+---
+
+### B$^+$-Tree Index File Example
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Bulk.And.Sequential.Loading.png" style="width:75%"/>
+ <figcaption>B<sup>+</sup>-tree loaded two different ways</figcaption>
+</figure>
+
+
+---
+
+{{HIDDEN}}
+
+### Indexing on Flash
+
+- Random I/O cost much lower on flash
+    - 20 to 100 microseconds for read/write
+- Writes are not in-place, and (eventually) require a more expensive erase
+- Optimum page size therefore much smaller
+- Bulk-loading still useful since it minimizes page erases
+- Write-optimized tree structures (discussed later) have been adapted to 
+<p>minimize page writes for flash-optimized search trees</p>
+
+
+---
+
+{{HIDDEN}}
+
+### Indexing in Main Memory
+
+- Random access in memory 
+    - Much cheaper than on disk/flash
+    - But still expensive compared to cache read
+    - Data structures that make best use of cache preferable
+    - Binary search for a key value within a large B$^+$-tree node results in 
+<p>many cache misses</p>
+- B$^+$- trees with small nodes that fit in cache line are preferable to reduce 
+<p>cache misses</p>
+- Key idea:  use large node size to optimize disk access, but structure 
+<p>data within a node using a tree with small node size, instead of using an </p>
+<p>array.</p>
+
+
+---
+
+### Tomorrow
+
+- Hashing

@@ -1,0 +1,34 @@
+https://uncch.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=aa2acf25-4519-4df1-b0d6-aee100099c01
+
+Welcome to COMP 421 databases and files. In this class, you'll be learning databases,
+file storage, system structures and in their design.
+
+We will be using Database Management Systems, Third Edition by Ramakrishnan.
+The first three chapters are pretty, good and easy reads.
+Please skip the discussion about UML.  UML is an old language that, in my opinion, has fallen out of favor.
+
+The first six chapters will be on the first midterm.   The next six or seven will be on the second midterm.
+One of the things I am changing for this class, is that you be able to drop one of the two midterms.
+Read the syllabus for more details.
+
+There is an Easter egg in the syllabus.  Did you find it?
+
+We will be homeworks in Python, which was the process, I think, in the last few years.
+The programs are going to be very small and the syllabus has a recommendation for downloading Python and learning how to code in it.
+But hopefully learning Python will be very trivial for you.
+
+Also, on the classes before the midterm we will be doing SQL gamification.
+Think of it as a cross between Jeopardy and escape rooms.
+The details of the games will be discussed and ironed out in the first two classes.
+But hopefully this will be fun and educational.
+
+So a little bit about myself, I've spent about 35 years in industry and worked for large corporations and startups.
+I've been responsible for hundreds of millions of dollars of annual revenue.
+And I've had 100+ developers reporting to me and I'd be responsible for tens of thousands of lines of code.
+
+Late in my career, I decided to go back and get my Ph.D. and now I have my dream job.
+
+So stop by my office sometime, introduce yourself.
+Having been in industry for awhile, I can do mock interviews if you want to schedule one.
+But come by the office and we'll talk about databases or whatever.
+But welcome to databases!

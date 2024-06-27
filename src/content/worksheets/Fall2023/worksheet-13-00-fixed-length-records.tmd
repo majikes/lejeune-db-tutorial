@@ -1,0 +1,126 @@
+<%
+setInfo(
+      assessment_type='worksheet',
+)
+comma_nl = '\n, '
+symbols = [f'Record {x} pointer' for x in range(12) ] + \
+          [ '10101 Srinivasan Comp. Sci. 65000',
+            '12121 Wu         Finance    90000',
+            '15151 Mozart     Music      40000',
+            '32343 El Said    History    60000',
+            '33456 Gold       Physics    87000',
+            '45565 Katz       Comp. Sci. 75000',
+            '58583 Califieri  History    62000',
+            '76543 Singh      Finance    80000',
+            '22222 Einstein   Physics    95000',
+            '76766 Crick      Biology    72000',
+            '83821 Brandt     Comp. Sci. 92000',
+            '98345 Kim        Elec. Eng. 80000',
+            'Null']
+%>
+
+# 13-00 Fixed Length Records
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+
+## {{!linkable_header('Questions')}}
+
+---
+
+Assume that the fixed length records are stored in alternative 3 (linked list).
+Record 6 was deleted, then record 4, then record 1.
+
+
+<img src="{{static('images/Chapter.13.Figure.13.4.Instructor.with.free.list.png')}}" style="width:50%"/>
+
+---
+
+**Delete.Record.10:** Fill in the table with record 10 deleted.
+<%
+answer = [
+'Record 10 pointer',
+'10101 Srinivasan Comp. Sci. 65000',
+'Record 4 pointer',
+'15151 Mozart     Music      40000',
+'22222 Einstein   Physics    95000',
+'Record 6 pointer',
+'33456 Gold       Physics    87000',
+'Null',
+'58583 Califieri  History    62000',
+'76543 Singh      Finance    80000',
+'76766 Crick      Biology    72000',
+'Record 1 pointer',
+'98345 Kim        Elec. Eng. 80000']
+answer2 = f''' All records, except record 10 should stay the same
+Record 10 should point to what the header used to point to
+
+Answer: {comma_nl.join(answer)}'''
+%>
+
+{{!table(inputs=1, headings='Description, Value', table=f'''
+header,{answer[0]}
+record 0,{answer[1]}
+record 1,{answer[2]}
+record 2,{answer[3]}
+record 3,{answer[4]}
+record 4,{answer[5]}
+record 5,{answer[6]}
+record 6,{answer[7]}
+record 7,{answer[8]}
+record 8,{answer[9]}
+record 9,{answer[10]}
+record 10,{answer[11]}
+record 11,{answer[12]}
+''', symbols=symbols, name='Delete.Record.10', points=50)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Insert.Wu** Insert the following record into the file:  
+```
+12121 Wu         Finance    90000
+```
+<%
+answer = [
+'Record 1 pointer',
+'10101 Srinivasan Comp. Sci. 65000',
+'Record 4 pointer',
+'15151 Mozart     Music      40000',
+'22222 Einstein   Physics    95000',
+'Record 6 pointer',
+'33456 Gold       Physics    87000',
+'Null',
+'58583 Califieri  History    62000',
+'76543 Singh      Finance    80000',
+'76766 Crick      Biology    72000',
+'12121 Wu         Finance    90000',
+'98345 Kim        Elec. Eng. 80000']
+answer2 = f''' All records, except record 10 should stay the same
+Record 10 should get Wu and header should point to record 1
+
+Answer: {comma_nl.join(answer)}'''
+%>
+
+{{!table(inputs=1, headings='Description, Value', table=f'''
+header,{answer[0]}
+record 0,{answer[1]}
+record 1,{answer[2]}
+record 2,{answer[3]}
+record 3,{answer[4]}
+record 4,{answer[5]}
+record 5,{answer[6]}
+record 6,{answer[7]}
+record 7,{answer[8]}
+record 8,{answer[9]}
+record 9,{answer[10]}
+record 10,{answer[11]}
+record 11,{answer[12]}
+''', symbols=symbols, name='Insert.Wu', points=50)}}
+% include('viewAnswer', answer=answer2)
+
+
+% include('worksheet-submit.md')

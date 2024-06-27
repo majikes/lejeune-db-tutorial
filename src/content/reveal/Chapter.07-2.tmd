@@ -1,0 +1,693 @@
+---
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+---
+
+### Today's class
+
+Chapter 7:  Normalization
+
+- By the end of class you should know
+  - Functional Dependency Theory
+  - Algorithms for Decomposition using Functional Dependencies
+- Remember to check the [grades page]({{HTTPS_FQDN}}/grades) to see if you completed subsequent submissions
+  - All subsequent submissions due by Dec 5th, 11:59:59 PM
+
+---
+
+### Functional Dependency Theory Roadmap
+
+- We now consider the formal theory that tells us which  functional dependencies are implied logically by a given set of  functional dependencies.
+- We then develop algorithms to generate lossless  decompositions into BCNF and 3NF
+- We then develop algorithms to test if a decomposition is  dependency-preserving
+
+Note:
+
+Start of 7.4 page 321
+
+---
+
+### Closure of a Set of Functional Dependencies
+
+- Given a set $F$ set of functional dependencies, there are  certain other functional dependencies that are logically  implied by $F$.
+  - If  $A \rightarrow B$ and $B \rightarrow C$, then we can infer that $A \rightarrow C$
+- The set of **all** functional dependencies logically implied by $F$ is the **closure** of $F$
+- We denote the <i>closure</i> of $F$ by <b>$F^+$
+
+
+---
+
+### Closure of a Set of Functional Dependencies
+
+- We can compute $F^+$, the closure of F, by repeatedly applying **Armstrong's Axioms**:
+  - **Reflexive rule:** if $\beta \subseteq \alpha$ then $\alpha \rightarrow \beta$
+  - **Augmentation rule:** if $\alpha \rightarrow \beta$, then $\gamma \alpha \rightarrow \gamma \beta$
+  - **Transitivity rule:**  if $\alpha \rightarrow \beta$, and $\beta \rightarrow \gamma$, then $\alpha \rightarrow \gamma$
+- These rules are:
+  - **sound** -- generate only functional dependencies that actually hold, and 
+  - **complete** -- generate all functional dependencies that hold.
+
+Note:
+
+$\gamma$ is Gamma
+
+---
+
+### Example of $F^+$
+
+- $R = (A, B, C, G, H, I)$
+<br/> $F$ = {$A \rightarrow B$
+<br/>{{TAB}} $A  \rightarrow C$
+<br/>{{TAB}} $CG \rightarrow H$
+<br/>{{TAB}} $CG \rightarrow I$
+<br/>{{TAB}} $B  \rightarrow H$ }
+- Some members of $F^+$
+  - $A \rightarrow H $ {{FRAG}}
+    - by transitivity from $A \rightarrow B$ and $B \rightarrow H$
+  - $AG \rightarrow  I$ {{FRAG}}
+    - by augmenting $A \rightarrow C$ with $G$, to get $AG \rightarrow CG$ and 
+    - transitivity with $CG \rightarrow I$ 
+  - $CG \rightarrow HI$ {{FRAG}}
+    - by augmenting $CG \rightarrow I$ to infer $CG \rightarrow CGI$, and
+    - augmenting of $CG \rightarrow H$ to infer $CGI \rightarrow HI$, and
+    - then transitivity to get $CG \rightarrow HI$ 
+
+Note:
+
+For this one walk them through each functional dependency
+
+---
+
+### Closure of Functional Dependencies (Cont.)
+
+- Additional rules:
+  - **Union rule**: If $\alpha \rightarrow \beta$ &amp; $\alpha \rightarrow \gamma$ hold, then $\alpha \rightarrow \beta \gamma$ holds.
+  - **Decomposition rule**: If $\alpha \rightarrow \beta \gamma$ holds, then $\alpha \rightarrow \beta$ &amp; $\alpha \rightarrow \gamma$ hold
+  - **Pseudo transitivity rule**: If $\alpha \rightarrow \beta$ &amp; $\gamma \beta \rightarrow \delta$ hold, then $\alpha \gamma \rightarrow \delta$ holds.
+- The above rules can be inferred from Armstrong’s axioms.
+
+Note:
+
+$\delta$ is delta
+
+---
+
+### Procedure for Computing $F^+$
+
+- To compute the closure of a set of functional dependencies F:
+<p>
+<br/>$F^+ = F$
+<br/><b>repeat</b>
+<br/>{{TAB}}<b>for each</b> functional dependency $f$ in $F^+$
+<br/>{{TAB}}{{TAB}}apply reflexivity and augmentation rules on $f$
+<br/>{{TAB}}{{TAB}}add the resulting functional dependencies to $F^+$
+<br/>{{TAB}}<b>for each</b> pair of functional dependencies $f_1$ and $f_2$ in $F^+$
+<br/>{{TAB}}{{TAB}}<b>if</b> $f_1$ and $f_2$ can be combined using transitivity
+<br/>{{TAB}}{{TAB}}<b>then</b> add the resulting functional dependency to $F^+$
+<br/><b>until</b> $F^+$ does not change any further
+
+- **NOTE**: Alternative procedures discussed later
+
+
+---
+
+### Closure of Attribute Sets
+#### More efficient that computing $F^+$
+
+- Given a set of attributes $\alpha$, define the **closure** of $\alpha$ **under** $F$ (denoted by $\alpha^+$) as the set of attributes that are functionally determined by $\alpha$ under $F$
+- Algorithm to compute $\alpha+$, the closure of $\alpha$ under $F$
+<br/>`result` := $\alpha$
+<br/><b>while</b> (changes to <i>result</i>) <b>do</b>
+<br/>{{TAB}}<b>for each</b> $\beta \rightarrow \gamma$ in $F$ <b>do:</b>
+<br/>{{TAB}}{{TAB}}<b>begin</b>
+<br/>{{TAB}}{{TAB}}{{TAB}}<b>if</b> $\beta :\subseteq$ `result` <b>then</b>
+<br/>{{TAB}}{{TAB}}{{TAB}}{{TAB}}`result` := `result` $\cup$ &nbsp; $\gamma$
+<br/>{{TAB}}{{TAB}}<b>end</b>
+
+
+---
+
+### Example $(AG)^+$
+
+- $R = (A, B, C, G, H, I)$
+<br/> $F$ = {$A \rightarrow B$, {{TAB}} $A  \rightarrow C$
+<br/>{{TAB}} $CG \rightarrow H$,{{TAB}} $CG \rightarrow I$
+<br/>{{TAB}} $B  \rightarrow H$ }
+- $(AG)^+$ <div class="row">
+ <div class="twocolumns">
+  <ol>
+   <li>result = AG</li>
+   <li>result = ABCG</li>
+   <li>result = ABCGH</li>
+   <li>result = ABCGHI</li>
+  </ol> 
+ </div>
+ <div class="twocolumns">
+  <br/>(A &rightarrow; C and A &rightarrow; B)
+  <br/>(CG &rightarrow; H)
+  <br/>(CG &rightarrow; I)
+ </div>
+</div>
+- Is <i>AG</i> a candidate key?
+  - Is AG a super key?
+    - Does $AG \rightarrow R$? == Is $R \supseteq (AG)^+$
+  - Is any subset of AG a superkey?
+    - Does $A \rightarrow R$? == Is $R \supseteq (A)^+$
+    - Does $G \rightarrow R$? == Is $R \supseteq (G)^+$
+
+Note:
+
+Since $(AG)^+ \subseteq R$ AG is a candidate key
+
+Since $H$ does not depend on $A$, A is not a candidate key
+
+---
+
+### Uses of Attribute Closure
+
+- There are several uses of the attribute closure algorithm:
+  - Testing for superkey:
+    - To test if $\alpha$ is a superkey, we compute $\alpha^+$, and check if $\alpha^+$ contains all attributes of $R$
+  - Testing functional dependencies
+    - To check functional dependency $\alpha \rightarrow \beta$ in $F^+$
+      - Just check if $\beta \subseteq \alpha^+$
+      - That is, compute $\alpha^+$, and then check if $\beta \subseteq \alpha^+$
+      - Simple, cheap, useful test!
+- Computing $F^+$
+  - For each $\gamma \subseteq R$, find the closure $\gamma^+$, and for each $S \subseteq \gamma^+$, we output a functional dependency $\gamma \rightarrow S$
+
+
+---
+
+### Canonical Cover
+
+- With functional dependencies $F$ on $R$
+  - DBMS must ensure each update does not violate $F$
+  - If violation, DBMS rolls back update
+- Get a simplified set of functional dependencies.
+  - Simplify the process
+- This simplified set is termed the **canonical cover**
+  - First define and remove **extraneous attributes**
+  - An attribute of $F$ **extraneous** if removal doesn't change $F^+$
+
+
+---
+
+### Extraneous Attributes
+#### Left side
+
+- Removing an attribute from the left side of a functional dependency could make it a stronger constraint
+  - For example, removing $B$ from $AB \rightarrow C$; get stronger result $A \rightarrow C$.
+    - $A \rightarrow C$ logically implies $AB \rightarrow C$
+- But removal depends on $F$, for example:
+  - $F =  ${$AB \rightarrow C$, $A \rightarrow D$, $D \rightarrow C$}
+  - Showing $F$ logically implies $A \rightarrow C$, makes $AB \rightarrow C$ extraneous
+
+Note:
+
+Since A \rightarrow D and  
+D \rightarrow C  
+apply Axiom Transitivity and A \rightarrow C
+
+---
+
+### Extraneous Attributes
+#### Right side
+
+- Removing an attribute from the right side of a functional dependency could make it a weaker constraint.
+  - For example, removing $C$ from $AB \rightarrow CD$; get the weaker result $AB \rightarrow D$.
+    - Weaker because $AB \rightarrow D$, longer infer $AB \rightarrow C$.
+- But removal depends on $F$, for example:
+  - $F = \\{ AB \rightarrow CD, A \rightarrow C\\}$
+  - Replacing $AB \rightarrow CD$ by $AB \rightarrow D$, we can still infer $AB \rightarrow C$ and thus $AB \rightarrow CD$
+
+
+Note:
+
+If we have AB implies D and A implies C,  
+We can show AB implies CD with union rule
+
+A implies C means that AB implies C
+
+AB implies C union AB implies D  
+AB implies CD
+
+---
+
+### Extraneous Attributes
+
+- Attribute $A$ of $F$ is **extraneous** if removal doesn't change $F^+$
+- Consider $\alpha \rightarrow \beta$ in $F$
+  - **Left side removal**: Attribute A is **extraneous** in $\alpha$ if 
+    - $A \in \alpha$ and
+    - $F$ logically implies ($F$ – {$\alpha \rightarrow \beta$}) $\cup$ {($\alpha –  A$) $\rightarrow \beta$}
+  - **Right side removal**: Attribute $A$ is **extraneous** in $\beta$ if
+    - $A \in \beta$ and 
+    - $F$ logically implies ($F – ${$\alpha \rightarrow \beta$}) $\cup$ {$\alpha \rightarrow$ ($\beta –A$)}
+- **NOTE** implication in the opposite direction is trivial in each of the cases above, since a “stronger” functional dependency always implies a weaker one
+
+
+---
+
+### Testing if an Attribute is Extraneous
+
+- For $R$ schema, $F$ functional dependency set holds on $R$. Consider an attribute  $\alpha \rightarrow \beta$
+- To test if attribute $A \in \beta$ is extraneous in $\beta$
+  - Consider the set:
+     <br/>{{TAB}} $F^\prime$ = $(F - \\{ \alpha \rightarrow \beta \\})$ $\cup \\{\alpha \rightarrow (\beta –  A)\\}$,
+  - If $A \subseteq \alpha^+$ in $F^\prime$, $A$ is extraneous in $\beta$
+- To test if attribute $A \in \alpha$ is extraneous in $\alpha$
+  - Let $\gamma = \alpha – \\{ A \\}$.  Compute $\gamma^+$ using dependencies in $F$
+    - If $\gamma^+$ includes all attributes in $\beta$, $A$ is extraneous in $\alpha$
+
+Note:
+
+In the first case, if we compute the F^prime dependencies w/out A,   
+and A is still in alpha closure, then A is extraneous
+
+In the second case, if we can remove A from alpha and
+that gama can be infer the same dependency  
+
+
+
+---
+
+### Examples of Extraneous Attributes
+
+- Let $F = \\{ AB \rightarrow CD, A \rightarrow E, E \rightarrow C \\}$
+- To check if $C$ is extraneous in $AB \rightarrow CD$, we:
+  - Compute the attribute closure of $AB$ under $F^\prime = \\{ AB \rightarrow D, A \rightarrow E, E \rightarrow C \\}$
+  - The closure is $ABCDE$ which includes $CD$
+  - This implies that $C$ is extraneous in $AB \rightarrow CD$
+
+Note:
+
+Closure of AB gets
+
+A and B from AB  
+E from A-> E  {ABE}  
+E -> C {ABCE}  
+AB -> D { ABCDE }  
+
+---
+
+{{HIDDEN}}
+
+### Canonical Cover
+
+- **Canonical cover** is when there are no extraneous attributes in $F$
+- **Canonical cover** for $F$ is a set of dependencies $F_c$ such that
+  - $F$ logically implies all dependencies in $F_c$, and
+  - $F_c$ logically implies all dependencies in $F$ and
+  - No functional dependency in $F_c$ contains an extraneous attribute, and
+  - Each left side of functional dependency in $F_c$ is unique. That is, there are no two dependencies in $F_c$
+    - $\alpha_1 \rightarrow \beta_1$ and $\alpha_2 \rightarrow \beta_2$ such that 
+    - $\alpha_1 = \alpha_2$
+
+Note:
+
+$\ni$ is such that
+
+---
+
+{{HIDDEN}}
+
+### Compute Canonical Cover
+
+- To compute a canonical cover for $F$:
+<br/><b>repeat</b>
+<br/>{{TAB}} Use union axiom to replace any dependencies in $F$ of form:
+  <br/>{{TAB}}{{TAB}}$\alpha_1 \rightarrow \beta_1$ and $\alpha_1 \rightarrow \beta_2$ with $\alpha_1 \rightarrow \beta_1 \beta_2$
+<br/>{{TAB}}Find a functional dependency $\alpha \rightarrow \beta$ in $F_c$ with an extraneous attribute either in $\alpha$ or in $\beta$
+<br/>{{TAB}}Note that tests for extraneous attributes done using $F_c$ not $F$
+<br/>{{TAB}}If an extraneous attribute is found, delete it from $\alpha \rightarrow \beta$
+<br><b>until</b> $F_c$ not changed
+
+- Note that the union rule may become applicable after some extraneous attributes have been deleted, so it has to be re-applied
+
+
+---
+
+{{HIDDEN}}
+
+
+### Example: Computing a Canonical Cover
+
+- $R = (A, B, C)$
+<br/>$F = \\{ A \rightarrow BC$, $B \rightarrow C$, $A \rightarrow B$, $AB \rightarrow C \\}$
+- Combine $A \rightarrow BC$ and $A \rightarrow B$ into $A \rightarrow BC$
+  - Set $F_c$ is now $\\{A \rightarrow BC$, $B \rightarrow C$, $AB \rightarrow C \\}$
+- $A$ is extraneous in $AB \rightarrow C$
+  - Check if the result of deleting $A$ from $AB \rightarrow C$ is implied by the other dependencies
+    - Yes: in fact,  $B \rightarrow C$ is already present!
+  - Set $F_c$ is now $\\{ A \rightarrow BC$, $B \rightarrow C \\}$
+- $C$ is extraneous in $A \rightarrow BC$
+  - Check if $A \rightarrow C$ is logically implied by $A \rightarrow B$ and the other dependencies
+    - Yes: using transitivity on $A \rightarrow B$ and $B \rightarrow C$. 
+  - Can use attribute closure of $A$ in more complex cases
+- The canonical cover is: $A \rightarrow B$, $B \rightarrow C$
+
+Note:
+
+Next slide talks about dependency preservation
+
+---
+
+{{HIDDEN}}
+
+
+### Dependency Preservation
+
+- Let $F_i$ be the set of dependencies $F^+$ that include only attributes in $R_i$
+  - A  decomposition is <b>dependency preserving</b>, if <br/>{{TAB}} $(F_1 \cup$, $F_2 \cup$, $\dots$, $F_n)^+ =$ $F^+$
+- Using the above definition, testing for dependency preservation takes exponential time.
+- Note that if a decomposition is NOT dependency preserving then checking updates for violation of functional dependencies  may require computing joins, which is expensive.
+
+
+---
+
+
+{{HIDDEN}}
+
+### Dependency Preservation (Cont.)
+
+- Let $F$ be the set of dependencies on schema $R$ and let $R_1$, $R_2$, $\dots$, $R_n$ be a decomposition of $R$
+- The restriction of $F$ to $R_i$ is the set $F_i$ of all functional dependencies in $F^+$ that include **only** attributes of $R$
+- Since all functional dependencies in a restriction involve attributes of only one relation schema, it is possible to test such  a dependency for satisfaction by checking only one relation.
+- Note that the definition of restriction uses all dependencies in in $F^+$, not just those in $F$
+- The set of restrictions $F_1$, $F_2$, $\dots$, $F_n$ is the set of functional dependencies that can be checked efficiently.
+  - Those that do not require exponential time
+
+
+---
+
+
+{{HIDDEN}}
+
+### Testing for Dependency Preservation
+
+- To check if a dependency $\alpha \rightarrow \beta$ is preserved in a decomposition of $R$ into $R_1$, $R_2$, $\dots$, $R_n$, we apply the following test (with attribute closure done with respect to $F$)
+<br/>result = $\alpha$
+<br/><b>repeat</b>
+<br/>{{TAB}}<b>for each</b> $R_i$ in the decomposition
+<br/>{{TAB}}{{TAB}}$t = ($ result $\cap$ $R_i)^+$ $\cap R_i$
+<br/>{{TAB}}{{TAB}}result = result $\cup t$
+<br/><b>until</b> (result does not change)
+
+- If <i>result</i> contains all attributes in $\beta$, then $\alpha \rightarrow \beta$ preserved.
+- We apply the test on all dependencies in $F$ to check if a decomposition is dependency preserving
+- This takes polynomial time, not exponential time required to compute $F^+$ and ($F_1 \cup$ $F_2 \cup$ $\dots$ $\cup F_n)^+$
+
+
+---
+
+
+{{HIDDEN}}
+
+### Example
+
+- $R = (A, B, C)$
+<br/>$ f= \\{ A \rightarrow B$,
+<br/>{{TAB}}$B \rightarrow C \\}$
+<br/>Key $= \\{ A \\}$
+- $R$ is not in BCNF
+- Decomposition $R_1 = (A, B)$,  $R_2 = (B, C)$
+  - $R_1$ and $R_2$ are in BCNF
+  - Lossless-join decomposition
+  - Dependency preserving
+
+Note:
+
+$F$ is not BCNF because $B$ is not a superkey in R yet it's $B \rightarrow C$
+
+---
+
+### Testing for BCNF
+
+- Check if non-trivial dependency $\alpha \rightarrow \beta$ violates BCNF 
+  1. Compute $\alpha^+$ (the attribute closure of $\alpha$), and
+  2. Verify $\alpha^+$ includes all attributes of $R$
+- <b>Simplified test</b>: To check if a relation schema $R$ is in BCNF
+  - Suffices check only $F$ dependencies for BCNF violation
+  - Rather than checking all $F^+$ dependencies
+  - If no BCNF violation, no $F^+$ dependencies violate BCNF.
+
+Note:
+
+This taken out of slide 
+
+- But **simplified test** incorrect when testing $R$ decomposition
+  - Consider $R = (A, B, C, D, E)$, $F = \\{ A \rightarrow B$, $BC \rightarrow D \\} $
+    - Decompose into $R_1 = (A,B)$ &amp; $R_2 = (A,C,D, E)$
+    - Neither depends in $F$ contain only attributes from $(A, C, D, E)$
+      - Mislead into thinking $R_2$ satisfies BCNF.
+    - In fact, $AC \rightarrow D$ in $F^+$ shows $R_2$ is not in BCNF.
+
+---
+
+{{HIDDEN}}
+
+### Testing Decomposition for BCNF
+
+- To check if a relation $R_i$ in a decomposition of $R$ is in BCNF, 
+  - Either test $R_i$ for BCNF with respect to the **restriction** of $F^+$ to $R_i$
+    - That is, all FDs in $F^+$ that contain only attributes from $R_i$
+  - Or use the original $F$ dependencies that hold on $R$, but with the following test:
+      - For every set of attributes $\alpha \subseteq  R$,
+        - Check that $\alpha^+$ either includes no attribute of $R_i - \alpha$, or includes all attributes of $R_i$.
+    - If the condition is violated by some $\alpha \rightarrow \beta$ in $F^+$,
+      - That dependency can be shown to hold on $R_i$ but $R_i$ violates BCNF
+    - We use above dependency to decompose $R_i$
+
+
+---
+
+
+{{HIDDEN}}
+
+### BCNF Decomposition Algorithm
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.07.Figure.7.11.BCNF.Decomposition.Algorithm.png" style="width:70%"/>
+ <figcaption>Figure 7.11 Algorithm to decompose into BCNF</figcaption>
+</figure><p/>
+
+- Note that each $R_i$ is in BCNF and decomposition is lossless-join.<p>
+
+
+
+---
+
+{{HIDDEN}}
+
+
+### Example of BCNF Decomposition
+
+- $\mbox{class}$ $\mbox{(course_id}$, $\mbox{title}$, $\mbox{dept_name}$, $\mbox{credits}$, $\mbox{sec_id}$, $\mbox{semester}$, $\mbox{year}$, $\mbox{building}$, $\mbox{room_number}$, $\mbox{capacity}$, $\mbox{time_slot_id})$
+- Functional dependencies
+  - $\mbox{course_id} \rightarrow \mbox{title, dept_name, credits}$
+  - $\mbox{building, room_number} \rightarrow \mbox{capacity}$
+  - $\mbox{course_id, sec_id, semester, year} \rightarrow \mbox{building},$ $\mbox{room_number},$ $\mbox{time_slot_id}$
+- A candidate key $\\{ \mbox{course_id}$, $\mbox{sec_id}$, $\mbox{semester}$, $\mbox{year} \\}$.
+- BCNF Decomposition:
+  - $\mbox{course_id} \rightarrow \mbox{title}$, $\mbox{dept_name}$, $\mbox{credit}$ holds
+    - but $\mbox{course_id}$ is not a superkey
+  - Decompose relation $\mbox{class}$ by:
+    - $\mbox{course}$ $\mbox{(course_id}$, $\mbox{title}$, $\mbox{dept_name}$, $\mbox{credits})$
+    - $\mbox{class_1}$ $\mbox{(course_id}$, $\mbox{sec_id}$, $\mbox{semester}$, $\mbox{year}$, $\mbox{building}$, $\mbox{room_number}$, $\mbox{capacity}$, $\mbox{time_slot_id})$
+
+Note:
+
+Can you determine the year from the course_id?  No!
+
+---
+
+{{HIDDEN}}
+
+
+### BCNF Decomposition (Cont.)
+
+- The decomposed relation $\mbox{course}$ is in BCNF
+  - How do you know this?
+- $\mbox{building}$, $\mbox{room_number}$ $\rightarrow$ $\mbox{capacity}$ holds on $\mbox{class_1}$
+  - but $\\{ \mbox{building}$, $\mbox{room_number} \\}$ not $\mbox{class_1}$ superkey.
+  - Decompose $\mbox{class_1}$ by:
+    - $\mbox{classroom} (\mbox{building}$, $\mbox{room_number}$, $\mbox{capacity} )$
+    - $\mbox{section} (\mbox{course_id}$, $\mbox{sec_id}$, $\mbox{semester}$, $\mbox{year}$, $\mbox{building}$, $\mbox{room_number}$, $\mbox{time_slot_id} )$
+- $\mbox{classroom}$ and $\mbox{section}$ are in BCNF.
+
+Note:
+
+You know this by the fact that a course_id uniquely identifies the title, department, credits.  
+You do it by doing attribute closure
+
+
+
+---
+
+### Third Normal Form
+
+- There are some situations where 
+  - BCNF is not dependency preserving, and 
+  - Efficient integrity constraints (FD violations) important
+- **Solution:** define weaker form, Third Normal Form (3NF)
+  - Allows some redundancy
+  - But FD can be checked on individual relations without computing a join.
+  - There is always a lossless-join, dependency-preserving decomposition into 3NF.
+- 3NF definition one of these are true: 
+  - $\alpha \rightarrow \beta$ is a trivial FD (same as BCNF)
+  - $\alpha$ is a superkey in $R$ (same as BCNF)
+  - Each $A \in (\beta - \alpha)$ contained in a $R$ candidate key
+    - If $\alpha$ is <font color='red'>not</font> a superkey, then any <i>extra</i> attributes are contained in a candidate key
+
+Note:
+
+Page 317  
+
+If $\alpha \rightarrow \beta$ is not trivial and 
+$\alpha$ is not a superkey **then**  
+
+Each attribute $A$ in $(\beta - \alpha)$ is contained in a $R$ candidate key
+
+---
+
+### 3NF Example
+
+- Relation dept_advisor:
+  - $\mbox{dept_advisor} (\mbox{s_ID}$, $\mbox{i_ID}$, $\mbox{dept_name})$
+<br/>$F = \\{ \mbox{s_id}$, $\mbox{dept_name}$ $\rightarrow$ $\mbox{i_ID}$,
+<br/>{{TAB}}$\mbox{i_ID}$ $\rightarrow$ $\mbox{dept_name} \\}$
+- Two candidate keys: $\mbox{s_ID}$, $\mbox{dept_name}$ and $\mbox{i_ID}$, $\mbox{s_ID}$
+- $R$ is in 3NF
+  - $\mbox{s_ID}$, $\mbox{dept_name}$ $\rightarrow$ $\mbox{i_ID}$ $\mbox{s_ID}$
+    - $\mbox{dept_name}$ is a superkey
+  - $\mbox{i_ID}$ $\rightarrow$ $\mbox{dept_name}$
+    - $\mbox{dept_name}$ is contained in a candidate key
+
+Note:
+
+The instructor id implies department name cause non-BCNF  
+- Because of rule key $\alpha$ = i_ID, $\beta$ = dept_name so $\beta - \alpha$ has dept_name
+- But since dept_name is in candidate key s_ID, dept_name, it is 3BCNF
+
+---
+
+{{HIDDEN}}
+
+### Testing for 3NF
+
+- Need to check only FDs in <i>F</i>, need not check all FDs in <i>F</i><sup><i>+</i></sup>.
+- Use attribute closure to check for each dependency $\alpha \rightarrow \beta$, if $\alpha$ is a superkey. 
+- If $\alpha$ not superkey: have to verify each attribute in $\beta$ is contained in a candidate key of $R$
+  - This test is rather more expensive
+    - It involve finding candidate keys
+  - This way testing 3NF has been shown to be NP-hard
+  - Interestingly, polynomial time 3NF algorithm available
+
+Note: 
+
+Finding all the candidate keys is expensive because you can keep adding attributes in transitive property or union axiom
+
+---
+
+
+{{HIDDEN}}
+
+### 3NF Decomposition Algorithm
+
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.07.Figure.7.12.3NF.Decomposition.Algorithm.png" style="width:50%"/>
+ <figcaption>Figure 7.12 Algorithm to decompose into 3NF</figcaption>
+</figure>
+
+- Algorithm creates the relational schema $R_j$
+  - by checking attributes then
+  - by adding candidate keys
+  - prunes duplicates
+- Resulting relational schema always has last 3NF check
+
+Note:
+
+This jumps to page 331 7.5.1.2 
+
+$F_c$ is the canonical cover  
+Set of schemas $R_j$ where $j=1,2,\dots,i$ where initially $i=0$
+
+Initial $F$ = $f_1$ i_ID -> dept_name and $f_2$ s_id, dept_name -> i_ID
+
+Initial schema $R_1$ (i_ID, dept_name) and $R_2$ (s_id, dept_name, i_ID)
+
+---
+
+
+{{HIDDEN}}
+
+### 3NF Decomposition: An Example
+
+- Relation schema:
+<br/>{{TAB}}$\mbox{cust_banker_branch} = (\mbox{customer_id}$, $\mbox{employee_id}$, $\mbox{branch_name}$, $\mbox{type})$
+- The functional dependencies for this relation schema are:
+  - $\mbox{customer_id}$, $\mbox{employee_id}$ $\rightarrow \mbox{branch_name}$, $\mbox{type}$
+  - $\mbox{employee_id}$ $\rightarrow$ $\mbox{branch_name}$
+  - $\mbox{customer_id}$, $\mbox{branch_name}$ $\rightarrow$ $\mbox{employee_id}$
+- We first compute a canonical cover
+  - $\mbox{branch_name}$ is extraneous in the r.h.s. of $1^\mbox{st}$ dependency
+  - No other attribute is extraneous, so we get $F_c =$
+<br/>{{TAB}}$\mbox{customer_id}$, $\mbox{employee_id}$ $\rightarrow$ $\mbox{type}$
+<br/>{{TAB}}$\mbox{employee_id}$ $\rightarrow$ $\mbox{branch_name}$
+<br/>{{TAB}}$\mbox{customer_id}$ $\mbox{branch_name}$ $\rightarrow$ $\mbox{employee_id}$
+
+
+---
+
+
+{{HIDDEN}}
+
+### 3NF Decomposition Example (Cont.)
+
+- The **for** loop generates following 3NF schema:
+<br/>{{TAB}}<i>(customer_id, employee_id, type)</i>
+<br/>{{TAB}}<i>(employee_id, branch_name)</i>
+<br/>{{TAB}}<i>(customer_id, branch_name, employee_id)</i>
+   - Observe that <i>(customer_id, employee_id, type)</i> contains a candidate key of the original schema, so no further relation  schema needs be added
+- At end of for loop, detect and delete schemas, such as (<i>employee_id, branch_name</i>), which are subsets of other  schemas
+  - result will not depend on the order in which FDs are considered
+- The resultant simplified 3NF schema is:
+<br/>{{TAB}}(<i>customer_id, employee_id, type</i>)
+<br/>{{TAB}}(<i>customer_id, branch_name, employee_id)</i>
+
+
+---
+
+### Comparison of BCNF and 3NF
+
+- It is always possible to decompose a relation into a set of  relations that are in 3NF such that:
+  - The decomposition is lossless
+  - The dependencies are preserved
+- It is always possible to decompose a relation into a set of relations that are in BCNF such that:
+  - The decomposition is lossless
+  - It may not be possible to preserve dependencies.
+
+
+---
+
+### Design Goals
+
+- Goal for a relational database design is:
+  - BCNF.
+  - Lossless join.
+  - Dependency preservation.
+- If we cannot achieve this, we accept one of
+  - Lack of dependency preservation 
+  - Redundancy due to use of 3NF
+- Interestingly, SQL does not provide a direct way of specifying functional dependencies other than superkeys. Can specify FDs using assertions, but they are expensive to test,  (and currently not supported by any of the widely used databases!)
+- Even if we had a dependency preserving decomposition, using SQL we would not be able to efficiently test a functional  dependency whose left hand side is not a key.
+
+

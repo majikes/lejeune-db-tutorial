@@ -1,0 +1,80 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Student;
+DROP TABLE IF EXISTS Takes;
+
+create table student
+	(ID			varchar(5), 
+	 name			varchar(20) not null, 
+	 dept_name		varchar(20), 
+	 tot_cred		numeric(3,0) check (tot_cred >= 0),
+	 primary key (ID)
+	);
+
+insert into student values ('00128', 'Zhang', 'Comp. Sci.', '102');
+insert into student values ('12345', 'Shankar', 'Comp. Sci.', '32');
+insert into student values ('19991', 'Brandt', 'History', '80');
+insert into student values ('23121', 'Chavez', 'Finance', '110');
+insert into student values ('44553', 'Peltier', 'Physics', '56');
+insert into student values ('45678', 'Levy', 'Physics', '46');
+insert into student values ('54321', 'Williams', 'Comp. Sci.', '54');
+insert into student values ('55739', 'Sanchez', 'Music', '38');
+insert into student values ('70557', 'Snow', 'Physics', '0');
+insert into student values ('76543', 'Brown', 'Comp. Sci.', '58');
+insert into student values ('76653', 'Aoi', 'Elec. Eng.', '60');
+insert into student values ('98765', 'Bourikas', 'Elec. Eng.', '98');
+insert into student values ('98988', 'Tanaka', 'Biology', '120');
+
+create table takes
+	(ID			varchar(5), 
+	 course_id		varchar(8),
+	 sec_id			varchar(8), 
+	 semester		varchar(6),
+	 year			numeric(4,0),
+	 grade		        varchar(2),
+	 primary key (ID, course_id, sec_id, semester, year),
+	 foreign key (ID) references student (ID)
+		on delete cascade
+	);
+
+insert into takes values ('00128', 'CS-101', '1', 'Fall', '2017', 'A');
+insert into takes values ('00128', 'CS-347', '1', 'Fall', '2017', 'A-');
+insert into takes values ('12345', 'CS-101', '1', 'Fall', '2017', 'C');
+insert into takes values ('12345', 'CS-190', '2', 'Spring', '2017', 'A');
+insert into takes values ('12345', 'CS-315', '1', 'Spring', '2018', 'A');
+insert into takes values ('12345', 'CS-347', '1', 'Fall', '2017', 'A');
+insert into takes values ('19991', 'HIS-351', '1', 'Spring', '2018', 'B');
+insert into takes values ('23121', 'FIN-201', '1', 'Spring', '2018', 'C+');
+insert into takes values ('44553', 'PHY-101', '1', 'Fall', '2017', 'B-');
+insert into takes values ('45678', 'CS-101', '1', 'Fall', '2017', 'F');
+insert into takes values ('45678', 'CS-101', '1', 'Spring', '2018', 'B+');
+insert into takes values ('45678', 'CS-319', '1', 'Spring', '2018', 'B');
+insert into takes values ('54321', 'CS-101', '1', 'Fall', '2017', 'A-');
+insert into takes values ('54321', 'CS-190', '2', 'Spring', '2017', 'B+');
+insert into takes values ('55739', 'MU-199', '1', 'Spring', '2018', 'A-');
+insert into takes values ('76543', 'CS-101', '1', 'Fall', '2017', 'A');
+insert into takes values ('76543', 'CS-319', '2', 'Spring', '2018', 'A');
+insert into takes values ('76653', 'EE-181', '1', 'Spring', '2017', 'C');
+insert into takes values ('98765', 'CS-101', '1', 'Fall', '2017', 'C-');
+insert into takes values ('98765', 'CS-315', '1', 'Spring', '2018', 'B');
+insert into takes values ('98988', 'BIO-101', '1', 'Summer', '2017', 'A');
+insert into takes values ('98988', 'BIO-301', '1', 'Summer', '2018', null);
+
+SELECT 'The Student Relation:' as '';
+SELECT * FROM Student;
+
+SELECT 'The Takes Relation:' as '';
+SELECT * FROM Takes;
+
+SELECT 'Student name and course_id from Student join takes' as '';
+SELECT name, course_id
+  FROM student, takes
+ WHERE student.ID = takes.ID;
+
+SELECT 'Student name and course_id from Student natural join takes' as '';
+SELECT name, course_id
+  FROM student natural join takes;
+
+SELECT 'Student natural join takes' as '';
+SELECT *
+  FROM student natural join takes;

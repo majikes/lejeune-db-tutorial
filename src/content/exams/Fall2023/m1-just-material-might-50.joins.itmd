@@ -1,0 +1,346 @@
+<%
+from collections import namedtuple
+import string
+
+r = 0
+a = 2
+JOINS = namedtuple('JOINS', 'relations')
+joins = [JOINS(relations=string.ascii_lowercase[r:r+2]),
+         JOINS(relations=string.ascii_lowercase[r+2:r+4]),
+         JOINS(relations=string.ascii_lowercase[r+4:r+6]),
+         JOINS(relations=string.ascii_lowercase[r+6:r+8]),
+               ]
+index = 0
+%>
+<style>
+table, th, td {
+ border: 2px solid black;
+}
+th {
+ text-align: center;
+}
+</style>
+## {{!linkable_header('Joins')}} {{points_joins}} points
+
+In this section, you will show your knowledge of the different join types.
+
+---
+
+
+<% 
+for index in range(number_joins):
+  if section == '003' or (team_member_number % number_sql_queries) == index:
+
+R1 = joins[index].relations[0].upper()
+r1 = R1.lower()
+R2 = joins[index].relations[1].upper()
+r2 = R2.lower()
+if index % 2 == 0:
+   if index == 0:
+      hd1 = [f'{R1}1',  f'{R1}2',   f'{R1}3',  f'{R1}4']
+      r1_len_greater_r2 = True   # Need to ensure order on left join
+      t1 = [[f'{r1}11', f'{r1}21', f'{r1}31', f'{r1}41'],
+            [f'{r1}12', f'{r1}22', f'{r1}32', f'{r1}42'],
+            [f'{r1}13', f'{r1}23', f'{r1}33', f'{r1}43'],
+            ]
+      hd2 = [f'{R2}1',  f'{R2}2',   f'{R2}3',  f'{R2}4', f'{R2}5',  f'{R2}6' ]
+      t2 = [[f'{r2}11', f'{r2}21', f'{r2}31', f'{r1}41', f'{r2}51', f'{r2}61'],
+            [f'{r2}12', f'{r2}22', f'{r2}32', f'{r1}42', f'{r2}52', f'{r2}62'],
+            ]
+      s = [f'{R1}2', f'{R2}2', f'{R2}5']
+      w = [f'{R1}4', f'{R2}4']
+      ac = [[f'{r1}21', f'{r2}21', f'{r2}51'],
+            [f'{r1}21', f'{r2}22', f'{r2}52'],
+            [f'{r1}22', f'{r2}21', f'{r2}51'],
+            [f'{r1}22', f'{r2}22', f'{r2}52'],
+            [f'{r1}23', f'{r2}21', f'{r2}51'],
+            [f'{r1}23', f'{r2}22', f'{r2}52'],
+           ]
+      ij = [[f'{r1}21', f'{r2}21', f'{r2}51'],
+            [f'{r1}22', f'{r2}22', f'{r2}52'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+      lj = [[f'{r1}21', f'{r2}21', f'{r2}51'],
+            [f'{r1}22', f'{r2}22', f'{r2}52'],
+            [f'{r1}23', 'NULL',    'NULL'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+      oj = [[f'{r1}21', f'{r2}21', f'{r2}51'],
+            [f'{r1}22', f'{r2}22', f'{r2}52'],
+            [f'{r1}23', 'NULL',    'NULL'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+   else:
+      hd1 = [f'{R1}1',  f'{R1}2',   f'{R1}3',  f'{R1}4']
+      r1_len_greater_r2 = False  # Need to ensure order on left join
+      t1 = [[f'{r1}11', f'{r2}21', f'{r1}31', f'{r1}41'],
+            [f'{r1}12', f'{r2}22', f'{r1}32', f'{r1}42'],
+            ]
+      hd2 = [f'{R2}1',  f'{R2}2',   f'{R2}3',  f'{R2}4', f'{R2}5',  f'{R2}6' ]
+      t2 = [[f'{r2}11', f'{r2}21', f'{r2}31', f'{r2}41', f'{r2}51', f'{r2}61'],
+            [f'{r2}12', f'{r2}22', f'{r2}32', f'{r2}42', f'{r2}52', f'{r2}62'],
+            [f'{r2}13', f'{r2}23', f'{r2}33', f'{r2}43', f'{r2}53', f'{r2}63'],
+            ]
+      s = [f'{R2}1', f'{R2}3', f'{R1}3']
+      w = [f'{R2}2', f'{R1}2']
+      ac = [[f'{r2}11', f'{r2}31', f'{r1}31'],
+            [f'{r2}11', f'{r2}31', f'{r1}32'],
+            [f'{r2}12', f'{r2}32', f'{r1}31'],
+            [f'{r2}12', f'{r2}32', f'{r1}32'],
+            [f'{r2}13', f'{r2}33', f'{r1}31'],
+            [f'{r2}13', f'{r2}33', f'{r1}32'],
+           ]
+      ij = [[f'{r2}11', f'{r2}31', f'{r1}31'],
+            [f'{r2}12', f'{r2}32', f'{r1}32'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+      lj = [[f'{r2}11', f'{r2}31', f'{r1}31'],
+            [f'{r2}12', f'{r2}32', f'{r1}32'],
+            [f'{r2}13', f'{r2}33', 'NULL'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+      oj = [[f'{r2}11', f'{r2}31', f'{r1}31'],
+            [f'{r2}12', f'{r2}32', f'{r1}32'],
+            [f'{r2}13', f'{r2}33', 'NULL'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+   end
+else:
+   if index == 1:
+      hd1 = [f'{R1}1',  f'{R1}2',   f'{R1}3',  f'{R1}4', f'{R1}5',  f'{R1}6']
+      r1_len_greater_r2 = True   # Need to ensure order on left join
+      t1 = [[f'{r1}11', f'{r1}21', f'{r1}31', f'{r1}41', f'{r1}51', f'{r1}61'],
+            [f'{r1}12', f'{r1}22', f'{r1}32', f'{r1}42', f'{r1}52', f'{r1}62'],
+            [f'{r1}13', f'{r1}23', f'{r1}33', f'{r1}43', f'{r1}53', f'{r1}63'],
+            ]
+      hd2 = [f'{R2}1',  f'{R2}2',   f'{R2}3',  f'{R2}4']
+      t2 = [[f'{r2}11', f'{r2}21', f'{r1}31', f'{r2}41'],
+            [f'{r2}12', f'{r2}22', f'{r1}32', f'{r2}42'],
+            ]
+      s = [f'{R1}4', f'{R2}2', f'{R2}4']
+      w = [f'{R1}3', f'{R2}3']
+      ac = [[f'{r1}41', f'{r2}21', f'{r2}41'],
+            [f'{r1}41', f'{r2}22', f'{r2}42'],
+            [f'{r1}42', f'{r2}21', f'{r2}41'],
+            [f'{r1}42', f'{r2}22', f'{r2}42'],
+            [f'{r1}43', f'{r2}21', f'{r2}41'],
+            [f'{r1}43', f'{r2}22', f'{r2}42'],
+           ]
+      ij = [[f'{r1}41', f'{r2}21', f'{r2}41'],
+            [f'{r1}42', f'{r2}22', f'{r2}42'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+      lj = [[f'{r1}41', f'{r2}21', f'{r2}41'],
+            [f'{r1}42', f'{r2}22', f'{r2}42'],
+            [f'{r1}43', 'NULL', 'NULL'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+      oj = [[f'{r1}41', f'{r2}21', f'{r2}41'],
+            [f'{r1}42', f'{r2}22', f'{r2}42'],
+            [f'{r1}43', 'NULL', 'NULL'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+   else:
+      hd1 = [f'{R1}1',  f'{R1}2',   f'{R1}3',  f'{R1}4', f'{R1}5',  f'{R1}6']
+      r1_len_greater_r2 = False  # Need to ensure order on left join
+      t1 = [[f'{r1}11', f'{r2}21', f'{r1}31', f'{r1}41', f'{r1}51', f'{r1}61'],
+            [f'{r1}12', f'{r2}23', f'{r1}32', f'{r1}42', f'{r1}52', f'{r1}62'],
+            ]
+      hd2 = [f'{R2}1',  f'{R2}2',   f'{R2}3',  f'{R2}4']
+      t2 = [[f'{r2}11', f'{r2}21', f'{r2}31', f'{r2}41'],
+            [f'{r2}12', f'{r2}22', f'{r2}32', f'{r2}42'],
+            [f'{r2}13', f'{r2}23', f'{r2}33', f'{r2}43'],
+            ]
+      s = [f'{R2}3', f'{R2}4', f'{R1}6', ]
+      w = [f'{R1}2', f'{R2}2']
+      ac = [[f'{r2}31', f'{r2}41', f'{r1}61'],
+            [f'{r2}31', f'{r2}41', f'{r1}62'],
+            [f'{r2}32', f'{r2}42', f'{r1}61'],
+            [f'{r2}32', f'{r2}42', f'{r1}62'],
+            [f'{r2}33', f'{r2}43', f'{r1}61'],
+            [f'{r2}33', f'{r2}43', f'{r1}62'],
+           ]
+      ij = [[f'{r2}31', f'{r2}41', f'{r1}61'],
+            [f'{r2}32', f'{r2}42', f'{r1}62'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+      lj = [[f'{r2}31', f'{r2}41', f'{r1}61'],
+            [f'{r2}32', f'{r2}42', f'{r1}62'],
+            [f'{r2}33', f'{r2}43', 'NULL'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+      oj = [[f'{r2}31', f'{r2}41', f'{r1}61'],
+            [f'{r2}32', f'{r2}42', f'{r1}62'],
+            [f'{r2}33', f'{r2}43', 'NULL'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+            ['ROWUNUSED', 'ROWUNUSED', 'ROWUNUSED'],
+           ]
+   end
+end
+%>
+
+Relation instance {{R1}}.  Attribute names are in uppercase, **bold**, and <font color='blue'>blue</font> in the first row.  Tuples are in the rows that follow.  
+
+
+<table>
+ <tr>
+   % for x in range(len(hd1)) :
+     <th><font color='blue'><b>{{hd1[x]}}</b></font></th>
+   % end
+ </tr>
+ % for x in range(len(t1)):
+   <tr>
+   % for y in range(len(t1[x])):
+     <td>{{t1[x][y]}}</td>
+   % end
+   </tr>
+%end
+</table>
+
+Relation instance {{R2}}.  Attribute names are in uppercase, **bold**, and <font color='blue'>blue</font> in the first row.  Tuples are in the rows that follow.
+
+<table>
+ <tr>
+   % for x in range(len(hd2)) :
+     <th><font color='blue'><b>{{hd2[x]}}</b></font></th>
+   % end
+ </tr>
+ </tr>
+ % for x in range(len(t2)):
+   <tr>
+   % for y in range(len(t2[x])):
+     <td>{{t2[x][y]}}</td>
+   % end
+   </tr>
+%end
+</table>
+
+<%
+symbols = [x for y in t1 for x in y] + [x for y in t2 for x in y] + ['ROWUNUSED', 'NULL']
+%>
+---
+
+**Cartesian.Product.{{index+1}}:** Given the relational instances above, what is the result of the following join?  
+```sql
+SELECT DISTINCT {{s[0]}}, {{s[1]}}, {{s[2]}}
+  FROM {{R1 if r1_len_greater_r2 else R2}}, {{R2 if r1_len_greater_r2 else R1}}
+ ORDER BY {{s[0]}}, {{s[1]}}, {{s[2]}}
+```
+**NOTE:** If after completing the rows returned from the query and there are rows remaining in the table,
+entry ROWUNUSED for the unused rows.
+{{!table(inputs=0, headings=f'{s[0]}, {s[1]}, {s[2]}', table=f'''
+{ac[0][0]},{ac[0][1]},{ac[0][2]}
+{ac[1][0]},{ac[1][1]},{ac[1][2]}
+{ac[2][0]},{ac[2][1]},{ac[2][2]}
+{ac[3][0]},{ac[3][1]},{ac[3][2]}
+{ac[4][0]},{ac[4][1]},{ac[4][2]}
+{ac[5][0]},{ac[5][1]},{ac[5][2]}
+''', symbols=symbols, name=f'Cartesian.Product.{index+1}', points=5)}}
+% include('viewAnswer', answer=ac)
+
+
+---
+
+**Inner.Join.{{index+1}}:** Given the relational instances above, what is the result of the following join?  
+```sql
+SELECT DISTINCT {{s[0]}}, {{s[1]}}, {{s[2]}}
+  FROM {{R1 if r1_len_greater_r2 else R2}}, {{R2 if r1_len_greater_r2 else R1}}
+ WHERE {{w[0]}} = {{w[1]}} 
+ ORDER BY {{s[0]}}, {{s[1]}}, {{s[2]}}
+```
+**NOTE:** If after completing the rows returned from the query and there are rows remaining in the table,
+entry ROWUNUSED for the unused rows.
+{{!table(inputs=0, headings=f'{s[0]}, {s[1]}, {s[2]}', table=f'''
+{ij[0][0]},{ij[0][1]},{ij[0][2]}
+{ij[1][0]},{ij[1][1]},{ij[1][2]}
+{ij[2][0]},{ij[2][1]},{ij[2][2]}
+{ij[3][0]},{ij[3][1]},{ij[3][2]}
+{ij[4][0]},{ij[4][1]},{ij[4][2]}
+{ij[5][0]},{ij[5][1]},{ij[5][2]}
+''', symbols=symbols, name=f'Inner.Join.{index+1}', points=5)}}
+% include('viewAnswer', answer=ij)
+
+
+---
+
+**Left.Join.{{index+1}}:** Given the relational instances above, what is the result of the following join?  
+```sql
+SELECT DISTINCT {{s[0]}}, {{s[1]}}, {{s[2]}}
+  FROM {{R1 if r1_len_greater_r2 else R2}} LEFT JOIN {{R2 if r1_len_greater_r2 else R1}}
+                ON {{w[0]}} = {{w[1]}} 
+ ORDER BY {{s[0]}}, {{s[1]}}, {{s[2]}}
+```
+**NOTE:** If after completing the rows returned from the query and there are rows remaining in the table,
+entry ROWUNUSED for the unused rows.
+{{!table(inputs=0, headings=f'{s[0]}, {s[1]}, {s[2]}', table=f'''
+{lj[0][0]},{lj[0][1]},{lj[0][2]}
+{lj[1][0]},{lj[1][1]},{lj[1][2]}
+{lj[2][0]},{lj[2][1]},{lj[2][2]}
+{lj[3][0]},{lj[3][1]},{lj[3][2]}
+{lj[4][0]},{lj[4][1]},{lj[4][2]}
+{lj[5][0]},{lj[5][1]},{lj[5][2]}
+''', symbols=symbols, name=f'Left.Join.{index+1}', points=5)}}
+% include('viewAnswer', answer=lj)
+
+
+---
+
+**Full.Outer.Join.{{index+1}}:** Given the relational instances above, what is the result of the following join?  
+```sql
+SELECT DISTINCT {{s[0]}}, {{s[1]}}, {{s[2]}}
+  FROM {{R1 if r1_len_greater_r2 else R2}} FULL OUTER JOIN {{R2 if r1_len_greater_r2 else R1}}
+                ON {{w[0]}} = {{w[1]}} 
+ ORDER BY {{s[0]}}, {{s[1]}}, {{s[2]}}
+```
+**NOTE:** If after completing the rows returned from the query and there are rows remaining in the table,
+entry ROWUNUSED for the unused rows.
+{{!table(inputs=0, headings=f'{s[0]}, {s[1]}, {s[2]}', table=f'''
+{oj[0][0]},{oj[0][1]},{oj[0][2]}
+{oj[1][0]},{oj[1][1]},{oj[1][2]}
+{oj[2][0]},{oj[2][1]},{oj[2][2]}
+{oj[3][0]},{oj[3][1]},{oj[3][2]}
+{oj[4][0]},{oj[4][1]},{oj[4][2]}
+{oj[5][0]},{oj[5][1]},{oj[5][2]}
+''', symbols=symbols, name=f'Full.Outter.Join.{index+1}', points=5)}}
+% include('viewAnswer', answer=oj)
+
+
+ %end
+%end
+
+

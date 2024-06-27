@@ -1,0 +1,80 @@
+<%
+from collections import namedtuple
+import math
+
+Run = namedtuple('Run', 'tuples per_page buffers')
+runs = [Run(tuples=30000, per_page=100, buffers=5),
+        Run(tuples=40000, per_page=100, buffers=6),
+        Run(tuples=50000, per_page=100, buffers=7),
+        Run(tuples=60000, per_page=100, buffers=8)]
+%>
+## {{!linkable_header('External Sort')}} {{points_external_sort}} points
+
+In this section, you will show your knowledge of the external sort algorithm discussed in the textbook.
+
+**Calculator.External.Sort:** You may use this box as a calculator.
+Just type in any expression that can be evaluated by a JavaScript eval.
+For example, `2 ** 0.5` will show you the result of the square root of 2
+in the red box to the right.
+`log(10)` will show the natural log of 10 in the red box to the right.
+Lastly, you may want to utilize the log identity of $\log_x{y} = \log{y}/\log{x}$.
+Leaving the box empty or filled in will **NOT** affect your grade.
+{{!calculator(name=f'_calculator_external_sort')}}
+
+% for index in range(number_external_sort):
+  % if section == '003' or (member_number % number_external_sort) == index:
+    % include('viewAnswer', answer=f' Only seen by students number member_number % {number_external_sort} == {index}')
+
+   **External.Sort.Table.{{index+1}}:** Assume you have a relation with {{runs[index].tuples}} tuples,
+   {{runs[index].per_page}} tuples fit in a page,
+   and there are {{runs[index].buffers}} pages to use for the external sort algorithm (B={{runs[index].buffers}}).
+   Fill in the table below for the number of runs and pages per run for
+   each pass of the external sort.  
+   <%
+   orig_num_pages = math.ceil(runs[index].tuples / runs[index].per_page)
+   num_pages = orig_num_pages
+   num_runs = math.ceil(num_pages / runs[index].buffers)
+   symbols = [f'{x * 10}' for x in range(100)]
+   symbols = symbols + [f'{x}' for x in range(400)]
+   answer = []
+   answer.append([num_runs, runs[index].buffers])
+   num_pages = answer[-1][1] * (runs[index].buffers - 1)
+   num_runs = math.ceil(orig_num_pages / num_pages)
+   answer.append([num_runs, num_pages])
+   num_pages = answer[-1][1] * (runs[index].buffers - 1)
+   num_runs = math.ceil(orig_num_pages / num_pages)
+   answer.append([num_runs, num_pages])
+   num_pages = min(answer[-1][1] * (runs[index].buffers - 1), orig_num_pages)
+   num_runs = max(math.ceil(orig_num_pages / num_pages), 1)
+   answer.append([num_runs, num_pages])
+   assert answer[-1][0] == 1
+   %>
+   {{!table(inputs=1, headings='Pass number,Number of runs, Pages per run', table=f'''
+Pass 0,{answer[0][0]},{answer[0][1]}
+Pass 1,{answer[1][0]},{answer[1][1]}
+Pass 2,{answer[2][0]},{answer[2][1]}
+Pass 3,{answer[3][0]},{answer[3][1]}''', symbols=symbols, points=15, name=f'External.Sort.Table.{index+1}')}}
+   % include('viewAnswer')
+
+
+   **External.Sort.Two.Pass.{{index+1}}:** Assume you want to external sort the same relation in two passes, 
+   what is the minimum number of buffers required to sort the relation in two passes.  
+   <%
+   num_pages = math.ceil(runs[index].tuples / runs[index].per_page)
+   min_pages = math.floor(num_pages ** 0.5)
+   run_size_pass_0 = math.ceil(num_pages/min_pages)
+   answer = []
+   while (run_size_pass_0 >= min_pages -1):
+      answer.append([min_pages, run_size_pass_0])
+      min_pages += 1
+      run_size_pass_0 = math.ceil(num_pages/min_pages)
+      end
+   answer2 = f''' For {answer[-2][0]} buffers pass 0 would have {answer[-2][1]} runs but only {answer[-2][0]-1} input buffers
+For {answer[-1][0]} buffers pass 0 would have {answer[-1][1]} runs
+Answer: {answer[-1][0]} pages'''
+   %>
+   {{!select(f'{answer[-1][0]}', choices=[f'{x}' for x in range(30)], points=5, name=f'External.Sort.Two.Pass.{index+1}')}}
+   % include('viewAnswer', answer=answer2)
+
+  % end  # section == 003 or member_number%number_external_sort == index
+% end  # for index in range(number_external_sort)

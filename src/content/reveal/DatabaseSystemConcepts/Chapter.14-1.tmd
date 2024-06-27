@@ -1,0 +1,478 @@
+---
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+
+---
+
+### Chapter 14:  Indexing
+
+- By the end of class you should know
+  - Basic Concepts
+  - Ordered Indices
+  - B$^+$-Tree Index Files
+  - B$^+$-Tree Extensions
+  - Hash Indices
+  - Multiple-Key Access
+  - Creation of Indices
+  - Write-Optimized Indices
+  - Spatial and Temporal Data
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch14.pdf  
+https://courses.cs.duke.edu/cps196.3/fall02/lectures/20-index.pdf  
+
+---
+
+### Basic Concepts
+
+- Indexing mechanisms used to speed up access to desired data
+  - For example, searching by author the library catalog
+- **Search Key** - attribute or set of attributes used to look up records in a file
+- An **index file** consists of records (called **index entries**) of the form of search key and pointer
+- Index files are typically much smaller than the original file 
+- Two basic kinds of indices:
+  - **Ordered indices:** search keys are stored in sorted order
+  - **Hash indices:** search keys are distributed uniformly across “buckets” using a “hash function”
+
+Note:
+
+Maybe draw a picture of what a search key looks like
+
+Indices are used to speed up access  
+You have a search key and index file  
+
+Two types of indices done  
+ - ordered indices
+ - hash
+
+---
+
+### Index Evaluation Metrics
+
+- Access types supported efficiently
+  - records with a specified value in the attribute
+  - records with an attribute value falling within a specified range of values
+- Indexes effect efficiency of
+  - Access time
+  - Insertion time
+  - Deletion time
+  - Space overhead
+
+
+---
+
+### Indices Definitions
+
+- **Ordered index**, index entries sorted on search key value. 
+  - Data entries may or may not be sorted by same search key
+- {{FRAG}} <b>Clustered index</b>: Data entries sorted by the same search key
+  - **_May_** be the **primary index**
+  - Unclustered index, data entries not sorted by the search key index
+- {{FRAG}} <b>Primary index</b> a unique key to each data entry
+  - **Secondary index**: does not have to uniquely identify each data entry
+    - Generally **unclustered index**
+- {{FRAG}} <b>Index-sequential file</b>: sequential file ordered on a search key 
+  - Clustering index on the search key.
+  - ISAM (Index Sequential Access Method)
+    - Similar to to B$^+$-trees
+    - But index entries static
+
+Note:
+
+These are terms we use to describe different indices.  
+Should know them and be able to differentiate them.   
+ - Give the students some examples
+
+Generally all indices are sorted while data may not be
+
+**FRAG**  
+Clustered index means data is sorted by the search key
+
+**FRAG**  
+ - Primary key 1-to-1 match to data entry  
+ - Primary index might be by book ISBN or author, title, edition  
+ - The above might be a good example where the primary key is not clustered
+
+**FRAG**  
+ - ISAM is a static index file system
+
+
+
+---
+
+### Dense Index Files
+
+- **Dense index** — One index record appears for each and every search-key value 
+- For example, index on <i>ID</i> attribute of <i>instructor</i> relation 
+
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.2.Dense.index.png" style="width:75%"/>
+ <figcaption>Figure 14.2 Dense index</figcaption> 
+</figure>
+
+Note:
+
+{{HTTPS_FQDN}}/pages/worksheets/worksheet-14-01-dense  
+{{HTTPS_FQDN}}/worksheets/worksheet-14-01-dense  
+
+Discuss why a dense index may or may not be clustered!
+
+---
+
+### Dense Index Files
+#### Non-primary key
+
+- Dense index on <i>dept_name</i>, with _instructor_ file sorted on <i>dept_name</i>
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.4.Dense.index.with.search.key.dept_name.png" style="width:75%"/>
+ <figcaption>Figure 14.4 Dense index with search key on <i>dept_name</i></figcaption> 
+</figure>
+
+Note:
+
+https://comp421.cs.unc.edu/pages/worksheets/worksheet-14-02-dense-dept_name  
+https://comp421.cs.unc.edu/worksheets/worksheet-14-02-dense-dept_name  
+
+---
+
+### Sparse Index Files
+
+- **Sparse Index**: index records for only **some** search-key values.
+    - Applicable when records are sequentially ordered on search-key
+- To locate a record with search-key value $K$ we:
+    - Find index record with largest search-key value $\lt K$
+    - Search file sequentially starting at the record to which the index record points
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.3.Sparse.Index.png" style="width:75%"/>
+ <figcaption>Figure 14.3 Sparse index</figcaption> 
+</figure>
+
+
+---
+
+### Sparse Index Files (Cont.)
+
+- Compared to dense indices:
+    - Less space/maintenance overhead for insertions/deletions.
+    - Generally slower than dense index for locating records.
+- **Good trade-off**: 
+    - Clustered: An index entry per block in file
+        - Traverse index then point to block with data entry
+        <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Sparse.index.png" style="width:25%"/>
+    - Unclustered index: sparse index on top of dense or other index
+        - Same clustered, but multiple I/Os walking pointers to data entry
+
+
+---
+
+### Secondary Indices Example
+
+- Index record points to a bucket
+  - Bucket has ptrs to all the data entries with that search-key<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.6.Secondary.index.instructor.png" style="width:75%"/>
+ <figcaption>Figure 14.6 Secondary index on <i>instructor</i> file on <i>dept_name</i></figcaption> 
+</figure><p/>
+
+- Secondary indices are **usually** dense or unclustered
+- What is the attribute of Figure 14.6's search key?
+  - {{FRAG}} <font color='green'>Salary</font>
+
+Note:
+
+**Point out that composite key**
+
+---
+
+### Multilevel Index
+
+- If index does not fit in memory
+  - Multiple accesses (I/O) required
+- Solution: treat index on disk as a sequential file
+  - construct a sparse index on it.
+  - outer index – a sparse index of the basic index
+  - inner index – the basic index file
+- {{FRAG}} Even if outer index too large for memory
+  - Create another level of index
+  - Essentially create a tree
+  - Indices/levels must be updated on insert or delete
+- {{FRAG}} Create a tree structure
+  - A binary tree is a balanced tree structure
+  - B$^+$-tree structure discussed later
+
+Note:
+
+If indices too many to fit in memory $\rightarrow$ multiple I/Os  
+**Solution** create a tree sparse on top of index
+
+**FRAG**  
+Create multiple levels  
+This creates a tree
+
+**FRAG**  
+Explain that this is leading us to a B$^+$-tree
+
+---
+
+### Multilevel Index (Cont.)
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.5.Two-level.sparse.index.png" style="width:50%"/>
+ <figcaption>Figure 14.5 Two-level sparse index</figcaption> 
+</figure><p/>
+
+
+---
+
+### Indices on Multiple Keys
+
+- **Composite search key**
+    - e.g. index on _instructor_ relation on attributes _(name, ID)_
+    - Values are sorted lexicographically<br/>
+{{TAB}}{{TAB}}(John, 12121) $\lt$ (John, 13514)  and<br/>
+{{TAB}}{{TAB}}(John, 13514) $\lt$ (Peter, 11223)
+    - Can query on just _name_, or on _(name, ID)_
+      - Can you query on just ID? Why?
+
+
+---
+
+### B$^+$-Tree
+#### Example
+
+- B$^+$ tree with search key name
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.9.B+-tree.for.instructor.file.png" style="width:75%"/>
+ <figcaption>Figure 14.9 B<sup>+</sup>-tree for instructor</figcaption> 
+</figure>
+
+
+---
+
+### B$^+$-Tree
+#### Salary 
+
+B$^+$-tree with search key salary without links<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter-14-1-B-tree-salary.png"/>
+ <figcaption>B<sup>+</sup>-tree of instructor with search key salary</figcaption>
+</figure>
+
+Note:
+
+Walk through the pointers.    
+
+Find professors who have salary of:  
+
+1. 60,000
+1. 92,000
+1. 80,000
+1. 95,000
+
+---
+
+### B$^+$-Tree Index Files (Cont.)
+
+- A B$^+$-tree is rooted tree that:
+  - All paths from root to leaf are of the same length
+  - Each non-root / non-leaf has between $\lceil n/2 \rceil$ and $n$ ptrs
+    - Between $\lceil (n-1)/2 \rceil$ and $n-1$ keys
+    - Non-leaf pages are index entries
+    - Leaf pages are data entries
+  - A leaf node has between $\lceil (n–1)/2 \rceil$ and $n-1$ values
+  - {{FRAG}} Special cases: 
+    - If the root is not a leaf, it has at least 2 children.
+    - If the root is a leaf, it can have between 0 and $n-1$ values.
+
+Note:
+
+All B$^+$-trees are:  
+
+1. rooted  
+1. Balanced  
+1. Each index or data entry has between $lceil (n-1)/2 \rceil$ values
+1. Special case is uninteresting
+1. Number of pointers in a node is called the node's fanout
+
+---
+
+### B$^+$-Tree Node Structure
+
+- Typical node<img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.7.Typical.node.of.a.B+-tree.png" style="width:50%"/>
+  - $K_i$ are the search-key values   
+  - $P_i$ are pointers to children (for non-leaf nodes) or pointers to records or buckets of records (for leaf nodes).
+- A node's search-keys ordered $K_1 \lt$ $K_2 \lt$ $\dots$ $K_{n-1}$
+  - Initially assume no duplicate keys
+  - Address duplicates later
+
+
+---
+
+### Leaf Nodes in B$^+$-Trees
+
+- Properties of a **leaf** node:
+  - Has between $\lceil (n-1)/2 \rceil$ and $n-1$ keys
+    - Has between $\lceil n/2 \rceil$ and $n$ valid pointers
+  - {{FRAG}} $P_i \rightarrow$ file record with all records with search key $K_i$
+  - {{FRAG}} For leaf nodes $L_i$, $L_j$:
+    - $i \lt j$, All search keys in $L_i \le$ all search keys in $L_j$
+  - {{FRAG}} Last valid pointer in $L_i \rightarrow L_{i+1}$
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.8.A.leaf.node.for.instructor.png" style="width:75%"/>
+ <figcaption>Figure 14.8 A leaf node for instructor B<sup>+</sup>-tree index (n=4)<figcaption> 
+</figure><p/>
+
+
+Note:
+
+Let's first look at the leaf node
+
+---
+
+### Non-Leaf Nodes in B$^+$-Trees
+
+- Non-leaf nodes (except root special case): sparse index of leaves
+  - There are between $\lceil n/2 \rceil$ and $n$ non-null pointers
+  - There are between $\lceil (n-1)/2 \rceil$ and $n-1$ non-null keys
+  - $P_1 \rightarrow$ subtree with keys $\lt K_1$ 
+  - $i \gt 1$, non-null $P_i \rightarrow$ subtree with keys $\ge K_{i-1}$
+  - Last non-null pointer $P_m \rightarrow$ subtree with keys $\gt K_{m-1}$
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.7.Typical.node.of.a.B+-tree.png" style="width:75%"/>
+ <figcaption>Figure 14.7 Typical node of a B<sup>+</sup>-tree<figcaption> 
+</figure>
+
+
+---
+
+### Example of B$^+$-tree
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.10.B+tree.for.instructor.without.data.png" style="width:100%"/>
+ <figcaption>Figure 14.10 B<sup>+</sup> for <i>instructor</i> n=6<figcaption> 
+</figure>
+
+<p/>
+
+- Leaf nodes must have between 3 and 5 search key values 
+  - $\lceil (n-1) /2 \rceil$ and $n-1$ with $n=6$
+- Non-leaf, non-root must have between 3 and 6 children
+  - $\lceil n/2 \rceil$ and $n$ with $n=6$
+- Root must have at least 2 children.
+
+
+---
+
+### Observations about B$^+$-trees
+
+- Since the inter-node connections are done by pointers, “logically” close blocks need not be “physically” close.
+- Non-leaf levels of B$^+$-tree form a hierarchy of sparse indices.
+- The B$^+$-tree contains a relatively small number of levels
+    -  Level below root has at least $2 * \lceil n/2 \rceil$ values
+    -  Next level has at least $2 * \lceil n/2 \rceil * \lceil n/2 \rceil$ values
+    -  .. etc.
+  - If there are $K$ search-key values in the file, the tree height is no more than $\lceil \log_{\lceil n/2 \rceil} (K) \rceil$
+  - Thus searches can be conducted efficiently.
+- Insertions and deletions to the main file can be handled efficiently, as the index can be restructured in logarithmic time (as we shall see).
+
+
+---
+
+### Queries on B$^+$ Trees 
+
+```
+function find(v)
+ 1. C=root // Start at root, traverse to leaves
+ 2. while (C is not a leaf  node)
+    A. Let i be least number s.t. v <= K[i]
+    B. if there is no such number i then
+       a. Set C=last non-null pointer in C
+    C. else if (v = C.K[i]) Set C = P[i+1]
+    D. else set C = C.P[i]
+ // Now at leaf node
+ 3. if for some i K[i] = v then return C.P[i]
+ 4. else return null // no record with search key v exists
+```
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.9.B+-tree.for.instructor.file.png" style="width:75%"/>
+ <figcaption>Figure 14.9 B<sup>+</sup>-tree for instructor</figcaption> 
+</figure>
+
+Note:
+
+Go through example of looking for `Califieri`
+
+---
+
+### Queries on B$^+$-Trees (Cont.)
+
+- **Range queries** find all records with search key values in a given range
+    - See book page 639 for details of **function findRange(lb, ub)** which returns set of all such records
+    - Real implementations usually provide an iterator interface to fetch matching records one at a time, using a <i>next</i>() function
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.14.Figure.14.10.B+tree.for.instructor.without.data.png" style="width:100%"/>
+ <figcaption>Figure 14.10 B<sup>+</sup>-tree for instructor without data nodes</figcaption> 
+</figure>
+
+
+
+---
+
+### Queries on B$^+$-Trees (Cont.)
+
+- For $K$ search-key values in file:
+  - Tree heigh is no more than $\lceil \log_{\lceil n/2 \rceil} (K) \rceil$
+- {{FRAG}} A node is generally the disk's block size, typically 4KB
+  - $n$ is typically around 100 (40 bytes per index entry)
+- {{FRAG}} With 1 million search key values and $n = 100$
+  - $\log_{50}(1,000,000) = 4$ 
+  - At most four node accesses from root to leaf
+- {{FRAG}} 1 million key B-tree $\approx 20$ nodes accesses for lookup
+  - Significant: every node access may need a disk I/O
+  - Disk I/O costs around 20 milliseconds
+  - B$^+$-tree saves up to 320 milliseconds per lookup
+
+Note:
+
+$n$ is the number of pointers in a $B^+$-tree node
+
+Height of the tree is same all paths
+
+**FRAG**  
+Each block is 4K per I/O
+
+**FRAG**  
+A million entries generally tree of height 4
+
+**FRAG**  
+Saves about .32 seconds per lookup
+
+---
+
+### Non-Unique Keys
+
+- If a search key $a_i$ is not unique, create instead an index on a composite key ($a_i, A_\rho)$, which is unique
+    - $A_\rho$ could be a primary key, record ID, or any other attribute that guarantees uniqueness
+- Search for $a_i = v$ can be implemented by a range search on composite key, with range ($v$, $-\infty$) to ($v, +\infty$)
+- {{FRAG}} But more I/O operations are needed to fetch the actual records
+    - If the index is clustering, all accesses are sequential
+    - If the index is non-clustering, each record access may need an I/O operation
+
+---
+
+### Tomorrow
+
+- Pick up on insertion and deleting of keys
+

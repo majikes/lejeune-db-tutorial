@@ -1,0 +1,83 @@
+<% setInfo(
+      due="2022-11-15  9:50:00",
+      needsSubmitCode=True,
+        assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False))
+)
+%>
+
+# Chapter 14 B tree
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+Let's assume you have this query:
+
+```sql
+SELECT S.sname
+  FROM Sailors
+ WHERE S.rating > 5
+```
+
+
+The schema for Sailors is:
+
+```sql
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY,
+     sname TEXT,
+     rating INTEGER,
+     age INTEGER)
+```
+
+---
+
+Assume the following:
+
+Schema has `rname` added to the reserves.
+
+```
+Sailors (sid: integer, sname: string, rating: integer, age: real)
+Reserves (sid: integer, bid: integer, day: dates, rname: string)
+```
+
+The Sailors table has a cardinality of 40,000. Each tuple is 50 bytes, 80 tuples per page, 500 pages.
+
+You may assume that ratings go from 1 to 10 inclusively and uniformly.
+
+---
+
+**No.Index.No.Sorting:** How many I/Os is required to read the sailors who have a rating greater than 5 assuming there is no index and the file is not sorted?  
+% answer = '500'
+% choices = ['250', '1.2', answer, '1.2', 'log_2(500)', 'less than 4 I/Os']
+{{!select(answer, choices=choices, points=25, name='No.Index.No.sorting')}}
+% include('viewAnswer')
+
+---
+
+<font color='red'>As given in class, this question should have S.rating = 5.</font>
+As such any answer will be accepted by the grader.
+If it were S.rating = 5 the answer would be less than 4 I/Os.  
+**B+.Tree:** How many I/Os is required to read the sailors who have a rating greater than 5 assuming that there is a B+ tree index on rating which has a height of 2 and the data entries are in Alternate 1 format?  
+% from datetime import datetime, date
+% assert datetime.now().date() < date(2022, 12, 15), f'Fix this question'
+% answer = 'less than 4 I/Os'
+{{!select(answer, choices, points=50, name='B+.Tree')}}
+%include('viewAnswer')
+
+---
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

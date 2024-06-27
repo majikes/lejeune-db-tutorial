@@ -1,0 +1,33 @@
+<h1>Assessments</h1>
+
+<%
+from config import assessment_folders
+
+for this_type in assessment_folders:
+   if assessments.get(this_type, None) is None:
+       continue
+   end
+
+   these_assessments = assessments[this_type]
+   if len(these_assessments) > 0: %>
+      <p>{{this_type.upper()}}</p>
+         <table>
+            <tr>
+               <th>Assessment</th>
+               <th>Access Pages</th>
+            </tr>
+            % for index, assessment in enumerate(these_assessments):
+               <tr>
+                  <td>
+                     <a href="{{get_url(this_type, key=assessment['key'])}}" target="_blank">{{assessment['key']}}</a>
+                  </td>
+                  <td>
+                     <a href="{{get_url('pages', assessment=this_type, key=assessment['key'])}}" target="_blank">Pages</a> 
+                  </td>
+               </tr>
+            <% end %>
+         </table>
+   <% end
+end %>
+
+% rebase('assessment.base')

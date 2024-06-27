@@ -1,0 +1,32 @@
+<%
+from content.exams.m1_just_material_might_50 import points_total, points_limit, duration
+from content.exams.m1_just_material_might_50 import exam, points_limit, maxpenalty, penalty, dbs
+
+from content.exams.m1_just_material_might_50 import points_sql_queries, number_sql_queries
+from content.exams.m1_just_material_might_50 import points_chapter_review, number_chapter_review
+from content.exams.m1_just_material_might_50 import points_joins, number_joins
+
+from datetime import datetime
+SUBSEQUENT_SUBMISSION_TIME = datetime(2023, 10, 17, 11, 59, 59)
+
+setInfo(duration=duration,
+        assessment_type='midterm1',
+        exam=exam,
+        points_limit=points_limit,
+        points_total=points_total,
+       )
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# COMP 421 Midterm 1 Fall 2023 
+
+% include('content/exams/m1-just-material-might-50.prolog.itmd')
+
+
+## {{!linkable_header('Questions')}} For a total of {{points_limit}} points
+
+% include('content/exams/m1-just-material-might-50.SQL_Queries.itmd')
+% include('content/exams/m1-just-material-might-50.joins.itmd')
+% include('content/exams/m1-just-material-might-50.chapter_review.itmd')
+
+% include('exams-submit.md')

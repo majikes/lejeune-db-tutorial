@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <script type="module">
+      % include('static/js/monitorloading.js')
+    </script>
+    <link rel="stylesheet" href="{{static('katex/katex.min.css')}}"/>
+    <script defer src="{{static('katex/katex.min.js')}}"></script>
+    <link rel="stylesheet" href="{{static('css/mypoll.css')}}"/>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="{{static('js/bundle.js')}}"></script>
+    
+    <script src="https://www.unpkg.com/codemirror@5/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="https://www.unpkg.com/codemirror@5/lib/codemirror.css"/>
+    <link rel="stylesheet" type="text/css" href="https://www.unpkg.com/codemirror@5/theme/monokai.css"/>
+    <script src="https://www.unpkg.com/codemirror@5/mode/javascript/javascript.js"></script>
+    <script src="https://www.unpkg.com/codemirror@5/mode/sql/sql.js"></script>
+    <script src="https://www.unpkg.com/codemirror@5/addon/edit/closebrackets.js"></script>
+    <script src="https://www.unpkg.com/codemirror@5/addon/edit/matchbrackets.js"></script>
+    <script src="https://www.unpkg.com/codemirror@5/addon/display/placeholder.js"></script>
+    <script src="{{static('codemirror/cm_run.js')}}"></script>
+
+    <% if defined('refresh'): %>
+    <meta http-equiv="refresh" content="{{refresh}}"/>
+    <% end %>
+   </head>
+  <body data-root="{{get_url('root')}}">
+    % if (not defined('key')) or (key != 'worksheet-demo'):
+       % include('nav')
+    % end
+    <section id="content" class="body">
+      <div id="loading">
+        Loading, please wait.
+      </div>
+      <div id="pagebody" class="entry-content" style="display:none">
+        <span id="onyen">{{get_onyen()}}</span>
+        {{!base}}
+      </div>
+    </section>
+ </body>
+</html>

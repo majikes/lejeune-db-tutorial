@@ -1,0 +1,260 @@
+<%
+from collections import namedtuple
+
+two_vowel_author = ['O', 'A', 'I', 'E']
+
+Book_List = namedtuple('Book_List', 'field sorted SQL')
+book_lists = [Book_List(field='authors\' first names and last names',
+                        sorted='in alphabetical order by last name',
+                        SQL='SELECT first_name, last_name FROM Authors ORDER BY last_name ASC'),
+              Book_List(field='authors\' first names and last names',
+                        sorted='in inverse alphabetical order by last name',
+                        SQL='SELECT first_name, last_name FROM Authors ORDER BY last_name DESC'),
+              Book_List(field='book titles',
+                        sorted='in alphabetical order',
+                        SQL='SELECT title FROM Books ORDER by title'),
+              Book_List(field='book titles',
+                        sorted='in inverse alphabetical order',
+                        SQL='SELECT title FROM Books ORDER by title DESC')]
+
+Page_Count = namedtuple('Page_Count', 'field sorted SQL')
+page_counts = [Page_Count(field='authors\' first names, last names, and their average page count per book',
+                         sorted='in inverse alphabetical order by their login',
+                         SQL='''
+SELECT first_name, last_name, avg(count)
+  FROM Authors A, books B, pagecounts PC
+ WHERE A.login=B.author AND
+       PC.book=B.id
+ GROUP BY login
+ ORDER BY login DESC'''),
+              Page_Count(field='authors\' first names, last names, and their average page count per book',
+                         sorted='in alphabetical order by their login',
+                         SQL='''
+SELECT first_name, last_name, avg(count)
+  FROM Authors A, books B, pagecounts PC
+ WHERE A.login=B.author AND
+       PC.book=B.id
+ GROUP BY login
+ ORDER BY login ASC'''),
+              Page_Count(field='authors\' last names and their average page count per book',
+                         sorted='in inverse alphabetical order by their first name',
+                         SQL='''
+SELECT last_name, avg(count)
+  FROM Authors A, books B, pagecounts PC
+ WHERE A.login=B.author AND
+       PC.book=B.id
+ GROUP BY login
+ ORDER BY first_name DESC'''),
+              Page_Count(field='authors\' first names and their average page count per book',
+                         sorted='in alphabetical order by their last name',
+                         SQL='''
+SELECT first_name, avg(count)
+  FROM Authors A, books B, pagecounts PC
+ WHERE A.login=B.author AND
+       PC.book=B.id
+ GROUP BY login
+ ORDER BY last_name ASC''')]
+
+Max_Category = namedtuple('Max_Category', 'description field')
+max_categories = [Max_Category(description='book title',      field='title'),
+                  Max_Category(description='author\'s login', field='author'),
+                  Max_Category(description='book id',         field='id'),
+                  Max_Category(description='creation date',   field='created')]
+
+Book_Pages = namedtuple('Book_Pages', 'field sorted SQL')
+book_pages = [Book_Pages(field='authors\' first names, last names, book titles, and number of pages',
+                         sorted='in order by book title',
+                         SQL='''
+SELECT first_name, last_name, title, count
+  FROM Authors A, books B, pagecounts PC
+ WHERE A.login=B.author AND
+       PC.book=B.id
+ ORDER BY title ASC'''),
+              Book_Pages(field='authors\' last names, book titles, and number of pages',
+                         sorted='in order by number of pages',
+                         SQL='''
+SELECT last_name, title, count
+  FROM Authors A, books B, pagecounts PC
+ WHERE A.login=B.author AND
+       PC.book=B.id
+ ORDER BY count ASC'''),
+              Book_Pages(field='book titles, number of pages, and the authors\' first name and last name',
+                         sorted='in order by last name',
+                         SQL='''
+SELECT title, count, first_name, last_name
+  FROM Authors A, books B, pagecounts PC
+ WHERE A.login=B.author AND
+       PC.book=B.id
+ ORDER BY last_name ASC'''),
+              Book_Pages(field='authors\' last names, the number of pages in the books, and the books\' title',
+                         sorted='in order by number of pages',
+                         SQL='''
+SELECT last_name, count, title
+  FROM Authors A, books B, pagecounts PC
+ WHERE A.login=B.author AND
+       PC.book=B.id
+ ORDER BY count ASC''')]
+
+Book_Photo = namedtuple('Book_Photo', 'description field')
+book_photos = [Book_Photo(description='title', field='title'),
+               Book_Photo(description='author login', field='author'),
+               Book_Photo(description='language', field='language'),
+               Book_Photo(description='date created', field='created')]
+
+author_cats = ['Animals and Nature', 'Fairy and Folk Tales', 'Recreation and Leisure', 'People and Places']
+%>
+## {{!linkable_header('Book SQL Queries')}} {{points_book_sql_queries}} points
+
+In this section, you will write SQL queries for book schema used in homework A5 and described below.
+Your queries will be tested immediately against two different databases.
+If your queries output matches the expected output, the
+displayed answers will be outlined in green.
+You need green, highlighted output from the query of both databases to get any credit.
+Your actual score will be determined when your query is
+tested against a different database but **two** green feedbacks should mean that you are on track to receive full credit.
+
+The schema for the book database is below:  
+```sql
+{{book_schema}}
+```
+
+Following is a scratch space which can be used to help you develop and 
+test queries using **only the smaller** books database.
+
+{{!sql('''select 1''', name='_scratch_election_1', dbs=[book_dbs[0]])}}
+
+---
+
+% for index in range(number_book_sql_queries):
+  % if section == '003' or (member_number % number_book_sql_queries) == index:
+    % include('viewAnswer', answer=f' Only seen by students number member_number % {number_book_sql_queries} == {index}')
+
+   **Simple.List.{{index+1}}:** List all the {{book_lists[index].field}} {{book_lists[index].sorted}}.  
+   % answer = book_lists[index].SQL
+   {{!sql(answer, dbs=book_dbs, num_rows=5, points=2.5, name=f'Simple.List.{index+1}')}}
+   % include('viewAnswer')
+
+   **Page.Pages.{{index+1}}:** List all the {{book_pages[index].field}} {{book_pages[index].sorted}}.  
+   **NOTE:** If there are multiple editions of a book,
+   possibly created at different times, they should be counted as separate, distinct books.  
+   % answer = book_pages[index].SQL
+   {{!sql(answer, dbs=book_dbs, num_rows=5, points=2.5, name=f'Page.Pages.{index+1}')}}
+   % include('viewAnswer')
+
+   **Average.Pages.{{index+1}}:** List all the {{page_counts[index].field}} {{page_counts[index].sorted}}.  
+   % answer = page_counts[index].SQL
+   {{!sql(answer, dbs=book_dbs, num_rows=7, points=5, name=f'Average.Pages.{index+1}')}}
+   % include('viewAnswer')
+
+   **Two.{{two_vowel_author[index]}}.Author.List.{{index+1}}:** List the first and last name of authors who have two case-insensitive  `{{two_vowel_author[index]}}`'s anywhere in their last name.  
+   **NOTE:** SQLite uses case insensitive matching for selection criteria using the LIKE operator and case sensitive in the selection criteria equal operator.
+   % answer = f'''
+SELECT first_name, last_name
+  FROM Authors
+  WHERE last_name like '%{two_vowel_author[index]}%{two_vowel_author[index]}%'
+'''
+   {{!sql(answer, dbs=book_dbs, sort=1, points=5, name=f'Two.{two_vowel_author[index]}.Author.List.{index+1}')}}
+   % include('viewAnswer')
+
+---
+
+### {{!linkable_header('Categories')}}
+
+   **Category.{{index+1}}:** List all the categories and
+   the number of books that are in each category.  
+   If the number of books is less than {{index+2}} display a null.
+   If the number of books is {{index+2}} or more, display the actual count.  
+   % answer = f'''
+WITH C1 as (SELECT DISTINCT category FROM categories),
+     C2 as (SELECT category, count(*) as C3
+              FROM categories
+            GROUP BY category
+            HAVING C3 >= {index+2})
+SELECT C1.category, C2.C3 
+  FROM C1
+  LEFT JOIN C2
+  ON C1.category=C2.category'''
+   {{!sql(answer, sort=1, dbs=book_dbs, num_rows=13, points=15, name=f'Category.{index+1}')}}
+   % include('viewAnswer')
+
+   **Max.Categories.{{index+1}}:** List the {{max_categories[index].description}} of the book(s) with the most number of categories along with the number of categories for those book(s).  
+   % answer = f'''
+WITH C1 as (SELECT max(c) as max_count FROM (SELECT count(*) as c
+                                               FROM categories
+                                               GROUP BY book)),
+C2 as (SELECT {max_categories[index].field}, count(*) as cat_count
+         FROM categories C, books B
+        WHERE B.id=C.book
+        GROUP BY book)
+SELECT C2.{max_categories[index].field}, C1.max_count
+  FROM C1
+  LEFT Join C2
+  ON C1.max_count = C2.cat_count'''
+   % answer2 = f'''{answer}
+
+Another way to do it is:
+SELECT B.{max_categories[index].field}, count(*) as cat_count
+  FROM categories C, books B
+ WHERE B.id=C.book
+ GROUP BY book
+ HAVING cat_count = (SELECT max(C)
+                       FROM (SELECT COUNT(*) AS C
+                               FROM categories C, books B
+                                WHERE B.id = C.book
+                               GROUP BY BOOK))'''
+   {{!sql(answer, dbs=book_dbs, sort=1, num_rows=13, points=15, name=f'Max.Categories.{index+1}')}}
+   % include('viewAnswer', answer=answer2)
+
+   **Author.Category.{{index+1}}:** For all authors who have had more than one book in the category of `{{author_cats[index]}}`
+   list the author's first name and last name along with the number of the author's books in the category `{{author_cats[index]}}`.  
+   % answer = f'''
+SELECT  first_name, last_name, count(*) as cat_count
+ FROM authors A, books B, categories C 
+WHERE A.login=B.author AND
+      C.book=B.id AND
+      C.category='{author_cats[index]}'
+GROUP BY A.login
+HAVING cat_count > 1'''
+   {{!sql(answer, dbs=book_dbs, sort=1, num_rows=13, points=5, name=f'Author.Category.{index+1}')}}
+   % include('viewAnswer')
+
+---
+
+### {{!linkable_header('Photos')}}
+
+   **Book.Photo.{{index+1}}:** For books that have photos,
+list the book's {{book_photos[index].description}} along with the number of photos in that book.  
+**NOTE$_1$:** If a book has the same photo on two pages, count it as two.  
+**NOTE$_2$:** If there are multiple editions of a book with the same title,
+   possibly created at different times, they should be counted as separate, distinct books.  
+   % answer = f'''
+SELECT {book_photos[index].field}, count(*)
+  FROM Photos, Pages, Books
+ WHERE Books.id=Pages.book AND
+       Photos.id=Pages.photo 
+ GROUP BY Pages.book'''
+   {{!sql(answer, dbs=book_dbs, sort=1, num_rows=10, points=5, name=f'Book.Photo.{index+1}')}}
+   % include('viewAnswer')
+
+   **Max.Book.Photo.{{index+1}}:** For the book(s) that has the most photos,
+list the book's {{book_photos[index].description}} along with the number of photos in that book.  
+**NOTE:** If a book has the same photo on two pages, count it as two.
+   % answer = f'''
+SELECT {book_photos[index].field}, count(*)
+  FROM Photos, Pages, Books
+ WHERE Books.id=Pages.book AND
+       Photos.id=Pages.photo 
+ GROUP BY Pages.book
+ HAVING COUNT(*) = (SELECT MAX(C) FROM
+                      (SELECT COUNT(*) as C
+                         FROM Photos, Pages, Books
+                        WHERE Books.id=Pages.book AND
+                              Photos.id=Pages.photo 
+                        GROUP BY Pages.book))'''
+   {{!sql(answer, dbs=book_dbs, sort=1, num_rows=12, points=15, name=f'Max.Book.Photo.{index+1}')}}
+   % include('viewAnswer')
+
+---
+
+  % end  # section == 003 or member_number%number_book_sql_queries == index
+% end  # for index in range(number_book_sql_queries)

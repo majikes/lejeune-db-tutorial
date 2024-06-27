@@ -1,0 +1,70 @@
+<%
+from collections import namedtuple
+import string
+
+katex_underscore = r'\textunderscore{}'
+katex_le = r'\le'
+
+SELECT_ALL = namedtuple('SELECT_ALL', 'relation attribute where op value')
+select_alls = [SELECT_ALL(relation='student', op='=', attribute='name',
+                          where=f'dept{katex_underscore}name', value="'Comp. Sci.'"),
+               SELECT_ALL(relation='course', attribute='title',
+                          where=f'dept{katex_underscore}name', op='=', value="'Math'"),
+               SELECT_ALL(relation='department', attribute='building',
+                          where='budget', op=katex_le, value='500000'),
+               SELECT_ALL(relation='instructor', attribute='name',
+                          where='salary', op=katex_le, value='50000'),
+
+               ]
+
+all_semesters = ['Fall', 'Winter', 'Spring', 'Summer']
+SET_DIFF = namedtuple('SET_DIFF', 'semester dept_name not_semester')
+set_diffs = [SET_DIFF(semester='Fall', dept_name='Astronomy',
+                      not_semester=[x for x in all_semesters if x!= 'Fall']),
+             SET_DIFF(semester='Spring', dept_name='Biology',
+                      not_semester=[x for x in all_semesters if x!= 'Spring']),
+             SET_DIFF(semester='Spring', dept_name='Physics',
+                      not_semester=[x for x in all_semesters if x!= 'Spring']),
+             SET_DIFF(semester='Fall', dept_name='Math',
+                      not_semester=[x for x in all_semesters if x!= 'Fall']),
+            ]
+
+DID_NOT_TAKE = namedtuple('DID_NOT_TAKE', 'dept title')
+did_not_takes = [DID_NOT_TAKE(dept='Comp. Sci.', title='Game Design'),
+                 DID_NOT_TAKE(dept='Math', title='Computability Theory'),
+                 DID_NOT_TAKE(dept='Cybernetics', title='Security'),
+                 DID_NOT_TAKE(dept='Statistics', title='UNIX System Programming')
+                 ]
+
+alphabet = list(string.ascii_uppercase)
+%>
+
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % q = did_not_takes[(index+1)%number_sql_queries]
+    **Did.Not.Take.{{index+1}}:** List the name and total number of credits for students in the {{q.dept}} department who did not take the {{q.dept}} course named '{{q.title}}'.  
+    Order the list in descending order by the name.
+    % answer = f'''
+-- Simple except
+SELECT S.name, S.tot_cred
+  FROM Student S
+ WHERE S.dept_name = '{q.dept}' AND
+       NOT EXISTS (SELECT *
+                     FROM Takes T, Course C
+                    WHERE S.ID = T.ID AND
+                          T.course_id = C.course_id AND
+                          C.dept_name = '{q.dept}' AND
+                          C.title = '{q.title}')
+ ORDER BY S.name DESC
+'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' Did.Not.Take.{index+1}')}}
+
+---
+
+    % include('viewAnswer')
+  %end
+%end
+
+

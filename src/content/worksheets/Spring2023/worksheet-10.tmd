@@ -1,0 +1,107 @@
+<%
+setInfo(due="2021-09-21 15:30:00",
+        needsSubmitCode=True,
+      assessment_type='worksheet',
+        exceptions=dict(ljacob23=dict(due='2021-09-22 00:00:00', needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        )
+dbs=['states-A.sqlite']
+%>
+# Joins
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+
+```sql
+  CREATE TABLE IF NOT EXISTS States
+             (abbrev char(2) PRIMARY KEY,
+              statename char(20),  -- May include territories
+              population integer)
+
+  CREATE TABLE IF NOT EXISTS Politicians
+             (bioid char(20),
+              firstname char(20),
+              lastname char(20),
+              birthday date, -- YYYY-MM-DD format string
+              gender char(1),
+              PRIMARY KEY(bioid))
+  CREATE TABLE IF NOT EXISTS Terms
+             (termid INTEGER PRIMARY KEY AUTOINCREMENT,
+              termtype char(20), -- Type of term elected; rep, sen, prez, viceprez
+              startdate date,
+              enddate date,
+              party char(20), -- Political party affiliation
+              how char(20),  -- Different ways to get into an office
+              bioid char(20),
+              -- President & vice president aren't elected from districts or states
+              -- Senators aren't elected from districts
+              district integer,  -- Null of prez, viceprez, or sen
+              state char(2),    -- Null for prez and viceprez
+              FOREIGN KEY(bioid) REFERENCES Politicians(bioid))''')
+```
+
+**Natural.Join**: Can a `Natural` join be done with relations States and Terms?
+% answer = 'C. No, the two relations do not have fields with the same name.'
+% choices = ['A. Sure. You can always do a natural join', 'B. No, there\'s nothing natural about this database', answer, 'D. Yes.  The natural join would be on field state and statename', 'E. All of the above', 'F. None of the above']
+{{!select(answer, choices, points=5, name='Natural.Join')}}
+% include('viewAnswer')
+
+---
+
+**Inner.Join**: Do an inner join between states and terms where the state abbreviation has the same value as the term's state. 
+Select all fields of both relations but limit your output to 10 rows.  
+Do not order the list.   
+% answer = '''SELECT *
+ FROM States S, Terms T
+ WHERE S.abbrev = T.state LIMIT 10'''
+{{!sql(answer, dbs=dbs, sort=True, points=10, name='Inner.Join')}}
+% include('viewAnswer')
+
+---
+
+**How.Elected**: There are many ways to get elected.
+List all the ways you can get elected.  
+**HINT:**  You may want to use relations Terms' field `how`.  
+% answer = '''SELECT DISTINCT how FROM Terms'''
+{{!sql(answer, dbs=dbs, sort=True, points=10, name='How.Elected')}}
+% include('viewAnswer')
+
+---
+
+**Non-election**: For each state that has elected a politician
+other than by election, list the state name and the number of times a politician was got into office without an `election`.  
+% answer = '''SELECT S.statename, count(*) as count
+ FROM states S, terms T
+ WHERE S.abbrev = T.state and how != 'election' group by statename'''
+{{!sql(answer, dbs=dbs, points=10, sort=True, name='Non-election')}}
+% include('viewAnswer')
+
+---
+
+**All.States.Non-election**: For each state,
+list the state name and the number of times a politician was got into office without an `election`.
+If no politician got into office without an `election`, return the value `null` instead of zero.  
+% answer = '''SELECT S1.statename, J.count
+FROM States S1 LEFT JOIN (SELECT statename, count(*) as count
+                            FROM states S, terms T 
+                           WHERE S.abbrev = T.state AND
+                                 how != 'election'
+                           GROUP BY statename) J 
+ON S1.statename = J.statename;'''
+{{!sql(answer, dbs=dbs, points=10, sort=True, name='All-States.Non-election', timeout=400000)}}
+% include('viewAnswer')
+
+
+%end 
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

@@ -1,0 +1,108 @@
+<%
+from collections import namedtuple
+katex_underscore = r'\textunderscore{}'
+katex_le = r'\le'
+
+SELECT_ALL = namedtuple('SELECT_ALL', 'relation attribute where op value')
+select_alls = [SELECT_ALL(relation='student', op='=', attribute='name',
+                          where=f'dept{katex_underscore}name', value="'Comp. Sci.'"),
+               SELECT_ALL(relation='course', attribute='title',
+                          where=f'dept{katex_underscore}name', op='=', value="'Math'"),
+               SELECT_ALL(relation='department', attribute='building',
+                          where='budget', op=katex_le, value='500000'),
+               SELECT_ALL(relation='instructor', attribute='name',
+                          where='salary', op=katex_le, value='50000'),
+
+               ]
+
+INSERT = namedtuple('INSERT', 's_name dept a_name a_id')
+inserts = [INSERT(s_name='Bates', dept='History', a_name='Pauli Murray', a_id='pauli'),
+           INSERT(s_name='Godfrey', dept='English', a_name='Edwin Greenlaw', a_id='edwin'),
+           INSERT(s_name='Lui', dept='Psychology', a_name='William Davie', a_id='william'),
+           INSERT(s_name='Singhal', dept='Geology', a_name='Elisha Mitchell', a_id='elisha'),
+           ]
+
+STRING_OP = namedtuple('STRING_OP', 'position value, like')
+string_ops = [STRING_OP(position='second', value='a', like='_a%'),
+              STRING_OP(position='second', value='e', like='_e%'),
+              STRING_OP(position='third', value='i', like='__i%'),
+              STRING_OP(position='third', value='b', like='__b%'),
+           ]
+%>
+
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % d = ['Comp. Sci.', 'Math', 'Cybernetics', 'Statistics'][index]
+    **How.Many.Students.{{index+1}}:** Find the number of students in the {{d}} department.  
+    % answer = f'''
+-- Aggregate count
+SELECT count(*) 
+  FROM Student
+ WHERE dept_name = '{d}'
+'''
+    {{!sql(answer, dbs=dbs, points=4, name=f' How.Many.Students.{index+1}', sort=1)}}
+    % include('viewAnswer')
+  %end
+%end
+
+
+---
+
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % q = inserts[index]
+    **New.Instructor.{{index+1}}:** Add a new instructor named '{{q.a_name}}', ID '{{q.a_id}}',
+    with a salary of 75,000
+    in the department of {{q.dept}}.  
+    **NOTE$_1$:** You may be assured that no other instructor has the ID {{q.a_id}} and so you may hardcode your query using it.  
+    **NOTE$_2$:** With all SQL statements like this that modify the database, you either need to refresh the web page before rerunning or handle the fact that the statement was previously run.
+    % answer = f'''
+-- Insert Instructor
+DELETE FROM INSTRUCTOR
+       WHERE name= '{q.a_name}' and  ID='{q.a_id}' and dept_name='{q.dept}';
+INSERT INTO Instructor (name, ID, salary, dept_name)
+                VALUES ('{q.a_name}', '{q.a_id}', 75000, '{q.dept}');
+'''
+    % ics = f"SELECT * from Instructor where name='{q.a_name}'"
+    {{!sql(answer, dbs=dbs, points=9, ics=[ics], name=f' New.Instructor.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+    **New.Advisor.{{index+1}}:** Make the new instructor from the previous question, {{q.a_name}}, the advisor to student '{{q.s_name}}'.  
+    **NOTE$_1$:** You need to get the previous question correct to get this question correct.  
+    **NOTE$_2$:** You can hardcode the advisor id of {{q.a_id}}, but you MUST programmatically determine student {{q.s_name}}'s ID.  In other words, do not print out {{q.s_name}}'s ID and then hardcode it.  Programmatically determine it within the SQL code!  
+    **NOTE$_3$:** You can be assured that the student name {{q.s_name}} is unique.  
+    **NOTE$_4$:** With all SQL statements like this that modify the database, you either need to refresh the web page before rerunning or handle the fact that the statement was previously run.
+    % answer = f'''
+-- Insert (not update) Advisor
+-- SELECT used within INSERT clause
+INSERT INTO Advisor (s_id, i_id)
+                SELECT ID, '{q.a_id}' FROM Student where name='{q.s_name}'
+'''
+    % ics = f"SELECT * from Advisor where i_ID='{q.a_id}'"
+    {{!sql(answer, dbs=dbs, points=9, ics=[ics], name=f' New.Advisor.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+    % q = string_ops[index]
+    **Strings.{{index+1}}:** Select all the student names who have a name with {{q.position}} character of {{q.value}}.  
+    Order the result alphabetically by the student's department name.
+    For all students within each department sort by the student's name.
+    % answer = f'''
+-- String wild card page 82
+-- Order BY
+SELECT S.name
+  FROM Student S
+ WHERE S.name like '{q.like}'
+ ORDER BY S.dept_name, S.name
+'''
+    {{!sql(answer, dbs=dbs, points=4, name=f' Strings.{index+1}')}}
+    % include('viewAnswer')
+  %end
+%end
+
+
+---
+

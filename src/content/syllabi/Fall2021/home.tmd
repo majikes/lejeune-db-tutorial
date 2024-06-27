@@ -1,0 +1,58 @@
+# COMP 421 Fall 2021
+% from agenda import parse
+% upnext = False
+
+## {{!linkable_header('Agenda')}}
+
+
+% if user_is_admin(user):
+  <font color="grey">Text in grey is comments that students can't yet see</font>
+% end
+
+The agenda is tentative.
+You should check it before each class.
+The farther items are in the future, the more likely their due dates are to change.
+
+Each item with a &#x2610; is a box you can check / click  when it is completed.
+I highly recommend that you use these boxes to ensure you are current on submissions.
+
+<!-- Use agenda's parse to break up each line starting with a "\n| "
+     and create variable d for its details.
+     Each day starts at FDOC 1/19/21 and must end before LDOC 5/5/21 -->
+% for d in parse('content/syllabi/agenda.tmd', user, 'student'):
+
+ <div class="agenda {{d['when']}}" markdown=1>
+ <!-- if this class details is the first present or future, flag it as "Next" -->
+ % if not upnext and d['when'] in ['present', 'future']:
+   % upnext = True
+   <div class="arrow_box">{{!linkable_header('Next')}}
+   </div>
+ % end
+
+ <!-- Following markdown should be indented by h3 has to appear in col 1 -->
+ % title_lower = d['title'].lower().replace(' ', '-')
+### {{d['date'].strftime('%m/%d')}} <a href="#{{title_lower}}" name="{{title_lower}}"><u>{{d['title']}}</u></a>
+
+ {{!d['body']}}
+
+ </div>
+
+% end
+
+<div class="agenda future" markdown=1>
+
+ <!-- Following markdown should be indented by h3 has to appear in col 1 -->
+ % title_lower = "Final Exam".lower().replace(' ', '-')
+<h3> {{exam_time.strftime('%m/%d')}} <a href="#{{title_lower}}" name="{{title_lower}}"><u>Final Exam</u></a></h3>
+
+% if conflict_exam:
+ <font color='red'>Conflict</font>
+%end
+ Final Exam on {{exam_time.strftime('%B %d, %Y at %I:%M %p')}} for <b>{{120 + 60 * extended}} minutes</b>.  
+ % if exam_url and False:
+    [Click here for zoom test]({{exam_url}})
+ % end   
+
+ <a href="{{HTTPS_FQDN}}/panopto/b47f93f2-a84c-47b9-8f58-adf600225f18">COMP 421 Final Exam Retrospective</a>
+
+ </div>

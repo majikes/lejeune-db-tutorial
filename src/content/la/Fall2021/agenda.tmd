@@ -1,0 +1,27 @@
+Preparing for first week  / Aug 23
+<!-- Z in column 1 followed by a URL is for the Zoom recording, leave URL blank for meeting url -->
+<!-- Days in the past appear blue/grey, Next day has a marker, Future is in white -->
+
+
+CL Read over the [syllabus]({{get_url('syllabi', page_name='syllabus')}}). | Watch and give me comments on [Course Care video]({{get_url('panopto', hexcode='e69a803f-d891-481e-8ef8-ac9b013890ac')}}). | Complete, submit, and give me comments on [worksheet-00-demo]({{get_url('worksheets', key='worksheet-00-demo')}}). | Send me when you would be willing to have office hours (LA 6 hours, TA 10 hours). | If you are willing / able to attend lecture (T or TH 2:00) which will count toward your hours. | Send me a list of times you're available (M/W/F) to do a group scrum meeting.
+
+<ul>
+ <li>Introduce each other
+  	 <ul>
+       <li>Ken Liu / TA</li>
+    	 <li>John Feshuk / LA</li>
+  	   <li>Tanying Lin / LA</li>
+  	 </ul>
+ </li>
+</ul>
+
+
+<!-- A line after a blank link that starts with a | starts another day -->
+
+| Preparing for week Aug 30: Chapter 3: Asymptotic Limits / Analysis
+
+CL Complete, submit, and give me comments on [worksheet on chapter 1]({{get_url('worksheets', key='worksheet-chapter-1')}}).
+
+Please finish off any items on last week's checklist.
+
+

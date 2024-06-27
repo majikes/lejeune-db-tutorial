@@ -1,0 +1,38 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+---
+
+
+## Today's notes
+
+<ul>
+ <li>A5 due by Wednesday 12/1 11:11:59 PM</li>
+ <li class="fragment">Nearly 60% course evaluation submissions!!!<ul>
+  <li>Should expect grades to be posted ASAP</li>
+  <li>Very close to getting 100 / 110 points on FE</li></ul></li>
+ <li class="fragment">Worksheet-Piazza-questions<ul>
+  <li>For questions posted in the Piazza group</li>
+  <li>Since added to grades page<br/>incremented worksheet drop count to 3</li></ul></li>
+ <li class="fragment">Final Exam<ul>
+  <li>Tuesday, Dec 7th, 12:00 PM (noon) to 2:00 PM</li>
+  <li>120 minutes</li>
+ </ul></li>
+</ul>
+
+---
+
+## Today's notes
+
+<ul>
+ <li>Today <b>asynchronous</b> SQL practice<ul>
+   <li>Do worksheet similar to exam</li>
+   <li>I will go over, in general, verbal terms</li>
+   <li>I will <b>NOT</b> give the answers</li>
+   <li>You can get the answers after you submit <code>View feedback</code> button</li>
+</ul>

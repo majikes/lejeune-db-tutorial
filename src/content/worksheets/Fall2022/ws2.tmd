@@ -1,0 +1,48 @@
+# Chapter 2 & 3 worksheet
+
+<%
+setInfo(
+due="2020-08-18 16:30:00",
+penalty=1,
+maxpenalty=1,
+exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+)
+%>
+
+18 August 2020
+
+### The schema for this worksheet is as follows:
+
+<font color=blue>Bakers(chef_id: string, name: string, restaurant: string, rank: integer, favorite_cookie: string)
+
+Restaurants(restaurant: string, cuisine: string, rating: real, owner_name: string)
+
+Cookies(cookie: string, shape: string, price: real, spice_level: integer)
+
+#####\* For each, assume that the primary key is the first attribute in the list.
+
+### <font color=black>{{!next()}}. Label the following statements as either "declarative" or "imperative".
+
+- I want chocolate chip cookies. I also want them to taste like snickerdoodles, and I want them to be shaped like dinosaurs. {{!select('Declarative', ['Declarative','Imperative'], name='Q{}a', points=3)}}
+- Place a ball of cookie dough into the oven. Cook it until it looks like a cooked cookie. Then, cover it in pink fondant. Lastly, put chocolate sprinkles on top. {{!select('Imperative', ['Declarative','Imperative'], name='Q{}b', points=3)}}
+- I do not care how you do it, just get me some ice cream! {{!select('Declarative', ['Declarative','Imperative'], name='Q{}c', points=3)}}
+
+### {{!next()}}. Which field of "Bakers" is a foreign key?
+
+{{!select('restaurant', ['chef_id', 'name', 'restaurant', 'rating', 'favorite_cookie'], points=None)}}
+
+### {{!next()}}. Given this SQL statement, match the parts of the statement to their label:
+
+#### SELECT B.name, C.spice_level FROM Bakers B, Cookies C WHERE B.favorite_cookie=C.cookie AND C.spice_level>5
+
+- Which part of the query performs a join of two tables? {{!select('=', ['B','spice_level','FROM','WHERE','='], name='Q{}a', points=5)}}
+- Which part of the query references a relation? {{!select('B', ['B','spice_level','FROM','WHERE','='], name='Q{}b', points=5)}}
+- What will be the arity of the view produced by this query? (Hint: The answer is an integer.){{!expression('2', dict(), name='Q{}c', points=5)}}
+
+### {{!next()}}. The set {restaurant, rank} may be a candidate key for Bakers.
+
+{{!select('True', ['True','False'], points=5)}}
+
+### {{!next()}}. How many distinct tuples are in a relation instance with cardinality 5 and degree 3?
+
+{{!select('5', ['3','5','15','not enough info'], points=5)}}

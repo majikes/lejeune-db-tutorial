@@ -1,0 +1,70 @@
+<%
+from collections import namedtuple
+katex_underscore = r'\textunderscore{}'
+katex_le = r'\le'
+
+STUDENT_NO_CLASS = namedtuple('STUDENT_NO_CLASS', 'dept bldg')
+no_students = [STUDENT_NO_CLASS(dept='Cybernetics', bldg='Taylor'),
+               STUDENT_NO_CLASS(dept='Accounting', bldg='Chandler'),
+               STUDENT_NO_CLASS(dept='Physics', bldg='Power'),
+               STUDENT_NO_CLASS(dept='Statistics', bldg='Saucon'),
+               ]
+%>
+
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % d = no_students[index]
+    **Instructor.Count.{{index+1}}:** List the names of {{d.dept}} instructors and the number of times they
+    have taught a course in {{d.bldg}} building.
+    If they have never taught a course in that building, express the count as Null
+    % answer = f'''
+-- Left join
+-- Table of instructors who teach in building and count of times
+WITH Instructor_building AS (SELECT I.ID, COUNT(*) as COUNT
+                               FROM Instructor I, Teaches T, Section S
+                              WHERE T.ID=I.ID AND
+                                    T.course_id=S.course_id AND
+                                    T.sec_id=S.sec_id AND
+                                    T.semester=S.semester AND
+                                    T.year = S.year AND
+                                    I.dept_name = '{d.dept}' AND
+                                    S.building = '{d.bldg}'
+                              GROUP BY I.ID )
+
+-- Get the name of every instructor and left join with counts
+SELECT I.name, B.count
+  FROM Instructor I
+  LEFT JOIN Instructor_building B
+        ON  B.ID = I.ID
+ WHERE dept_name = '{d.dept}'
+'''
+    {{!sql(answer, dbs=dbs, points=9, name=f' Instructor.Count.{index+1}', sort=1)}}
+    % include('viewAnswer')
+
+    **Student.Takes.All.{{index+1}}:** List the names of all the students who have taken all the courses in the {{d.dept}} department.
+    % answer = f'''
+-- SQL Division
+SELECT S.name
+  FROM Student S
+ WHERE NOT EXISTS (SELECT C.course_id
+                     FROM Course C
+                    WHERE C.dept_name = '{d.dept}'
+
+                   EXCEPT
+
+                   SELECT C1.course_id
+                     FROM Course C1, Takes T1, Student S1
+                    WHERE T1.course_id = C1.course_id AND
+                          T1.ID = S1.ID AND
+                          S.ID = S1.ID)
+'''
+    {{!sql(answer, dbs=dbs, points=9, name=f' Student.Takes.All.{index+1}', sort=1)}}
+    % include('viewAnswer')
+  %end
+%end
+
+-
+
+

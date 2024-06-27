@@ -1,0 +1,31 @@
+% time = f.time.strftime('%Y/%m/%d %H:%M:%S')
+
+<dt><b><a href="{{get_url('viewKey', key=f.key, onyen=onyen)}}">{{f.key}}</a></b>
+  <a href="{{get_url('viewSubmission', key=f.key, post_id=f.post_id)}}?onyen={{onyen}}">Submitted at {{time}} id:{{f.post_id}}</a></dt>
+<dd>
+  % if f.score is not None and f.points_total is not None:
+     <table>
+      <tr> 
+        <th>Score</th>
+        <th>Points</th>
+        <th>Percent</th>
+        % if not defined('detailed_feedback') or not detailed_feedback:
+           <th>Answers</th>
+        % end
+      </tr>  
+      <tr>
+        <td>{{ round(f.score, 1) }}</td>
+        <td>{{ round(f.points_total, 1)}}</td>
+        <td>{{ round(100.0 * f.score/f.points_total, 1)}}</td>
+        % if not defined('detailed_feedback') or not detailed_feedback:
+          % if f.answers_exist:
+             <td><a href="{{get_url('rubric', key=f.key)}}">{{f.key}} answers</a></td>
+          % else:
+          <td><i>Answers not available yet</i><br/>You must get a 100% before you can see answers</td>
+          % end
+        % end
+      </tr>
+     </table> 
+  % end
+  {{f.msg}}
+</dd>

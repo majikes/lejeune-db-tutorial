@@ -1,0 +1,110 @@
+<%
+import json
+setInfo(
+      due="2022-10-10 10:55:00",
+      needsSubmitCode=True,
+      assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      points_limit=100,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                    calliexu=dict(needsSubmitCode=False, due='2022-10-12 00:00:00'),
+                      )
+)
+with open('content/worksheets/sailors.json', encoding='utf-8') as fid:
+    schema = json.load(fid)
+dbs = ['sailors.sqlite', 'sailors1.sqlite']
+%>
+
+# Chapter 9 Storage
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+**Disks:** Memory in a computer is of a hierarchical structure.
+Which of the memory is considered volatile?  
+ **A:** Cache  
+ **B:** Main memory  
+ **C:** Hard disk drive  
+ **D:** Solid state device  
+ **E:** Magnetic tape  
+ **F:** A and B  
+ **G:** C and D  
+ **H:** None of them  
+% answer = 'F'
+% answer2 = f'''
+
+Cache and main memory is voatile (page 305)
+
+{answer}'''
+{{!select(answer, choices='ABCDEFGH', points=10, name='Disks')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Access.Time:** Match the terminology with the description of page access time.  
+% answer = ['seek time', 'rotational delay', 'transfer time']
+% choices = ['arm movement', 'hand waving', 'twirling time', 'waiting', 'spin time', 'actual'] + answer
+{{!table(inputs=1, headings='Description, term', table=f'''
+Moving arm to position disk head on track,{answer[0]}
+Waiting for a block to rotate under head,{answer[1]}
+Actually moving data to or from disk to memory,{answer[2]}''', symbols=choices, name='Access.Time', points=30)}}
+%include('viewAnswer')
+
+---
+
+**Solid.State.Drives:** Which of the following does a SSD **totally** eliminate?  
+% answer = 'rotational delay'
+% answer2 = f'''
+See slide 10.  
+
+Seek time is nominal $\lt$ 0.1 ms
+Rotational delay is totally eliminated
+
+Answer: {answer}'''
+{{!select(answer, choices=choices, points=10, name='Solid.State.Drives')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Buffer.Manager:** Which of the following is not an attribute of the DBMS buffer management system?  
+  **A:** Keeping track of free pages in the buffer pool  
+  **B:** Keeping track of pin counts  
+  **C:** Writing pages with dirty bit before replacing it in memory  
+  **D:** Keeping track of which user is using which page  
+  **E:** Implementing a buffer replacement policy  
+  **F:** None of the above  
+% answer = 'D'
+% answer2 = f'''
+The buffer manager has no knowledge of users
+
+Answer: {answer}'''
+{{!select(answer, choices='ABCDEF', points=10, name='Buffer.Manager')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Schema.Table:** Retrieve **all** the information from the schema from the database.  
+**NOTE:** The webpage uses SQLITE v2 which uses table sqlite_master.  Most student uses SQLite3 which uses sqlite_schema.
+% answer = f'''
+SELECT *
+  FROM sqlite_master
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=40, name='Schema.Table')}}
+%include('viewAnswer')
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

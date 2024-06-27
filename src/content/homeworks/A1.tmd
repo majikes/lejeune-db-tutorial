@@ -1,0 +1,15 @@
+<%
+setInfo(
+      assessment_type='homework',
+)
+%>
+
+# Link to homework 1
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+[homework A1]({{get_url('homeworks', key='A1')}})
+
+% if 'dummy' in pages:
+ {{!select('A', list('ABC'), points=25, name='dummy')}}
+% end

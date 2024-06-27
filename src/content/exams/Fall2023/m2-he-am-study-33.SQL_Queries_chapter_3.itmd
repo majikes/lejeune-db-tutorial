@@ -1,0 +1,37 @@
+<%
+from collections import namedtuple
+katex_underscore = r'\textunderscore{}'
+katex_le = r'\le'
+
+teach_most_dept = ['Marketing', 'Physics', 'Accounting', 'Cybernetics']
+%>
+
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % d = teach_most_dept[index]
+    **Teach.Most.{{index+1}}:** Find the name of the teacher**(s)** in the {{d}} department who teach the most classes.  
+    **NOTE:** The classes do not have to be classes from the {{d}} department.  
+    % answer = f'''
+-- Aggregate max
+WITH max_teach as (SELECT T.ID, count(*) as count
+                     FROM Teaches T, Instructor I
+                    WHERE I.dept_name = '{d}' AND
+                          I.ID = T.ID
+                    GROUP BY T.ID)
+
+SELECT I.name
+  FROM Teaches T, Instructor I
+ WHERE dept_name = '{d}' AND
+       T.ID = I.ID
+ GROUP BY I.name
+ HAVING COUNT(*) = (SELECT MAX(count) FROM max_teach)
+'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' Teach.Most.{index+1}', sort=1)}}
+    % include('viewAnswer')
+  %end
+%end
+
+---
+

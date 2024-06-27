@@ -1,0 +1,66 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Student;
+CREATE TABLE STUDENT (ID			varchar(5), 
+                      name			varchar(20) not null, 
+                      dept_name		varchar(20), 
+                      tot_cred		numeric(3,0) check (tot_cred >= 0));
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('00128', 'Zhang', 'Comp. Sci.', '102');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('12345', 'Shankar', 'Comp. Sci.', '32');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('19991', 'Brandt', 'History', '80');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('23121', 'Chavez', 'Finance', '110');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('44553', 'Peltier', 'Physics', '56');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('45678', 'Levy', 'Physics', '46');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('54321', 'Williams', 'Comp. Sci.', '54');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('55739', 'Sanchez', 'Music', '38');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('70557', 'Snow', 'Physics', '0');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('76543', 'Brown', 'Comp. Sci.', '58');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('76653', 'Aoi', 'Elec. Eng.', '60');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('98765', 'Bourikas', 'Elec. Eng.', '98');
+INSERT INTO Student (ID, name, dept_name, tot_cred) VALUES ('98988', 'Tanaka', 'Biology', '120');
+
+DROP TABLE IF Exists Course;
+CREATE TABLE COURSE (course_id		varchar(8), 
+                     title			varchar(50), 
+                     dept_name		varchar(20),
+                     credits		numeric(2,0) check (credits > 0));
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-101', 'Intro. to Biology', 'Biology', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-301', 'Genetics', 'Biology', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('BIO-399', 'Computational Biology', 'Biology', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-101', 'Intro. to Computer Science', 'Comp. Sci.', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-190', 'Game Design', 'Comp. Sci.', '4');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-315', 'Robotics', 'Comp. Sci.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('CS-347', 'Database System Concepts', 'Comp. Sci.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('EE-181', 'Intro. to Digital Systems', 'Elec. Eng.', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('FIN-201', 'Investment Banking', 'Finance', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('HIS-351', 'World History', 'History', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('MU-199', 'Music Video Production', 'Music', '3');
+INSERT INTO Course (course_id, title, dept_name, credits) VALUES ('PHY-101', 'Physical Principles', 'Physics', '4');
+
+SELECT 'List all the courses' AS '';
+SELECT course_id 
+  FROM course;
+
+SELECT 'Insert Database Systems CS 421' as '';
+INSERT INTO COURSE (course_id, title, dept_name, credits) 
+            VALUES('CS-421', 'Database Systems', 'Comp. Sci.', 3);
+
+SELECT 'List all the courses after CS-421 insert' AS '';
+SELECT course_id 
+  FROM course;
+
+SELECT 'Insert Database Systems CS 421' as '';
+INSERT INTO COURSE (course_id, title, dept_name, credits) 
+            VALUES('CS-421', 'Database Systems', 'Comp. Sci.', 3);
+
+
+SELECT 'List all students:' AS '';
+SELECT * 
+  FROM Student;
+
+SELECT 'Add student Green to the database with unknown credits' AS '';
+INSERT INTO Student (ID, name, dept_name) VALUES ('3003', 'Green', 'Finance');
+
+SELECT 'List all students after student Green inserted:' AS '';
+SELECT * 
+  FROM Student;

@@ -1,0 +1,57 @@
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('29', 'Brutus',  1, 33.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('32', 'Andy',    8, 25.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+INSERT INTO Sailors values ('64', 'Horatio', 7, 35.0);
+INSERT INTO Sailors values ('71', 'Zorba',  10, 16.0);
+INSERT INTO Sailors values ('74', 'Horatio', 9, 35.0);
+INSERT INTO Sailors values ('85', 'Art',     3, 25.5);
+INSERT INTO Sailors values ('95', 'Bob',     3, 63.5);
+
+SELECT 'The Sailors Sailors table:' as '';
+SELECT * FROM Sailors;
+
+DROP TABLE IF EXISTS Boats;
+CREATE TABLE Boats (bid INTEGER PRIMARY KEY, bname char(20), color char(20));
+INSERT INTO Boats values ('101', 'Interlake', 'blue');
+INSERT INTO Boats values ('102', 'Interlake', 'red');
+INSERT INTO Boats values ('103', 'Clipper', 'green');
+INSERT INTO Boats values ('104', 'Marine', 'red');
+
+SELECT 'The Boats Boats table:' as '';
+SELECT * FROM Boats;
+
+DROP TABLE IF EXISTS Reserves;
+CREATE TABLE Reserves (sid INTEGER, bid INTEGER, day date,
+                       FOREIGN KEY(sid) REFERENCES Sailors(sid),
+                       FOREIGN KEY(bid) REFERENCES Boats(bid));
+INSERT INTO Reserves VALUES ('22', '101', '10/10/98');
+INSERT INTO Reserves VALUES ('22', '102', '10/10/98');
+INSERT INTO Reserves VALUES ('22', '103', '10/8/98' );
+INSERT INTO Reserves VALUES ('22', '104', '10/7/98' );
+INSERT INTO Reserves VALUES ('29', '104', '10/1/98' );
+INSERT INTO Reserves VALUES ('29', '102', '10/2/98' );
+INSERT INTO Reserves VALUES ('29', '103', '10/3/98' );
+INSERT INTO Reserves VALUES ('29', '101', '10/4/98' );
+INSERT INTO Reserves VALUES ('31', '102', '11/10/98');
+INSERT INTO Reserves VALUES ('31', '103', '11/6/98' );
+INSERT INTO Reserves VALUES ('31', '104', '11/12/98');
+INSERT INTO Reserves VALUES ('64', '101', '9/5/98');
+INSERT INTO Reserves VALUES ('64', '102', '9/8/98');
+INSERT INTO Reserves VALUES ('74', '103', '9/8/98');
+
+SELECT 'The Reserves Reserves table:' as '';
+SELECT * FROM Reserves;
+
+SELECT 'The Sailors table:' as '';
+SELECT * FROM Sailors;
+
+SELECT 'Find the name and age of the youngest sailor at each rating level' as '';
+SELECT S.sname, MIN(S.age), S.rating
+  FROM Sailors AS S
+ GROUP BY S.rating; 

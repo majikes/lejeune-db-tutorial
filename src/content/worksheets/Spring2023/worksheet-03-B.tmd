@@ -1,0 +1,114 @@
+<%
+setInfo(
+        due="2023-01-24 10:45:00",
+        pages=['questions', 'submit'],
+        assessment_type='worksheet',
+        maxpenalty=0.75,
+        penalty=.2,
+        exceptions=dict(awtack=dict(due="2023-02-01 18:00:00"))
+       )
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+% if 'questions' in pages:
+
+# 03-B Chapter 3 worksheet: Second Practice with SQL
+
+% dbs=['worksheet-03.sqlite']
+
+I have created a _table_ Students using the following SQL commands.
+
+```
+create table if not exists Students
+(sid text,
+ name text,
+ login text,
+ age integer,
+ gpa real);
+
+insert into Students values ('53666', 'Jones', 'jones@cs', 18, 3.4);
+insert into Students values ('53688', 'Smith', 'smith@cs', 18, 3.2);
+insert into Students values ('53650', 'Smith', 'smith@math', 19, 3.9);
+```
+
+
+---
+
+### Break things!
+
+Now go back and execute the cell where you inserted the new student again. Then run
+the cell where you listed the contents. There should be 2 copies of that student now.
+<font color="red">Ouch!</font> We've got duplicate entries in our database! We'll learn how to prevent this later.
+
+<font style="background: palegreen">You can fix the fact that a cell on the page was run multiple times</font> by refreshing the page to reload the database and then run each cell
+again.
+
+---
+
+Enrolled: Create a new table Enrolled
+
+Include the following fields.
+
+- sid: text
+- cid: text
+- grade: text
+
+Exists: I recommend you use the `create table if not exists` syntax to avoid getting
+into difficulties when you rerun the cell.
+
+% answer = '''CREATE TABLE IF NOT EXISTS Enrolled (sid text, cid text, grade text)'''
+{{!sql(answer, dbs=dbs, points=10, name='_Exists')}}
+% include('viewAnswer')
+
+My code can't really tell if you got that table correct because create table doesn't
+return anything for me to check.
+
+Insert:. Insert some entries into the Enrolled table.
+
+| sid   | cid         | grade |
+| ----- | ----------- | ----- |
+| 53688 | Carnatic101 | C     |
+| 53688 | Reggae203   | B     |
+| 53650 | Topology112 | A     |
+| 53666 | History105  | B     |
+
+**Note**: You can put multiple SQL statements into the box below and
+separate them using semicolons.
+
+% answer = '''insert into Enrolled values ('53688', 'Carnatic101', 'C');
+insert into Enrolled values ('53688', 'Reggae203', 'B');
+insert into Enrolled values ('53650', 'Topology112', 'A');
+insert into Enrolled values ('53666', 'History105', 'B');
+'''
+{{!sql(answer, dbs=dbs, points=0, name='_Insert')}}
+% include('viewAnswer')
+
+% answer = '''select * from Enrolled'''
+Contents: Since I can't really tell if the above statement worked because it didn't
+return a result,
+list the contents of the Enrolled table
+to show it worked.
+{{!sql(answer, dbs=dbs, points=15, name='_Contents', sort=True)}}
+% include('viewAnswer')
+
+---
+
+% answer = '''SELECT name, cid FROM Students, Enrolled WHERE Students.sid = Enrolled.sid AND grade = 'A' '''
+A-student: List the student name and course id for each student whose grade is A.
+{{!sql(answer, dbs=dbs, points=10, sort=True, name='A-student')}}
+% include('viewAnswer')
+
+To best simulate the way the grader will work, I suggest you reload your page and step
+one cell to the next pressing execute. If it shows all the answers correct under those
+conditions it should pass the grader just fine.
+
+---
+
+% end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

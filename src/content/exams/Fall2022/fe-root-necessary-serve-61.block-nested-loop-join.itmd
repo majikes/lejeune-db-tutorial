@@ -1,0 +1,52 @@
+#### {{!linkable_header(name_block_nested_loop)}} {{points_block_nested_loop}} out of {{points_evaluation}} {{name_evaluation.lower()}} points out of {{points_limit}} total points
+
+**Calculator:** You may use this box as a calculator.
+Just type in any expression that can be evaluated by a JavaScript eval.
+For example, `2 ** 0.5` will show you the result of the square root of 2
+in the red box to the right.
+Leaving the box empty or filled in will **NOT** affect your grade.
+{{!calculator(name=f'_calculator.bnl')}}
+
+---
+
+<%
+BNL_PAGES = namedtuple('PAGES_BNL', 'sailors reserves buffers')
+bnl_pages = [BNL_PAGES(sailors=500, reserves=1000, buffers=502),
+             BNL_PAGES(sailors=500, reserves=250, buffers=252),
+             BNL_PAGES(sailors=100, reserves=200, buffers=102),
+             BNL_PAGES(sailors=150, reserves=300, buffers=152),
+             ]
+
+for index in range(number_block_nested_loop):
+  if (section == '003') or (conflict_exam and index == number_block_nested_loop-1) or (not conflict_exam and ((member_number%(number_block_nested_loop-1) == index))):
+      if index == number_block_nested_loop -1:
+        include('viewAnswer', answer=f' Only seen by students at the conflict exam')
+      else:
+        include('viewAnswer', answer=f' Only seen by member number % {number_block_nested_loop-1} == {index}')
+      end
+%>
+
+Assume that Sailors is a file of {{bnl_pages[index].sailors}} pages,
+Reserves is a file of {{bnl_pages[index].reserves}} pages,
+and there are {{bnl_pages[index].buffers}} buffers.
+<%
+answer = [f'{bnl_pages[index].buffers-2}', '2', '1', '1',
+          f'{bnl_pages[index].reserves // (bnl_pages[index].buffers -2)}',
+          f'{bnl_pages[index].sailors  // (bnl_pages[index].buffers -2)}',
+          f'{bnl_pages[index].sailors + bnl_pages[index].reserves}']
+choices = [f'{x}' for x in range(503)] + [f'{x*25}' for x in range(81)]
+%>
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+How many buffers are used for the outer loop?,{answer[0]}
+How many buffers are used for the input and output of the inner loop?,{answer[1]}
+Assuming Sailors is the outer loop&#44; how many times is each Sailors page read in?,{answer[2]}
+Assuming Reserves is the outer loop&#44; how many times is each Reserves page read in?,{answer[3]}
+Assuming Sailors is the inner loop&#44; how many times is each Sailors page read in?,{answer[4]}
+Assuming Reserves is the inner loop&#44; how many times is each Reserves page read in?,{answer[5]}
+Depending on which relation is the outer or inner loop&#44; what is the optimal number of I/Os required to complete the BNL join,{answer[6]}''', symbols=choices, points=10, name=f'Block.Nested.Loop.Join.{index+1}')}}
+%include('viewAnswer')
+
+---
+
+  % end  # section == 003 or member_number%number_block_nested_loop == index
+% end  # for index in range(number_block_nested_loop)

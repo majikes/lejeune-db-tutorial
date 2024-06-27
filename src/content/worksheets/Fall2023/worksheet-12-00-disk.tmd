@@ -1,0 +1,37 @@
+<%
+setInfo(assessment_type='worksheet')
+%>
+
+# 12-00 Disk worksheet
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+
+---
+
+
+**Disk.Arm:** Of the following disk characteristics, which accounts for the moving of the disk arm?
+
+**A** Rotational latency  
+**B** Data-transfer time  
+**C** Seek time  
+**D** All of the above  
+**E** None of the above  
+% answer = 'C'
+% answer2 = f'''Page 566 says:
+The time for repositioning the arm is called the seek time:
+
+Answer: {answer}'''
+{{!select(answer, choices='ABCDE', points=50, name='Disk.Arm')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Rotational.Latency:** Given a disk that spins at $R$ RPMs, Rotations Per Minute,
+write an arithmetic expression that describes the average rotational delay in seconds.  
+% answer = '0.5 * 60 / R'
+{{!expression(answer, dict(R=1), dict(R=5), dict(R=6), points=50, name='Rotational.Latency')}}
+% include('viewAnswer')
+
+% include('worksheet-submit.md')

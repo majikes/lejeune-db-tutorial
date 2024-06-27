@@ -1,0 +1,80 @@
+<%
+setInfo(
+        due="2022-08-22 10:45:00",
+        pages=['questions', 'submit'],
+        assessment_type='worksheet',
+        penalty=.2,
+        maxpenalty=0.75,
+        exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+       )
+from config import final_exam_time
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+# Office hours and final exam
+
+% if 'questions' in pages:
+
+**When.Are.Worksheets.Due:** When do you need to submit this and all worksheets?  
+**NOTE:** You may want to look at the first line in this worksheet for the answer.  
+ **A** Anytime during class is fine  
+ **B** Anytime during the semester  
+ **C** Before Professor Majikes says <i>Did everyone submit?</i>  
+% answer = 'C'
+{{!select(answer, 'ABC', points=20, name='When.Are.Worksheets.Due')}}
+% include('viewAnswer')
+
+---
+
+**Handling.Submission.Errors.During.Class:** What should you do if you get an error or otherwise can't submit with the rest of the class?  
+ **A** Wait until the end of class, Professor Majikes doesn't like to be interrupted during class.  
+ **B** Be silent and try it again and again until it works.  
+ **C** Raise your hand (or unmute on Zoom) and let Professor Majikes know **before** he turns off the submit button.  
+ **D** Do nothing.  You will get credit for the submission regardless.  
+  % answer = 'C'
+  {{!select(answer, 'ABCD', points=20, name='Handling.Submission.Errors.During.Class')}}
+  % include('viewAnswer')
+
+---
+
+**Zoom.Versus.In.Class:** When is Zoom preferable to in-class?  
+  **A** They're pretty much the same  
+  **B** For exams or games, the peace and quiet is beneficial  
+  **C** When you are ill and physically cannot make it to class  
+  % answer = 'C'
+  {{!select(answer, 'ABC', points=20, name='Zoom.Versus.In.Class')}}
+  % include('viewAnswer')
+
+---
+
+**Course.Care:** True or false: Per the course checklist on {{HTTPS_FQDN}} 
+I have watched the [course care video]({{get_url('panopto',hexcode='e69a803f-d891-481e-8ef8-ac9b013890ac')}}) and I know when office hours are and how to sign up for them.  
+  **A** True  
+  **B** False  
+  % answer = 'A'
+  {{!select(answer, 'AB', points=20, name='Model.Real.World')}}
+  % include('viewAnswer')
+
+---
+
+**Final.Exam:** According to the registrar's webpage and the [syllabus key date]({{get_url('syllabi', page_name='syllabus')}}#key-dates),
+when is the final exam?  
+**NOTE$_1$:** You may want to use the syllabus key dates hyperlink.  
+**NOTE$_2$:** Selection pull downs are shown in ASCII-ascending order.  
+  %choices = ['Fri, Dec 02 08:00 AM', 'Fri, Dec 02 12:00 PM', 'Fri, Dec 02 04:00 PM', 'Fri, Dec 02 07:00 PM', 'Sat, Dec 03 08:00 AM', 'Sat, Dec 03 12:00 PM', 'Sat, Dec 03 04:00 PM', 'Mon, Dec 05 8:00 AM', 'Mon, Dec 05 12:00 PM', 'Mon, Dec 05 04:00 PM', 'Mon, Dec 05 07:00 PM', 'Tue, Dec 06 8:00 AM', 'Tue, Dec 06 12:00 PM', 'Tue, Dec 06 04:00 PM', 'Tue, Dec 06 07:00 PM', 'Thu, Dec 08 8:00 PM', 'Thu, Dec 08 12:00 PM', 'Thu, Dec 08 04:00 PM', 'Thu, Dec 08 07:00 PM', 'Fri, Dec 09 8:00 AM', 'Fri, Dec 09 12:00 PM', 'Fri, Dec 09 04:00 PM', 'Fri, Dec 09 07:00 PM' ]
+  % answer = final_exam_time.strftime('%a, %b %d %I:%M %p')
+  {{!select(answer, choices, points=20, name='Final.Exam')}}
+  % include('viewAnswer')
+
+---
+
+% end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end
+

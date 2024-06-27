@@ -1,0 +1,26 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+---
+
+
+## Today's notes
+
+<ul>
+ <li>A5 due by Wednesday 12/1 11:11:59 PM</li>
+ <li>Today SQL practice<ul>
+   <li>Do worksheet similar to exam</li>
+   <li>After handing in, go over</li>
+   <li>Then do <i>redo</i>&nbsp; version</li>
+ </ul></li>
+ <li>Final Exam<ul>
+  <li>Tuesday, Dec 7th, 12:00 PM (noon) to 2:00 PM</li>
+  <li>120 minutes</li>
+ </ul></li>
+ <li>Any questions?</li>
+</ul>

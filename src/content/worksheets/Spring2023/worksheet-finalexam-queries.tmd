@@ -1,0 +1,184 @@
+<%
+from collections import namedtuple
+from content.exams.fe_mothball_midwife_granite_27 import points_total, points_limit, points_max
+
+setInfo(
+        needsSubmitCode=True,
+        assessment_type='worksheet',
+        due='2023-04-25 11:00:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False),
+                        ehrensam=dict(needsSubmitCode=False, due='2023-04-26 00:00:00'),
+                        hchen3=dict(needsSubmitCode=False, due='2023-04-26 00:00:00')),
+        pages=['questions', 'submit'],
+        max_segments=3,
+        maxpenalty=1.00, penalty=.20,
+       )
+dbs=['midterm2-nc-legislature-1.sqlite']
+PARTISAN = namedtuple('PARTISAN', 'party chamber role start_name vote_type long_name')
+partisans = [PARTISAN(party='Republican', chamber='Senate', role='Senator',
+                      start_name='C', vote_type='yea', long_name='Senate'),
+             PARTISAN(party='Republican', chamber='House',  role='Representative',
+                      start_name='H', vote_type='nay', long_name='House of Representatives'),
+             PARTISAN(party='Democratic',   chamber='House',  role='Representative',
+                      start_name='R', vote_type='yea', long_name='House of Representatives'),
+             PARTISAN(party='Democratic',   chamber='Senate', role='Senator',
+                      start_name='S', vote_type='nay', long_name='Senate'),
+          ]
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+# Final Exam Queries
+
+## Final Exam Prologue 
+
+**<font size="+1">This is the prologue from the final exam.</font>**
+You <font color="red" size="+1">don't</font> have 180 minutes to do this worksheet,
+you <font color="red" size="+1">don't</font> have to stay in full screen mode for this worksheet,
+there are <font color="red" size="+1">not</font> 110 points on this worksheet,
+etc.
+The <font color="red" size="+1">normal worksheet</font> grading applies: 50% minimum grade for worksheets handed in on time; a 75% or better gets full credit.
+
+The prologue applies to the exam and is here in this worksheet for you to read at your leisure!
+
+---
+
+% include('content/exams/fe-mothball-midwife-granite-27.prolog.itmd')
+
+## {{!linkable_header('Legislature Database Schema')}}
+
+Here are the tables you'll find for the database used in the final exam.
+Your queries will be run against two versions of the database.
+One of the databases will be much smaller and only contain a subset of the information.
+
+% import json
+% schema = json.load(open('fe-nc-legislature-1.json'))
+```sql
+{{schema.replace("'", "`")}}
+```
+
+---
+
+In the exam SQL section, you will write SQL queries for the North Carolina legislature schema at the beginning of the exam.
+Your queries will be tested immediately against **two** different databases.
+The second database has small modifications to prevent hard coding answers.
+If your queries output matches the expected output, the
+displayed answers will be outlined in green.
+You need green, highlighted output from the query of **both** databases to get any credit.
+Your actual exam score will be determined when your query is
+tested against a different database but **two** green feedbacks should mean that you are on track to receive full credit.
+
+---
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}}
+% q = partisans[0]
+
+**<font color='red' size="+1">NOTE:</font>** This set of queries 
+is meant to give you a complex query and how to solve it in pieces.
+This should be something learnt in earlier computer science classes.
+
+Suffice it to say _George Polya_'s 1945, easy to read book, [How to Solve It](https://en.wikipedia.org/wiki/How_to_Solve_It) describes it as:
+
+1. Understand the problem.  If you don't know what the problem is asking, then you can't answer it.  
+2. Devise a plan.  The plan is just a guess or list.  But come up with a plan.  
+3. Carry out one piece of the plan.   
+4. Given step three above, you may change your plan.  But you often revise/repeat steps two and three until you solve it.  
+
+The complex question is:
+>> Display the full names of North Carolina {{q.role}}s that 
+>> have a last name starting with the letter B.
+>> For each of these legislators, show the count of the number of roll calls the legislator was absent,
+>> the number of roll calls the legislator voted Yea,
+>> the number of roll calls the legislator voted Nay,
+>> and the number of roll calls the legislator abstained.
+>> **NOTE:** Each row will show the {{q.role}} full name, a vote type, and the number of times that vote was cast.
+>> Not all {{q.role}}s cast each vote type.
+
+This is a hard query.  Let's break it down!
+
+1. Find the {{q.role}}s starting with the letter B
+1. Find look at the attributes in the Legislator relation  
+1. Find out how many times they did the different votes
+
+As you go through the list, you'll learn something and modify your list
+
+---
+
+Let's assume you know how to find an attribute starting with a letter...
+
+
+**{{q.role}}.Last.Name.Starting.D:** List all attributes of the North Carolina {{q.role}}s
+who have a last name starting with the letter B.
+% answer = f'''
+SELECT *
+  FROM Legislators L
+ WHERE L.last_name like 'B%' AND
+       L.role = '{q.role}'
+'''
+{{!sql(answer, dbs=dbs, points=25, sort=True, name=f'{q.role}.Last.Name.Staring.D')}}
+% include('viewAnswer')
+
+
+---
+
+Did you note that there's a `name` attribute which is the full name and a field that is the `last_name`?
+This makes the database non-BCNF but you can understand why Legiscan set it up like this.  
+People may know their Senator's full name or just their last name.
+But sometimes their full name and name are not the same.  
+Note the names of North Carolina Senator Jim Burgin.  
+
+---
+
+% for vote_type in ['Absent', 'Yea', 'Nay', 'Abstain']:
+
+**{{vote_type}}.{{q.role}}:** List the name of each North Carolina {{q.role}} whose last name starts with the letter B and the number of roll calls where they voted Yea.
+% answer = f'''
+SELECT L.name, count(*)
+  FROM Legislators L, Roll_calls R, Votes V
+ WHERE L.legislator_id = V.legislator_id AND
+       R.roll_call_id = V.roll_call_id AND
+       L.last_name like 'B%' AND
+       V.vote_text = '{vote_type}' AND
+       L.role = '{q.role}'
+ GROUP BY L.name
+'''
+{{!sql(answer, dbs=dbs, points=10, sort=True, name=f'{vote_type}.{q.role}')}}
+% include('viewAnswer')
+
+% end
+
+---
+
+**<font color='red' size="+1">NOTE:</font> Did you notice that the some of North Carolina {{q.role}} didn't vote in all the different ways?   
+For example, North Carolina Senator Jim Burgin never abstained from a vote!   
+
+---
+
+**Complex.Queries:** Display the full names of North Carolina {{q.role}}s that 
+have a last name starting with the letter B.
+For each of these legislators, show the count of the number of roll calls the legislator was absent,
+the number of roll calls the legislator voted Yea,
+the number of roll calls the legislator voted Nay,
+and the number of roll calls the legislator abstained.  
+**Order the output first alphabetically by {{q.role}} name then alphabetically by the vote type.
+**NOTE:** Each row will show the {{q.role}} full name, a vote type, and the number of times that vote was cast.
+Not all {{q.role}}s cast each vote type.
+% answer = f'''
+SELECT L.name, vote_text, count(*)
+  FROM Legislators L, Roll_calls R, Votes V
+ WHERE L.legislator_id = V.legislator_id AND
+       R.roll_call_id = V.roll_call_id AND
+       L.last_name like 'B%' AND
+       L.role = '{q.role}'
+ GROUP BY L.name, V.vote_text
+ ORDER BY L.name, V.vote_text
+'''
+{{!sql(answer, dbs=dbs, points=25, name='Complex.Query')}}
+% include('viewAnswer')
+
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

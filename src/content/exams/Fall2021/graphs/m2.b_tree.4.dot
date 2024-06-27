@@ -1,0 +1,113 @@
+digraph G
+{
+    splines=false
+    "block"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="connector0"></td>
+                        <td port="key0">4</td>
+                        <td port="connector1"></td>
+                        <td port="key1">17</td>
+                        <td port="connector2"></td>
+                        <td port="key2">24</td>
+                        <td port="connector3"></td>
+                        <td port="key3">30</td>
+                        <td port="connector4"></td>
+                    </tr>
+                </table>>
+    ]
+    "block0"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="key0">2*</td>
+                        <td port="key1">3*</td>
+                        <td port="key2">_</td>
+                        <td port="key3">_</td>
+                    </tr>
+                </table>>
+    ]
+    "block1"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="key0">5*</td>
+                        <td port="key1">7*</td>
+                        <td port="key2">14*</td>
+                        <td port="key3">16*</td>
+                    </tr>
+                </table>>
+    ]
+    "block2"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="key0">19*</td>
+                        <td port="key1">20*</td>
+                        <td port="key2">22*</td>
+                        <td port="key3">_</td>
+                    </tr>
+                </table>>
+    ]
+    "block3"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="key0">24*</td>
+                        <td port="key1">27*</td>
+                        <td port="key2">29*</td>
+                        <td port="key3">_</td>
+                    </tr>
+                </table>>
+    ]
+    "block4"
+    [
+        shape = none
+        label = <<table border="1" cellborder="0" cellspacing="0">
+                    <tr>
+                        <td port="key0">33*</td>
+                        <td port="key1">34*</td>
+                        <td port="key2">38*</td>
+                        <td port="key3">39*</td>
+                    </tr>
+                </table>>
+    ]
+
+    "block":"connector0" -> "block0":"connector2"
+    "block":"connector1" -> "block1":"connector2"
+    "block":"connector2" -> "block2":"connector2"
+    "block":"connector3" -> "block3":"connector2"
+    "block":"connector4" -> "block4":"connector2"
+
+    "block1":"key0" -> "block0":"key3"
+    "block0":"key3" -> "block1":"key0"
+    "block2":"key0" -> "block1":"key3"
+    "block1":"key3" -> "block2":"key0"
+    "block3":"key0" -> "block2":"key3"
+    "block2":"key3" -> "block3":"key0"
+    "block4":"key0" -> "block3":"key3"
+    "block3":"key3" -> "block4":"key0"
+
+    "root" [ shape = none label="root" ]
+    "L1" [ shape = none label="L1" ]
+    "L2" [ shape = none label="L2" ]
+    "L3" [ shape = none label="L3" ]
+    "L4" [ shape = none label="L4" ]
+    "L5" [ shape = none label="L5" ]
+    "root" -> "block":"connector0"
+    "L1" -> "block0":"connector0"
+    "L2" -> "block1":"connector0"
+    "L3" -> "block2":"connector0"
+    "L4" -> "block3":"connector0"
+    "L5" -> "block4":"connector0"
+
+    {rank=min; "block" "root"}
+    {rank=same; "block0" "block1" "block2" "block3" "block4"}
+    {rank=max; "L1" "L2" "L3" "L4" "L5"}
+}

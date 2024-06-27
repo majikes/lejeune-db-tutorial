@@ -1,0 +1,170 @@
+<%
+from content.exams.m1_dear_more_too_63 import points_total, points_limit
+from content.exams.m1_dear_more_too_63 import due, exam, possible_pages, points_limit, duration, exceptions, maxpenalty, penalty, dbs, needsSubmitCode
+
+from content.exams.m1_dear_more_too_63 import points_sql_queries, number_sql_queries
+from content.exams.m1_dear_more_too_63 import points_chapter_review, number_chapter_review
+
+setInfo(duration=duration,
+        needsSubmitCode=True,
+        due='2021-09-14 15:15:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False)),
+        exam=True,
+        pages=possible_pages,
+        maxpenalty=1.00, penalty=.20,
+       )
+dbs=['states-A.sqlite']
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+# Worksheet on States database
+
+### Exam Instructions / Prologue 
+
+**This is a copy of the exam prologue.**
+You can read it now or before the exam to ensure you understand what to expect.
+
+## Election Database Schema
+
+Here is the tables you'll find for the database used in the midterm.
+Your queries will be run against two versions of the database.
+One of the databases will be much smaller and only contain a subset of the information.
+You should not consider this database information to be accurate to the current administration.
+ 
+```sql
+CREATE TABLE IF NOT EXISTS States
+           (abbrev char(2) PRIMARY KEY,
+            statename char(20),  -- May include territories
+            population integer)
+
+CREATE TABLE IF NOT EXISTS Politicians
+           (bioid char(20),
+            firstname char(20),
+            lastname char(20),
+            birthday date, -- YYYY-MM-DD format string
+            gender char(1),
+            PRIMARY KEY(bioid))
+
+CREATE TABLE IF NOT EXISTS Terms
+   (termid INTEGER PRIMARY KEY AUTOINCREMENT,
+    termtype char(20), -- Type of term elected; rep, sen, prez, viceprez
+    startdate date,
+    enddate date,
+    party char(20), -- Political party affiliation
+    how char(20),  -- Different ways to get into an office
+    bioid char(20),
+    -- Presidents & vice presidents aren't elected from districts or states
+    -- Senators aren't elected from districts
+    district integer,  -- Null for prez, viceprez, or sen
+    state char(2),     -- Null for prez and viceprez
+    FOREIGN KEY(bioid) REFERENCES Politicians(bioid))''')
+```
+
+**NOTE:** The database has been attenuated.
+For example, this database only has the original 13 states in the States relation.
+The Politicians relation only has the politicians born since the last century.  
+The grader will use a different database.
+
+
+% if 'questions' in pages:
+
+---
+
+## Exam format
+
+
+The exam is about 100 points with about 25% of the points multiple-choice questions and 75% of the questions SQL queries.
+The SQL queries run within your browser on your machine.
+Therefore, if you put in a query that is very large, you may hang your machine.
+
+In the following scratch space, enter `SELECT * FROM States, Politicians, Terms`.  
+It will more than likely chew up all the space on your machine.
+The only way to recover from this is a refresh (`<ctrl>R` or `<cmd>R`).
+It would be good to try it now as opposed to trying it on the exam.
+
+There are no points for the following SQL query.
+It is a scratch pad.
+{{!sql(''' select 1 ''', name='_scratch_sql_queries_1', dbs=dbs)}}
+
+---
+
+## Schema
+
+**SCHEMA:** From class we learned that table `sqlite_master` has the schema.
+List all the tuples in the schema that have a type of table.  
+% answer = '''SELECT * FROM sqlite_master WHERE type='table' '''
+<code>SELECT * FROM sqlite_master WHERE type='table'  </code>  
+{{!sql(answer, dbs=dbs, points=10, num_rows=3, name='SCHEMA', sort=1)}}
+% include('viewAnswer')
+
+
+---
+
+### United States Electorate
+
+This database has the different types of federal electorate.
+There are `rep`, `sen`, `prez`, and `viceprez` which are United States House of Representatives,
+United States Senators, United States Presidents, and United States Vice Presidents, respectively.
+
+**TERM.TYPE:** Write a SQL query to list all the possible term types.  
+% answer = '''SELECT DISTINCT termtype FROM Terms'''
+{{!sql(answer, dbs=dbs, points=15, num_rows=3, name='TERM.TYPE', sort=1)}}
+% include('viewAnswer')
+
+
+**HOW:** Write a SQL query to list all the possible ways someone can get into office.  
+This is the field `how` in Terms.
+% answer = '''SELECT DISTINCT how FROM Terms'''
+{{!sql(answer, dbs=dbs, points=15, num_rows=3, name='HOW', sort=1)}}
+% include('viewAnswer')
+
+**DISTRICT** United States Representatives are elected from districts within states.
+Presidents, Vice Presidents, and Senators are not.
+For these three offices, the district value is a -1.  
+List all the different `district`s when the `termtype` is not `rep`.  
+% answer = '''SELECT DISTINCT district FROM Terms WHERE termtype!='rep' '''
+{{!sql(answer, dbs=dbs, points=15, num_rows=3, name='DISTRICT', sort=1)}}
+% include('viewAnswer')
+
+---
+
+## Full screen
+
+
+**Full.Screen:** You have to be in full screen mode.
+No points will be deducted if you  **stay** in full screen mode.
+% answer = 'D. All of the above'
+% choices = ['A. You must stay in full screen mode.', 'B. You will get a warning that you are leaving full screen mode.', 'C. The screen will turn red after leaving full screen mode.', answer, 'E. None of the above']
+{{!select(answer, choices, points=15, name='Full.Screen')}}
+% include('viewAnswer')
+
+---
+
+### Front Board
+
+**Front.Board:** How do you ask questions during the exam?  
+% answer = 'E. All of the above'
+% choices = ['A. First look at the front board for the answer from a previous student', 'B. Second, reread the question. It will take Majikes a while to get to you', 'C. Raise your hand in person or on zoom', 'D. Only ask questions about how the test is administered, not about databases', answer, 'F. None of the above']
+{{!select(answer, choices, points=15, name='Front.Board')}}
+% include('viewAnswer')
+
+---
+
+### Submit Code
+
+**Where:** To submit an exam, you must have a submit code.
+Where can you find the submit code?  
+% answer = 'C. In front of class or from ARS proctor'
+% choices = ['A. Get it from a friend in class', 'B. Use a submit code previous submissions; they don\'t change', answer, 'D. Guess', 'E. All of the above', 'F. None of the above']
+{{!select(answer, choices, points=15, name='Where')}}
+% include('viewAnswer')
+
+%end 
+
+---
+
+% if 'submit' in pages:
+% include('exams-pledge.md')
+% include('submit.md')
+%end

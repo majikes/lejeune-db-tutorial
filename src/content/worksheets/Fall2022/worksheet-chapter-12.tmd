@@ -1,0 +1,72 @@
+<%
+setInfo(
+      due="2022-10-17  8:00:00",
+      needsSubmitCode=False,
+      assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      harley87=dict(needsSubmitCode=False, due='2021-10-26 15:15:00')),
+)
+dbs = ['states-B.sqlite']
+%>
+
+# Chapter 12 Preclass
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+**Access.Path:** Which of the following describes an access path?  
+ **A:** The way to enter the Dean Smith Center without a ticket.  
+ **B:** One of several possible ways to retrieve tuples from a table.  
+ **C:** It may consist of a file scan  
+ **D:** It may use an index entry  
+ **E:** None of the above  
+ **F:** B, C, and D  
+ %answer = 'F'
+ %answer2 = f'''See page 398.  Answer: {answer}'''
+ {{!select(answer, 'ABCDEF', points=30, name='Access.Path')}}
+ %include('viewAnswer', answer=answer2)
+
+---
+
+**CNF:** What is CNF?  
+ **A:** Conjunctive normal form  
+ **B:** Selection of conditions logically AND'd together  
+ **C:** The conjunction of conditions in a selection  
+ **D:** All of the above  
+ **E:** None of the above  
+ % answer = 'D'
+ % answer2 = f'See page 398.  Answer: {answer}'''
+ {{!select(answer, 'ABCDE', points=35, name='CNF')}}
+ %include('viewAnswer', answer=answer2)
+
+---
+
+<img src="{{static('images/DBMS.Figure.12.3.png')}}" alt="DBMS Figure 12.3"/>
+
+**Image:** What does the above figure represent?  
+ **A:** A stick figure done by a 5 year old  
+ **B:** A query expression expressed as a relational algebra tree  
+ **C:** All selections with between 5 and 100 I/Os.  
+ **D:** Pointer path  
+ **E:** None of the above  
+ % answer = 'B'
+ {{!select(answer, 'ABCDE', points=35, name='Image')}}
+ %include('viewAnswer')
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

@@ -1,0 +1,59 @@
+<%
+setInfo(
+      due="2023-03-30 10:50:00",
+      needsSubmitCode=True,
+			pages=['questions', 'submit'],
+        assessment_type='worksheet',
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(_003=dict(needsSubmitCode=False))
+)
+answer = 'Yes'
+choice = ['Yes', 'No', 'Neutral']
+%>
+
+# Green lights for the final exam
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+The following questions all require a Yes, No, or Neutral before you can submit
+
+I will abide by whatever 50% plus one vote is received from the class.
+If anyone votes neutral, your vote will **not** count in the calculation of the percentage of 
+class deciding.
+
+--- 
+
+
+% if 'questions' in pages:
+
+
+**Green.Highlights:** Given that there is always the possibility of errors in the
+grader, the browsers, etc, should green highlights be used during the final exam?  
+{{!select(answer, choice, required="required", points=33.4, name='Green.Highlights')}}
+
+---
+
+**CPU.Warning:** The pop-up warning that the database query is taking more than two seconds
+of CPU time is meant to warn you that your query is wrong and you probably want to refresh
+your browser.  
+Should the JavaScript promise of excessive CPU be issued during the final exam?  
+{{!select(answer, choice, required="required", points=33.3, name='CPU.Warning')}}
+
+---
+
+**Selects:** The select pull down allows you to type and or use your cursor to select a number as 
+was used in the number of I/Os section of midterm 2.
+This allows me to give you a list of number which somewhat limits you to the possible number, the range, etc.  
+The select statement can take more time, especially if the list is long and you use the cursor/mouse.
+The select statement does not take more time if you type in the numbers.  
+Should select lists, pull-downs, be used during the final exam?  
+{{!select(answer, choice, required="required", points=33.3, name='Selects')}}
+
+--- 
+
+% end
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

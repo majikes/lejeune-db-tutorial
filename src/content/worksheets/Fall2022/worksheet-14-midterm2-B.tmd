@@ -1,0 +1,96 @@
+<%
+setInfo(due="2021-11-04 15:11:00",
+        needsSubmitCode=True,
+        exceptions=dict(_003=dict(needsSubmitCode=False)),
+        pages=['questions', 'submit'],
+        )
+dbs=['sailors.sqlite', 'sailors1.sqlite']
+%>
+# Midterm 2 B
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+
+
+```sql
+  CREATE TABLE Sailors
+      (sid integer primary key,
+       sname text,
+       rating integer,
+       age integer)
+
+  CREATE TABLE Boats
+      (bid integer primary key,
+       bname text,
+       color text)
+
+  CREATE TABLE Reserves
+      (sid integer,
+       bid integer,
+       day text,
+       primary key (sid, day)
+       foreign key (sid) references Sailors(sid)
+       foreign key (bid) references Boats(bid))
+
+```
+---
+
+**Alphabetically.Last:** Select the name of each sailor and the alphabetically last boat name that the sailor has reserved.
+Only return the names of sailors who have reserved at least one boat.  
+% answer = '''
+SELECT S.sname, max(B.bname)
+  FROM Sailors S, Boats B, Reserves R
+ WHERE S.sid=R.sid AND B.bid=R.bid
+ GROUP BY S.sname'''
+{{!sql(answer, dbs=dbs, sort=1, points=20, name='Alphabetically.Last')}}
+% include('viewAnswer')
+
+---
+
+**Last.Reserved:** Select the name of each sailor and the last boat they reserved.
+Only return the names of sailors who have reserved at least one boat.  
+% answer = '''
+SELECT S.sname, B.bname
+  FROM Sailors S, Boats B, Reserves R
+ WHERE S.sid=R.sid AND B.bid=R.bid
+ GROUP BY S.sname
+ HAVING R.day = max(R.day)
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=40, name='Last.Reserved')}}
+% include('viewAnswer')
+
+---
+
+**Last.Reserved.Null:** Select the name of each sailor and the last boat they reserved.
+For any sailor who never reserved a boat, return Null for the boat name.
+% answer = '''
+WITH S1 as (SELECT sname, sid FROM Sailors),
+     R2 as (SELECT S.sname, S.sid, B.bname
+              FROM Sailors S, Boats B, Reserves R
+             WHERE S.sid=R.sid AND B.bid=R.bid
+             GROUP BY S.sname
+             HAVING R.day = max(R.day))
+
+
+SELECT S1.sname, R2.bname
+  FROM S1
+ LEFT JOIN  R2
+    ON S1.sid = R2.sid
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=40, name='Last.Reserved.Null')}}
+% include('viewAnswer')
+
+
+%end 
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

@@ -1,0 +1,20 @@
+#! /bin/sh
+
+set -eu
+
+SML_VERSION=110.99
+SML_CONFIG="https://smlnj.org/dist/working/$SML_VERSION/config.tgz"
+
+SMLROOT="${1:-/usr/local/sml}"
+echo "installing in $SMLROOT" >&2
+test -d "$SMLROOT" || mkdir "$SMLROOT"
+cd "$SMLROOT"
+curl "$SML_CONFIG" > config.tgz
+tar xzf config.tgz
+./config/install.sh
+
+actual_version="$("$SMLROOT/bin/sml" @SMLversion | cut -d' ' -f2)"
+if ! test x"$SML_VERSION" = x"$actual_version"; then
+  echo "expected $SML_VERSION <> actual $actual_version" >&2
+  exit 1
+fi

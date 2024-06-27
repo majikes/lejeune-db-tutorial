@@ -1,0 +1,399 @@
+---
+title: {{TITLE}}
+theme: "comp550"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+---
+
+## Today's notes
+
+ * Welcome <small>{{HTTPS_FQDN}}/worksheets/worksheet-01-welcome</small>
+ * From the {{FRAG}} [agenda $\dots$]({{HTTPS_FQDN}}#introduction)
+     - There's a checklist
+ * {{FRAG}} By the end of class you should understand
+     - COMP 421 {{FRAG}} [COVID Community Standard](https://www.unc.edu/posts/2021/06/30/covid-19-update-revised-community-standards-effective-july-12/)
+     - COMP 421 {{FRAG}} [people]({{HTTPS_FQDN}}/syllabi/help), [grading criteria]({{HTTPS_FQDN}}/syllabi/syllabus#grading-criteria), & [systems]({{HTTPS_FQDN}}) 
+     - Where the {{FRAG}} [syllabus]({{HTTPS_FQDN}}/syllabi/syllabus) is:
+        - Where the {{FRAG}} [day-to-day agenda]({{HTTPS_FQDN}}/#agenda) 
+        - Where any work you've {{FRAG}} [submitted]({{HTTPS_FQDN}}/view) 
+        - Where your submission's {{FRAG}} [feedback]({{HTTPS_FQDN}}/feedback) 
+        - Where's your current {{FRAG}} [grade]({{HTTPS_FQDN}}/grades)
+        - Which assignments you're {{FRAG}} [missing]({{HTTPS_FQDN}}/grades)
+     - Homeworks done using Jupyter notebooks &amp; Python {{FRAG}}
+
+Notes:
+
+Have the students fill out the Welcome worksheet.
+ - Ensure they only put in public information
+
+Go over "What you should understand by the end of class" 
+ - COVID Standard
+ - People in the class
+ - Checklist items
+   - slides 
+   - my worksheets are like poll everywhere
+   - where to find the agenda, grades, etc
+ 
+Let the students know that this is the location where everything is.
+Explain that everyone has access to these slides (generally the night before)
+
+We'll introduce the people, grading criteria, etc from the syllabus.
+
+Show them the navigation links to their grades, submissions and feedback.
+
+---
+
+## COVID Community Standard
+
+ * On July 19th, UNC announced [COVID Community Standards](https://www.unc.edu/posts/2021/06/30/covid-19-update-revised-community-standards-effective-july-12/)
+   - Masks are required in all buildings {{FRAG}}
+     - Please remind me and I'll remind you
+   - If you present {{FRAG}} [symptoms](https://campushealth.unc.edu/services/covid-19-services/covid-19-faqs), please do not come to class 
+   - While not presenting symptoms, I have {{FRAG}} [MCL](https://www.lls.org/sites/default/files/file_assets/mantlecelllymphoma.pdf) 
+ * {{FRAG}} Synchronous Zoom will be available for lectures
+   - If you present symptoms, use Zoom
+   - If I present COVID symptoms, I will use zoom
+   - No questions asked about your symptoms
+ * {{FRAG}} Dean's note still required to miss exams
+ * {{FRAG}} Any questions about class COVID policy?
+ 
+Notes:
+
+Point out that the university has a COVID policy
+ - masks, symptoms, MCL
+ 
+Zoom is an alternative
+ - All in-class worksheets due in class
+
+Dean's note required for missing exam
+
+---
+
+## Instructional Team
+<img src="{{LOGO}}" style="float:right; width:15%; position:fixed; top:100px; right:0;"/>
+
+   * Instructor
+      * [John Majikes](mailto:jmajikes@cs.unc.edu) 150 Sitterson Hall
+      * Office hours [You Can Book Me](https://jmajikes.youcanbook.me/)
+      * Personal issues [email](mailto:jmajikes@cs.unc.edu)
+   * TAs {{FRAG}}
+      * Ken Liu
+   * LAs {{FRAG}}
+      * John Feshuk &amp; Tanying Lin
+   * Office hours {{FRAG}}
+      * See [syllabus/help]({{HTTPS_FQDN}}/syllabi/help) for hours
+         * LA/TA start week of August 30th
+         * Email [me](mailto:jmajikes@cs.unc.edu) for hours this week
+      * [Piazza]({{PIAZZA}}) is a great place for questions
+   * Welcome video on {{FRAG}} [agenda]({{HTTPS_FQDN}}#introduction) 
+      * Any concerns? Welcome output
+
+Note:
+The LAs and I are here for your help.
+
+Don't fall behind. 
+You may want to use Piazza for faster answers during the week.
+
+{{HTTPS_FQDN}}/welcome?section=001
+{{HTTPS_FQDN}}/pages/worksheets/worksheet-01-welcome
+
+Internet connections, math, technology, grading, scheduling
+
+---
+
+## About me
+
+ * Spent 35+ years in industry
+   - IBM, Oracle, BitSight Security
+ * {{FRAG}} PhD in computers training dogs
+   - Worked on Artificial Pancreas
+   - Hope to train diabetic alert dogs with computers
+ * USA Olympic Cycling Coach {{FRAG}}
+   - Rode across NC, New Mexico (Tour de Tucson)<br />
+   Montana, Death Valley, Raleigh-to-Richmond
+
+Note:
+
+I've been around the block.
+
+I worked on testing ISAM (index sequential access method) DOS/VSE system in 1981!
+
+---
+
+## COMP 421
+## Databases and Files
+   * Section 001 T/TH 2:00 PM - 3:15 PM
+   * Zoom link on {{FRAG}} [agenda]({{HTTPS_FQDN}}/#agenda)
+      * Zoom links different per section 
+      * For remote students / COVID Symptoms
+      * In-person instruction better
+   * {{FRAG}} Worksheets for credit
+      * In-class worksheets due when presented in class
+      * Some worksheets due by end of the class day
+      * {{FRAG}} Worksheets can be done not-for-credit anytime
+   * {{FRAG}} See syllabus for <a href="{{HTTPS_FQDN}}/syllabi/syllabus#attendance-policy">attendance policy</a>, etc
+
+Note:
+
+Class is from 2 to 3:15.  It's synchronous
+
+If you follow the class asynchronously, 
+your worksheet submission will incur a late penalty.
+
+---
+
+## Why databases?
+
+ * Databases are interesting subjects
+    - {{FRAG}} Databases are used everywhere
+    - {{FRAG}} Amount of data ever increasing
+ * {{FRAG}} Languages will come and go
+    - Data and Databases are here to stay
+ * {{FRAG}} More than likely you will use DBMS your entire career!
+ * {{FRAG}} Class will pull back curtain on how things work<br />
+ * {{FRAG}} DB Programming different than Java, Python, etc
+
+Note:
+
+I've been using databases since 1981.
+I started out programming in fortran, pascal, assembler, LISP, snowball, APL, etc
+
+Databases are still around nearly 40 years later.
+
+---
+
+## Systems
+
+ * {{HOSTNAME}} one-stop for all course information 
+ * Syllabus: {{FRAG}}
+   * Navigation button on {{HOSTNAME}} or 
+   * [{{HOSTNAME}}/syllabi/syllabus]({{HTTPS_FQDN}}/syllabi/syllabus)  
+ * Lecture notes, slides, and what to expect each day: {{FRAG}}
+   * [{{HOSTNAME}}/#next]({{HTTPS_FQDN}}#next)
+   * Agenda has daily checklist {{FRAG}}
+      * See [how to succeed in this course]({{HTTPS_FQDN}}/syllabi/syllabus#how-to-succeed-in-this)
+ * View submissions even before they're graded:{{FRAG}}
+   * [{{HOSTNAME}}/view]({{HTTPS_FQDN}}/view)
+ * Feedback on submission after grading:{{FRAG}}
+   * [{{HOSTNAME}}/feedback]({{HTTPS_FQDN}}/feedback)
+ * Overall grade summary:{{FRAG}}
+   * [{{HOSTNAME}}/grades]({{HTTPS_FQDN}}/grades) 
+ * {{FRAG}} Not submitted work shown on <a href="{{HTTPS_FQDN}}/grades" target="_blank">{{HOSTNAME}}/grades</a>
+ * Any questions on {{HOSTNAME}} system?{{FRAG}}
+
+Note:
+This system, not Sakai will be used for course information
+
+There's navigation buttons for everything:  
+
+ - The syllabus
+ - Lecture notes
+ - See the agenda for worksheet bonuses
+ - View submissions in case you are not sure if you submitted them
+ - Feed feedback from the grader
+ - Get your weighted grade so far this semester
+ 
+To provide you timely feedback, assignments grades immediately after due date.
+
+---
+
+## Synchronous classes
+### Worksheets
+
+ * COMP 421 is a synchronous class
+    * At-home worksheets {{FRAG}}
+        * Pre-class reading or summary of previous work
+        * [worksheet-01-demo]({{HTTPS_FQDN}}/worksheets/worksheet-01-demo) due before next class
+    * In-class worksheets {{FRAG}}
+        * [worksheet-01-welcome]({{HTTPS_FQDN}}/worksheets/worksheet-01-welcome) due already
+    * Class-participation worksheet bonus {{FRAG}}
+        * Additional bonus for class participation
+        * More info [syllabus#worksheet-bonus]({{HTTPS_FQDN}}/syllabi/syllabus#worksheet-bonus)
+    * Worksheets {{FRAG}}
+        * On time submission of 75% $\rightarrow$ 100%
+        * On time submission minimum 50% 
+        * See [syllabus#worksheets]({{HTTPS_FQDN}}/syllabi/syllabus#worksheets) 
+        * Try out [worksheet-demo]({{HTTPS_FQDN}}/worksheets/worksheet-demo)
+    * Any questions on worksheets? {{FRAG}}
+
+Note:
+This class is meant to be synchronous
+
+We'll do worksheets to in Zoom breakout rooms or within class.
+
+There are 102 points in the class,
+use the worksheets as the way to round your grades.
+
+---
+
+## Administration requirement
+
+ * COMP 210/410 Data Structures and Analysis
+ * COMP 211/401 Systems Fundamentals {{FRAG}}
+ * COMP 301/411 Computer Organization {{FRAG}}
+ * Either {{FRAG}}
+    * MATH 381 Discrete Mathematics
+    * COMP 283 Discrete Structures
+
+Note:
+If you don't know how to do proofs and
+data structures then you'll be in trouble in this class.
+
+
+---
+
+## Lectures
+
+ * Many reading assignments from DBMS book 
+    * Read ahead to prepare for class
+    * Complete any pre-class [agenda]({{HTTPS_FQDN}}#agenda) worksheets
+    * Do not just come to class and    
+      assume you'll absorb the material
+ * Don't miss lectures {{FRAG}}
+    * Late in-class worksheet incur late penalty
+    * Zoom available for remote students or sick students
+    * Recording on [{{HOSTNAME}}#agenda]({{HTTPS_FQDN}}#agenda) 
+ * Aristotle - Excellence is never an accident. {{FRAG}}    
+      It is the result of sincere effort and intelligent execution.
+
+Note:
+Do not miss class
+
+Do the readings
+
+Come unprepared or you will be lost.
+
+
+---
+
+## Grading
+
+ * I do all grading
+     * No complaints to TAs/LAs about grading
+ * Solutions will be posted the morning due date {{FRAG}}
+     * No credit after solutions posted
+ * Dean's note for late assignments must {{FRAG}}
+   cover the entire assignment period
+ * Any questions on grading? {{FRAG}}
+ * Let's do our first worksheet together {{FRAG}}
+
+Note:
+I do all the grading. 
+Complaints start and end at my office.
+
+No assignments will be accepted after the answers are posted.
+
+You need a Dean's note for the entire assignment.
+
+{{HTTPS_FQDN}}/worksheets/worksheet-01-grading
+{{HTTPS_FQDN}}/pages/worksheets/worksheet-01-grading
+
+[All assessments]({{HTTPS_FQDN}}/assessments)
+
+---
+
+## Midterms / Exams
+ * Midterm 1, Thursday, September 28
+ * {{FRAG}} Midterm 2, Tuesday, November 9
+ * Final Exam , TBD {{FRAG}}
+ * Closed Book Exams {{FRAG}}
+     * No DBMS
+     * No internet, no google
+     * No phone
+     * No friends
+ * Any questions on exams {{FRAG}}
+
+Note:
+
+Midterm and exams during recitation schedule.
+
+Do not browse the internet during exams.
+
+---
+
+## Homeworks
+
+ * Five homeworks graded
+   * Done in Jupyter notebooks and Python
+   * A non-credit [demo assignment]({{HTTPS_FQDN}}/static/images/A0.zip) is available
+ * May work together to understand problems {{FRAG}}
+   * Final work must be done by yourself
+   * Leverage Piazza, LAs/TAs/myself 
+   * Homeworks prepare you for the kinds of questions on the midterm and final
+   * Conversely, don't understand homework $\rightarrow$ unprepared for exams
+ * {{FRAG}} <a href="https://catalog.unc.edu/policies-procedures/honor-code/" target="_blank">Honor Code</a> 
+   * If someone other than LAs help $\rightarrow$ {{FRAG}}
+     give credit 
+   * Do not post code, passwords, etc on Piazza {{FRAG}}
+   * {{FRAG}}
+     **DO NOT COPY** from other students 
+   * In the end, you must do the work! {{FRAG}}
+ 
+Note:
+
+All homeworks done in Python and Jupyter notebooks
+There's a non-credit demo.  
+Show them the demo
+
+Please don't cheat,
+I will not tolerate it.
+
+Do not give passwords, heads up on assessments, etc to other students.   
+
+You should have the following open
+
+http://localhost:8888/tree?
+http://localhost:8888/notebooks/A0.ipynb
+
+---
+
+## Evaluation  
+
+ * 7% Worksheet
+    * 75% $\Rightarrow$ 100% if on-time
+    * 50% min if on-time
+    * Low-value, low-stakes
+ * 20% Five Homeworks {{FRAG}}
+    * Easier than exams
+ * Midterm / exams during recitation {{FRAG}}
+    * {{FRAG}} 20% Midterm 1, Sep 28 
+    * {{FRAG}} 25% Midterm 2, Nov 9
+    * 30% Final Exam, TBD {{FRAG}}
+    * Midterms / final are cumulative {{FRAG}}
+ * Total 102% {{FRAG}}
+ * No rounding. {{FRAG}} [see syllabus#grading-feedback]({{HTTPS_FQDN}}/syllabi/syllabus#grading-feedback)
+
+Note: 
+Total grades add up to 102%
+
+Worksheets are the extra.
+
+Do not cheat
+
+---
+
+## Epilogue
+ 
+ * Become familiar with the COVID Community Standards {{FRAG}}
+ * Become familiar with the syllabus {{FRAG}}
+ * Become familiar with Python and Jupyter notebooks {{FRAG}}
+ * Determine when things are due {{FRAG}}
+ * Whether you've submitted assessments {{FRAG}}
+ * Your feedback and grades {{FRAG}}
+ * General grading criteria {{FRAG}}
+ * Do not fall behind! {{FRAG}}
+ * Ask for help! {{FRAG}}
+ * I want to help you succeed. {{FRAG}}
+ * Ensure {{FRAG}} [today's checklist]({{HTTPS_FQDN}}#introduction) completed
+
+Note: 
+
+So today you should have a general understanding of the syllabus
+
+Where to make sure you're up to date.
+
+Do not fall behind.  In fact, stay ahead!
+

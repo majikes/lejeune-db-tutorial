@@ -1,0 +1,108 @@
+There is only one type of join in SQL&#44; the natural join,{answer[2]}
+<%
+setInfo(assessment_type='worksheet')
+%>
+
+# Chapter 14 B$^+$ tree
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+## {{!linkable_header('Questions')}}
+
+<%
+symbols = [
+'10101 Srinivasan Comp. Sci. 65000',
+'15151 Mozart     Music      40000',
+'32343 El Said    History    80000',
+'45565 Katz       Comp. Sci. 75000',
+'58583 Califieri  History    60000',
+'76543 Singh      Finance    80000',
+'76766 Crick      Biology    72000',
+'31601 Majikes    Comp. Sci. 76000',
+'98345 Kim        Elec. Eng. 80000',
+'Center', 'Left', 'Right',
+'40000', '60000', '65000', '72000', '75000', '76000', '80000',
+'Null']
+%>
+-- -
+
+Assume we have a B$^+$ tree with search key of salary as follows:
+
+<img src="{{static('images/worksheet-14-04-before-insert.png')}}" style="float:none; width:75%"/>
+
+---
+
+Insert ID=31601, name=Majikes, dept_name='Comp. Sci.' and salary=76000 
+and complete the entries for the following tree:
+
+<img src="{{static('images/worksheet-14-04-after-insert.png')}}" style="float:none; width:75%"/>
+
+**Leaf.Nodes:** Complete the leaf nodes in the tree
+<%
+answer = [
+'15151 Mozart     Music      40000',
+'40000',
+'58583 Califieri  History    60000',
+'60000',
+'10101 Srinivasan Comp. Sci. 65000',
+'65000',
+'Center',
+'76766 Crick      Biology    72000',
+'72000',
+'45565 Katz       Comp. Sci. 75000',
+'75000',
+'Null',
+'Null',
+'Right',
+'31601 Majikes    Comp. Sci. 76000',
+'76000',
+'32343 El Said    History    80000',
+'80000',
+'Null',
+'Null',
+'Null',
+]
+%>
+{{!table(inputs=1, headings='Pointer/Key, Value', table=f'''
+LeftP1,{answer[0]}
+LeftK1,{answer[1]}
+LeftP2,{answer[2]}
+LeftK2,{answer[3]}
+LeftP3,{answer[4]}
+LeftK3,{answer[5]}
+LeftP4,{answer[6]}
+CenP1,{answer[7]}
+CenK1,{answer[8]}
+CenP2,{answer[9]}
+CenK2,{answer[10]}
+CenP3,{answer[11]}
+CenK3,{answer[12]}
+CenP4,{answer[13]}
+RightP1,{answer[14]}
+RightK1,{answer[15]}
+RightP2,{answer[16]}
+RightK2,{answer[17]}
+RightP3,{answer[18]}
+RightK3,{answer[19]}
+RightP4,{answer[20]}
+''', symbols=symbols, name='Leaf.Nodes', points=50)}}
+% include('viewAnswer')
+
+
+---
+
+**Root.Node:** Complete the root node in the tree:
+% answer = ['72000', '76000', 'Null']
+{{!table(inputs=1, headings='Pointer/Key, Value', table=f'''
+RootK1,{answer[0]}
+RootK2,{answer[1]}
+RootK3,{answer[2]}
+''', symbols=symbols, name='Left.Center.Leaf.Pointers', points=50)}}
+% include('viewAnswer')
+
+
+
+% include('worksheet-submit.md')

@@ -1,0 +1,318 @@
+---
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+
+---
+
+### Today's class
+
+#### Chapter 2: Intro to Relational Model
+
+- By the end of class you should know
+  - Structure of Relational Databases
+  - Database Schema  
+  - Keys  
+  - Schema Diagrams  
+  - Relational Query Languages  
+  - The Relational Algebra  
+
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch2.pdf
+
+---
+
+### Example of a **_Instructor_**  Relation
+
+- A relational database consists of a collection of tables 
+  - The instructor table
+  - Each row is an instructor entity
+  - Each column is a attribute describing the instructor
+
+<figure>
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.1.Instructor.Relation.png" style="width:50%"/>
+ <figcaption>Figure 2.1 The <i>instructor</i> relation.</figcaption> 
+</figure>
+
+Note:
+
+
+Relational databases are made up of tables
+
+Tables are made up of entities or rows
+
+Columns are attributes
+
+**Next slide** 
+Describes the attribute, entity more formally
+
+---
+
+### Relation Schema and Instance
+
+- $A_1 A_2, \dots, A_n$ are _attributes_  
+- $R = (A_1, A_2, \dots, A_n )$ is a _relation schema_ 
+   - Example:<br/> _instructor_ = (ID,  name, dept_name, salary)  
+- A relation instance _r_ defined over schema $R$ is denoted by $r (R)$.  
+- The current values a relation are specified by a table  
+- An element **_t_** of relation **_r_** is called a  _tuple_ and is represented by a _row_ in a table
+
+Note:
+
+A collection of attributes is a relation schema
+
+A instance is defined over $R$ denoted by $r(R)$
+
+
+---
+
+### Attributes
+
+- The set of allowed values for each attribute is called the **domain** of the attribute 
+- Attribute values are (normally) required to be **atomic**; that is, indivisible  
+- The special value **_null_**  is a member of every domain. Indicated that the value is “unknown”
+- The null value causes complications in the definition of many operations  
+
+Note:
+
+Define the term domain, atomic, null
+
+OOP, arrays, etc are not atomic
+
+Describe normal in more detail!
+
+
+
+---
+
+### Relations are Unordered
+
+- Order of tuples is irrelevant (tuples may be stored in an arbitrary order)  
+- Example: _instructor_  relation with unordered tuples  
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.4.Unsorted.Instructor.Relation.png" style="width:50%"/>
+ <figcaption>Figure 2.4 Unsorted display of <i>instructor</i> relation.</figcaption> 
+</figure>
+- See <a href="{{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.1.Instructor.Relation" _target="blank">SQL statements for the instructor table</a>
+
+Note:
+
+The database is going to keep data in whatever order it likes.
+
+Think of relations as sets not necessarily rows in a table!
+
+---
+
+### Database Schema vs instance
+
+- **Database schema:** logical structure of the database.  
+- **Database instance:** a snapshot of data in the database at a given instant.
+- Example:
+   - schema:   _instructor_ (ID, name, dept_name, salary)</p>
+   - Instance: <figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.4.Unsorted.Instructor.Relation.png" style="width:50%"/>
+</figure>
+
+Note:
+
+There is a difference between the database schema and an instance of the database 
+
+---
+
+### Keys
+
+- Let $K \subseteq R$  
+- $K$ is a **superkey** of $R$ if:
+  - Values of $K$ sufficient to identify unique tuple of each possible relation _r(R)_  
+  - Example:  {_ID_} and {ID,name} are both superkeys of _instructor._
+- Superkey $K$ is a **candidate key** if $K$ is minimal  
+   - Example: {_ID_} is a candidate key for _Instructor_
+- One of the candidate keys is selected to be the <b>primary key</b>.<br/> Which one?
+- <b>Foreign key:</b> Value in one relation must appear in another  
+     - **Referencing** relation
+     - **Referenced** relation
+     - Example: _dept_name_ in _instructor_ is a foreign key from _instructor_ referencing _department_  
+
+Note:
+
+Keys are a subset of the relation
+There are super keys and candidate key
+
+Primary key is the candidate key chosen to represent tuples in relation
+
+Foreign key is the referenced by another relation  
+A value can be referencing another relation  
+
+---
+
+### Schema Diagram for University Database
+
+<figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.9.Schema.University.Database.png" style="width:50%"/>
+ <figcaption>Figure 2.9 Schema diagram for the university database</figcaption> 
+</figure>
+
+Note:
+
+A relation appears as a box
+ - Name in blue at the top but the color is not important
+ - Attributes are listed inside the box
+
+Primary key is underlined.  But sometimes they show a key  
+
+Foreign-key constraint appears as arrows **from** foreign-key attributes of the _referencing_ relation of the _referenced_ relation.
+
+
+
+
+
+---
+
+### Relational Query Languages
+
+- Procedural versus non-procedural, or declarative
+- _Pure_ languages: 
+  - Relational algebra
+  - Tuple relational calculus
+  - Domain relational calculus
+  - All three equivalent expressiveness
+- We will concentrate in this chapter on relational algebra
+  - Not Turing-machine equivalent
+  - Consists of six basic operations
+
+Note:
+
+There are three pure languages that define relational query languages  
+- We concentrate on relational algebra
+
+Even though it is not Turing Complete, it's good  
+There are only six basic operations to remember!
+
+---
+
+### Relational Algebra
+
+- Consisting of six operations
+  - Each takes one or two relations as input
+  - Each produces a new relation as a result
+- Six basic operators  
+   - select: $\sigma$
+   - project: $\Pi$
+   - union: $\cup$
+   - set difference: _–_ 
+   - Cartesian product: $\times$
+   - rename: _$\rho$_
+
+Note:
+
+Although this may be confusing but there are only six operations
+
+If it helps, select, is sigma and they both start with an s
+
+$\sigma_\mbox{dept_name = 'Comp. Sci.'} $ (Instructor)
+
+Project is Pi and it projects one relation onto another
+
+$\Pi_\mbox{dept_name} $ Instructor  
+
+rename is rho 
+
+---
+
+### Select Operation
+ - **select** operation selects tuples that satisfy a predicate.
+ - Notation:  $\sigma_p (r)$  
+ - $p$ is called the **selection predicate**  
+ - Example: select those tuples of the _instructor_ relation where the instructor is in the 'Physics' department.
+   - $\sigma_{_\mbox{dept_name='Physics'}} (instructor)$  
+   - [SELECT * FROM Instructor WHERE dept_name='Physics']({{HTTPS_FQDN}}/sql/interpreter/Chapter.02.SelectPhysicInstructors)
+   - Result <figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.10.Result.Of.Query.png" style="width:50%"/>
+ <figcaption>Figure 2.10</figcaption> 
+</figure>
+
+Note:
+
+It's important to note what select selects fields for the tuple of the new relation by using a predicate.
+
+Selection predicate of instructors in the Physics department  
+See the sql interpreter
+
+
+We'll look at predicates in the next slide
+
+---
+
+### Select Operation (Cont.)
+
+- Selection predicate uses $= \ne, \gt, \ge, \lt, \le$ 
+- Predicates can be combined using the connectives:
+   - $\land$ (**and**)
+   - $\lor$ (**or**)
+   - $\neg$ (**not**)
+ - Example: Physics instructors with a salary greater $90,000:
+   - $\sigma_{_{\mbox{dept_name='Physics'} \land \mbox{salary} \gt \mbox{90000}}} (instructor)$ 
+   - [SELECT * FROM Instructor WHERE dept_name='Physics' AND salary > 9000]({{HTTPS_FQDN}}/sql/interpreter/Chapter.02.SelectPhysicInstructorSalaryGt9000)
+ - Select predicate may include comparisons between two attributes.
+   - Example, find all departments whose name is the same as their building name:
+   - $\sigma_{_\mbox{dept_name=building}} (department)$ 
+
+Note:
+
+Selection predicate uses the same operators as algebraic math
+
+Predicates can be combined with AND, OR, NOT
+
+Predicates may be combined with multiple attributes or fields
+
+---
+
+### Project Operation
+
+- Unary operation returns relation with certain attributes
+  - $\Pi_{_{A_1, A_2, \dots, A_k}} (r)$ 
+  - Where $A_1, A_2, \dots, A_k$ are attribute names<br/> and $r$ is a relation name. 
+- Result is the relation of $k$ columns only
+  - Duplicate rows removed from result
+  - Relations are sets
+
+Note:
+
+Projection projects or partitions a relation into one with smaller number of attributes  
+List the attributes you want to keep
+
+Note that the result only has $k$  
+Result is a set, so no duplicates
+
+---
+
+### Projection Operation Example
+
+- Example: eliminate the _dept_name_ attribute of _instructor_  
+  - $\Pi_{_\mbox{ID, name, salary}} (instructor)$
+  - [SELECT ID, name, salary FROM Instructor]({{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.11.Projection.ID.Name.Salary)    
+  - <figure style="border: 0">
+ <img src="{{HTTPS_FQDN}}/static/images/Chapter.02.Figure.2.11.Projection.Name.Salary.png" style="width:35%"/>
+ <figcaption>Figure 2.11</figcaption> 
+</figure>
+
+Note:
+
+{{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.11.Projection.ID.Name.Salary
+
+{{HTTPS_FQDN}}/pages/worksheets/worksheet-02-select-project  
+{{HTTPS_FQDN}}/worksheets/worksheet-02-select-project?onyen=student1  
+
+
+---
+
+### Eiplogu
+
+- Tomorrow we will finish off chapter 2

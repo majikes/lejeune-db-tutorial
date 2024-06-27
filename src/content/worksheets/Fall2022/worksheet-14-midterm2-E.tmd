@@ -1,0 +1,124 @@
+<%
+setInfo(
+        due='2021-11-05 00:00:00',
+        exceptions=dict(_003=dict(needsSubmitCode=False, duration=999)),
+        pages=['questions', 'submit'],
+        maxpenalty=0.75, penalty=.2,
+        )
+dbs = ['sailors.sqlite', 'sailors1.sqlite']
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+# Mock Midterm 2 E
+
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+
+```sql
+  CREATE TABLE Sailors
+      (sid integer primary key,
+       sname text,
+       rating integer,
+       age integer)
+
+  CREATE TABLE Boats
+      (bid integer primary key,
+       bname text,
+       color text)
+
+  CREATE TABLE Reserves
+      (sid integer,
+       bid integer,
+       day text,
+       primary key (sid, day)
+       foreign key (sid) references Sailors(sid)
+       foreign key (bid) references Boats(bid))
+
+```
+
+--- 
+
+## Questions
+
+% if 'questions' in pages:
+
+For the following questions, assume that each tuple of Sailors is
+30 bytes long,
+that a page can hold 125 Sailors tuples, and there are 100 pages of Sailors
+Further assume that each tuple of Reserves is 20 bytes long,
+that a page can hold 200 Reserves tuples, and there are 1000 pages of reserves.
+
+For reference, you should assume that the Chapter 12 change to Reserves relation is:  
+`Sailors(sid: integer, sname: string, rating: integer, age: real)`  
+`Reserves(sid: integer, bid: integer, day: dates, rname: string)`  
+
+**Algebra:** Enter the following relational algebra statement into a SQL Query:  
+$\tau_{Sailors.sname ASC} (\pi_{Sailors.sname} (Sailors \bowtie Reserves))$  
+**NOTE:** The tau $\tau$ symbol extends the relational algebra operator for the SQL ORDER BY operator.  
+Also note the output difference of relational algebra versus SQL queries.  
+% answer = '''SELECT DISTINCT S.sname as name
+  FROM Sailors S, Reserves R
+  WHERE S.sid = R.sid
+   ORDER by name'''
+% answer2 = f'''Tau is order by name
+Pi partition / Select sname as name
+with natural join of Sailors, Reserves on sid
+Answer: {answer}'''
+{{!sql(answer, dbs=dbs, sort=0, points=20, name='Algebra')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Simple:** Let's assume that Sailors has no index on `sname`,
+that Reserves has no index on `rname`,
+no buffering optimization will be done,
+and that sorting will be done separately
+then what is the minimum number of page reads and writes needed to complete 
+the natural join using a simple nested loop?  
+% answer = '12500100'
+% answer2 = f''' Simple nested loops work on tuples
+Outer loop should be the smaller number of pages
+Sailors = 100 pages Reserves = 1,000 pages
+Number of Sailors tuples per page = 125
+Cost = M + M* Pr * N = 100 + 100 * 125 * 1000 = 12,500,100
+The higher cost is = M + M * Pr * N = 1000 + 200 * 1000 * 100 = 20,001,00
+
+Answer {answer}'''
+{{!expression(answer, dict(l=1), points=10, name='Simple')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**A.Better.Way.Sorting:** Using a simple nested loop is very expensive.
+Why might a sorting join be better?  
+**A** Sorting is always good because we have lots of memory  
+**B** For this query, we have to sort the resulting output  
+**C** For this query, we have to remove duplicates  
+**D** Sorting is not helpful for joins  
+**E** None of these  
+% answer = 'B and C'
+% answer2 = f'''We have to sort the result anyway
+We have to remove duplicates and we can do that in the sorting phase
+Answer: {answer}'''
+% choices = ['A', 'B', 'C', 'D', 'E', 'A and B', 'A and C', 'A and D', 'B and C', 'B and D', 'C and D']
+{{!select(answer, choices, points=10, name='A.Better.Way.Sorting')}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+Not a question on this mock exam, but think about 
+what ways you might do the join?
+What might help facilitate the join; hash, B$^+$ tree, buffers, etc?
+What would be the cost of each?
+% end
+
+---
+
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+% end

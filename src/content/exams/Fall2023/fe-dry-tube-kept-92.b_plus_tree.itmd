@@ -1,0 +1,271 @@
+<style>
+table, th, td {
+ border: 2px solid black;
+}
+th {
+ text-align: center;
+}
+</style>
+<%
+from collections import namedtuple
+import string
+
+BPLUSTREE = namedtuple('BPLUSTREE', '''RootP1    RootK1    RootP2    RootK2    RootP3    RootK3    RootP4 
+                                       LeftP1    LeftK1    LeftP2    LeftK2    LeftP3    LeftK3    LeftP4 
+                                       CenterP1  CenterK1  CenterP2  CenterK2  CenterP3  CenterK3  CenterP4 
+                                       RightP1   RightK1   RightP2   RightK2   RightP3   RightK3   RightP4
+                                       SearchKey GivenField GivenValue Extra''')
+b_plus_trees = [BPLUSTREE(SearchKey='grade', GivenField='CenterK3', GivenValue='C+',
+                          RootP1='LeftNode', RootP2='CenterNode', RootP3='RightNode', RootP4='Null',
+                          RootK1='B+', RootK2='D', RootK3='Null',
+                          LeftK1='A', LeftK2='A+', LeftK3='B',
+                          CenterK1='B+', CenterK2='C', CenterK3='C+',
+                          RightK1='D', RightK2='F', RightK3='Null',
+                          LeftP1='7 Winter Student6 COMP311 2021 A',
+                          LeftP2='1 Fall Student1 COMP110 2001 A+',
+                          LeftP3='5 Summer Student5 COMP126 2012 B',
+                          LeftP4='CenterNode',
+                          CenterP1='6 Winter Student4 COMP283 2023 B+',
+                          CenterP2='3 Spring Student2 COMP116 2006 C',
+                          CenterP3='8 Spring Student7 COMP421 2022 C+',
+                          CenterP4='RightNode',
+                          RightP1='4 Summer Student3 COMP311 2019 D',
+                          RightP2='2 Fall Student6 COMP210 2020 F',
+                          RightP3='Null',
+                          RightP4='Null',
+                          Extra='9 Fall Student8 COMP550 2021 A'),
+                BPLUSTREE(SearchKey='ID', GivenField='CenterK3', GivenValue='Student6',
+                          RootP1='LeftNode', RootP2='CenterNode', RootP3='RightNode', RootP4='Null',
+                          RootK1='Student4', RootK2='Student7', RootK3='Null',
+                          LeftK1='Student1', LeftK2='Student2', LeftK3='Student3',
+                          CenterK1='Student4', CenterK2='Student5', CenterK3='Student6',
+                          RightK1='Student7', RightK2='Student8', RightK3='Null',
+                          LeftP1='1 Fall Student1 COMP110 2001 A+',
+                          LeftP2='3 Spring Student2 COMP116 2006 C',
+                          LeftP3='4 Summer Student3 COMP311 2019 A+',
+                          LeftP4='CenterNode',
+                          CenterP1='6 Winter Student4 COMP283 2023 B+',
+                          CenterP2='5 Summer Student5 COMP110 2020 B',
+                          CenterP3='2 Fall Student6 COMP210 2022 F',
+                          CenterP4='RightNode',
+                          RightP1='8 Spring Student7 COMP421 2022 A',
+                          RightP2='9 Fall Student8 COMP550 2021 C+',
+                          RightP3='Null',
+                          RightP4='Null',
+                          Extra='7 Winter Student6 COMP210 2012 A'),
+                BPLUSTREE(SearchKey='course_id', GivenField='CenterK3', GivenValue='COMP311',
+                          RootP1='LeftNode', RootP2='CenterNode', RootP3='RightNode', RootP4='Null',
+                          RootK1='COMP210', RootK2='COMP421', RootK3='Null',
+                          LeftK1='COMP110', LeftK2='COMP116', LeftK3='COMP126',
+                          CenterK1='COMP210', CenterK2='COMP283', CenterK3='COMP311',
+                          RightK1='COMP421', RightK2='COMP550', RightK3='Null',
+                          LeftP1='1 Fall Student1 COMP110 2001 A+',
+                          LeftP2='3 Spring Student2 COMP116 2006 C',
+                          LeftP3='5 Summer Student5 COMP126 2020 B',
+                          LeftP4='CenterNode',
+                          CenterP1='2 Fall Student6 COMP210 2022 F',
+                          CenterP2='6 Winter Student4 COMP283 2023 B+',
+                          CenterP3='4 Summer Student3 COMP311 2019 A+',
+                          CenterP4='RightNode',
+                          RightP1='8 Spring Student7 COMP421 2022 A',
+                          RightP2='9 Fall Student8 COMP550 2021 C+',
+                          RightP3='Null',
+                          RightP4='Null',
+                          Extra='7 Winter Student6 COMP311 2012 A'),
+                BPLUSTREE(SearchKey='year', GivenField='CenterK3', GivenValue='2021',
+                          RootP1='LeftNode', RootP2='CenterNode', RootP3='RightNode', RootP4='Null',
+                          RootK1='2019', RootK2='2022', RootK3='Null',
+                          LeftK1='2001', LeftK2='2006', LeftK3='2012',
+                          CenterK1='2019', CenterK2='2020', CenterK3='2021',
+                          RightK1='2022', RightK2='2023', RightK3='Null',
+                          LeftP1='1 Fall Student1 COMP110 2001 A+',
+                          LeftP2='3 Spring Student2 COMP116 2006 C',
+                          LeftP3='5 Summer Student5 COMP126 2012 B',
+                          LeftP4='CenterNode',
+                          CenterP1='4 Summer Student3 COMP311 2019 A+',
+                          CenterP2='2 Fall Student6 COMP210 2020 F',
+                          CenterP3='7 Winter Student6 COMP311 2021 A',
+                          CenterP4='RightNode',
+                          RightP1='8 Spring Student7 COMP421 2022 A',
+                          RightP2='6 Winter Student4 COMP283 2023 C+',
+                          RightP3='Null',
+                          RightP4='Null',
+                          Extra='9 Fall Student8 COMP550 2021 C+'),
+                          ]
+
+TREEINSERT = namedtuple('TREEINSERT', '''RootP1    RootK1    RootP2    RootK2    RootP3
+                                         LeftP1    LeftK1    LeftP2    LeftK2    LeftP3
+                                         CenterP1  CenterK1  CenterP2  CenterK2  CenterP3
+                                         RightP1   RightK1   RightP2   RightK2   RightP3
+                                         SearchKey InsertedPtr''')
+tree_inserts = [TREEINSERT(SearchKey='grade',
+                           RootP1='LeftNode', RootP2='CenterNode', RootP3='RightNode',
+                           RootK1='B+', RootK2='D',
+                           LeftK1='A', LeftK2='B',
+                           CenterK1='C', CenterK2='C+',
+                           RightK1='D', RightK2='Null',
+                           LeftP1='7 Winter Student6 COMP311 2021 A',
+                           LeftP2='5 Summer Student5 COMP126 2012 B',
+                           LeftP3='CenterNode',
+                           CenterP1='3 Spring Student2 COMP116 2006 C',
+                           CenterP2='8 Spring Student7 COMP421 2022 C+',
+                           InsertedPtr='8 Spring Student7 COMP421 2022 C+',
+                           CenterP3='RightNode',
+                           RightP1='4 Summer Student3 COMP311 2019 D',
+                           RightP2='Null',
+                           RightP3='Null'),
+                TREEINSERT(SearchKey='ID',
+                           RootP1='LeftNode', RootP2='CenterNode', RootP3='RightNode',
+                           RootK1='Student4', RootK2='Student5',
+                           LeftK1='Student1', LeftK2='Student2',
+                           CenterK1='Student4', CenterK2='Null',
+                           RightK1='Student5', RightK2='Student6',
+                           LeftP1='1 Fall Student1 COMP110 2001 A+',
+                           LeftP2='3 Spring Student2 COMP116 2006 C',
+                           LeftP3='CenterNode',
+                           CenterP1='6 Winter Student4 COMP283 2023 B+',
+                           InsertedPtr='6 Winter Student4 COMP283 2023 B+',
+                           CenterP2='Null',
+                           CenterP3='RightNode',
+                           RightP1='5 Summer Student5 COMP110 2020 B',
+                           RightP2='2 Fall Student6 COMP210 2022 F',
+                           RightP3='Null'),
+                TREEINSERT(SearchKey='course_id',
+                           RootP1='LeftNode', RootP2='CenterNode', RootP3='RightNode',
+                           RootK1='COMP126', RootK2='COMP421',
+                           LeftK1='COMP110', LeftK2='COMP116',
+                           CenterK1='COMP210', CenterK2='COMP311',
+                           RightK1='COMP421', RightK2='Null',
+                           LeftP1='1 Fall Student1 COMP110 2001 A+',
+                           LeftP2='3 Spring Student2 COMP116 2006 C',
+                           LeftP3='CenterNode',
+                           CenterP1='2 Fall Student6 COMP210 2022 F',
+                           InsertedPtr='2 Fall Student6 COMP210 2022 F',
+                           CenterP2='4 Summer Student3 COMP311 2019 A+',
+                           CenterP3='RightNode',
+                           RightP1='8 Spring Student7 COMP421 2022 A',
+                           RightP2='Null',
+                           RightP3='Null'),
+                TREEINSERT(SearchKey='year',
+                           RootP1='LeftNode', RootP2='CenterNode', RootP3='RightNode',
+                           RootK1='2012', RootK2='2022',
+                           LeftK1='2001', LeftK2='2006',
+                           CenterK1='2019', CenterK2='2021',
+                           RightK1='2022', RightK2='Null',
+                           LeftP1='1 Fall Student1 COMP110 2001 A+',
+                           LeftP2='3 Spring Student2 COMP116 2006 C',
+                           LeftP3='CenterNode',
+                           CenterP1='4 Summer Student3 COMP311 2019 A+',
+                           InsertedPtr='4 Summer Student3 COMP311 2019 A+',
+                           CenterP2='9 Fall Student8 COMP550 2021 C+',
+                           CenterP3='RightNode',
+                           RightP1='2 Fall Student6 COMP210 2022 F',
+                           RightP2='Null',
+                           RightP3='Null'),
+                           ]
+%>
+## {{!linkable_header('B-plus trees')}} {{points_b_plus_trees}} points
+
+In this section, you will show your knowledge of B$^+$ trees.
+
+---
+
+
+% for index in range(number_b_plus_trees):
+  % if section == '003' or (team_member_number % number_b_plus_trees) == index:
+
+% q = b_plus_trees[index]
+Assume the following B$^+$ tree with $n=4$ and the **Takes** relation and a search key of {{q.SearchKey}}:
+<img src="{{static(f'slides/fe-dry-tube-kept-92.b-plus-tree-classroom.{index}.png')}}" style="float:none; width: 100%"/>
+
+% assert '-' not in [x for y in list(q) for x in y], f'You cannot have a minus sign in mypoll tables: {list(q)}'
+% symbols = [x.split(' ') for x in list(q)]
+% symbols = list(set(item for row in symbols for item in row)) # Flatten out list of lists
+% symbols = symbols + list(q) # Add back in the tuples
+**Complete.B.Plus.Tree.{{index+1}}:** Complete the indices for relation Takes using a search key of {{q.SearchKey}}.
+You should assume the same notation used in class and the same algorithm used in the book.  
+To facilitate having only one single correct answer, field {{q.GivenField}} must be '{{q.GivenValue}}'.
+It may help you to start building your tree from field {{q.GivenField}}.  
+% if q.SearchKey == 'grade':
+ **NOTE:** Ascending alphanumeric sort order for grades is A, A+, A-, B, B+, B-, C, C+, C-, D, D+, D-, F  
+% end
+{{!table(inputs=1, headings=f' Field, Value', table=f'''
+RootP1,{q.RootP1}
+RootK1,{q.RootK1}
+RootP2,{q.RootP2}
+RootK2,{q.RootK2}
+RootP3,{q.RootP3}
+RootK3,{q.RootK3}
+RootP4,{q.RootP4}
+LeftP1,{q.LeftP1}
+LeftK1,{q.LeftK1}
+LeftP2,{q.LeftP2}
+LeftK2,{q.LeftK2}
+LeftP3,{q.LeftP3}
+LeftK3,{q.LeftK3}
+LeftP4,{q.LeftP4}
+CenterP1,{q.CenterP1}
+CenterK1,{q.CenterK1}
+CenterP2,{q.CenterP2}
+CenterK2,{q.CenterK2}
+CenterP3,{q.CenterP3}
+CenterK3,{q.CenterK3}
+CenterP4,{q.CenterP4}
+RightP1,{q.RightP1}
+RightK1,{q.RightK1}
+RightP2,{q.RightP2}
+RightK2,{q.RightK2}
+RightP3,{q.RightP3}
+RightK3,{q.RightK3}
+RightP4,{q.RightP4}
+''', symbols=symbols, name=f'Complete.B.Plus.Tree.{index+1}', points=15)}}
+% include('viewAnswer', answer=q)
+
+---
+
+% q = tree_inserts[index]
+Assume the following B$^+$ tree with $n=3$ and the **Takes** relation and a search key of {{q.SearchKey}}:
+<img src="{{static(f'slides/fe-dry-tube-kept-92.b-plus-tree-pre-insert.{index}.png')}}" style="float:none; width: 100%"/>
+
+% assert '-' not in [x for y in list(q) for x in y], f'You cannot have a minus sign in mypoll tables: {list(q)}'
+% symbols = [x.split(' ') for x in list(q)]
+% symbols = list(set(item for row in symbols for item in row)) # Flatten out list of lists
+% symbols = symbols + list(q) # Add back in the tuples
+**Insert.B.Plus.Tree.{{index+1}}:** Complete the following table of {{q.SearchKey}} search keys and pointers
+after an insert of record '{{q.InsertedPtr}}'.  
+**Note:** You can be assured that RootP1 points to LeftNode, RootP2 points to CenterNode, and RootP3 points to RightNode.
+% if q.SearchKey == 'grade':
+ **NOTE:** Ascending alphanumeric sort order for grades is A, A+, A-, B, B+, B-, C, C+, C-, D, D+, D-, F  
+% end
+<img src="{{static(f'slides/fe-dry-tube-kept-92.b-plus-tree-post-insert.{index}.png')}}" style="float:none; width: 100%"/>
+
+{{!table(inputs=1, headings=f' Field, Value', table=f'''
+RootP1,{q.RootP1}
+RootK1,{q.RootK1}
+RootP2,{q.RootP2}
+RootK2,{q.RootK2}
+RootP3,{q.RootP3}
+LeftP1,{q.LeftP1}
+LeftK1,{q.LeftK1}
+LeftP2,{q.LeftP2}
+LeftK2,{q.LeftK2}
+LeftP3,{q.LeftP3}
+CenterP1,{q.CenterP1}
+CenterK1,{q.CenterK1}
+CenterP2,{q.CenterP2}
+CenterK2,{q.CenterK2}
+CenterP3,{q.CenterP3}
+RightP1,{q.RightP1}
+RightK1,{q.RightK1}
+RightP2,{q.RightP2}
+RightK2,{q.RightK2}
+RightP3,{q.RightP3}
+''', symbols=symbols, name=f' Insert.B.Plus.Tree.{index+1}', points=15)}}
+% include('viewAnswer', answer=q)
+
+---
+
+
+ %end
+%end
+

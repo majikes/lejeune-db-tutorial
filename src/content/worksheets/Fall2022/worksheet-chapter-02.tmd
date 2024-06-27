@@ -1,0 +1,87 @@
+<%
+setInfo(
+      due="2021-08-26 14:00:00",
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+)
+%>
+
+# Pre-chapter 2 worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+Unfortunately, in this worksheet, all answers are multiple choice.
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**ER:** What is an ER-data model?  
+**A:** External-relationship data model.  
+**B:** It describes the data involved in real-world enterprise in terms of objects and their relationships.  
+**C:** The first layer of a database schema.  
+**D:** None of these.  
+% answer = 'B'
+% answer2 = f'''
+Page 25 says that an entity-relationship ER data model allows us to describe
+the data involved in a real-world enterprise in terms of objects and their
+relationships and is widely used to develop an initial database design.
+
+Answer: {answer}'''
+{{!select(answer, list('ABCD'), points=25, name='ER')}}
+% include('viewAnswer', answer=answer2)
+
+**Entity:** What is an entity?  
+**A:** An object in the real world that is distinguishable from other objects.  
+**B:** An attribute.  
+**C:** A key.  
+**D:** A candidate key.  
+% answer = 'A'
+% answer2 = f'''
+Page 28 says an entity is an object in the real world that is distinguishable from other objects.
+
+Answer: {answer}'''
+{{!select(answer, list('ABCD'), points=25, name='Entity')}}
+%include('viewAnswer', answer=answer2)
+
+**Relationship:** According to the DBMS book, what is a relationship?  
+**A:** A long term contractual obligation between two objects.  
+**B:** The data type of entities in the database.  
+**C:** An association among two or more entities.  
+**D:** An attribute.  
+% answer = 'C'
+% answer2 = f'''
+Page 29 says that a relationship is an association among two or more entities.
+
+Answer: {answer}'''
+{{!select(answer, list('ABCD'), points=25, name='Relationship')}}
+%include('viewAnswer', answer=answer2)
+
+**Versus:** While identifying entities and attributes, it is sometimes _not_&nbsp; clear whether a property should be modeled as an attribute or as an entity set.  
+**A:** True  
+**B:** False  
+% answer = 'A'
+% answer2 = f'''
+Page 41 says that while identifying the attributes of an entity set, it is
+sometimes not clear whether a property should be modeled as an attribute or 
+an entity set.
+
+Answer: {answer}'''
+{{!select(answer, list('AB'), points=25, name='Versus')}}
+% include('viewAnswer', answer=answer2)
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

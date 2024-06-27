@@ -1,0 +1,74 @@
+# {{!linkable_header(name_b_tree)}} ({{points_b_tree}} out of {{points_limit}} points)
+
+<%
+for new_index in range(number_b_tree):
+  index = (new_index+1)%number_b_tree
+  if (section == '003') or (conflict_exam and index == number_b_tree-1) or (not conflict_exam and ((member_number%(number_b_tree-1) == index))):
+      if index == number_b_tree -1:
+        include('viewAnswer', answer=f' Only seen by students at the conflict exam')
+      else:
+        include('viewAnswer', answer=f' Only seen by member number % {number_b_tree-1} == {index}')
+      end
+%>
+
+   Figure 1 is a B+ Tree with index pages that can contain at most two keys
+   and leaf pages that can contain at most two data entries.
+   The root has two keys, {{index*10+6}} and {{index*10+9}}, and 
+   three pointers.
+
+   After inserting the data with key {{index*10+9}} using the DBMS text book
+   insertion algorithm from chapter 10, the resulting B+ tree
+   will have the shape of Figure 2.
+   Use the table at the right to fill in the key and data values 
+   for the B+ tree after the insertion.
+   You must follow the DBMS book Chapter 10 algorithm for insertion into a B+ tree.
+   (This means, do not do redistribution of nodes which was not covered in class.)
+
+   For example, if you believe that after inserting {{index*10+9}} into the B+ tree
+   in Figure 1, then the resulting root$^\prime$ would be have a key value of {{index*10+9}}, 
+   then in the table for
+   **Variable name in tree** row **A**, put the value {{index*10+9}}.
+   For any values that are empty, enter `null`.
+
+  
+<div class="row">
+  <div class="twothirdcolumns">
+   <figure style="border: 5px solid #4B9CD3">
+     <img src="{{static(f'images/fe-root-necessary-serve-61.insert.{index+1}.png')}}" style="width:100%" alt='Figure 1. B+ tree'/>
+     <figcaption>Figure 1. B+ tree before insertion of {{index*10+9}}</figcaption>
+   </figure>  
+
+
+   <figure style="border: 5px solid #4B9CD3">
+     <img src="{{static(f'images/fe-root-necessary-serve-61.insert.var.png')}}" style="width:100%" alt='Figure 2. B+ tree'/>
+     <figcaption>Figure 2. B+ tree after insertion of {{index*10+9}} with variables for key and data values</figcaption>
+   </figure>  
+  </div>
+
+ <div class="threecolumns">
+ <p />&nbsp;
+  <b>Btree.After.Insertion.{{index+1}}:</b> Fill in the key and data values for the resulting B+ tree.<br />
+  <b>Note:</b>Even though, alternate 2 leaf pages include an asterisk in the notation,
+  the pull downs do not include the asterisk.
+  % answer = [f'{index*10+9}', f'{index*10+6}', f'{index*10+10}', f'{index*10+2}', f'{index*10+4}', f'{index*10+6}', f'{index*10+8}', f'{index*10+9}', 'null', f'{index*10+10}', f'{index*10+12}']
+  % symbols = answer + ['null']
+  {{!table(inputs=1, headings='Variable name in tree, Value', table=f'''
+A,{answer[0]}
+B,{answer[1]}
+C,{answer[2]}
+D,{answer[3]}
+E,{answer[4]}
+F,{answer[5]}
+G,{answer[6]}
+H,{answer[7]}
+I,{answer[8]}
+J,{answer[9]}
+K,{answer[10]}''', symbols=symbols, name=f'Btree.After.Insertion.{index+1}', points=10)}}
+%include('viewAnswer')
+ </div>
+</div> 
+
+---
+
+  % end  # section == 003 or member_number%number_b_tree == index
+% end  # for index in range(number_b_tree)

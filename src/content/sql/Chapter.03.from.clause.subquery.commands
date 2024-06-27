@@ -1,0 +1,23 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Department;
+CREATE TABLE Department (dept_name  varchar(20), 
+                         building   varchar(15), 
+                         budget     numeric(12,2) check (budget > 0),
+                         primary key (dept_name));
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Biology', 'Watson', '90000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Comp. Sci.', 'Taylor', '100000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Elec. Eng.', 'Taylor', '85000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Finance', 'Painter', '120000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('History', 'Painter', '50000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Music', 'Packard', '80000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Physics', 'Watson', '70000');
+INSERT INTO DEPARTMENT(dept_name, building, budget) VALUES ('Wizards', 'Hogwarts', '120000');
+
+SELECT 'Find all departments with the maximum budget' AS '';
+WITH max_budget(value) AS (SELECT MAX(budget)
+                            FROM Department)
+
+SELECT D.dept_name
+  FROM department as D, max_budget as M
+ WHERE D.budget = M.value;

@@ -1,0 +1,49 @@
+<%
+from content.exams.fe_root_necessary_serve_61 import points_total, points_limit
+from content.exams.fe_root_necessary_serve_61 import due, exam, possible_pages, points_limit, duration, exceptions, maxpenalty, penalty, sailors_dbs, politicians_dbs, needsSubmitCode
+
+from content.exams.fe_root_necessary_serve_61 import points_b_tree, number_b_tree, name_b_tree
+from content.exams.fe_root_necessary_serve_61 import points_sql_queries, number_sql_queries, name_sql_queries
+from content.exams.fe_root_necessary_serve_61 import points_evaluation, number_evaluation, name_evaluation
+from content.exams.fe_root_necessary_serve_61 import points_sorting, number_sorting, name_sorting
+from content.exams.fe_root_necessary_serve_61 import points_counting, number_counting, name_counting
+from content.exams.fe_root_necessary_serve_61 import points_block_nested_loop, number_block_nested_loop, name_block_nested_loop
+from content.exams.fe_root_necessary_serve_61 import points_index_nested_loop, number_index_nested_loop, name_index_nested_loop
+
+setInfo(duration=duration,
+        due='2022-12-06 19:10:00',
+        partial=False,
+        exam=exam,
+        assessment_type='fe',
+        needsSubmitCode=needsSubmitCode,
+        exceptions=exceptions,
+        pages=possible_pages,
+        points_limit=100,
+        points_total=points_total,
+        maxpenalty=1.00, penalty=.20,
+       )
+%>
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+# Final Exam COMP 421 Fall 2022
+
+% include('content/exams/fe-root-necessary-serve-61.prolog.itmd')
+
+
+% if 'questions' in pages:
+
+## {{!linkable_header('Questions')}} For a total of {{points_limit}} points
+
+% if 'questions' in pages:
+% include('content/exams/fe-root-necessary-serve-61.SQL_Queries.itmd')
+% include('content/exams/fe-root-necessary-serve-61.evaluations.itmd')
+% include('content/exams/fe-root-necessary-serve-61.b_tree.itmd')
+% end
+
+<!-- 'questions' in pages -->
+% end 
+
+% if 'submit' in pages:
+% include('exams-pledge.md')
+% include('submit.md')
+% end

@@ -1,0 +1,91 @@
+<%
+setInfo(
+      due="2023-01-26  8:00:00",
+			pages=['questions', 'submit'],
+      assessment_type='worksheet',
+      penalty=1,
+      maxpenalty=1,
+      exceptions=dict(jenny13=dict(due="2020-09-01 18:00:00"))
+)
+%>
+
+# Pre-chapter 4 worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+Unfortunately, in this worksheet all answers are multiple choice.
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+---
+
+**Query.Languages**: What is/are the query language(s) discussed in chapter 4?  
+**A:** Relational algebra  
+**B:** Relational calculus  
+**C:** Both A and B  
+**D:** Structured query language  
+% answer = 'C'
+% answer2 = f'''
+Page 100 bottom of the page
+
+Answer: {answer}'''
+{{!select(answer, list('ABCD'), points=25, name='Query.Languages')}}
+% include('viewAnswer', answer=answer2)
+
+**Expression** What is a relational algebra expression?  
+**A:** A relation  
+**B:** A unary algebra operator applied to a single relation  
+**C:** A binary algebra operator applied to two expressions  
+**D:** All of the above.  
+% answer = 'D'
+% answer2 = f'''
+Page 102 has relational algebra expression in bold type 
+
+Answer: {answer}'''
+{{!select(answer, list('ABCD'), points=25, name='Expression')}}
+%include('viewAnswer', answer=answer2)
+
+**Basic.Operations:** Which of the following are **NOT** relational algebra operations?  
+**A:** Selection   
+**B:** Projection  
+**C:** Cross product  
+**D:** Set-difference  
+**E:** Union  
+**F** Joins  
+**G:** Division  
+**H:** None of them, they are all relational algebra operations  
+% answer = 'H'
+% answer2 = f'''
+Page 103-109 show the operations 
+
+Answer: {answer}'''
+{{!select(answer, list('ABCDEFGHI'), points=25, name='Basic.Operations')}}
+%include('viewAnswer', answer=answer2)
+
+**Join.Types:** Which of the following are types of joins?  
+**A:** Cross-product  
+**B:** Conditional joins   
+**C:** Equijoins  
+**D:** Natural join  
+**E:** All of the above  
+% answer = 'E'
+% answer2 = f'''
+Page 107-08
+
+Answer: {answer}'''
+{{!select(answer, list('ABCDE'), points=25, name='Join.Types')}}
+% include('viewAnswer', answer=answer2)
+
+% end
+% if 'submit' in pages:
+
+---
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

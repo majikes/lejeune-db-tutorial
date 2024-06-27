@@ -1,0 +1,28 @@
+<h1>Visualizations</h1>
+
+<style>
+table {
+    font-family: arial, sans-serif;
+      border-collapse: collapse;
+        width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+      text-align: left;
+        padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+
+<table>
+  <tr>
+    <th>Name</th></tr>
+  <br />
+% for v in visualizations:
+<tr><th><a href="{{v['url']}}" target="_blank">{{v['name']}}</a></th></tr>
+% end
+</table>

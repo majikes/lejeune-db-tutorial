@@ -1,0 +1,75 @@
+PRAGMA foreign_key = ON;
+
+DROP TABLE IF EXISTS Sailors;
+CREATE TABLE Sailors (sid INTEGER PRIMARY KEY, sname char(20), rating integer, age real);
+INSERT INTO Sailors values ('22', 'Dustin',  7, 45.0);
+INSERT INTO Sailors values ('29', 'Brutus',  1, 33.0);
+INSERT INTO Sailors values ('31', 'Lubber',  8, 55.5);
+INSERT INTO Sailors values ('32', 'Andy',    8, 25.5);
+INSERT INTO Sailors values ('58', 'Rusty',  10, 35.0);
+INSERT INTO Sailors values ('64', 'Horatio', 7, 35.0);
+INSERT INTO Sailors values ('71', 'Zorba',  10, 16.0);
+INSERT INTO Sailors values ('74', 'Horatio', 9, 35.0);
+INSERT INTO Sailors values ('85', 'Art',     3, 25.5);
+INSERT INTO Sailors values ('95', 'Bob',     3, 63.5);
+
+SELECT 'The Sailors Sailors table:' as '';
+SELECT * FROM Sailors;
+
+DROP TABLE IF EXISTS Boats;
+CREATE TABLE Boats (bid INTEGER PRIMARY KEY, bname char(20), color char(20));
+INSERT INTO Boats values ('101', 'Interlake', 'blue');
+INSERT INTO Boats values ('102', 'Interlake', 'red');
+INSERT INTO Boats values ('103', 'Clipper', 'green');
+INSERT INTO Boats values ('104', 'Marine', 'red');
+
+SELECT 'The Boats Boats table:' as '';
+SELECT * FROM Boats;
+
+DROP TABLE IF EXISTS Reserves;
+CREATE TABLE Reserves (sid INTEGER, bid INTEGER, day date,
+                       FOREIGN KEY(sid) REFERENCES Sailors(sid),
+                       FOREIGN KEY(bid) REFERENCES Boats(bid));
+INSERT INTO Reserves VALUES ('22', '101', '10/10/98');
+INSERT INTO Reserves VALUES ('22', '102', '10/10/98');
+INSERT INTO Reserves VALUES ('22', '103', '10/8/98' );
+INSERT INTO Reserves VALUES ('22', '104', '10/7/98' );
+INSERT INTO Reserves VALUES ('31', '102', '11/10/98');
+INSERT INTO Reserves VALUES ('31', '103', '11/6/98' );
+INSERT INTO Reserves VALUES ('31', '104', '11/12/98');
+INSERT INTO Reserves VALUES ('64', '101', '9/5/98');
+INSERT INTO Reserves VALUES ('64', '102', '9/8/98');
+INSERT INTO Reserves VALUES ('74', '103', '9/8/98');
+
+SELECT 'The Reserves Reserves table:' as '';
+SELECT * FROM Reserves;
+
+SELECT 'Solution 1: Project red boats, then Reserves, then Sailors, then project sname' as '';
+SELECT 'Did Horacio (sid=64) or Horacio (sid=74) reserve a Red and Green Boat?' as '';
+WITH T AS (SELECT *
+             FROM Boats B
+             WHERE color='red' OR color='green')
+SELECT DISTINCT sname 
+  FROM T
+NATURAL JOIN Reserves
+NATURAL JOIN Sailors;
+
+SELECT 'Solution 2: Project red boats, then project bid and natural join Reserves, then project sname Sailors' AS '';
+WITH R AS (SELECT *
+             FROM Boats B
+            WHERE color='red'),
+     T1 AS (SELECT sid
+              FROM R
+            NATURAL JOIN Reserves),  
+     G AS (SELECT *
+             FROM Boats B
+            WHERE color='green'),
+     T2 AS (SELECT sid
+              FROM G
+             NATURAL JOIN Reserves)
+
+SELECT DISTINCT sname 
+  FROM (SELECT * FROM T1
+         INTERSECT
+        SELECT * FROM T2)
+ NATURAL JOIN Sailors; 

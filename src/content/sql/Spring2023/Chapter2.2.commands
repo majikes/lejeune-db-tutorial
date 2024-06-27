@@ -1,0 +1,43 @@
+-- Create and populate the Employees relation
+DROP TABLE IF EXISTS Employees;
+CREATE TABLE Employees (ssn char(11), name char(20), lot integer, PRIMARY KEY(ssn));
+INSERT INTO Employees values ('123-22-3666', 'Dave Davies', 1);
+INSERT INTO Employees values ('231-31-5368', 'John Jones', 5);
+INSERT INTO Employees values ('131-24-3650', 'Sarah Smith', 1);
+INSERT INTO Employees values ('223-32-6316', 'G. G. Guldu', 3);
+
+-- Display the Employees relation
+SELECT 'The Employees table:' as '';
+SELECT * FROM Employees;
+
+-- Create and populate the Departments relation
+DROP TABLE IF EXISTS Departments;
+CREATE TABLE Departments (did integer, dname text, budget real);
+INSERT INTO Departments values(1, 'Marketing', 250000);
+INSERT INTO Departments values(2, 'Development', 1250000);
+INSERT INTO Departments values(3, 'Corporate', 125000);
+
+-- Display the Employees relation
+SELECT 'The Deparments table:' as '';
+SELECT * FROM Departments;
+
+-- Create and populate the Works_In relation
+DROP TABLE IF EXISTS Works_In;
+CREATE TABLE Works_In(ssn char(11), did integer, since date,
+                      PRIMARY KEY(ssn, did), FOREIGN KEY (ssn) REFERENCES Employees, FOREIGN KEY(did) REFERENCES Departments);
+INSERT INTO Works_In values('123-22-3666', 1, '2015-01-01');
+INSERT INTO Works_In values('231-31-5368', 2, '2020-01-01');
+INSERT INTO Works_In values('231-31-5368', 1, '2015-01-01');
+INSERT INTO Works_In values('131-24-3650', 2, '2021-01-01');
+INSERT INTO Works_In values('223-32-6316', 3, '2015-01-01');
+
+-- Display the Works_In relation
+SELECT 'The Works_In table:' as '';
+SELECT * FROM Works_In;
+
+-- Display who works in which department since 2021
+SELECT 'Who works in what department starting from 2020 and after' as '';
+SELECT * from Employees, Departments, Works_IN
+  WHERE Employees.ssn=Works_In.ssn AND
+        Departments.did=Works_In.did AND
+        since >= '2020-01-01';

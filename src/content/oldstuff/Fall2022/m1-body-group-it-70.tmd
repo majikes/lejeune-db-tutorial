@@ -1,0 +1,25 @@
+<%
+from content.exams.m1_body_group_it_70 import points_total, points_limit
+from content.exams.m1_body_group_it_70 import due, exam, possible_pages, points_limit, duration, exceptions, maxpenalty, penalty, dbs, needsSubmitCode
+
+from content.exams.m1_body_group_it_70 import points_sql_queries, number_sql_queries
+from content.exams.m1_body_group_it_70 import points_chapter_review, number_chapter_review
+
+setInfo(duration=duration,
+        due=due,
+        partial=False,
+        assessment_type='midterm1',
+        exam=False,  # =exam,
+        needsSubmitCode=needsSubmitCode,
+        exceptions=exceptions,
+        pages=possible_pages,
+        maxpenalty=1.00, penalty=.20,
+       )
+%>
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+# COMP 421 Midterm 1 Fall 2022 Prologue
+
+% include('content/exams/m1-body-group-it-70.prolog.itmd')
+
+

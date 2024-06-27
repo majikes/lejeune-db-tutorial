@@ -1,0 +1,116 @@
+<%
+setInfo(due="2021-09-23 15:02:00",
+        needsSubmitCode=True,
+        pages=['questions', 'submit'],
+        )
+dbs=['sailors.sqlite']
+%>
+# Midterm 1 D Sailors
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+
+```sql
+  CREATE TABLE Sailors
+      (sid integer primary key,
+       sname text,
+       rating integer,
+       age integer)
+
+  CREATE TABLE Boats
+      (bid integer primary key,
+       bname text,
+       color text)
+
+  CREATE TABLE Reserves
+      (sid integer,
+       bid integer,
+       day text,
+       primary key (sid, day)
+       foreign key (sid) references Sailors(sid)
+       foreign key (bid) references Boats(bid))
+
+```
+
+% # https://www.cs.ubc.ca/~laks/cpsc304/Basic-SQL-Tutorial-Sol.pdf 
+---
+
+---
+
+**Reserved.All:** Find the name of sailors who have reserved all boats.  
+% answer = '''
+SELECT s.sname
+  FROM Sailors s
+ WHERE NOT EXISTS (SELECT *
+                     FROM Boats b
+                    WHERE NOT EXISTS (SELECT *
+                                        FROM Reserves r
+                                      WHERE r.sid=s.sid AND r.bid=b.bid))
+ '''
+{{!sql(answer, dbs=dbs, sort=1, points=25, name='Reserved.All')}}
+% include('viewAnswer')
+
+---
+
+**Lake.Sailors:** Find the names of sailors who have reserved all boats whose name have 'lake' in it.
+% answer = '''
+SELECT s.sname
+  FROM Sailors s
+ WHERE NOT EXISTS (SELECT *
+                     FROM Boats b
+                    WHERE b.bname LIKE '%lake%' AND
+                      NOT EXISTS (SELECT *
+                                    FROM Reserves r
+                                   WHERE r.sid=s.sid AND
+                                         r.bid=b.bid))
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=25, name='Lake.Sailors')}}
+% include('viewAnswer')
+
+---
+
+**Better.Than.Bart:** Find the sailor id's of sailors whose rating is better than a sailor named Bart.  
+% answer = '''
+SELECT s1.sid
+  FROM Sailors s1, Sailors s2
+ WHERE s1.rating>s2.rating AND
+       s2.sname='Bart'
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=25, name='Better.Than.Bart')}}
+% include('viewAnswer')
+
+---
+
+**Older.Is.Better:** Find the name and age of the oldest sailor.  
+% answer = '''
+SELECT s1.sname, s1.age
+FROM Sailors s1
+WHERE NOT EXISTS (SELECT *
+                    FROM Sailors s2
+                   WHERE s2.age>s1.age) 
+'''
+% answer2 = f'''Answer:
+{answer}
+
+Alternatively
+SELECT s1.sname, s1.age
+  FROM Sailors s1
+ WHERE s1.age >= (SELECT max(s2.age)
+                    FROM Sailors s2)
+'''
+{{!sql(answer, dbs=dbs, sort=1, points=25, name='Older.Is.Better')}}
+% include('viewAnswer', answer=answer2)
+
+%end
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

@@ -1,0 +1,70 @@
+<%
+from collections import namedtuple
+katex_underscore = r'\textunderscore{}'
+katex_le = r'\le'
+
+SELECT_QUERY = namedtuple('SELECT_QUERY', 'dept_name text_order sql_order')
+select_queries = [SELECT_QUERY(dept_name='Comp. Sci.', text_order='alphabetically',         sql_order='ASC'),
+                  SELECT_QUERY(dept_name='Physics',    text_order='inverse alphabetically', sql_order='DESC'),
+                  SELECT_QUERY(dept_name='Math',       text_order='alphabetically',         sql_order='ASC'),
+                  SELECT_QUERY(dept_name='Accounting', text_order='inverse alphabetically', sql_order='DESC')]
+%>
+
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % d = select_queries[index]
+    **How.Many.Students.{{index+1}}:** Find the number of students in the {{d.dept_name}} department.  
+    % answer = f'''
+-- Aggregate count
+SELECT count(*) 
+  FROM Student
+ WHERE dept_name = '{d.dept_name}'
+'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' How.Many.Students.{index+1}', sort=1)}}
+    % include('viewAnswer')
+  %end
+%end
+
+---
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % d = select_queries[index]
+    **How.Many.Rooms.{{index+1}}:** List the names of each building {{d.text_order}} along with the number of classrooms in each building.
+    % answer = f'''
+-- GROUP BY Having
+SELECT building, count(*) as COUNT
+  FROM Classroom
+ GROUP BY building
+ ORDER BY building {d.sql_order}
+'''
+    {{!sql(answer, dbs=dbs, points=5, name=f' How.Many.Rooms.{index+1}')}}
+    % include('viewAnswer')
+  %end
+%end
+
+---
+
+% for index in range(number_sql_queries):
+  % if section == '003' or (team_member_number % number_sql_queries) == index:
+
+    % d = select_queries[(index+1) % len(select_queries)]
+    **Buildings.With.More.Than.One.Classroom.{{index+1}}:** List the names of each building {{d.text_order}} that have more than one classroom.
+    % answer = f'''
+-- GROUP BY without Aggregate in select
+SELECT building
+  FROM Classroom
+ GROUP BY building
+ HAVING count(*) > 1
+ ORDER BY building {d.sql_order}
+'''
+    {{!sql(answer, dbs=dbs, points=7.5, name=f' Buildings.With.More.Than.One.Classroom.{index+1}')}}
+    % include('viewAnswer')
+  %end
+%end
+
+---
+

@@ -1,0 +1,556 @@
+---
+title: {{TITLE}}
+theme: "comp421"
+separator: "^---"
+verticalSeparator: "^----"
+notesSeparator: "^Note:"
+revealOptions:
+    transition: fade
+
+
+---
+
+### Chapter 3: Introduction to SQL
+#### Part I
+
+- By the end of class you should know
+  - SQL Data Definition
+  - Basic Query Structure of SQL Queries
+    - We will cover a laundry list of commands
+    - From book, homework, practice you need to learn how to use them
+  - Additional Basic Operations
+  - Set Operations
+
+
+Note:
+
+https://www.db-book.com/slides-dir/PDF-dir/ch3.pdf
+
+---
+
+{{HIDDEN}} 
+
+### History
+
+- IBM Sequel language developed as part of System R project at the IBM San Jose Research Laboratory
+- Renamed Structured Query Language (SQL)
+- ANSI and ISO standard SQL:
+  - SQL-86
+  - SQL-89
+  - SQL-92 
+  - SQL:1999 (language name became Y2K compliant!)
+  - SQL:2003
+- Commercial systems offer most, if not all, SQL-92 features, plus varying feature sets from later standards and special proprietary features. 
+  - Not all examples here may work on your particular system.
+
+
+---
+
+### SQL Parts
+
+- Data manipulation language, **DML**, provides the ability to:
+  - Query information from the database
+  - Insert tuples into the database
+  - Modify tuples in the database
+  - Delete tuples from the database
+- Data definition language, <b>DDL</b>, provides the ability to:
+  - Specify integrity constraints
+  - Define multiple views of the data
+  - Specify the beginning / end of a transaction
+  - Embed SQL w/in general purpose programming languages
+  - Specify access rights to relations and views
+
+Note:
+
+There are two parts to the SQL languages
+
+DML is the active query, insert, modify, delete
+
+**FRAG** 
+DDL defines integrity constraint, views, transactions, embedded SQL into programming languages and access rights.
+
+---
+
+### Data Definition Language
+
+- **DDL** allows the specification of information about relations, including:
+  - The schema for each relation.
+  - The type of values associated with each attribute.
+  - The Integrity constraints
+  - The set of indices to be maintained for each relation.
+  - Security and authorization information for each relation.
+  - The physical storage structure of each relation on disk.
+
+Note:
+
+DDL describes
+ - The schema for each relation / table  
+ - The type (integer, float, text) of each attribute  
+ - Any integrity constraints (bank balances must be $\ge$ 0)  
+ - Which indices exist for which attributes
+ - The storage layout ISAM, B$^+$ tree, etc
+
+---
+
+### DDL Domain Types in SQL
+
+- Most common SQL types:
+  - **char(n).** Fixed length string of $n$ character string
+  - **varchar(n).** Variable length string of max $n$ characters
+  - **int.** Integer (machine-dependent length bits)
+  - **smallint.** Small integer (machine-dependent length bits)
+  - **numeric(p,d).** Fixed point number (precision $p$ digits, max $d$ to right of decimal
+    -  **numeric**(3,1), allows 44.5 to be stores exactly, but not 444.5 or 0.32
+  - **real** &amp; **double precision.** Floating point and double-precision floating point
+  - **float(n).** Floating point number, with at least $n$ digits.
+- More are covered in Chapter 4.
+
+
+---
+
+### Create Table Construct
+
+- Relation is defined using the **create table** command: <br/>create table $r (A_1 D_1, A_2, D_2, \dots, A_n D_n,$<br />(integrity-constraint$_1$), $\dots)$
+   - $r$ is the name of the relation
+   - each $A_i$ is an attribute name in the schema of relation $r$
+   - $D_i$ is the data type of values in the domain of attribute $A_i$
+- To define the instructor relation similar to the book:
+```
+CREATE TABLE Instructor (
+      ID char(5),
+      name varchar(20),
+      dept_name varchar(20),
+      salary numeric(8,2))
+```
+
+Note:
+
+This table is does not include the primary key and the foreign key reference
+
+---
+
+### And a Few More Relation Definitions
+
+```
+CREATE TABLE IF NOT EXISTS Student (
+    ID char(5),
+    name varchar(20),
+    dept_name varchar(20),
+    tot_cred numeric(3,0),
+    primary key (ID),
+    foreign key (dept_name) references department)
+```
+
+```
+CREATE TABLE IF NOT EXISTS Takes (
+    ID varchar(5),
+    course_id varchar(8),
+    sec_id varchar(8),
+    semester varchar(6),
+    year numeric(4,0),
+    grade varchar(2),
+    primary key (ID, course_id, sec_id, semester, year),
+    foreign key (ID) references student,
+    foreign key (course_id, sec_id, semester, year) references section)
+```
+
+Note:
+
+Note that student references depart_name from department relation
+
+Define table of which classes students take
+
+---
+
+### And more still
+
+```
+CREATE TABLE Course (
+     course_id varchar(8),
+     title varchar(50),
+     dept_name varchar(20),
+     credits numeric(2,0),
+     primary key (course_id), foreign key (dept_name) references department)
+```
+
+
+---
+
+### Updates to tables
+
+- **Insert** [Insert Majikes into the instructor table]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.insert.instructor)
+```
+INSERT INTO Instructor (ID, name, dept_name, salary)
+      VALUES ('150150', 'Majikes', 'Comp. Sci.', 90000)
+```
+- **Delete** [Remove all tuples from the $student$ relation]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.delete.student)
+```
+DELETE FROM Student
+```
+- **Drop Table**
+```
+drop table r
+```
+
+
+---
+
+### Updates to tables II
+
+- **[Alter]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.alter.instructor)** adding an attribute
+```
+alter table r add A D
+```
+  - where $A$ is the name of the attribute to be added to relation $r$ and $D$ is the domain of $A$.
+  - All exiting tuples in the relation are assigned <i>null</i> as the value for the new attribute.
+
+- **Alter** dropping an attribute
+```
+alter table r drop A
+```
+  - where $A$ is the name of an attribute of relation $r$
+  - Dropping of attributes not supported by many databases.
+    - [SQLite does not support attribute drop](https://sqlite.org/lang_altertable.html#making_other_kinds_of_table_schema_changes)
+
+
+---
+
+### Basic Query Structure 
+
+- A typical SQL query has the form:
+```
+SELECT A1, A2, ..., An
+  FROM R1, R2, ..., Rm
+ WHERE P
+```
+  - $A_i$ represents an attribute
+  - $R_i$ represents a relation
+  - $P$ is a predicate.
+- The result of an SQL query is a relation multiset.
+
+
+---
+
+### The select Clause
+
+- **select** clause lists attributes desired in result
+  - corresponds to relational algebra projection operation
+- Example: find the names of all instructors:
+
+```
+SELECT name
+  FROM instructor
+```
+
+- SQL names are case insensitive
+  - You may use upper- or lower-case letters
+  - $Name \equiv NAME \equiv name$
+  - Be consistent!!  I try to:
+    - Lower case attributes
+    - Table names capitalized first letter
+    - Upper case keywords
+  - How would you do a [case insensitive query]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.case.insensitive)
+
+
+---
+
+### The select Clause (Cont.)
+
+- SQL allows duplicates in relations / query results.
+  - A mulitset
+  - Force the elimination of duplicates, use keyword **distinct**
+- Find the distinct department names of all instructors
+```
+SELECT DISTINCT dept_name
+  FROM Instructor
+```
+- The keyword **all** specifies duplicates should not be removed.
+```
+SELECT ALL dept_name
+  FROM Instructor
+```
+
+---
+
+### The select Clause (Cont.)
+
+- An asterisk in the select clause denotes 'all attributes' 
+```
+SELECT * FROM Instructor
+```
+
+- An attribute can be a literal with no **from** clause
+```
+SELECT '437'
+```
+  - Table with one column and a single row with value “437”
+  - Can give the column a name using:
+```
+select '437' as FOO
+```
+- An attribute can be a literal with **from** clause
+```
+select 'A' from instructor
+```
+  - One column table of $n$ rows each row with value 'A'
+  - $n$ number of tuples in instructor table
+
+Note:
+
+These are all variations on the select query.  
+ - Useful to know for special circumstances
+ - Play with them in the blue screens
+
+---
+
+### The select Clause (Cont.)
+
+- **select** clause can contain [arithmetic expressions]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.monthly.instructor.salary)
+  - The operation, +, –, ∗, / and //, operating on constants or attributes
+  - List the instructor names and their monthly salary:
+```
+select name, salary/12
+  from instructor
+```
+  - Rename to monthly_salary and do float division:
+```
+select name, salary/12.0 as monthly_salary
+  from instructor
+```
+
+Note:
+
+Use {{HTTPS_FQDN}}/sql/interpreter/Chapter.03.monthly.instructor.salary to show formatting
+
+---
+
+### The where Clause
+
+- **where** clause specifies conditions to be satisfied
+  - Corresponds to relational algebra selection predicate
+- To find all instructors in the computer science department
+```
+select name
+  from instructor
+ where dept_name = 'Comp. Sci.'
+```
+- SQL allows logical connectives **and**, **or**, and **not**
+- SQL uses comparison operators $\lt, \le, \ge, =$ and $\gt$
+  - Comparisons can be applied to results of arithmetic expressions
+- List [computer science instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.instructors.salary.gt8000) with salary $\gt 80000$
+```
+SELECT name
+  FROM Instructor
+ WHERE dept_name = 'Comp. Sci.' AND
+       salary > 80000
+```
+
+Note:
+
+https://comp421.cs.unc.edu/pages/worksheets/worksheet-03-01-select-instructor
+
+https://comp421.cs.unc.edu/worksheets/worksheet-03-01-select-instructor
+
+---
+
+### The from Clause
+
+- The **from** clause lists the relations involved in the query
+   - Corresponds to relational algebra Cartesian product
+- Find the [Cartesian product instructor $\times$ teaches]({{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.12.Cartesian.Product)
+```
+select *
+  from instructor, teaches
+```
+- Generates every possible instructor – teaches pair
+  - Common attributes prefixed with their relation name 
+- Cartesian product not very useful directly
+  - Useful when combined with where-clause condition
+  - Useful with (selection operation in relational algebra).
+
+Note:
+
+Cartesian product example show how big and non-useful Cartesian product alone is
+
+---
+
+### Examples
+
+- List instructor names who have taught some course and the course_id
+```
+select name, course_id
+  from instructor, teaches
+ where instructor.ID = teaches.ID
+```
+- List [computer science instructors who have taught some course and the course_id]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.comp.sci.instructor.course_id)
+```
+select name, course_id
+  from instructor, teaches
+ where instructor.ID = teaches.ID and
+       instructor.dept_name = 'Comp. Sci.'
+```
+
+Note:
+
+This is a good time to explain why you iteratively develop.  
+
+Section 3.3.2 has lots on this covering four pages!
+
+Cartesian Product loop
+
+
+
+---
+
+### The Rename Operation
+
+- SQL allows renaming relations / attributes using the **AS** clause
+  - List [all instructor names who have a higher salary than some computer science instructor]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.instructor.salary.gt.comp.sci)
+```
+SELECT DISTINCT I.name
+  FROM Instructor as I, instructor as CS
+ where I.salary > CS.salary and
+       CS.dept_name = 'Comp. Sci.' 
+```
+- Cautions
+  - Joining a table to itself is a self-join operation
+  - Keyword **AS** is optional and may be omitted<br />`instructor as T` $\equiv$ `instructor  T`
+  - I commend you to always use AS
+
+Note:
+
+Show how this actually shows all but the lowest salary computer science instructor!
+
+Do an example with the department name
+
+---
+
+### String Operations
+
+- SQL includes a string-matching operator
+  - Useful for comparisons on character strings.
+  - Operator **like** uses patterns w/ two special characters:
+    - percent ( % ).  Matches any **substring**.
+    - underscore ( _ ).  Matches any **character**.
+- List [instructor names whose name includes the substring “an”]({{HTTPS_FQDN}}//sql/interpreter/Chapter.03.string.wildcards).
+```
+SELECT name
+  FROM Instructor
+ WHERE name LIKE '%an%'
+```
+- To match special character, escape it with a backslash.
+  - List instructors with underscored names:
+```
+SELECT name
+  FROM instructor
+ WHERE name LIKE '%\_%'
+```
+
+Note:
+
+Since SQL was started in the 1970s, notice how it doesn't use _normal_ regular expressions!
+
+Be careful.  Try without the LIKE and use =
+
+---
+
+### String Operations (Cont.)
+
+- Patterns are case sensitive. 
+- Pattern matching examples:
+   - 'Intro%' matches any string beginning with “Intro”.
+   - '%Comp%' matches any string containing “Comp” as a substring.
+   - '_ _ _' matches any string of exactly three characters.
+   - '_ _ _ %' matches any string of at least three characters.
+- [SQL supports a variety of string operations]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.string.concat.len.upper) such as
+   - concatenation (using “||”)
+   - converting from upper to lower case (and vice versa)
+       - **upper()** and **lower()**
+   - finding string length, extracting substrings, etc.
+       - **length()**, **substring()**
+
+---
+
+### Ordering the Display of Tuples
+
+- List in alphabetic order the names of all instructors
+```
+select distinct name
+  from instructor
+ order by name
+```
+- Specify **desc** / **asc** for descending /ascending order
+   - Can be specified for each attribute
+   - Ascending order is the default.
+   - Example: `order by name desc`
+- [Can sort on multiple attributes]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.order) (comma separated)
+  - Example: `order by dept_name, name`
+
+---
+
+### Where Clause Predicates
+
+- SQL includes a **between** comparison operator
+  - Example:  List instructor names w/ salary between \$90,000 <b></b>and \$100,000
+  - That is salary $\ge$ <b></b> \$90,000 <b></b>and salary $\le$ <b></b> \$100,000
+```
+select name
+  from instructor 
+ where salary between 90000 and 100000
+```
+- Can also do tuple comparison
+```
+select name, course_id
+  from instructor I, teaches T
+ where (I.ID, dept_name) = (T.ID, 'Biology')
+```
+
+Note:
+
+Had to do funky html to break up KaTex parsing
+
+---
+
+### Set Operations
+
+- List course ids from Fall 2017 or in Spring 2018
+```
+select course_id from section where sem = 'Fall' and year = 2017
+union
+select course_id from section where sem = 'Spring' and year = 2018
+```
+- List course ids from Fall 2017 and in Spring 2018
+```
+select course_id from section where sem = 'Fall' and year = 2017
+intersect
+select course_id from section where sem = 'Spring' and year = 2018
+```
+- List [course ids that ran in Fall 2017 but not in Spring 2018]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.set.union.intersect.except)
+```
+select course_id from section where sem = 'Fall' and year = 2017
+except
+select course_id from section where sem = 'Spring' and year = 2018
+```
+
+- **union**, **intersect**, **except** automatically eliminate duplicates
+- **union all**, **intersect all**, **except all** retain duplicates
+
+
+---
+
+### Chapter 3 Part I epilogue
+
+- You should have a pretty good understanding of
+  - DML versus DDL
+    - Different data types
+    - Table creation / modification
+  - Basic and not so basic SQL commands
+    - Specifying attributes, relations, predicates
+    - Warnings on extraneous joins, incorrect syntax
+    - Joins
+    - Arithmetic and string operations
+    - Set operations
+
+
+
+

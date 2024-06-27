@@ -1,0 +1,46 @@
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Section;
+CREATE TABLE Section (course_id varchar(8), sec_id varchar(8),
+                      semester varchar(6) check(semester in ('Fall', 'Winter', 'Spring', 'Summer')),
+                      year numeric(4,0) check (year > 1701 and year < 2100),
+                      building varchar(15), room_number varchar(7), time_slot_id varchar(4));
+INSERT INTO Section (course_id, sec_id, semester, year, building, room_number, time_slot_id)
+            VALUES ('BIO-101', 1, 'Summer', 2017, 'Painter', 514, 'B'),
+                   ('BIO-311', 1, 'Summer', 2018, 'Painter', 514, 'A'),
+                   ('CS-101',  1, 'Fall',   2017, 'Packard', 101, 'H'),
+                   ('CS-101',  1, 'Spring', 2018, 'Packard', 101, 'F'),
+                   ('CS-190',  1, 'Spring', 2017, 'Taylor', 3128, 'E'),
+                   ('CS-190',  2, 'Spring', 2017, 'Taylor', 3128, 'A'),
+                   ('CS-315',  1, 'Spring', 2018, 'Watson',  120, 'D'),
+                   ('CS-319',  1, 'Spring', 2018, 'Watson',  100, 'B'),
+                   ('CS-319',  2, 'Spring', 2018, 'Taylor', 3128, 'C'),
+                   ('CS-347',  1, 'Fall',   2017, 'Taylor', 3128, 'A'),
+                   ('EE-181',  1, 'Spring', 2017, 'Taylor', 3128, 'C'),
+                   ('FIN-201', 1, 'Spring', 2018, 'Packard', 101, 'B'),
+                   ('HIS-351', 1, 'Spring', 2018, 'Painter', 514, 'C'),
+                   ('MU-199',  1, 'Spring', 2018, 'Packard', 101, 'D'),
+                   ('PHY-101', 1, 'Fall',   2017, 'Watson',  100, 'A')
+                   ;
+
+
+SELECT 'The Section relation' AS '';
+SELECT *
+  FROM Section;
+
+-- SELECT 'Try to insert a semester with lower case fall semester' AS '';
+-- INSERT INTO Section (course_id, sec_id, semester, year, building, room_number, time_slot_id)
+--             VALUES ('CS-421', 1, 'fall', '2023', 'Murphey', 116, 'C');
+
+-- SELECT 'Try to insert a semester with a year of 2123 instead of 2023' AS '';
+-- INSERT INTO Section (course_id, sec_id, semester, year, building, room_number, time_slot_id)
+--             VALUES ('CS-421', 1, 'fall', '2123', 'Murphey', 116, 'C');
+
+SELECT 'Insert Fall 2023 COMP 421' AS '';
+INSERT INTO Section (course_id, sec_id, semester, year, building, room_number, time_slot_id)
+            VALUES ('CS-421', 1, 'Fall', '2023', 'Murphey', 116, 'C');
+
+SELECT 'The Section relation' AS '';
+SELECT *
+  FROM Section;
+

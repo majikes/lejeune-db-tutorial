@@ -1,0 +1,93 @@
+digraph G
+{
+    splines=true 
+    "node00"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="ptr1">P<sub>1</sub></td>
+                        <td port="key1">72000</td>
+                        <td port="ptr2">P<sub>2</sub></td>
+                        <td port="key2"></td>
+                        <td port="ptr3">P<sub>3</sub></td>
+                        <td port="key3"></td>
+                        <td port="ptr4">P<sub>4</sub></td>
+                    </tr>
+                </table>>
+    ]
+    "node10"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="ptr1">P<sub>1</sub></td>
+                        <td port="key1">40000</td>
+                        <td port="ptr2">P<sub>2</sub></td>
+                        <td port="key2">60000</td>
+                        <td port="ptr3">P<sub>3</sub></td>
+                        <td port="key3">65000</td>
+                        <td port="ptr4">P<sub>4</sub></td>
+                    </tr>
+                </table>>
+    ]
+    "node11"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="ptr1">P<sub>1</sub></td>
+                        <td port="key1">72000</td>
+                        <td port="ptr2">P<sub>2</sub></td>
+                        <td port="key2">75000</td>
+                        <td port="ptr3">P<sub>3</sub></td>
+                        <td port="key3">80000</td>
+                        <td port="ptr4">P<sub>4</sub></td>
+                    </tr>
+                </table>>
+    ]
+    "instructors"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                 <tr><td><font color="blue">ID</font></td>
+                       <td><font color="blue">name</font></td>
+                       <td><font color="blue">dept_name</font></td>
+                       <td><font color="blue">salary</font></td>
+                       </tr>
+                 <tr><td port="id1">10101</td><td port="name1">Srinivasan</td><td port="dept_name1">Comp. Sci.</td><td port="salary1">65000</td><td port="next_ptr1"></td></tr>
+                 <tr><td port="id3">15151</td><td port="name3">Mozart    </td><td port="dept_name3">Music     </td><td port="salary3">40000</td><td port="next_ptr3"></td></tr>
+                 <tr><td port="id5">32343</td><td port="name5">El Said   </td><td port="dept_name5">History   </td><td port="salary5">80000</td><td port="next_ptr5"></td></tr>
+                 <tr><td port="id7">45565</td><td port="name7">Katz      </td><td port="dept_name7">Comp. Sci.</td><td port="salary7">75000</td><td port="next_ptr7"></td></tr>
+                 <tr><td port="id8">58583</td><td port="name8">Califieri </td><td port="dept_name8">History   </td><td port="salary8">60000</td><td port="next_ptr8"></td></tr>
+                 <tr><td port="id9">76543</td><td port="name9">Singh     </td><td port="dept_name9">Finance   </td><td port="salary9">80000</td><td port="next_ptr9"></td></tr>
+                 <tr><td port="id10">76766</td><td port="name10">Crick     </td><td port="dept_name10">Biology   </td><td port="salary10">72000</td><td port="next_ptr10"></td></tr>
+                 <tr><td port="id12">98345</td><td port="name12">Kim       </td><td port="dept_name12">Elec. Eng.</td><td port="salary12">80000</td><td port="next_ptr12"></td></tr>
+                </table>>
+    ]
+
+    [ comment="add labels" ]
+    "root" [ shape = none label="root" ]
+    "l1" [ shape = none label="L1" ]
+
+    [ comment="add node invisible pointers to align nodes left to right"]
+    "root" -> "node00":"ptr1"
+    "node00":"ptr1" -> "node10":"ptr1" [ style=invis ]
+    "node00":"ptr2" -> "node11":"ptr1" [ style=invis ]
+
+    [ comment="add instructor data pointers" ]
+    "instructors":"next_ptr5" -> "instructors":"next_ptr9" [color=blue]
+    "instructors":"next_ptr9" -> "instructors":"next_ptr12" [color=green]
+
+    [ comment="root node pointers"]
+    "node00":"ptr1":s -> "node10":"ptr1":n
+    "node00":"ptr2":s -> "node11":"ptr1":n
+
+    [ comment="chain leaves" ]
+    "node10":"ptr4":e -> "node11":"ptr1":w
+
+    {rank=source; "root", "node00"}
+    {rank=same; "l1"->"node10" "node11" }
+    {rank=same; "instructors"}
+
+}

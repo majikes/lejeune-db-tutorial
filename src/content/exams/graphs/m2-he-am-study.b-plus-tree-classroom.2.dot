@@ -1,0 +1,134 @@
+digraph G
+{
+    splines=true 
+    "root"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="ptr1">RootP<sub>1</sub></td>
+                        <td port="key1">RootK<sub>1</sub></td>
+                        <td port="ptr2">RootP<sub>2</sub></td>
+                        <td port="key2">RootK<sub>2</sub></td>
+                        <td port="ptr3">RootP<sub>3</sub></td>
+                        <td port="key3">RootK<sub>3</sub></td>
+                        <td port="ptr4">RootP<sub>4</sub></td>
+                    </tr>
+                </table>>
+    ]
+    "leftNode"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="ptr1">LeftP<sub>1</sub></td>
+                        <td port="key1">LeftK<sub>1</sub></td>
+                        <td port="ptr2">LeftP<sub>2</sub></td>
+                        <td port="key2">LeftK<sub>2</sub></td>
+                        <td port="ptr3">LeftP<sub>3</sub></td>
+                        <td port="key3">LeftK<sub>3</sub></td>
+                        <td port="ptr4">LeftP<sub>4</sub></td>
+                    </tr>
+                </table>>
+    ]
+    "centerNode"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="ptr1">CenterP<sub>1</sub></td>
+                        <td port="key1">CenterK<sub>1</sub></td>
+                        <td port="ptr2">CenterP<sub>2</sub></td>
+                        <td port="key2">CenterK<sub>2</sub></td>
+                        <td port="ptr3">CenterP<sub>3</sub></td>
+                        <td port="key3">CenterK<sub>3</sub></td>
+                        <td port="ptr4">CenterP<sub>4</sub></td>
+                    </tr>
+                </table>>
+    ]
+    "rightNode"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                    <tr>
+                        <td port="ptr1">RightP<sub>1</sub></td>
+                        <td port="key1">RightK<sub>1</sub></td>
+                        <td port="ptr2">RightP<sub>2</sub></td>
+                        <td port="key2">RightK<sub>2</sub></td>
+                        <td port="ptr3">RightP<sub>3</sub></td>
+                        <td port="key3">RightK<sub>3</sub></td>
+                        <td port="ptr4">RightP<sub>4</sub></td>
+                    </tr>
+                </table>>
+    ]
+    "takes"
+    [
+        shape = none
+        label = <<table border="1" cellborder="1" cellspacing="0">
+                 <tr><td><font color="blue">sec_id</font></td>
+                     <td><font color="blue">semester</font></td>
+                     <td><font color="blue">ID</font></td>
+                     <td><font color="blue">course_id</font></td>
+                     <td><font color="blue">year</font></td>
+                     <td><font color="blue">grade</font></td>
+                     </tr>
+                 <tr><td>1</td><td>Fall  </td><td>Student1</td><td>COMP110</td><td>2001</td><td>A+</td></tr>
+                 <tr><td>2</td><td>Fall  </td><td>Student6</td><td>COMP210</td><td>2020</td><td port="2">F</td></tr>
+                 <tr><td>3</td><td>Spring</td><td>Student2</td><td>COMP116</td><td>2006</td><td>C</td></tr>
+                 <tr><td>4</td><td>Summer</td><td>Student3</td><td>COMP311</td><td>2019</td><td port="4">A+</td></tr>
+                 <tr><td>5</td><td>Summer</td><td>Student5</td><td>COMP126</td><td>2012</td><td>B</td></tr>
+                 <tr><td>6</td><td>Winter</td><td>Student4</td><td>COMP283</td><td>2023</td><td>B+</td></tr>
+                 <tr><td>7</td><td>Winter</td><td>Student6</td><td>COMP311</td><td>2021</td><td port="8">A</td></tr>
+                 <tr><td>8</td><td>Spring</td><td>Student7</td><td>COMP421</td><td>2022</td><td>A</td></tr>
+                 <tr><td>9</td><td>Fall  </td><td>Student8</td><td>COMP550</td><td>2021</td><td port="9">C+</td></tr>
+                </table>>
+    ]
+
+    [ comment="add labels" ]
+    "rootLabel" [ shape = none label="root" ]
+    "takesRelation" [ shape = none label="Takes Relation" ]
+
+    [ comment="add node invisible pointers to align nodes left to right"]
+    "rootLabel" -> "root":"ptr1"
+    "root":"ptr1" -> "leftNode":"ptr1" [ style=invis ]
+
+    "leftNode":"ptr4" -> "centerNode":"ptr1" [ style=invis ]
+    "centerNode":"ptr4" -> "rightNode":"ptr1" [ style=invis ]
+
+    "leftNode":"ptr1" -> "takesRelation" [style=invis ]
+    "rightNode":"ptr1" -> "takes" [style=invis ]
+
+    "takesRelation" -> "takes" [ style=invis ]
+
+    [ comment="root node pointers
+    'root':'ptr1':s -> 'leftNode':'ptr1':n
+    'root':'ptr2':s -> 'centerNode':'ptr1':n
+    'root':'ptr3':s -> 'rightNode':'ptr1':n
+    "]
+
+    [ comment="inner leaf node pointers"]
+    "leftNode":"ptr4":e -> "centerNode":"ptr1":w
+    "centerNode":"ptr4":e -> "rightNode":"ptr1":w
+
+    [ comment="linked tuples" ]
+    "takes":"8":e -> "takes":"9":e [color="red"]
+
+
+    [ comment="Leaf node labels" ]
+    "n10" [ shape = none label="LeftNode" ]
+    "n11" [ shape = none label="CenterNode" ]
+    "n12" [ shape = none label="RightNode" ]
+    "n10" -> "leftNode":"ptr2" [ style=invis]
+    "n10":n -> "leftNode":"ptr2":s
+    "n11" -> "centerNode":"ptr2" [ style=invis]
+    "n11":n -> "centerNode":"ptr2":s
+    "n12" -> "rightNode":"ptr2" [ style=invis]
+    "n12":n -> "rightNode":"ptr2":s
+
+    {rank=source; level1[style=invis, share=point]; "rootLabel", "root"}
+    {rank=same; level2[style=invis, share=point]; "leftNode" "centerNode" "rightNode"}
+    {rank=same; level3[style=invis, share=point]; "n10" "n11" "n12"}
+    {rank=same; level4[style=invis, share=point]; "takesRelation" -> "takes"}
+    edge[style=invis] "rootLabel"->"leftNode"->"n10"->"takesRelation";
+
+}

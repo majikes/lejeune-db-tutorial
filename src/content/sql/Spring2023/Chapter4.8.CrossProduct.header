@@ -1,0 +1,2 @@
+Sailors(sid: string, name: string, rating: integer, age: real);
+Reserves(sid: string, bid: integer, day: date)

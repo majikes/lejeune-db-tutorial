@@ -1,0 +1,118 @@
+<%
+setInfo(due="2021-09-23 14:34:00",
+        needsSubmitCode=True,
+        pages=['questions', 'submit'],
+        )
+dbs=['states-A.sqlite']
+%>
+# Midterm 1 B Set Operations
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+% if 'questions' in pages:
+
+
+```sql
+  CREATE TABLE IF NOT EXISTS States
+             (abbrev char(2) PRIMARY KEY,
+              statename char(20),  -- May include territories
+              population integer)
+
+  CREATE TABLE IF NOT EXISTS Politicians
+             (bioid char(20),
+              firstname char(20),
+              lastname char(20),
+              birthday date, -- YYYY-MM-DD format string
+              gender char(1),
+              PRIMARY KEY(bioid))
+  CREATE TABLE IF NOT EXISTS Terms
+             (termid INTEGER PRIMARY KEY AUTOINCREMENT,
+              termtype char(20), -- Type of term elected; rep, sen, prez, viceprez
+              startdate date,
+              enddate date,
+              party char(20), -- Political party affiliation
+              how char(20),  -- Different ways to get into an office
+              bioid char(20),
+              -- President & vice president aren't elected from districts or states
+              -- Senators aren't elected from districts
+              district integer,  -- Null of prez, viceprez, or sen
+              state char(2),    -- Null for prez and viceprez
+              FOREIGN KEY(bioid) REFERENCES Politicians(bioid))''')
+```
+---
+
+**Not.Set.Operator:** Which of the following is **not** a SQL **set** operation?  
+% answer = 'C. Division'
+% choices = ['A. Union', 'B. Intersect', answer, 'D. Except', 'E. All of the Above' ,'F. None of the above']
+{{!select(answer, choices, points=5, name='Not.Set.Operator')}}
+% include('viewAnswer')
+
+---
+
+**Set.Requirements:** Which of the following is **not** a requirement of SQL set operations'
+% answer = 'E. None of the above are false'
+% choices = ['A. Set operands must produce the same number of columns', 'B. Set operands column\'s must be compatible data types', 'C. Multiple set operations can be used in one query', 'D. All of the above are false', answer]
+{{!select(answer, choices, points=5, name='Set.Requirements')}}
+% include('viewAnswer')
+
+---
+
+**First.Politician**: What is the alphabetically first politician by their last name?  
+% answer = '''
+SELECT MIN(lastname) FROM Politicians'''
+{{!sql(answer, dbs=dbs, sort=1, points=10, name='First.Politician')}}
+% include('viewAnswer')
+
+---
+
+**Last.Politician**: What is the alphabetically last politician by their last name?  
+% answer = '''
+SELECT MAX(lastname) FROM Politicians'''
+{{!sql(answer, dbs=dbs, sort=1, points=10, name='Last.Politician')}}
+% include('viewAnswer')
+
+---
+
+**First.And.Last**: What is the last names of politicians who are alphabetically first and last?  
+% answer = '''
+SELECT MIN(lastname) FROM Politicians
+UNION
+SELECT MAX(lastname) FROM Politicians'''
+{{!sql(answer, dbs=dbs, sort=True, points=20, name='First.And.Last')}}
+% include('viewAnswer')
+
+---
+
+**Last.And.First**: What is the last names of the politicians who are alphabetically first and last?  
+**NOTE:** This time, please sort the names in reverse alphabetical order.  
+% answer = '''
+SELECT MIN(lastname) as lastname FROM Politicians
+UNION
+SELECT MAX(lastname) as lastname FROM Politicians
+ORDER BY lastname DESC'''
+{{!sql(answer, dbs=dbs, sort=1, points=15, name='How.Many.States')}}
+% include('viewAnswer')
+
+---
+
+**Second.Through.Ten**: What is the last name of the alphabetically second through tenth politician?  
+% answer = '''
+SELECT lastname FROM Politicians
+EXCEPT
+SELECT MIN(lastname) FROM Politicians
+ORDER BY lastname
+LIMIT 9'''
+{{!sql(answer, dbs=dbs, sort=1, points=15, name='Second.Through.Ten')}}
+% include('viewAnswer')
+
+%end 
+
+---
+
+% if 'submit' in pages:
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

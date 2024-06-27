@@ -1,0 +1,123 @@
+<%
+setInfo(
+      assessment_type='worksheet',
+)
+%>
+
+# Pre-chapter 3 worksheet
+
+<img src="{{static('images/COMP421Logo.png')}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+
+## {{!linkable_header('Questions')}}
+
+---
+
+**DDL.True.False:** Answer the following questions about SQL data definition language with true or false.  
+<%
+answer = ['True', 'False', 'False', 'False']
+answer2 = f'''
+{answer[0]} Page 67.  Of course it supports fixed and float
+{answer[1]} Page 67. It's machine dependent
+{answer[2]} Page 68.  It's define table
+{answer[3]} Page 69. It has to be non-null and unique
+'''
+symbols = answer
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+SQL DDL supports both fixed and float data types,{answer[0]}
+SQL DDL a small integer goes from -32&#44;767 to 32&#44;767,{answer[1]}
+The DEFINE TABLE command makes a table in the database,{answer[2]}
+There are no restrictions on a table's primary key,{answer[3]}
+''', symbols=symbols, name='DDL.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**DML.True.False:** Answer the following questions about SQL data manipulation language with true or false.  
+<%
+answer = ['False', 'True', 'False', 'False']
+answer2 = f'''
+{answer[0]} Page 71.  It's select, from, and where
+{answer[1]} Page 72.  Yes, distinct ensures no duplicates
+{answer[2]} Page 73. All is the opposite of distinct.  Asterisk returns all attributes
+{answer[3]} Page 74. SQL uses logical connectives and, or, and not
+'''
+symbols = answer
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+A basic SQL query consists of a select and from clause,{answer[0]}
+The distinct keyword ensures there are no duplicates,{answer[1]}
+Use the ALL keyword returns all attributes in a select clause,{answer[2]}
+SQL uses logical connectives &&#44; |&#44; and !,{answer[3]}
+''', symbols=symbols, name='DML.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**String.True.False:** Answer the following questions about SQL string with true or false.  
+<%
+answer = ['False', 'False', 'True', 'True']
+answer2 = f'''
+{answer[0]} Page 82. Concatenation is ||
+{answer[1]} Page 82. SQL uses % and _
+{answer[2]} Page 73. Yes.  And lower converts to lower case
+{answer[3]} Page 84. Ordering strings is ASC and DESC for alphabetical and reverse
+'''
+symbols = answer
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+SQL strings are immutable and cannot be concatenated,{answer[0]}
+Be careful when using .* for SQL pattern matching,{answer[1]}
+Function upper converts a string to upper case,{answer[2]}
+Keyword ASC is used in ordering strings,{answer[3]}
+''', symbols=symbols, name='String.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+
+---
+
+**Set.Null.True.False:** Answer the following questions about SQL set and NULL operations with true or false.  
+<%
+answer = ['True', 'False', 'True', 'True']
+answer2 = f'''
+{answer[0]} Page 83. UNION All  preserves duplicates
+{answer[1]} Page 88. INTERSECT ALL preserves duplicates
+{answer[2]} Page 89. Yes.  And lower converts to lower case
+{answer[3]} Page 84. False. Null or True is True
+'''
+symbols = answer
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+SQL UNION removes duplicates from the result,{answer[0]}
+SQL INTERSECT ALL does multi-intersection of relations,{answer[1]}
+Any mathematical comparison involving Null is treated as unknown,{answer[2]}
+All logical operations involving null has an unknown result,{answer[3]}
+''', symbols=symbols, name='Set.Null.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+---
+
+**Advanced.True.False:** Answer the following questions about advanced SQL operations with true or false.  
+<%
+answer = ['True', 'True', 'False','True']
+answer2 = f'''
+{answer[0]} Page 95. This is true! and very important
+{answer[1]} Page 105. True
+{answer[2]} Page 106. False.  You can use SCALAR subqueries in the SELECT clause
+{answer[3]} Page 113. True
+'''
+symbols = answer
+%>
+{{!table(inputs=1, headings='Question, Answer', table=f'''
+The WHERE clause is applied to the FROM clause predicate while the HAVING clause is applied to the resulting relation from the FROM clause,{answer[0]}
+The WITH clause creates a temporary relation for a query,{answer[1]}
+Subqueries can not be used within the SELECT clause,{answer[2]}
+SQL provides a CASE/WHEN/THEN/ELSE/END statement,{answer[3]}
+''', symbols=symbols, name='Advanced.Null.True.False', points=20)}}
+% include('viewAnswer', answer=answer2)
+
+% include('worksheet-submit.md')

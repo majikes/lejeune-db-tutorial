@@ -1,0 +1,106 @@
+<%
+import json
+setInfo(
+      due="2022-10-05 10:55:00",
+      needsSubmitCode=True,
+      assessment_type='worksheet',
+			pages=['questions', 'submit'],
+      penalty=1,
+      maxpenalty=1,
+      points_limit=100,
+      exceptions=dict(_003=dict(needsSubmitCode=False),
+                      )
+)
+with open('content/worksheets/sailors.json', encoding='utf-8') as fid:
+    schema = json.load(fid)
+dbs = ['sailors.sqlite', 'sailors1.sqlite']
+%>
+
+# Chapter 8 Terminology
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width=50%"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+## {{!linkable_header('Questions')}}
+
+% if 'questions' in pages:
+
+Below are tables of terminology and their use.
+It's important to know what indexes types are, what types of indexes there are, what types of files, etc.
+Read chapter 8 to understand all the terminology.
+
+---
+
+
+% answer = ['sorted file', 'heap file']
+% answer2 = f'''
+
+Page 276 An index is a data structure that organizes data records on disk to optimize
+certain kinds of retrieval operations
+
+Sorted file is taken from the slide
+
+Page 20 says a heap file has data stored in random order with index
+
+
+{answer}'''
+**File.Organization.Terminology:** Match up the use of the term for a file organization with the term itself.  
+{{!table(inputs=1, headings='Terminology from the book, The term itself', table=f'''
+File organization that's best if records are retrieved in order,{answer[0]}
+File organization with data records stored in _random_ order usually with some index to support retrieval,{answer[1]}''', symbols=answer, name='File.Organization.Terminology', points=33)}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+% answer = ['index', 'hash index', 'B+ tree']
+% answer2 = f'''
+
+Page 276 An index is a data structure that organizes data records on disk to optimize
+certain kinds of retrieval operations
+
+Page 279 A hash function is applied to a search key to access a group or bucket.
+
+Page 276 A data entry (entry in a index file) is an actual data record is alternative 1
+Page 276 A data entry is a (k, rid) pair is alternative 2
+
+
+{answer}'''
+**Index.Terminology:** Match up the use of the term with the term itself.  
+{{!table(inputs=1, headings='Terminology from the book, The term itself', table=f'''
+A data structure that organizes records on disk to optimize certain kinds of retrieval operations,{answer[0]}
+Uses a hash function with a search key to directly access the primary page of a bucket of data records,{answer[1]}
+A tree structure with non-leaf pages containing index entries and leaf data entries that are chained,{answer[2]}''', symbols=answer, name='Index.Terminology', points=33)}}
+%include('viewAnswer', answer=answer2)
+
+---
+
+**Clustered.Unclustered.Terminology:** Which of the following statements are true or false.
+% choices = ['False', 'True']
+% answer = ['False', 'True', 'True', 'False']
+% answer2 = f'''
+Page 277 Clustered and unclustered.  Not hashed
+Page 277 Alternative 1 is clustered because the records are arranged in order
+Page 377 Alternative 1 and 2 can be either clustered or unclustered
+Page 277 Cost of searching in a range is improved with clustered
+
+{answer}'''
+{{!table(inputs=1, headings='Terminology from the book, The term itself', table=f'''
+The book uses two terms for the physical ordering sequence of data entries in an index&#44; clustered and hashed,{answer[0]}
+An index that uses Alternative 1 is&#44; by definition&#44; clustered,{answer[1]}
+Alternative 2 and 3 can be clustered or unclustered,{answer[2]}
+Cost of searching is **ALWAYS** improved with a clustered index. Therefore unclustered index should never be used,{answer[3]}''', symbols=choices, name='Clustered.Unclustered.Terminology', points=34)}}
+%include('viewAnswer', answer=answer2)
+
+
+---
+
+% end
+% if 'submit' in pages:
+
+% include('worksheet-pledge.md')
+% include('submit.md')
+%end

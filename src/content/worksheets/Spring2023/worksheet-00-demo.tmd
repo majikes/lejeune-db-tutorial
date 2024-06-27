@@ -1,0 +1,188 @@
+<%
+setInfo(duration=80,
+        due='2023-01-17 08:00:00',
+        assessment_type='worksheet',
+        maxpenalty=0.75, penalty=.2,
+        pages=['questions','submit']
+        )
+dbs = ['sailors1.sqlite', 'sailors.sqlite']
+%>
+
+# 00 Worksheet demo 
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+% include('green-highlight.md')
+
+---
+
+% if 'questions' in pages:
+## {{!linkable_header('Questions')}}
+
+
+Try your luck at the Pythagorean Theorem.
+Remember, the evaluation of each answer will be done by a computer program.
+Therefore the _normal_ computer operators will be used.
+<div class="row">
+ <div class="twocolumns">
+<table>
+ <thead>
+  <tr>
+  <th>Operation</th> <th>Operator<br/>Symbol</th>
+ </thead
+ <tbody>
+  <tr> <td>Addition      </td> <td>+</td> </tr>
+  <tr> <td>Multiplication</td> <td>*</td> </tr>
+  <tr> <td>Division      </td> <td>/</td> </tr>
+  <tr> <td>Exponent, for a^2 or $a^2$  </td> <td>&#x2a;&#x2a;</td> </tr>
+  <tr> <td>Square root, for a^0.5 or $\sqrt{a}$  </td> <td>&#x2a;&#x2a;0.5 or sqrt()</td> </tr>
+ </tbody>
+</table>
+ </div>
+</div>
+
+
+Variable names are **case sensitive**.
+Therefore, use lower-case $a$, $b$, and $c$, for the following equations.
+Using an upper-case version of the variables will result in an <font color="red">unknown: No globals A</font> message.
+
+<div class="row">
+ <div class="threefourthcolumns">
+Pythagorean.Theorem.1: Given a right triangle with sides 
+$a$ of length 3 and $b$ of length 4, what is the length of 
+hypotenuse $c$?  
+% answer = 'sqrt(a*a + b*b)'
+{{!expression(answer, dict(a=3, b=4), points=5, name='Pythagorean.Theorem.1')}}<br/>
+% include('viewAnswer')
+
+<p/>
+Note that an acceptable answer can use 
+numerical equations like $3**2$,
+symbolical values in equations like $a+b$,
+both numbers and symbols like $a**2$,
+integer values like 37,
+or float values like 37.0. <br/>
+
+<p/>
+Each correct solution will be highlighted in <font color='green'>green</font> whenever 
+the answer is finished.
+The system assumes input is finished when you click outside the input box.
+ </div>
+ <div class="fourcolumns">
+  <img src="{{static('images/triangle.png')}}" style="width:80%; float:right" />
+ </div>
+</div>
+
+Try another question. 
+But for this one, you cannot enter numeric values.
+You may only use symbols $a$ and $b$ and apply mathematical computation on them.  
+
+Remember: The multiplication symbol is the asterisk, `*`.
+Addition is the plus sign, `+`.
+Exponential notation uses two asterisks, `**`.
+Square root is a number raised to the 0.5 power.
+
+**Pythagorean.Theorem.2:** Given a right triangle of sides $a$ and $b$, 
+what is the length of the hypotenuse?
+% answer = '(a ** 2 + b ** 2) ** 0.5'
+{{!expression(answer, dict(a=5, b=12), dict(a=3, b=4), points=5, name='Pythagorean.Theorem.2')}}
+% include('viewAnswer')
+
+Let's try one more to see if you can apply what you learned.
+
+**Pythagorean.Theorem.3:** Given a right triangle of sides $a$ and hypotenuse $c$,
+what is the length of side $b$?  
+% answer = 'sqrt(c**2 - a*a)'
+{{!expression(answer, dict(a=5, c=13), dict(a=3, c=5), dict(a=4, c=5), points=5, name='Pythagorean.Theorem.3')}}
+% include('viewAnswer')
+
+
+---
+
+**Matching:** Let's try our hands at matching letters in the 
+left to answer questions on the right.
+<div class="row">
+ <div class="fourcolumns">
+  <br/>A. a=5, b=3, c=4
+  <br/>B. a=-1, b=1, c=37
+  <br/>C. a=0, b=0, c=1
+  <br/>D. Pythagorean was a person
+  <br/>E. Pythagoras was a person
+  <br/>F. Yes
+  <br/>G. No
+ </div>
+ <div class="threefourthcolumns">
+ % answer = ['A', 'E', 'F']
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+Which can be the three sides of a right triangle?,{answer[0]}
+Which is a true statement about Pythagorean or Pythagoras?,{answer[1]}
+Is it possible to get these answers to turn green? (Hint&#44; it is!),{answer[2]}''', points=15, symbols=['A', 'B', 'C', 'D', 'E', 'F', 'G'], name='Matching')}}
+  <br/>
+  %include('viewAnswer')
+ </div>
+</div>
+
+---
+
+For COMP 421, we will be entering SQL commands in the browser.
+The command you enter will be executed against two databases.
+If your command is correct, the browser will highlight both resulting output tables green.
+Of course, if your command is incorrect it will not highlight **both** output tables green.
+
+**Sailor.Names:** List all the sailor names in the sailors table order by their name:  
+The correct answer which will highlight both output tables green is:  
+% answer = ''' SELECT sname as SailorName
+   FROM Sailors
+  ORDER BY SailorName'''
+
+```sql
+{{answer}}
+```
+{{!sql(answer, dbs=dbs, sort=0, points=15, name='Sailor.Names')}}
+% include('viewAnswer')
+
+Now try variations on the command entered.
+Note the case insensitivity of the table name by entering `FROM Sailors` or `FROM SaIlOrS`.
+Note that if the output from a command is verbose and impeding your concentration on the 
+next command, you can hit the `Minimize Output` button to show less output while still keeping the correct-indicating, green highlight.
+
+To understand that a correct answer highlights both outputs green, 
+note that the sailor's names are slightly different in the first and second database.
+Enter the following command to try test this out.
+The output will exclude sailor Majikes from both tables.
+And since sailor Majikes is only in the first table, it is the only one that is not highlighted green.
+
+```sql
+SELECT sname as SailorName
+  FROM Sailors
+ WHERE SailorName != 'Majikes'
+  ORDER BY SailorName
+```
+
+**<font color='red'>NOTE</font>:** Before submitting the worksheet,
+use the correct SQL command to get both table outputs green!
+
+---
+
+Multiple choice problems like the one below 
+are also available.
+But as anyone could just guess each option,
+multiple choice problems do not produce
+green highlights.
+
+
+**Multiple.Choice:**  Was this helpful?  
+% answer = 'Yes!'
+{{!select(answer, choices=['Yes!', 'No it was not helpful', 'Somewhat'], points=5, name='Multiple.Choice')}}
+%include('viewAnswer')
+% end
+
+---
+
+% if 'submit' in pages:
+ % include('worksheet-pledge.md')
+ % include('submit.md')
+% else:
+ If this were a real, classroom worksheet then a submit button was appear at the bottom.
+% end
