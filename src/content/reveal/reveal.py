@@ -66,7 +66,7 @@ def restart_reveal(deploy):
         pdf_file = re.sub(r'.md$', r'.pdf', md_file)
         md_mtime = datetime.fromtimestamp(os.path.getmtime(md_file))
         try:
-            pdf_mtime1 = datetime.fromtimestamp(os.path.getmtime(f'../slides/{pdf_file}'))
+            pdf_mtime1 = datetime.fromtimestamp(os.path.getmtime(f'../../static/slides/{pdf_file}'))
         except FileNotFoundError:
             pdf_mtime1 = datetime.fromtimestamp(0)
         try:
@@ -84,11 +84,11 @@ def restart_reveal(deploy):
             subprocess_rtn(['node_modules/.bin/decktape', '--size', '612x1000',
                             '--chrome-path', '/usr/bin/chromium-browser', 'reveal',
                             f'http://localhost:1948/{md_file}',
-                            f'/var/www/mypoll/content/slides/{pdf_file}'])
+                            f'/var/www/lejune/content/static/slides/{pdf_file}'])
             subprocess_rtn(['node_modules/.bin/decktape', '--size', '612x1000',
                             '--chrome-path', '/usr/bin/chromium-browser', 'reveal',
                             f'http://localhost:1948/{md_file}',
-                            f'../slides/{pdf_file}'])
+                            f'../../static/slides/{pdf_file}'])
     if deploy==0:
         os.kill(reveal_pid.pid, signal.SIGTERM)
 
