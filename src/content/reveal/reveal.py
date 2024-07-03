@@ -20,7 +20,7 @@ from watchdog.observers import Observer
 import Args
 from updateReveal import process_tmd_files
 
-patterns = ["*.tmd", "theme/comp421.css"]
+patterns = ["*.tmd", "theme/lejeune.css"]
 ignore_patterns = ""
 ignore_directories = False
 case_sensitive = True
@@ -37,8 +37,8 @@ def restart_reveal(deploy):
     global reveal_pid  # pylint: disable=global-statement
 
     try:
-        copyfile('theme/comp421.css',
-            '/usr/local/lib/node_modules/reveal-md/node_modules/reveal.js/dist/theme/comp421.css')
+        copyfile('theme/lejeune.css',
+            '/usr/local/lib/node_modules/reveal-md/node_modules/reveal.js/dist/theme/lejeune.css')
     except IOError:
         print('Copying theme to node_modules received Permissin Error: Ignoring!')
     process_tmd_files()
@@ -57,7 +57,7 @@ def restart_reveal(deploy):
             output = check_output(f"ps -o cmd= {pid}", shell=True)
             if output.find(b'/usr/local/bin/reveal-md') > 0:
                 os.kill(pid, signal.SIGTERM)
-    cmd_list = ['/usr/local/bin/reveal-md', '--print-size', '', '--theme', 'comp421'] + md_files
+    cmd_list = ['/usr/local/bin/reveal-md', '--print-size', '', '--theme', 'lejeune'] + md_files
     reveal_pid = Popen(cmd_list) # pylint: disable=consider-using-with
     print(f"Reveal-md pid is {reveal_pid.pid}")
 

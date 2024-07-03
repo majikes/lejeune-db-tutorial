@@ -10,7 +10,7 @@ revealOptions:
 
 ---
 
-### COMP 421 Files and Databases
+### Welcome 
 
 <img src="https://cs.unc.edu/wp-content/uploads/sites/1265/2021/07/Majikes_thumb.jpg" style="float: left; width:10%">
 
@@ -18,11 +18,9 @@ revealOptions:
   - [jmajikes@cs.unc.edu](mailto:jmajikes@cs.unc.edu)
   - https://tarheels.live/johnmajikes/
 
-- **Group activity:** First worksheet on the [grades]({{HTTPS_FQDN}}/grades) page
+- **Group activity:** First worksheet on the [home page]({{HTTPS_FQDN}})
   - [welcome worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-00-welcome)
-  - Fill out and submit as we wait for folks!
-    - I will ask "Did everyone submit?"
-    - 15 second warning to submit or get a zero
+  - Play around with it while we wait for folks!
 
 Note:
 

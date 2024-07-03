@@ -377,7 +377,7 @@ body {
 }
 
 body:before {
-background: url("https://comp421.cs.unc.edu/static/images/COMP421Logo.png") no-repeat 0 0;
+background: url("https://lejeune.majikes.net/static/images/COMP421Logo.png") no-repeat 0 0;
 background-size: 86px 110px;
 content: "";
 width: 86px;
@@ -389,7 +389,7 @@ right: 1em;
 }
 
 body:after {
-content: '\00A9\0020 John Majikes COMP 421 Spring 2024';
+content: '\00A9\0020 John Majikes Camp Lejeune Summer 2024';
 position: fixed;
 bottom: 1em;
 left: 1em;
