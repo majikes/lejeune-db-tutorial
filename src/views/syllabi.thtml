@@ -59,7 +59,7 @@ ul li.checked::before {
     % include('nav', admin=admin)
     % include('nav2')
     <section id="content" class="body">
-      <span id="onyen">{{get_onyen()}}</span>
+      <span id="onyen" style="color: white">{{get_onyen()}}</span>
       <div id="pagebody" class="entry-content">
         <!-- This probably is not needed.  Added for future, potential debug support -->
         % if get_onyen() == '':
