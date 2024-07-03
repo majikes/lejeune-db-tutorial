@@ -6,6 +6,7 @@
 *.pickle
 .env
 package-lock.json
+**__pycache__/
 **node_modules
 **videos/
 **assignments/
