@@ -238,9 +238,6 @@ def static(filename):
     m = osp.getmtime(p)
     s = f"{int(m):x}"
     u = app.get_url("static", filename=filename)
-    if u[:7] == '/mypoll':
-        # bottle.py get_url returns the request.environ SCRIPT_NAME prefix
-        u = u[7:]
     return u + "?" + s
 
 
