@@ -34,7 +34,7 @@
         Loading, please wait.
       </div>
       <div id="pagebody" class="entry-content" style="display:none">
-        <span id="onyen">{{get_onyen()}}</span>
+        <span id="onyen" style="color:white">{{get_onyen()}}</span>
         {{!base}}
       </div>
     </section>
