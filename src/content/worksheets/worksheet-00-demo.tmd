@@ -5,9 +5,8 @@ dbs = ['wkst.university1.sqlite', 'wkst.university2.sqlite']
 
 # 00 Worksheet demo 
 
-<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+<img src="{{LOGO}}" style="float:right; vertical-align:0px; width:40%"/>
 
-% include('worksheet-dont-panic.md')
 % include('green-highlight.md')
 
 ---
@@ -15,7 +14,11 @@ dbs = ['wkst.university1.sqlite', 'wkst.university2.sqlite']
 ## {{!linkable_header('Green lights for equation evaluation')}}
 
 
-Try your luck at the Pythagorean Theorem.
+Try your luck at the Pythagorean Theorem using my website.
+Remember, ancient Greek philosopher Pythagoras
+theorized that for any right triangle (a triangle with 
+one 90 degree angle), that sum of the squares of the two 
+shorter angles equals the square of the hypotenuse (longest side).  
 Remember, the evaluation of each answer will be done by a computer program.
 Therefore the _normal_ computer operators will be used.
 <div class="row">
@@ -43,20 +46,19 @@ Using an upper-case version of the variables will result in an <font color="red"
 
 <div class="row">
  <div class="threefourthcolumns">
-Pythagorean.Theorem.1: Given a right triangle with sides 
+<b>Pythagorean.Theorem.1</b>: Given a right triangle with sides 
 $a$ of length 3 and $b$ of length 4, what is the length of 
 hypotenuse $c$?  
 % answer = 'sqrt(a*a + b*b)'
-{{!expression(answer, dict(a=3, b=4), points=5, name='Pythagorean.Theorem.1')}}<br/>
+{{!expression(answer, dict(a=3, b=4), points=10, name='Pythagorean.Theorem.1')}}<br/>
 % include('viewAnswer')
 
 <p/>
 Note that an acceptable answer can use 
-numerical equations like $3**2$,
-symbolical values in equations like $a+b$,
-both numbers and symbols like $a**2$,
-integer values like 37,
-or float values like 37.0. <br/>
+numerical equations like $3**2 + 4**2$.
+Or the answer can be use
+symbolical values in equations like $a**2+b**2$.
+Or the answer can use number integer values like 5.
 
 <p/>
 Each correct solution will be highlighted in <font color='green'>green</font> whenever 
@@ -68,6 +70,8 @@ The system assumes input is finished when you click outside the input box.
  </div>
 </div>
 
+---
+
 Try another question. 
 But for this one, you cannot enter numeric values.
 You may only use symbols $a$ and $b$ and apply mathematical computation on them.  
@@ -75,12 +79,13 @@ You may only use symbols $a$ and $b$ and apply mathematical computation on them.
 Remember: The multiplication symbol is the asterisk, `*`.
 Addition is the plus sign, `+`.
 Exponential notation uses two asterisks, `**`.
-Square root is a number raised to the 0.5 power.
+Square root is a number raised to the 0.5 power
+and can be done by using the `sqrt()` function with the parameter passed in.
 
-**Pythagorean.Theorem.2:** Given a right triangle of sides $a$ and $b$, 
+**Pythagorean.Theorem.2:** Instead of using numerical values for the sides, given a right triangle of sides $a$ and $b$, 
 what is the length of the hypotenuse?
 % answer = '(a ** 2 + b ** 2) ** 0.5'
-{{!expression(answer, dict(a=5, b=12), dict(a=3, b=4), points=5, name='Pythagorean.Theorem.2')}}
+{{!expression(answer, dict(a=5, b=12), dict(a=3, b=4), points=10, name='Pythagorean.Theorem.2')}}
 % include('viewAnswer')
 
 Let's try one more to see if you can apply what you learned.
@@ -88,7 +93,7 @@ Let's try one more to see if you can apply what you learned.
 **Pythagorean.Theorem.3:** Given a right triangle of sides $a$ and hypotenuse $c$,
 what is the length of side $b$?  
 % answer = 'sqrt(c**2 - a*a)'
-{{!expression(answer, dict(a=5, c=13), dict(a=3, c=5), dict(a=4, c=5), points=10, name='Pythagorean.Theorem.3')}}
+{{!expression(answer, dict(a=5, c=13), dict(a=3, c=5), dict(a=4, c=5), points=15, name='Pythagorean.Theorem.3')}}
 % include('viewAnswer')
 
 
@@ -96,9 +101,8 @@ what is the length of side $b$?
 
 ## {{!linkable_header('Green lights for table matching')}}
 
-<font color='green'>Green</font> highlighting is available for matching within a table.
-Therefore, for a table you either get all or none of the points.
-There is no proportional credit.
+<font color='green'>Green</font> highlighting is available for matching within a table
+if you get all questions in the table correct.
 
 **Matching:** Let's try our hands at matching letters in the 
 left to answer questions on the right.
@@ -107,16 +111,14 @@ left to answer questions on the right.
   <br/>A. a=5, b=3, c=4
   <br/>B. a=-1, b=1, c=37
   <br/>C. a=0, b=0, c=1
-  <br/>D. Pythagorean was a person
-  <br/>E. Pythagoras was a person
-  <br/>F. Yes
-  <br/>G. No
+  <br/>D. Yes
+  <br/>E. No
  </div>
  <div class="threefourthcolumns">
- % answer = ['A', 'E', 'F']
+ % answer = ['A', 'A', 'D']
 {{!table(inputs=1, headings='Question,Answer', table=f'''
-Which can be the three sides of a right triangle?,{answer[0]}
-Which is a true statement about Pythagorean or Pythagoras?,{answer[1]}
+Which is a right triangle with a hypotenuse of length 5?,{answer[0]}
+Which is is a right triangle with a side of length 3?,{answer[1]}
 Is it possible to get these answers to turn green? (Hint&#44; it is!),{answer[2]}''', points=15, symbols=['A', 'B', 'C', 'D', 'E', 'F', 'G'], name='Matching')}}
   <br/>
   %include('viewAnswer')
@@ -127,18 +129,16 @@ Is it possible to get these answers to turn green? (Hint&#44; it is!),{answer[2]
 
 ## {{!linkable_header('Green lights for database queries')}}
 
-For COMP 421, we will be entering SQL commands in the browser.
-The command you enter will be executed against two databases.
+Most queries for this exercise will be entered in your browser
+and run against two databases.
 If your command is correct, the browser will highlight both resulting output tables green.
 Of course, if your command is incorrect it will not highlight **both** output tables green.
 
-**Instructor.Names:** List the instructor names and the course_id's they have taught.  
-The correct answer which will get two green highlights is
-taken from the bottom of page 77 in _Silberschatz_ $7^{th}$ edition **Database System Concepts**.   You may copy the query right from the book or from below!  
+**Instructor.Names:** List the instructor names.
+You may copy the query from below:  
 % answer = '''
-SELECT name, course_id
-  FROM Instructor I, Teaches T
-  WHERE I.id=T.id
+SELECT name
+  FROM Instructor
 '''
 
 ```sql
@@ -160,15 +160,16 @@ To understand that a correct answer highlights both outputs green,
 note that the instructors and courses are different in the first and second database.
 Enter the following command to try test this out.
 
-**Instructor.Majikes:** List the instructor(s) named `Majikes`.
-You may copy the query from below  
+**Instructor.Majikes:** For the instructor named Majikes,
+list all the information in the Instructor table.
+You may copy the query from below:  
 ```sql
-SELECT name
+SELECT *
   FROM Instructor
  WHERE name = 'Majikes'
 ```
 % answer = '''
-SELECT name
+SELECT *
   FROM Instructor
   WHERE name = 'Majikes'
 '''
@@ -177,103 +178,14 @@ SELECT name
 
 ---
 
-## {{!linkable_header('No partial credit in COMP 421')}}
-
-Per the [syllabus]({{get_url('syllabi', page_name='syllabus')}}) there is no partial credit in COMP 421.
-There is <font color='green'>green</font> highlights as described in the [grading feedback]({{get_url('syllabi', page_name='syllabus')}}#grading-feedback).
-
-For [games]({{get_url('syllabi', page_name='syllabus')}}#games) and
-[worksheets]({{get_url('syllabi', page_name='syllabus')}}#worksheets)
-the minimum grade for an on-time submission is 50%.
-For any game segment or worksheet correctly answering 75% or better will receive a score of a 100%.
-
-For [homeworks]({{get_url('syllabi', page_name='syllabus')}}#homework-assignments) and
-[exams]({{get_url('syllabi', page_name='syllabus')}}#exams), the syllabus describes how
-[subsequent submissions]({{get_url('syllabi', page_name='syllabus')}}#subsequent-submissions)
-increases the score of the assessment.
-
-This is a form of partial credit that depends on waiting for the grader to complete,
-correcting incorrect answers, and resubmission.
-The [syllabus subsequent submissions]({{get_url('syllabi', page_name='syllabus')}}#subseqent-submission) describes
-how the grading works.
-
-**Subsequent.Submissions:** Assuming for a homework an initial submission was 75%,
-the second submission was 90%,
-the third submissions was 100%, 
-and a fourth submission was 100%, 
-what would be the final overall score for the homework?   
-% answer = '75 +(90 -75)/2 + (100-90)/3 + 0/4'
-% answer2 = f'''
-The first submission counts for 75%
-The second submission adds (90 - 75)/2 or {(90-75)/2}%
-The third submission add (100 - max(90, 75))/3 or {(100 - max(90, 75))/3}%
-The fourth submission adds (100 - max(90, 75, 100))/4 or 0%
-
-Answer: {answer} or {round(eval(answer), 2)}'''
-{{!expression(answer, dict(P=[75, 90, 100, 100]), points=15, name='Subsequent.Submissions')}}
-% include('viewAnswer', answer=answer2)
-
----
-
-## {{!linkable_header('No late submissions')}}
-
-Per the syllabus section 
-on [worksheets]({{get_url('syllabi', page_name='syllabus')}}#worksheets),
-on [games]({{get_url('syllabi', page_name='syllabus')}}#games),
-and on [homeworks]({{get_url('syllabi', page_name='syllabus')}}#homeworks),
-there are no late submissions.
+There are very few simple multiple choice questions.
+For multiple choice questions, the answer does not turn green
+because you could simply try each answer to see which gives the <font color='green'>green</font> highlight.
 
 
-**Late.Submissions:** I understand that late submissions are not accepted in COMP 421.
-In order for an assessment to be available for subsequent submission, 
-the assessment must be submitted on time.  
-% answer = 'Yes'
-{{!select(answer, choices=['Yes', 'No'], points=5, name='Late.Submissions')}}
-%include('viewAnswer')
+**Most.Decorated.Marine**: Who is the most decorated Marine in American history?
 
---- 
-
-## {{!linkable_header('Security checks and Honor Code')}}
-
-Per the [syllabus section on technology]({{get_url('syllabi', page_name='syllabus')}}#technolog)
-the assignments have security built in.
-Although some assessments, like homeworks, allow collaboration
-nothing, absolutely nothing, should be copied from a non-class source into the web browser.
-It must have originated as your own typing.
-
-In addition, on exams you are not allowed to go to other websites. 
-You must have full-screen focus on the exam for the duration of the exam.
-
-**Technology:** I have read the [syllabus section on technology]({{get_url('syllabi', page_name='syllabus')}}#technolog) and understand that all answers must be typed in
-and exams must be done only in full-screen mode.  
-% answer = 'Yes'
-{{!select(answer, choices=['Yes', 'No'], points=5, name='Technology')}}
-%include('viewAnswer')
-
-
-**Copy/Paste:** I have read the [syllabus section on technology]({{get_url('syllabi', page_name='syllabus')}}#technolog) and understand that copy/pasting is disallowed 
-even on [subsequent submissions]({{get_url('syllabi', page_name='syllabus')}}#subseqent-          submission).
-
-% answer = 'Yes'
-{{!select(answer, choices=['Yes', 'No'], points=5, name='Copy/Paste')}}
-%include('viewAnswer')
-
-
----
-
-## {{!linkable_header('No green lights for simple multiple choice')}}
-
-Multiple choice problems like the one below 
-are also available.
-But as anyone could just guess each option,
-multiple choice problems do not produce
-green highlights.
-
-
-**Multiple.Choice:**  Was this helpful?  
-% answer = 'Yes!'
-{{!select(answer, choices=['Yes!', 'No it was not helpful', 'Somewhat'], points=5, name='Multiple.Choice')}}
-%include('viewAnswer')
-
+% answer = 'Chesty Puller'
+{{!select(answer, choices=[ answer ], points=10, name='Most.Decorated.Marine')}}
 
 % include('worksheet-submit.md')

@@ -1,9 +1,10 @@
 % from assessments import submit_in_pages
 
-% if submit_in_pages(pages):
+% if False:
+  missing percent submit_in_pages(pages):
 
 --- 
 
-   % include('worksheet-pledge.md')
-   % include('submit.md')
+   missing percent include('worksheet-pledge.md')
+   missing percent include('submit.md')
 % end
