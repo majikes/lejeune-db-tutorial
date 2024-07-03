@@ -187,5 +187,6 @@ because you could simply try each answer to see which gives the <font color='gre
 
 % answer = 'Chesty Puller'
 {{!select(answer, choices=[ answer ], points=10, name='Most.Decorated.Marine')}}
+% include('viewAnswer')
 
 % include('worksheet-submit.md')
