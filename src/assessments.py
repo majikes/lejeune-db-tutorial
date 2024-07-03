@@ -2,7 +2,6 @@
  Describe and list the assessments for COMP 550
 """
 # pylint: disable=too-many-arguments, unsupported-membership-test, too-many-statements, bad-indentation
-from datetime import date
 import sys
 from collections import namedtuple
 from itertools import compress
@@ -38,48 +37,6 @@ def get_assessment_percentages(cursor, onyen):
    per = cursor.fetchone()
    # assert per and sum(per) == 101, f"For onyen {onyen}, the percentages are {per}"
    return per
-
-def get_assessment_due_date(cursor, key, onyen):
-    """ Given a key return the latest date/time the assessment can be submitted
-
-        Caller expects a datetime object even if there is no due date.
-        In that case, return the first day of classes
-
-        Note that first you find the single page record for the
-        onyen or section (prefer onyen), then see what page
-        sections apply
-    """
-    cursor.execute("""
-        WITH Ids AS (SELECT P.id, RANK() OVER(Partition by P.key     -- rank within each key
-                                              Order BY P.onyen DESC) -- prefer onyen page
-                                              AS rank_num
-                       FROM Pages as P, Roll R
-                      WHERE R.onyen = %(onyen)s AND
-                            P.key = %(key)s AND
-                            (P.onyen=%(onyen)s OR (P.onyen='' AND P.section=R.section)))
-
-        SELECT P.end_time
-           FROM Active_sections as A, Pages as P, Ids as I
-           WHERE A.page_id = P.id AND
-                 A.page_id = I.id AND
-                 ((A.page_section in %(subsequent_submittable_pages)s and
-                   -- did they originally submit
-                   (SELECT EXISTS (SELECT *
-                                     FROM Assessments
-                                    WHERE key=%(key)s AND
-                                          number_submissions > 0 AND 
-                                          onyen=%(onyen)s))) OR
-                  A.page_section in %(first_submittable_pages)s) AND
-                 I.rank_num = 1
-           ORDER BY P.end_time DESC        """,
-                   dict(key=key, onyen=onyen,
-                        subsequent_submittable_pages=tuple(SUBMITTABLE_PAGES),
-                        first_submittable_pages=tuple(FIRST_SUBMITTABLE_PAGES)))
-    rows = cursor.fetchall()
-    if not rows or not rows[0]:
-       return date.today
-    return rows[0].end_time
-
 
 def get_active_pages(cursor, key, onyen):
     """ Given a key return all the active pages for the onyen

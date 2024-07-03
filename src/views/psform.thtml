@@ -33,7 +33,8 @@
 {{!base}}
 </div>
 
-% if submit_in_pages(pages):  # We need a submit button
+% if False:
+ needs a percent if submit_in_pages(pages):  # We need a submit button
    % if submit_code_in_pages(pages):  # We need a submit code textarea
       <p>Submit code from the front of class: <input name="_submitCode" placeholder="Enter the submit code" required="required"/></p>
    % end
@@ -47,7 +48,7 @@
 </form>
   <script>
     var _section = "{{section}}";
-    var _pages = "{{pages}}";
+    var _pages = [];
     var _rubrics = {{!rubrics}};
   </script>
 % rebase('assessment.base')

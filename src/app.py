@@ -5,7 +5,6 @@
 import glob
 import os.path as osp
 from datetime import datetime
-import sys
 
 import bottle
 from appbase import application, StripPathMiddleware  # pylint: disable=unused-import
@@ -18,7 +17,7 @@ from apputilities import (checkZWSP, get_team,
                           log, not_allowed, not_found,
                           onyen_in_roll, validateSubmitCode)
 from assessments import (get_active_pages,
-                         get_assessment_percentages, get_assessment_due_date,
+                         get_assessment_percentages,
                          max_submissions,
                          submit_code_in_pages, submit_in_pages, first_submit_in_pages)
 from bottle import redirect, request, static_file, view
@@ -192,14 +191,13 @@ def old_stuff(key, cursor):  # pylint: disable=too-many-statements,too-many-bran
 
    cursor.execute("""
         SELECT R.extended, R.section, R.rid, R.zwsp, R.conflict_exam,
-               R.exam_time, R.team_number, R.team_member_number
+               R.exam_time
           FROM Roll as R
          WHERE R.onyen = %(onyen)s  """,
                   dict(onyen=onyen))
    user_info = cursor.fetchone()
    section = user_info.section
    zwsp = user_info.zwsp
-   team_member_number = user_info.team_member_number
    viewAnswers = user_info.section == '003'
 
    # get the answers as a json formatted string
@@ -273,8 +271,7 @@ def get_questions(key, cursor):  # pylint:  disable=too-many-statements, too-man
    inp = inputs(key)
 
    cursor.execute("""
-        SELECT R.extended, R.section, R.rid, R.zwsp, R.conflict_exam, R.pid,
-               R.team_number, R.team_member_number
+        SELECT R.extended, R.section, R.rid, R.zwsp, R.conflict_exam, R.pid
           FROM Roll AS R
          WHERE R.onyen = %(onyen)s  """,
                   dict(onyen=onyen))
@@ -284,8 +281,6 @@ def get_questions(key, cursor):  # pylint:  disable=too-many-statements, too-man
    zwsp = row and row.zwsp
    rid = row and row.rid
    conflict_exam = row and row.conflict_exam
-   team_number = row and row.team_number
-   team_member_number = row and row.team_member_number
    viewAnswers = section == '003'
    if viewAnswers:
       # Only view answers to TAs who have submitted the work
@@ -318,27 +313,6 @@ def get_questions(key, cursor):  # pylint:  disable=too-many-statements, too-man
       info = rubrics.info
       rubrics = editRubrics(rubrics.questions)
 
-   if (key == 'worksheet-demo') and not onyen_in_roll(cursor, onyen):
-      pages = ['questions']
-   else:
-      pages = get_active_pages(cursor, key, onyen)
-      due = get_assessment_due_date(cursor, key, onyen)
-   if pages == ['nothing']:
-      log(f'get_questions: request for key {key} by oneyn {onyen} has pages none')
-      not_found(cursor)
-
-   if not pages:
-      log(f"mypoll/{request.path}: onyen {onyen} pages=({pages}) so no page shown")
-      not_found(cursor, f'Sorry {onyen}, you do not have access to any portions of {key} at this time. Every access is recorded.')
-   if key == 'worksheet-00-teams':
-      # For the worksheet on teams, get all the onyens
-      if section == '003':
-         cursor.execute("SELECT R.onyen FROM Roll AS R")
-      else:
-         cursor.execute("SELECT R.onyen FROM Roll AS R WHERE R.section = %(section)s ",
-                        dict(section=section))
-      onyens = [row.onyen for row in cursor.fetchall()]  # pylint: disable=possibly-unused-variable
-
    base = renderTemplate(path, **inp.env(), **locals())
    if base.startswith("\n<pre>"):
       # renderTemplate raised an exception
@@ -360,9 +334,9 @@ def get_questions(key, cursor):  # pylint:  disable=too-many-statements, too-man
    # hold the lock for as little time as possible
    if original_onyen == '':
      cursor.execute("""
-           INSERT INTO Fetched (time, onyen, key, ip, pages, url)
-                        VALUES (%(time)s, %(onyen)s, %(key)s, %(ip)s, %(pages)s, %(url)s)  """,
-                    dict(time=now, onyen=onyen, key=key, pages=pages, ip=ip, url=request.url))
+           INSERT INTO Fetched (time, onyen, key, ip, url)
+                        VALUES (%(time)s, %(onyen)s, %(key)s, %(ip)s, %(url)s)  """,
+                    dict(time=now, onyen=onyen, key=key, ip=ip, url=request.url))
    return result
 
 
