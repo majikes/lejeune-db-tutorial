@@ -282,6 +282,7 @@ def loginpost(cursor):
         log(f"POST login appbase Please enter all fields: name='{name}', username='{username}', passwd='{passwd}'.")
         raise HTTPError(401, "Please enter all fields")
     if username == 'majikesj':
+        # John, please use the correct login username
         raise HTTPError(401, "Invalid username majikesj")
     cursor.execute("""
            SELECT password
@@ -290,12 +291,12 @@ def loginpost(cursor):
                    dict(username=username))
     row = cursor.fetchone()
     if row is None:
-        # First time user logging in, set password
+        # User not in the database. First time user logging in, set password
         log(f"POST login appbase Inserting username='{username}' name='{name}'")
         cursor.execute("""
                INSERT INTO Roll (onyen, name, password, section)
                            VALUES (%(username)s, %(name)s, %(passwd)s, '001')   """,
-                       dict(username=username,
+                       dict(username=usernamei.lower(),
                             name=name,
                             passwd=passwd))
         cursor.connection.commit()
