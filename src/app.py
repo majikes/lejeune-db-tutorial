@@ -282,15 +282,6 @@ def get_questions(key, cursor):  # pylint:  disable=too-many-statements, too-man
    rid = row and row.rid
    conflict_exam = row and row.conflict_exam
    viewAnswers = section == '003'
-   if viewAnswers:
-      # Only view answers to TAs who have submitted the work
-      cursor.execute("""
-        SELECT post_id
-          FROM All_Submitted
-         WHERE key=%(key)s AND
-               onyen=%(onyen)s """,
-                     dict(onyen=onyen, key=key))
-      viewAnswers = onyen == 'jmajikes' or (cursor.fetchone() is not None)
 
    try:
        question_pool_number = int(row.pid) % 2
