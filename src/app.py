@@ -121,7 +121,6 @@ def zoom(cursor):
 @view("syllabi")
 def syllabi(page_name, cursor):
    """Render a page such as the syllabus, help, etc."""
-   log(f"JJM syllabi page_name='{page_name}'")
    onyen, original_onyen = get_onyen_for_endpoint()
    if not onyen_in_roll(cursor, onyen):
       log(f"syllabi: {onyen} not enrolled in COMP421.")
