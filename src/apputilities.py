@@ -3,7 +3,6 @@ Utilities for all the endpoint methods
 """
 # pylint: disable=unsupported-membership-test, too-many-statements, bad-indentation
 
-import copy
 import hashlib
 import random
 import re
@@ -18,7 +17,7 @@ import dotenv
 from appbase import get_url, get_onyen, get_onyen_for_endpoint
 from assessments import SUBMITTABLE_PAGES
 from bottle import HTTPError, request
-from config import admin_email, gmail_host, gmail_user, hostname
+from config import admin_email, gmail_host, gmail_user
 from db import with_db_cursor
 from ZWSP import ZWSP
 
@@ -135,66 +134,25 @@ def checkZWSP(fields, onyen, zwsp, key, post_id, cursor):  # pylint: disable=too
         return  # We don't care about non-grade assessments
     re_prog = re.compile(ZWSP.ZWSP_regex)
     for _, fieldname, value in fields:
-        if fieldname[0] == '_':
-            continue   # We don't care about non-grade fields
-        # Strip out the onyen's ZWSP in case they copied from one field to another
-        # in their own submission
-        stripped = value.replace(zwsp, '')
-        # If after strip, use ZWSP_regex to see if there's another student's ZWSP
-        if re_prog.search(stripped):
-            # find copy sources
-            sources = {}
-            sources_string = copy.copy(stripped)
-            while re_prog.search(sources_string):
-                pos = re_prog.search(sources_string)
-                starting_pos = pos.start()
-                ending_pos = starting_pos + ZWSP.numDigits
-                other_zwsp = sources_string[starting_pos:ending_pos]
-                byte_array = f'\\x{bytearray(other_zwsp.encode("utf-8")).hex()}'
+        if fieldname == '_submit' and 'pasted:' in value and re_prog.search(value):
+            s = re_prog.search(value)
+            zwsp_pasted = s.group(0)
+            byte_array = f'\\x{bytearray(zwsp_pasted.encode("utf-8")).hex()}'
+            cursor.execute('''
+                      SELECT onyen
+                        FROM roll
+                       WHERE zwsp::bytea = %(data)s''',
+                           dict(data=byte_array))
+            row = cursor.fetchone()
+            if row:
+                log(f'checkZWSP: post_id {post_id} onyen {onyen} copied from {row.onyen} for {key} data {value}')
                 cursor.execute('''
-                          SELECT onyen
-                            FROM roll
-                           WHERE zwsp::bytea = %(data)s''',
-                               dict(data=byte_array))
-                row = cursor.fetchone()
-                if row:
-                    sources[row.onyen] = other_zwsp
-                    log(f'checkZWSP: post_id {post_id} onyen {onyen} ',
-                        f'copied from {row.onyen} for {key} field {fieldname}')
-                    cursor.execute('''
-                           INSERT INTO zwsp
-                                       (post_id, fieldname, s_onyen)
-                               values (%(post_id)s, %(fieldname)s, %(onyen)s) ''',
-                                   dict(post_id=post_id, fieldname=fieldname, onyen=row.onyen))
-                else:
-                    log(f'checkZWSP: onyen {onyen} copied from unknown onyen '
-                        f'for {key} field {fieldname}')
-                sources_string = re.sub(other_zwsp, '', sources_string)
-            # Send an email alert
-            note = f"""
-Received a ZWSP from onyen {onyen} on submission {key}.
-
-User {onyen} ZWSP {strUnicode(zwsp)} {bytearray(zwsp.encode('utf-8')).hex()}
-
-"""
-            for u, z in sources.items():
-                note += f"Source user {u} ZWSP {strUnicode(z)} " \
-                    f"{bytearray(z.encode('utf-8')).hex()} \n"
-            note += f"""
-The field {fieldname} has the value {stripped} {bytearray(stripped.encode('utf-8')).hex()}
-with ZWSP in it."""
-            for index in range((len(stripped)-1)//4 +1):
-                subst = value[index*4:(index+1)*4]
-                note += f"\n{subst}: {bytearray(subst.encode('utf-8')).hex()}"
-            subject = f"Zero-width space {key} on {hostname}"
-            msg = MIMEText(note)
-            msg['Subject'] = subject
-            msg['From'] = admin_email
-            msg['To'] = msg['To']
-            s = smtplib.SMTP('fafnir.cs.unc.edu')
-            s.sendmail(admin_email, [admin_email], msg.as_string())
-            s.quit()
-            return
+                      INSERT INTO zwsp
+                                  (postid, fieldname, s_onyen)
+                           values (%(post_id)s, %(fieldname)s, %(onyen)s) ''',
+                               dict(post_id=post_id,
+                                    fieldname=f"{value} {onyen}",
+                                    onyen=row.onyen))
 
 
 @with_db_cursor
