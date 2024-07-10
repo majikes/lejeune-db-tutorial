@@ -17,38 +17,56 @@ revealOptions:
 - Instructor John Majikes 
   - [jmajikes@cs.unc.edu](mailto:jmajikes@cs.unc.edu)
   - https://tarheels.live/johnmajikes/
-
+- Today's slides taken from COMP 421 at UNC Chapel Hill
+  - Silbershatz's book: [Database System Concepts](https://db-book.com/)
 - **Group activity:** First worksheet on the [home page]({{HTTPS_FQDN}})
-  - [welcome worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-00-welcome)
+  - [Demo worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-00-demo)
   - Play around with it while we wait for folks!
 
 Note:
 
  Leave this slide up at start of class  
  Bring up a second screen of {{HTTPS_FQDN}}/welcome  
- and screen for the submit button {{HTTPS_FQDN}}/submitcode
- {{HTTPS_FQDN}}/pages/worksheets/worksheet-00-welcome  
+ {{HTTPS_FQDN}}/pages/worksheets/worksheet-00-demo  
 
 ---
 
 ### Today's class
 
-- By the end of class you should know
-  - About me, the assistants, office hours
-  - About the class and its website
-  - How grades are calculated
-  - Course policy
+- By the end of this slide deck you should know
+  - About me
+  - About the class
+    - High-level Database Overview
+      - Database Security
+    - Web servers
 
+---
+
+### Why me
+
+- My father is a 93 year old United States Marine
+  - Corporal served two tours in 1950s Korea
+  - Battle of [Chosin Reservoir fighting back to coast](https://www.britannica.com/event/Battle-of-the-Chosin-Reservoir/Fighting-back-to-the-coast)
+  - Served under then Colonel [Chesty Puller](https://en.wikipedia.org/wiki/Chesty_Puller)
+  - &Therefore; I respect military; especially U.S. Marines
+- University of North Carolina, emeritus
+  - Taught introductory databases
+  - Worked on IDCAMS, an old database file system
+  - Have been a department / area DBMA
+  - 35+ software engineering industry experience
+    - IBM, Oracle, BitSight Security
+ 
 ---
 
 ### About me 
 
+- Two time cancer survivor
+- University of Virginia starting Sept 2024
+  - School of Medicine
+  - Center of Diabetes Technology
+  - Research scientist medical devices
 - Why _I think_ databases are important!
   - Languages come and go; Data is forever
-- Spent 35+ years in industry
-  - IBM, Oracle, BitSight Security
-  - Was department / area level DBMA
-  - Can do mock job interviews
 - PhD in computers training dogs
   - Worked on the Artificial Pancreas
 - Rode my bicycle across:
@@ -69,159 +87,16 @@ Like to ride bikes long distances
 
  Give student the opportunity to ask questions about you
 
----
-
-### More about me
-
-- [Mantle Cell Leukemia](https://www.lls.org/research/mantle-cell-lymphoma-mcl)
-- Will wear N95 mask
-  - When people within six feet of me
-  - Hopefully not when lecturing
-- Undergoing chemotherapy
-  - Feel sorry for me?  Don't!!!
-  - Expect a full recovery
-  - Come run with me in the Tar Heel 4 miler
-- Any questions about my leukemia?
-  
-
 
 ---
 
-### Assistants &amp; office hours
+### Class Material
 
-- Learning Assistants
-  - Christine Mendoza
-  - Erin Ma
-  - Kathy Wu
-  - Wei Shan
-  - Yulim Kim
-
-- Teaching assistants
-  - John Sebastian Sigmon
-
-- Office hours
-  - LA/TA hours through [course care](https://course.care/ng/course/96)
-    - Course enrollment code {{COURSE_CARE_CODE}}
-  - My office hours [you can book me](https://jmajikes.youcanbook.me/)
-  - See [help page]({{HTTPS_FQDN}}/syllabi/help#office-hours) for more information
-  - A [welcome video]({{HTTPS_FQDN}}/video/WelcomeVideo) is available
-
-Note:
-
- LA/TAs are students like you
-
- My office hours are different because of multiple classes, clubs, etc  
-
- Did anyone find the Easter egg:  
- - welcome video?  
- - completing demo  
-
-
----
-
-### About COMP 421
-
-- **NOT** how to build a database management system (DBMS)!
-- By the end of the semester you should know how to use a DBMS
-  - Code basic and intermediate level SQL commands
-  - Understand why/how commands executed
-  - Reasoning behind DBMS implementation
-- Python coding limited to homeworks
-  - Used to give SQL programming experience
-
-Note:
-
- What this course is not  
- Not building a dbms  
-
- What this course is  
- - coding SQL  
- - how commands work  
- - reasoning behind design  
-
-Python  
-Please get with ITS help desk if you have install problems or  
-come see me
-
- This will lead into the website!
-
----
-
-### Hard or Easy
-
-- Students ask: Is COMP 421 hard or easy?
-  - Hoping this class is fun; useful skill
-  - It pulls back the curtain on how things work
-- Different kind of programming
-  - Not like Turing complete languages (Java, Python)
-  - Still requires iterative development/debugging skills!
-- Hard part is keeping up
-  - No late assignments accepted!!!
-  - Book reading before each class
-  - 6% of grade is coming to class &amp; being prepared!
-  - Large class; easy to fall behind
-    - Have to treat all students the same
-    - Generally means no exceptions
-    - See Course Policy slide 
-
-Note:
-
-Describe why course is good
-
-What has changed since last semester
-
-Explain iterative dev; why this class different
-
-Hard part of the class is keeping up!
-
-As it's a large class, don't fall behind
-
----
-
-### Subsequent Submissions
-
-- [Subsequent submissions]({{HTTPS_FQDN}}/syllabi/syllabus#subsequent-submissions) (sub sub) relatively new
-    - Replaces previous boost / provides second chances for on-time submissions
-    - For worksheets, homeworks, &amp; midterms
-    - Not available for final exam
-- Initial submission must be on time
-    - No sub sub for late late submissions
-    - Hand it in on time to to qualify for sub sub
-- See [syllabus key dates]({{HTTPS_FQDN}}/syllabi/syllabus#key-dates) sub sub deadlines
-    - Midterm sub sub due two weeks after midterm
-    - Non-midterm sub sub due by LDOC
-
----
-
-### General Information
-
-- I do not use Sakai or Canvas
-   - Everything on [COMP421 website]({{HTTPS_FQDN}})
-   - [Syllabus]({{HTTPS_FQDN}}/syllabi/syllabus) root of all class information
-   - [Daily agenda]({{HTTPS_FQDN}}/#next) shows next class's material
-   - [Grades]({{HTTPS_FQDN}}/grades) shows grades and missing assignments
-   - [View Feedback]({{HTTPS_FQDN}}/feedback) has grader output and answers 
-- Please see me about improvements or problems
-   - If you can see a better way to do something, come talk!
-   - If I do something badly, call me out (in private or public)!
-
-
-Note:
-
-Try the web pages out and show them
-
-- Show them how the agenda said what is upcoming
-- Show them how on the grades page, it has worksheet-00-demo on it
-- Especially show them the grader output for worksheet-00-demo
-
-- Discuss how things are done differently
-
----
-
-### Worksheet demo
-
+- Don't have to install any software
+  - All material on this website
+- Material presented will have demo worksheet
+  - Learn best with hands-on practice
 - Look at [demo worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-00-demo)
-  - Note the due date of one week 
   - Any questions on worksheet demo?
 
 Note:
@@ -230,35 +105,15 @@ Give students group time to go over worksheet demo
 
 ---
 
-### Worksheet bonus
+### Databases
 
-- Adds 50% to your lowest worksheet score
-  - Given for insightful class participation / Piazza post
-  - Meant to encourage and reward participation
-  - For example, did you read the syllabus before class?
-     - Did you find the Easter egg(s)?
-
-Note:
-
-Lots of worksheet bonuses given out
-
-Did you find that doing the demo before class got you a bonus?  
-Also one on the welcome video  
-Did you find the one on A0 handed in early  
-
- 
----
-
-### Any questions?
-
-- You should know
- - [Chapter 1 preclass worksheet]({{HTTPS_FQDN}}/worksheets-chapter-01-01-preclass) out at 3:30 PM
-    - Due before next lecture
- - Next lecture remote
- - Attendance policy
- - How to navigate worksheets
- - Know the syllabus
- - When things are due
-   - How to check the class website agenda
-   - Check things off as you complete them
-   - Check what's due on [grades page]({{HTTPS_FQDN}}/grades) and [agenda page]({{HTTPS_FQDN}}#next) before Thursday's class!
+- Cover databases at high level
+  - The user's point of view
+  - Discuss how it works, but no detailed math
+- Where databases are used
+  - Everywhere!
+  - Will show you how this website works
+- Security of data
+  - Why security is important
+  - Why you are important to security!
+- Any questions?
