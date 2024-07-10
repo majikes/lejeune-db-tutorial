@@ -81,11 +81,11 @@ def restart_reveal(deploy):
                 subprocess_rtn = run  # Run and wait
             else:
                 subprocess_rtn = Popen
-            subprocess_rtn(['node_modules/.bin/decktape', '--size', '612x1000',
+            subprocess_rtn(['node_modules/.bin/decktape', '--size', '612x750',
                             '--chrome-path', '/usr/bin/chromium-browser', 'reveal',
                             f'http://localhost:1948/{md_file}',
                             f'/var/www/lejune/content/static/slides/{pdf_file}'])
-            subprocess_rtn(['node_modules/.bin/decktape', '--size', '612x1000',
+            subprocess_rtn(['node_modules/.bin/decktape', '--size', '612x750',
                             '--chrome-path', '/usr/bin/chromium-browser', 'reveal',
                             f'http://localhost:1948/{md_file}',
                             f'../../static/slides/{pdf_file}'])
