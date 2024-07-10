@@ -19,6 +19,7 @@ from db import with_db_cursor
 from bottle import request, HTTPError
 import markdown
 from config import admins
+from ZWSP import ZWSP
 
 # lax security when testing
 Testing = False
@@ -30,6 +31,8 @@ dotenv_values = dotenv.dotenv_values()
 app = application = bottle.Bottle()
 
 md = markdown.Markdown(tab_length=8, extensions=['extra', 'tables'])  # pip install Markdown markdown-extra
+
+zwsp_object = ZWSP()
 
 def log(*args):
    """Print for debugging especially when doing make deploy"""
@@ -295,10 +298,21 @@ def loginpost(cursor):
         log(f"POST login appbase Inserting username='{username}' name='{name}'")
         cursor.execute("""
                INSERT INTO Roll (onyen, name, password, section)
-                           VALUES (%(username)s, %(name)s, %(passwd)s, '001')   """,
-                       dict(username=usernamei.lower(),
+                           VALUES (%(username)s, %(name)s, %(passwd)s, '001') 
+               RETURNING rid  """,
+                       dict(username=username.lower(),
                             name=name,
                             passwd=passwd))
+        row = cursor.fetchone()
+        assert row and row.rid > -1, f"INSERT of name {name} with onyen {username} returned row {row}"
+        rid = row.rid
+        zwsp = zwsp_object.getSequence(rid)
+        cursor.execute("""
+               UPDATE ROLL set ZWSP = %(zwsp)s
+                           WHERE rid = %(rid)s  """,
+                       dict(rid=rid,
+                            zwsp=zwsp))
+
         cursor.connection.commit()
     elif row.password and passwd.upper() != row.password.upper():
         # User entered different password (or none at all) than the first time through
