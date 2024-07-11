@@ -4,7 +4,7 @@
   <p/>
   <input type="text" name="username" placeholder="username" /> Any unique text (no blanks)
   <p/>
-  <input type="password" name="passwd" placeholder="clear password" /> A non-secure password!  <font color="red">I can see what you type!</font>
+  <input type="password" name="passwd" placeholder="clear password" /> A non-secure password like kids name, nickname, jarhead, devildog, etc!  <font color="red">This website is not secure and I can see what you type!</font>
   <p/>
   <input type="hidden" name="path" value="{{path}}" />
   <button type="submit">Submit</button>
