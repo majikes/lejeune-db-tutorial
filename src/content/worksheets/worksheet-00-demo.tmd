@@ -72,61 +72,6 @@ The system assumes input is finished when you click outside the input box.
 
 ---
 
-Try another question. 
-But for this one, you cannot enter numeric values.
-You may only use symbols $a$ and $b$ and apply mathematical computation on them.  
-
-Remember: The multiplication symbol is the asterisk, `*`.
-Addition is the plus sign, `+`.
-Exponential notation uses two asterisks, `**`.
-Square root is a number raised to the 0.5 power
-and can be done by using the `sqrt()` function with the parameter passed in.
-
-**Pythagorean.Theorem.2:** Instead of using numerical values for the sides, given a right triangle of sides $a$ and $b$, 
-what is the length of the hypotenuse?
-% answer = '(a ** 2 + b ** 2) ** 0.5'
-{{!expression(answer, dict(a=5, b=12), dict(a=3, b=4), points=10, name='Pythagorean.Theorem.2')}}
-% include('viewAnswer')
-
-Let's try one more to see if you can apply what you learned.
-
-**Pythagorean.Theorem.3:** Given a right triangle of sides $a$ and hypotenuse $c$,
-what is the length of side $b$?  
-% answer = 'sqrt(c**2 - a*a)'
-{{!expression(answer, dict(a=5, c=13), dict(a=3, c=5), dict(a=4, c=5), points=15, name='Pythagorean.Theorem.3')}}
-% include('viewAnswer')
-
-
----
-
-## {{!linkable_header('Green lights for table matching')}}
-
-<font color='green'>Green</font> highlighting is available for matching within a table
-if you get all questions in the table correct.
-
-**Matching:** Let's try our hands at matching letters in the 
-left to answer questions on the right.
-<div class="row">
- <div class="fourcolumns">
-  <br/>A. a=5, b=3, c=4
-  <br/>B. a=-1, b=1, c=37
-  <br/>C. a=0, b=0, c=1
-  <br/>D. Yes
-  <br/>E. No
- </div>
- <div class="threefourthcolumns">
- % answer = ['A', 'A', 'D']
-{{!table(inputs=1, headings='Question,Answer', table=f'''
-Which is a right triangle with a hypotenuse of length 5?,{answer[0]}
-Which is is a right triangle with a side of length 3?,{answer[1]}
-Is it possible to get these answers to turn green? (Hint&#44; it is!),{answer[2]}''', points=15, symbols=['A', 'B', 'C', 'D', 'E', 'F', 'G'], name='Matching')}}
-  <br/>
-  %include('viewAnswer')
- </div>
-</div>
-
----
-
 ## {{!linkable_header('Green lights for database queries')}}
 
 Most queries for this exercise will be entered in your browser
@@ -178,7 +123,8 @@ SELECT *
 
 ---
 
-There are very few simple multiple choice questions.
+For today's class, there are few if any 
+simple multiple choice questions.
 For multiple choice questions, the answer does not turn green
 because you could simply try each answer to see which gives the <font color='green'>green</font> highlight.
 
@@ -188,5 +134,12 @@ because you could simply try each answer to see which gives the <font color='gre
 % answer = 'Chesty Puller'
 {{!select(answer, choices=[ answer ], points=10, name='Most.Decorated.Marine')}}
 % include('viewAnswer')
+
+**United.States.Marine.Corp.Birthday**: What is the birthday of the United States Marine Corp?  
+% answer = 'November 10, 1775'
+% choices = ['Every day it\'s good to be a marine', 'November 11, 1918'] + [answer]
+{{!select(answer, choices=choices, points=10, name='United.States.Marine.Corp.Birthday')}}
+% include('viewAnswer')
+
 
 % include('worksheet-submit.md')
