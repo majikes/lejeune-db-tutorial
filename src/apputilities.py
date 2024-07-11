@@ -14,12 +14,11 @@ from typing import NoReturn
 
 import dotenv
 
-from appbase import get_url, get_onyen, get_onyen_for_endpoint
+from appbase import get_onyen, get_onyen_for_endpoint
 from assessments import SUBMITTABLE_PAGES
 from bottle import HTTPError, request
 from config import admin_email, gmail_host, gmail_user
 from db import with_db_cursor
-from ZWSP import ZWSP
 
 dotenv.load_dotenv()
 dotenv_values = dotenv.dotenv_values()
@@ -253,20 +252,9 @@ def set_worksheet_bonus(cursor, onyen, submitter, reason, ip='127.0.0.1', sectio
       insert into worksheet_bonus
         (onyen, submitter, share_time, reason, ip)
         values (%s, %s, %s, %s, %s)
-        returning id
       """,
                   [onyen, submitter, share_time, reason, ip],
                   )
-   wsb_id = cursor.fetchone()[0]
-
-   # Send an acknowledgement of the submission
-   to_email = f"{onyen.lower()}@email.unc.edu"
-   grade_url = f"{dotenv_values['HTTPS_FQDN']}{get_url('grades')}"
-   note = f"""
-The system has received a worksheet bonus submission of up to 5% on a worksheet score for {onyen} with id {wsb_id}.
-
-You can view the submission at {grade_url}"""
-   email_alert(f"Worksheet bonus {wsb_id}", note, to_list=[to_email, admin_email])
 
    return get_worksheet_bonus_information(cursor, section)
 
