@@ -7,26 +7,27 @@
 
 
 The plan for today is to cover some basics of databases.
-We'll discuss how everything is in tables and how this relates
-to getting information out.
+We'll discuss why databases are important,
+how everything in a database is in tables,
+and
+how this relates to getting information out.
 
 
 We then talk about security of databases.
 But this security is more about examples of how the databases can be breached.
+The security discussion is sprinkled throughout the slides.
 Like all technology, breaches are usually caused or at least aided by humans.
 
 <b><u>Please ask questions</u></b>.
-The plan will be changed and redirected by your questions.
+The plan will be improvised and adapted from your questions.
 I guarantee you that a plan directed by any United States Marine or Sailor is better than my plan.
 
 
 1. [Welcome and my background slides]({{static('slides/01.Welcome.Background.pdf')}} )
         - [Demo worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-00-demo)
-%if admin:
 2. [Database Introduction slides]({{static('slides/02.Database.Introduction.pdf')}} )
-        - [Find All Computer Science Instructors demo]({{HTTPS_FQDN}}/sql/interpreter/Chapter.01.FindAllInstructorsInCSDepartment)
-        - [Database models worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-01-models)
 3. [SQL Database Language]({{static('slides/03.SQL.Language.pdf')}} )
+%if admin:
         - [Select command worksheet](http://lejuene.majikes.net/worksheets/worksheet-03-01-select-instructor)
         - [Aggregate (min/max) functions]({{HTTPS_FQDN}}/worksheets/worksheet-03-02-aggregates)
 %end
