@@ -253,7 +253,7 @@ SELECT name
 ### The select Clause (Cont.)
 
 - SQL allows duplicates in relations / query results.
-  - A mulitset
+  - A multiset
   - Force the elimination of duplicates, use keyword **distinct**
 - Find the distinct department names of all instructors
 ```
@@ -588,7 +588,7 @@ Note:
 BEFORE going onto group by check for questions
 
 
-https://comp421.cs.unc.edu/worksheets/worksheet-03-02-aggregates?onyen=student1
+https://lejeune.majikes.net/worksheets/worksheet-03-02-aggregates?onyen=student1
 
 
 ---
@@ -837,7 +837,7 @@ SQL division has three parts.
 - The all selection
 - The number this one did
 
-Hopefully https://comp421.cs.unc.edu/sql/interpreter/Chapter.03.sql.relational.division will help
+Hopefully https://lejeune.majikes.net/sql/interpreter/Chapter.03.sql.relational.division will help
 
 
 ---

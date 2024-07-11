@@ -22,12 +22,12 @@ revealOptions:
 - **Group activity:** First worksheet on the [home page]({{HTTPS_FQDN}})
   - [Demo worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-00-demo)
   - Play around with it while we wait for folks!
+- If you ignored my warning about passwords on the login page please see me
 
 Note:
 
  Leave this slide up at start of class  
- Bring up a second screen of {{HTTPS_FQDN}}/welcome  
- {{HTTPS_FQDN}}/pages/worksheets/worksheet-00-demo  
+ Remind the marines not to use a real password!!!!
 
 ---
 
@@ -35,10 +35,15 @@ Note:
 
 - By the end of this slide deck you should know
   - About me
-  - About the class
-    - High-level Database Overview
-      - Database Security
-    - Web servers
+  - About the class material
+  - About the plan to cover databases
+  - How you can change this plan
+
+Note:
+
+Aristotle said "Tell me what you will tell me, tell me, and tell me what you told me". 
+
+I use this boilerplate on all my slides
 
 ---
 
@@ -49,13 +54,22 @@ Note:
   - Battle of [Chosin Reservoir fighting back to coast](https://www.britannica.com/event/Battle-of-the-Chosin-Reservoir/Fighting-back-to-the-coast)
   - Served under then Colonel [Chesty Puller](https://en.wikipedia.org/wiki/Chesty_Puller)
   - &Therefore; I respect military; especially U.S. Marines
-- University of North Carolina, emeritus
-  - Taught introductory databases
+  - Terminology mistakes due to ignorance, not arrogance
+- University of North Carolina, retired
+  - Taught introductory databases, data science
   - Worked on IDCAMS, an old database file system
   - Have been a department / area DBMA
-  - 35+ software engineering industry experience
-    - IBM, Oracle, BitSight Security
+- 35+ software engineering industry experience
+  - IBM - mainframe communications
+  - Oracle - cloud and phone network database
+  - BitSight Security - Expose &amp; mitigate cyber risk
+
  
+Note:
+
+<b>I respect each and every U.S. Marine.</b>  
+If I make a mistake in terminology, it's out of ignorance not arrogance.
+
 ---
 
 ### About me 
@@ -67,7 +81,8 @@ Note:
   - Research scientist medical devices
 - Why _I think_ databases are important!
   - Languages come and go; Data is forever
-- PhD in computers training dogs
+- PhD in computers science
+  - Machine Learning to train dogs
   - Worked on the Artificial Pancreas
 - Rode my bicycle across:
   - North Carolina, New Mexico, Montana, Death Valley, northern California, Raleigh-to-Richmond
@@ -92,6 +107,8 @@ Like to ride bikes long distances
 
 ### Class Material
 
+- The website used for the class is my own
+  - Used to teach large (&gt;200) classes at UNC
 - Don't have to install any software
   - All material on this website
 - Material presented will have demo worksheet
@@ -117,3 +134,17 @@ Give students group time to go over worksheet demo
   - Why security is important
   - Why you are important to security!
 - Any questions?
+
+---
+
+### Anything else?
+
+- You should:
+  - Know about me
+  - Know about the class material
+  - At a high level, know what the class will cover
+- What would you like to know about?
+  - More about security?
+  - More about the math of a database?
+  - Other things?
+  
