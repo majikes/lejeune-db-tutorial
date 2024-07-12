@@ -111,13 +111,13 @@ input.evaluate {
   width: 80%;
 }
 input.correct {
-  background: #40a48e;
+  background: lightgreen;
 }
 table.correct input {
-  background: #40a48e;
+  background: lightgreen;
 }
 table.correct select {
-  background: #40a48e;
+  background: lightgreen;
 }
 table.truthtable input {
   width: 3em;
@@ -293,19 +293,19 @@ details {
   padding-left: 1em;
 }
 input[data-correct='1'] {
-  background-color: #40a48e;
+  background-color: lightgreen;
 }
 table[data-correct='1'] input {
-  background-color: #40a48e;
+  background-color: lightgreen;
 }
 table[data-correct='1'] select {
-  background-color: #40a48e;
+  background-color: lightgreen;
 }
 textarea[data-correct='1'] {
-  background-color: #40a48e;
+  background-color: lightgreen;
 }
 .CodeMirror[data-correct='1'] {
-  background-color: #40a48e;
+  background-color: lightgreen;
 }
 input[data-correct='-1'] {
   background-color: #E7B416;
