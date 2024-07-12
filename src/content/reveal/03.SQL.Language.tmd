@@ -185,6 +185,7 @@ DELETE FROM Student
 ```
 drop table r
 ```
+- Try the links above to test out insert and delete
 
 
 ---
@@ -198,13 +199,11 @@ alter table r add A D
   - where $A$ is the name of the attribute to be added to relation $r$ and $D$ is the domain of $A$.
   - All exiting tuples in the relation are assigned <i>null</i> as the value for the new attribute.
 
-- **Alter** dropping an attribute
+- **Alter** dropping an attribute or column
 ```
 alter table r drop A
 ```
   - where $A$ is the name of an attribute of relation $r$
-  - Dropping of attributes not supported by many databases.
-    - [SQLite does not support attribute drop](https://sqlite.org/lang_altertable.html#making_other_kinds_of_table_schema_changes)
 
 
 ---

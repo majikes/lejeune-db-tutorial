@@ -20,7 +20,7 @@ revealOptions:
 - Today's slides taken from COMP 421 at UNC Chapel Hill
   - Silbershatz's book: [Database System Concepts](https://db-book.com/)
 - **Group activity:** First worksheet on the [home page]({{HTTPS_FQDN}})
-  - [Demo worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-00-demo)
+  - <a href="{{HTTPS_FQDN}}/worksheets/worksheet-00-demo" target="_blank">Demo worksheet</a>  
   - Play around with it while we wait for folks!
 - If you ignored my warning about passwords on the login page please see me
 

@@ -18,21 +18,6 @@ revealOptions:
   - The database language
 
 
-Note:
-
-### Outline
- - Database-System Applications
- - Purpose of Database Systems
- - View of Data
- - Database Languages
- - Database Design
- - Database Engine
- - Database Architecture
- - Database Users and Administrators
- - History of Database Systems
-
-https://www.db-book.com/slides-dir/PDF-dir/ch1.pdf
-
 ---
 
 ### Database Management Systems
@@ -235,7 +220,7 @@ Might want to explain why the ID is in each table?
 <figure>
  <img src="{{HTTPS_FQDN}}/static/images/Chapter.01.Figure.1.1.InstructorAndDepartmentTable.png" style="width:35%">
 </figure>
-- <a href="https://lejeune.majikes.net/sql/interpreter/Chapter.01.Figure.1.1" target="+blank">Try any text this color</a> they're HTML links
+- <a href="https://lejeune.majikes.net/sql/interpreter/Chapter.01.Figure.1.1" target="_blank">Try this link</a> to play with the table
 
 Note:
 
@@ -349,6 +334,7 @@ You need a good collection of tables.
   - Marines: what attributes would you have in a table?
   - What about civvies?
   - Equipment issued?
+
 ---
 
 ### Database Engine / Modules
@@ -362,11 +348,6 @@ You need a good collection of tables.
   - The transaction management component
   - We can go into more detail if you'd like
 
-Note:
-
-**Section 1.6** Database Engine
-
-We'll discuss each section at a high level now
 
 <!--v-->
 
@@ -625,3 +606,4 @@ Note:
   - There are lots of databases out there
   - They're the foundation of a lot of work
     - We're still using SQL that was developed in 1970s!
+- There's a <a href="{{HTTPS_FQDN}}/worksheets/worksheet-02-purpose" target="_blank">review worksheet</a> to work on
