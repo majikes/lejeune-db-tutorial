@@ -1,0 +1,80 @@
+<%
+setInfo(assessment_type='worksheet')
+dbs = ['wkst.university1.sqlite', 'wkst.university2.sqlite']
+%>
+
+# 02 Purpose 
+
+<img src="{{LOGO}}" style="float:right; vertical-align:0px"/>
+
+% include('worksheet-dont-panic.md')
+
+---
+
+## {{!linkable_header('Purpose of databases')}}
+
+Remember, you have to get all questions in a table correct in order to get the <font color="green">green</font> light. 
+
+**Good.Reasons:** What are some good reasons to use a database.  
+<div class="row">
+ <div class="twocolumns">
+  <br/>A. Multiple copies of pieces of data helps database backups
+  <br/>B. If a single copy of a piece of data is updated, all users see the update.<br/>There are no out of data copies of data.
+  <br/>C. The more the merrier, it's always good to have multiple copies of your social security number in a database.
+  <br/>D. Bank balances should never be negative
+  <br/>E. Data should never lie
+  <br/>F. Semper Fi
+  <br/>H. I have no idea
+ </div>
+ <div class="twocolumns">
+ % answer = ['B', 'D']
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+What is an example of database role in database redundancy and inconsistency?,{answer[0]}
+What is an example of database integrity constraints?,{answer[1]}
+''', points=15, symbols=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], name='Good.Reasons')}}
+  <br/>
+  %include('viewAnswer')
+ </div>
+</div>
+
+---
+
+**Atomicity.Security:** What are some good examples of atomicity and security?
+<div class="row">
+ <div class="twocolumns">
+  <br/>A. Databases are as fast as atoms, electrons, and protons
+  <br/>B. Databases operate at the atomic level
+  <br/>C. All or nothing.  Multiple accesses of the database appear as a single access.
+  <br/>D. News accounts show that databases can be corrupted
+  <br/>E. Users <b>may</b> have access to some but not all data in the database
+  <br/>F. Post a marine guard outside the database
+ </div>
+ <div class="twocolumns">
+ % answer = ['C', 'E']
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+What is an example of atomicity of updates for databases?,{answer[0]}
+What is an example of security of databases,{answer[1]}
+''', points=15, symbols=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], name='Atomicity.Security')}}
+  <br/>
+  %include('viewAnswer')
+ </div>
+</div>
+
+---
+
+**True.False:** Answer the following true or false questions:
+ % answer = ['True'] * 7
+{{!table(inputs=1, headings='Question,Answer', table=f'''
+Data in a database is stored in tables also called relations,{answer[0]}
+Rows of tables may have IDs to ensure each row is unique,{answer[1]}
+SQL does NOT support network communications,{answer[2]}
+Databases use programming languages like Python to support output to displays and input from users,{answer[3]}
+A database management system&comma; DBMS&comma; is made up of at least one database and set of programs to access the data,{answer[4]}
+Database administrators design the layout of a database,{answer[5]}
+There are lots of database architectures or types.  But they are all generally accessed with SQL,{answer[6]}
+''', points=15, symbols=['True', 'False'], name='True.False')}}
+%include('viewAnswer')
+
+---
+
+% include('worksheet-submit.md')
