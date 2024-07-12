@@ -2,7 +2,7 @@
 title: {{TITLE}}
 theme: "lejeune"
 separator: "^---"
-verticalSeparator: "^----"
+verticalSeparator: "<!--v-->"
 notesSeparator: "^Note:"
 revealOptions:
     transition: fade
@@ -12,17 +12,15 @@ revealOptions:
 
 ### Introduction to SQL
 
-- By the end of class you should know
+- By the end of class you should know:
   - SQL Data (Table) Definition
   - Basic Query Structure of SQL Queries
     - We will cover a laundry list of commands
-    - You need to ask questions if you don't understand!
-    - If no questions are asked, lecture will go too fast
+    - **Please** ask questions!!!
+    - If no questions, lecture will go too fast
   - Additional Basic Operations
-  - Set Operations
   - Null Values
   - Aggregate Functions
-  - Nested Subqueries
   - Modification of the Database
 
 
@@ -32,28 +30,16 @@ https://www.db-book.com/slides-dir/PDF-dir/ch3.pdf
 
 ---
 
-### SQL Commands
+### SQL Commands Covered today
 
-- More DBMA SQL commands to manage the database
-  - Specify integrity constraints
-  - Define multiple views of the data
-  - Specify the beginning / end of a transaction
-  - Embed SQL w/in general purpose programming languages
-  - Specify access rights to relations and views
 - Everyday SQL commands to manipulated the data
+  - Create a table
+    - DBMA normally does
+    - Helpful to understand visualize the table
   - Query information from the database
   - Insert tuples into the database
   - Modify tuples in the database
   - Delete tuples from the database
-
-Note:
-
-There are two parts to the SQL languages
-
-DML is the active query, insert, modify, delete
-
-**FRAG** 
-DDL defines integrity constraint, views, transactions, embedded SQL into programming languages and access rights.
 
 ---
 
@@ -102,17 +88,20 @@ DDL describes
 
 - Relation is defined using the **create table** command:
    - Each table must have a name
-   - Each column or attribute must have a name and a type
+   - Each column or attribute must have a name &amp; type
    - Tables can have integrity constraints:
      - Bank balances can't be less than zero
+     - Only one submission of each assignment / student
      - Each paygrade must be associated with a rank
-- To define the instructor relation similar to the book:
+- To define the [instructor relation with a minimum salary]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.check)
 ```
 CREATE TABLE Instructor (
       ID char(5),
       name varchar(20),
       dept_name varchar(20),
-      salary numeric(8,2))
+      salary numeric(8,2) 
+        constraint minimum_wage
+          check (salary >= 4000))
 ```
 
 Note:
@@ -123,6 +112,8 @@ This table is does not include the primary key and the foreign key reference
 
 ### And a Few More Relation Definitions
 
+- Don't allow a Student table's row to have a dept_name value that is **NOT** in the department table's primary key.
+  - [Try this]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.foreign.key)
 ```
 CREATE TABLE IF NOT EXISTS Student (
     ID char(5),
@@ -133,26 +124,15 @@ CREATE TABLE IF NOT EXISTS Student (
     foreign key (dept_name) references department)
 ```
 
-```
-CREATE TABLE IF NOT EXISTS Takes (
-    ID varchar(5),
-    course_id varchar(8),
-    sec_id varchar(8),
-    semester varchar(6),
-    year numeric(4,0),
-    grade varchar(2),
-    primary key (ID, course_id, sec_id, semester, year),
-    foreign key (ID) references student,
-    foreign key (course_id, sec_id, semester, year) references section)
-```
 
 Note:
 
 Note that student references depart_name from department relation
 
-Define table of which classes students take
 
 ---
+
+{{HIDDEN}}
 
 ### And more still
 
@@ -167,8 +147,6 @@ CREATE TABLE Course (
 
 
 ---
-
-{{HIDDEN}}
 
 ### Updates to tables
 
@@ -190,6 +168,8 @@ drop table r
 
 ---
 
+{{HIDDEN}}
+
 ### Updates to tables II
 
 - **[Alter]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.alter.instructor)** adding an attribute
@@ -207,10 +187,9 @@ alter table r drop A
 
 
 ---
+### Getting data out of the database
 
-### Basic Query Structure 
-
-- A typical SQL query has the form:
+- The basic SQL query structure has the form:
 ```
 SELECT A1, A2, ..., An
   FROM R1, R2, ..., Rm
@@ -244,8 +223,8 @@ SELECT name
     - Lower case attributes
     - Table names capitalized first letter
     - Upper case keywords
-  - How would you do a [case insensitive query]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.case.insensitive)
-
+  - How would you do a [case insensitive test?]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.case.insensitive)
+    - You'd use an function called upper or lower!
 
 ---
 
@@ -254,7 +233,7 @@ SELECT name
 - SQL allows duplicates in relations / query results.
   - A multiset
   - Force the elimination of duplicates, use keyword **distinct**
-- Find the distinct department names of all instructors
+- Find the [distinct department names of all instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.distinct)
 ```
 SELECT DISTINCT dept_name
   FROM Instructor
@@ -284,16 +263,15 @@ Use {{HTTPS_FQDN}}/sql/interpreter/Chapter.03.monthly.instructor.salary to show 
 
 ### The where Clause
 
-- **where** clause specifies conditions to be satisfied
-  - Corresponds to relational algebra selection predicate
-- To find all instructors in the computer science department
+- **where** clause limits the rows returned
+- To only show the instructors in the CS department
 ```
 select name
   from instructor
  where dept_name = 'Comp. Sci.'
 ```
 - SQL allows logical connectives **and**, **or**, and **not**
-- SQL uses comparison operators $\lt, \lt=, \ge, =$ and $\gt=$
+- SQL uses comparison operators $\lt, \lt=, =$ and $\gt=$
 - List [computer science instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.instructors.salary.gt8000) with salary $\gt 80000$
 ```
 SELECT name
@@ -302,10 +280,14 @@ SELECT name
        salary > 80000
 ```
 - After trying out that page, let's try a worksheet our [worksheet on select and where](http://lejuene.majikes.net/worksheets/worksheet-03-01-select-instructor#questions)
+  - Be careful!
 
 Note:
 
-http://lejuene.majikes.net/worksheets/worksheet-03-01-select-instructor
+I spelled lejeune wrong!
+
+See if any marines copied from each other!  
+The no more than is a tough question  
 
 ---
 
@@ -319,6 +301,7 @@ select *
   from instructor, teaches
 ```
 - Generates every possible instructor – teaches pair
+  - Would it be useful to have each marine's name matched with every other marine's medical records?
 - Cartesian product not very useful directly
   - Useful when combined with where-clause condition
   - Limit the selection by WHERE clause (next slide)
@@ -344,6 +327,10 @@ select name, course_id
  where instructor.ID = teaches.ID and
        instructor.dept_name = 'Comp. Sci.'
 ```
+- My rule of thumb
+  - Join the primary key in each relation in the FROM clause with another relation's primary key
+  - Prevents irrelevant output like the Cartesian product
+  - Above the instructor and teaches IDs are joined to only give valid teachers teaching classes
 
 Note:
 
@@ -580,7 +567,7 @@ select count(distinct ID)
 ```
 select count(*) from course
 ```
-- Let's [try aggregate worksheet]({{HTTPS_FQDN}}/worksheet-03-02-aggregates)
+- Let's [try aggregate worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-03-02-aggregates)
 
 Note:
 
@@ -768,6 +755,8 @@ select count(distinct ID)
    - $\ne$ **all** $\equiv$ **not in**
 
 ---
+
+{{HIDDEN}}
 
 ### Test for Empty Relations
 - The **exists** construct returns **true** if subquery is nonempty.
@@ -998,6 +987,9 @@ delete from instructor
 
 ### Deletion (Cont.)
 
+- This is a hard one!
+  - The test of salary is a subquery
+  - We will only show this one!
 - Delete [all instructors whose salary is less than the average salary of instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.delete.average)
    - Problem: As tuples deleted from _instructor_, the average salary changes
    - Solution used in SQL:
@@ -1007,7 +999,8 @@ delete from instructor
 ```
 delete from instructor
  where salary < (select avg(salary) 
-                   from instructor)
+                          from instructor
+                        )
 ```
 
 
@@ -1033,6 +1026,8 @@ insert into student
 
 
 ---
+
+{{HIDDEN}}
 
 ### Insertion (Cont.)
 
@@ -1075,16 +1070,11 @@ update instructor
    set salary = salary * 1.05
  where salary < 70000
 ```
-- Give a 5% salary raise to instructors whose salary is less than average
-```
-update instructor
-   set salary = salary * 1.05
- where salary < (select avg(salary)
-                   from instructor)
-```
 
 
 ---
+
+{{HIDDEN}}
 
 ### Updates (Cont.)
 
@@ -1108,6 +1098,8 @@ Ask students why the order is important.
  
 ---
 
+{{HIDDEN}}
+
 ### Case Statement for Conditional Updates
 
 - Same query as before but with [case statement]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.case)
@@ -1120,6 +1112,8 @@ update instructor
 ```
 
 ---
+
+{{HIDDEN}}
 
 ### Updates with Scalar Subqueries
 
@@ -1136,6 +1130,8 @@ update student S
 - Sets <i>tot_creds</i> null for students who have not taken any course
 
 ---
+
+{{HIDDEN}}
 
 ### Updates with Scalar Subqueries 
 
@@ -1167,12 +1163,9 @@ UPDATE Student S SET should be UPDATE Student SET
 ### Chapter 3 Part II Epilogue
 
 - We have covered a lot. 
-  - Each slide was packed with information
-- You should have learned advanced SQL commands
-  - What null means and how it's used
-  - Several very common aggregate commands
-  - Nested subqueries and when to use them
-  - How to update data
-- Post chapter 3 worksheet due before 8:00 AM next class
-- Pre-class chapter 4 worksheet due before 8:00 AM next class
+- You should recognize how to create a table
+  - The DBMA would probably do that for you
+- You should have a pretty good idea how to get data from the database
+  - Basic selects, multiple relations, and aggregates
+- Hopefully you know some of the security behind databases
  

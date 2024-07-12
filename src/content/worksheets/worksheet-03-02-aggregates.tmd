@@ -18,13 +18,26 @@ dbs = ['wkst.university1.sqlite', 'wkst.university2.sqlite']
 ## {{!linkable_header('Questions')}} 
 
 
+**List.Computer.Science.Instructors:** List the salary of the computer science instructors.  
+**NOTE:** Don't list the names or any attribute. Just list the salary.
+% answer = '''
+SELECT salary
+  FROM Instructor
+ WHERE dept_name = 'Comp. Sci.'
+ '''
+{{!sql(answer, dbs=dbs, sort=True, points=33, name='List.Computer.Science.Instructors')}}
+%include('viewAnswer')
+
+---
+
 **Average.Computer.Science.Salary:** What is the average salary of faculty in the computer science ('Comp. Sci.') department?   
+**NOTE:** You may want to copy/paste the previous command but use <q>AVG(salary)</q> instead of <q>salary</q>.  
 % answer = '''
 SELECT AVG(salary)
   FROM Instructor
  WHERE  dept_name = 'Comp. Sci.'
  '''
-{{!sql(answer, dbs=dbs, sort=True, points=20, name='Average.Computer.Science.Salary')}}
+{{!sql(answer, dbs=dbs, sort=True, points=33, name='Average.Computer.Science.Salary')}}
 %include('viewAnswer')
 
 ---
@@ -35,52 +48,9 @@ SELECT MAX(salary)
   FROM Instructor
  WHERE  dept_name = 'Comp. Sci.'
  '''
-{{!sql(answer, dbs=dbs, sort=True, points=20, name='Maximum.Computer.Science.Salary')}}
+{{!sql(answer, dbs=dbs, sort=True, points=34, name='Maximum.Computer.Science.Salary')}}
 %include('viewAnswer')
 
 ---
-
-**Names.Computer.Science.Maximum.Salary:** What is (are) the names of the faculty in the computer science department that make the most money?
-% answer = '''
---- Temporary relation
-WITH max_salary AS (SELECT MAX(salary) as salary
-                      FROM Instructor
-                     WHERE  dept_name = 'Comp. Sci.')
-SELECT name
-  FROM Instructor I, Max_salary M
- WHERE I.salary >= M.salary  AND
-       dept_name = 'Comp. Sci.'
-'''
-{{!sql(answer, dbs=dbs, sort=True, points=20, name='Names.Computer.Science.Maximum.Salary')}}
-%include('viewAnswer')
-%include('viewAnswer', answer='''
---- Average salary in subquery
-SELECT name
-  FROM Instructor
- WHERE dept_name = 'Comp. Sci.' AND
-       salary >= (SELECT MAX(salary)
-                    FROM Instructor
-                   WHERE dept_name = 'Comp. Sci.')
-''')
-
----
-
-**Names.Computer.Science.Larger.Than.Average:** What is are the names of the computer science faculty that make more than the average salary of the people in the computer science department?
-% answer = '''
-WITH Avg_salary AS (SELECT AVG(salary) as salary
-                      FROM Instructor
-                     WHERE  dept_name = 'Comp. Sci.')
-SELECT name
-  FROM Instructor I, Avg_salary A
- WHERE I.salary >= A.salary AND
-       dept_name = 'Comp. Sci.'
- '''
-{{!sql(answer, dbs=dbs, sort=True, points=20, name='Names.Computer.Science.Larger.Than.Average')}}
-%include('viewAnswer')
-
----
-
-
-
 
 % include('worksheet-submit.md')

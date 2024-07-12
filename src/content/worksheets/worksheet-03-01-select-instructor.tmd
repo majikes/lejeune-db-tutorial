@@ -33,19 +33,19 @@ Write queries for the following questions:
 
 ---
 
-**Instructors.Making.No.More.Than.72000:** Get the name of all the professors making no more than $72,000.  
+**Instructors.Making.No.More.Than.75000:** Get the name of all the professors making no more than $75,000.  
 **NOTE:** The instructor could be in any department.  
 **NOTE:** How would you test for "no more than"?  
-% answer = '''SELECT name FROM Instructor WHERE salary <= 72000 '''
-{{!sql(answer, dbs=dbs, sort=True, points=25, name='Instructors.Making.No.More.Than.72000')}}
+% answer = '''SELECT name FROM Instructor WHERE salary <= 75000 '''
+{{!sql(answer, dbs=dbs, sort=True, points=25, name='Instructors.Making.No.More.Than.75000')}}
 %include('viewAnswer')
 
 ---
 
-**Computer.Science.Instructors.Making.No.More.Than.72000:** Get the name of all the professors making no more than $72,000.  
-**NOTE:** The instructors must be in the computer science department and make no more than $72,000.
-% answer = '''SELECT name FROM Instructor WHERE dept_name = 'Comp. Sci.' AND salary <= 72000 '''
-{{!sql(answer, dbs=dbs, sort=True, points=25, name='Computer.Science.Instructors.Making.No.More.Than.72000')}}
+**Computer.Science.Instructors.Making.No.More.Than.75000:** Get the name of all the professors making no more than $75,000.  
+**NOTE:** The instructors must be in the computer science department and make no more than $75,000.
+% answer = '''SELECT name FROM Instructor WHERE dept_name = 'Comp. Sci.' AND salary <= 75000 '''
+{{!sql(answer, dbs=dbs, sort=True, points=25, name='Computer.Science.Instructors.Making.No.More.Than.75000')}}
 %include('viewAnswer')
 
 ---

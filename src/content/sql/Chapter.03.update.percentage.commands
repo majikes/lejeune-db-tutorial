@@ -36,25 +36,3 @@ UPDATE Instructor
 SELECT 'List the names and salary of all instructors after second 5% increase' AS '';
 SELECT name, salary
   FROM Instructor;
-
-SELECT 'Give a 5% salary raise to instructors whose salary is less than average' AS '';
-UPDATE Instructor
-   SET salary = salary * 1.05
- WHERE salary < (SELECT AVG(salary)
-                   FROM Instructor);
-
-SELECT 'List the names and salary of all instructors after third 5% increase' AS '';
-SELECT name, salary
-  FROM Instructor;
-
-UPDATE Instructor
-SET salary = salary * 1.03
-    WHERE salary > 90000;
-UPDATE Instructor
-SET salary = salary * 1.05
-    WHERE salary <= 90000;
-
-SELECT 'List the names and salary of all instructors after last increase' AS '';
-SELECT name, salary
-  FROM Instructor;
-

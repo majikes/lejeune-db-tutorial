@@ -49,3 +49,5 @@ SELECT *
 SELECT 'The Cartesian Product of instructors X teaches' as '';
 SELECT *
   FROM Instructor, Teaches;
+
+-- Is it really helpful to have all the teaches matched with all the courses?
