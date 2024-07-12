@@ -898,7 +898,7 @@ def slide(cursor, slide_name):
    now = datetime.now()
    ip = request.remote_addr
 
-   slide_path = f'content/slides/{slide_name}'
+   slide_path = f'slides/{slide_name}'
    if not osp.exists(slide_path):
       log(f' slide {slide_name} not found at {slide_path}')
       not_found(cursor)

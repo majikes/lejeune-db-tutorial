@@ -71,7 +71,7 @@ def restart_reveal(deploy):
             pdf_mtime1 = datetime.fromtimestamp(0)
         try:
             pdf_mtime2 = datetime.fromtimestamp(os.path.getmtime(
-                f'/var/www/mypoll/content/slides/{pdf_file}'))
+                f'/var/www/lejeune/static/slides/{pdf_file}'))
         except FileNotFoundError:
             pdf_mtime2 = datetime.fromtimestamp(0)
         if pdf_mtime1 < md_mtime or pdf_mtime2 < md_mtime:
@@ -84,7 +84,7 @@ def restart_reveal(deploy):
             subprocess_rtn(['node_modules/.bin/decktape', '--size', '612x750',
                             '--chrome-path', '/usr/bin/chromium-browser', 'reveal',
                             f'http://localhost:1948/{md_file}',
-                            f'/var/www/lejune/content/static/slides/{pdf_file}'])
+                            f'/var/www/lejeune/static/slides/{pdf_file}'])
             subprocess_rtn(['node_modules/.bin/decktape', '--size', '612x750',
                             '--chrome-path', '/usr/bin/chromium-browser', 'reveal',
                             f'http://localhost:1948/{md_file}',
