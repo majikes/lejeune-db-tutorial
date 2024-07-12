@@ -56,7 +56,7 @@ Note:
 -  Financial services
    - Banks, credit cards, retailers, advertisers
 -  Collections
-   - Documents, navigation systems,
+   - Documents, navigation systems
 -  Database are ubiquitous
    - This class uses a DBMS to allow:
      - You to have worksheets W/O answers
@@ -167,8 +167,8 @@ Security can be granted at a fine data field level!
 
 ### University Database Example
 
-- This class use a university database 
-- Data consists of information about:
+- This class uses a university database 
+- Data consist of information about:
   - Students
   - Instructors
   - Classes
@@ -240,13 +240,13 @@ The next slide is going to show how to create tables
 ```sql 
 create table instructor (
   ID char(5),
-  name varchar(20)
+  name varchar(20),
   dept_name varchar(20),
   salary numeric(8,2))
 ```
 - Database compiler generates tables
 - Data dictionary contains metadata (i.e., data about data)
-  - Schema is the representative (plan) for the database
+  - Schema is the representation or plan for the db
   - Integrity constraints
   - Primary key (ID uniquely identifying a row)
   - Authorization
@@ -274,7 +274,7 @@ select onyen from roll except select onyen from fetched where url like '%sql%Cha
 ```sql
 SELECT name
   FROM instructor
- WHERE dept_name = 'Comp.Sci.'
+ WHERE dept_name = 'Comp. Sci.'
 ```
 - SQL always returns a table (relation)
   - It <i>may</i> have duplicates
@@ -318,9 +318,10 @@ Note:
   - Done by a database administrator (DBA)
 - Logical Design – How the database looks to users.
   - Requires a <q>good</q> collection of relation schemas.
-  - Business decision – which attributes recorded in the database
+  - Business decisions
+    - Which attributes recorded in the database
     - How the data will be used
-  - Computer Science decision
+  - Computer Science decisions
      - How to arrange data for performance
      - Add indexes for fast searches
 - Physical Design – How to store the data 
@@ -360,7 +361,7 @@ You need a good collection of tables.
   - Indices
     - Provides fast access to data items
     - Index maintains pointers to data items
-    - Storage manage maintains the pointers
+    - Storage manager maintains the pointers
 
 Note:
 
@@ -375,12 +376,9 @@ SM maintains data files (4K or 8K?)
 ### Query Processor
 
 - The query processor components include:
-  - Compiles or interprets statements
     - Records the definitions in the data dictionary.
     - Provides an evaluation plan to process query
     - Performs query optimization
-      - Picks the lowest cost plan
-    - Plan give to evaluation engine
   - Query evaluation engine
     - Executes low-level query plan
 
@@ -601,7 +599,7 @@ Note:
 
 - You should know:
   - What a databases and DBMS is and why it's used
-  - We'll just cover high level user access to DB
+  - High level user access to DB
     - This is just a survey
   - There are lots of databases out there
   - They're the foundation of a lot of work
