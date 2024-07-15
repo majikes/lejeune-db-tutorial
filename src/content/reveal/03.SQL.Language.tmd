@@ -10,7 +10,8 @@ revealOptions:
 
 ---
 
-### Introduction to SQL
+### This lecture
+#### Introduction to SQL
 
 - By the end of class you should know:
   - SQL Data (Table) Definition
@@ -94,7 +95,7 @@ DDL describes
      - Only one submission of each assignment / student
      - Each paygrade must be associated with a rank
 - To define the [instructor relation with a minimum salary]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.check)
-```
+```sql
 CREATE TABLE Instructor (
       ID char(5),
       name varchar(20),
@@ -141,7 +142,7 @@ Note that student references depart_name from department relation
 
 ### And more still
 
-```
+```sql
 CREATE TABLE Course (
      course_id varchar(8),
      title varchar(50),
@@ -156,17 +157,17 @@ CREATE TABLE Course (
 ### Updates to tables
 
 - **Insert** [Insert Majikes into the instructor table]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.insert.instructor)
-```
+```sql
 INSERT INTO Instructor (ID, name, dept_name, salary)
       VALUES ('150150', 'Majikes', 'Comp. Sci.', 90000)
 ```
 - **Delete** [Remove all tuples from the $student$ relation]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.delete.student)
-```
+```sql
 DELETE FROM Student
 ```
 - **Drop Table**
-```
-drop table r
+```sql
+DROP TABLE r
 ```
 - Try the links above to test out insert and delete
 
@@ -183,15 +184,15 @@ Make yourself an instructor in a class.
 ### Updates to tables II
 
 - **[Alter]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.alter.instructor)** adding an attribute
-```
-alter table r add A D
+```sql
+ALTER TABLE r ADD A D
 ```
   - where $A$ is the name of the attribute to be added to relation $r$ and $D$ is the domain of $A$.
   - All exiting tuples in the relation are assigned <i>null</i> as the value for the new attribute.
 
 - **Alter** dropping an attribute or column
-```
-alter table r drop A
+```sql
+ALTER TABLE r DROP A
 ```
   - where $A$ is the name of an attribute of relation $r$
 
@@ -202,7 +203,7 @@ alter table r drop A
 #### SELECT is the most used SQL command
 
 - The basic SQL query structure has the form:
-```
+```sql
 SELECT A1, A2, ..., An
   FROM R1, R2, ..., Rm
  WHERE P
@@ -210,7 +211,7 @@ SELECT A1, A2, ..., An
   - $A_i$ represents an attribute
   - $R_i$ represents a relation
   - $P$ is a predicate.
-    - Can be compound with **and** and **or**
+    - Compound predicate with **and** &amp; **or**
 - The result of an SQL query is a relation multiset.
   - Each row in a database table (relation) is unique
   - But each row in a query result may not be unique
@@ -219,21 +220,21 @@ SELECT A1, A2, ..., An
 
 ---
 
-### The select Clause
+### The select statement
 
-- **select** clause lists attributes desired in result
+- **select** statement lists attributes desired in result
 - [Example: find the names of all instructors:]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.Select.Attribute)
 
-```
+```sql
 SELECT name
-  FROM instructor
+  FROM Instructor
 ```
 
-- SQL names are case insensitive
+- SQL statements are case insensitive
   - You may use upper- or lower-case letters
   - $Name \equiv NAME \equiv name$
   - Be consistent!!  I try to:
-    - Lower case attributes
+    - Lower case column names
     - Table names capitalized first letter
     - Upper case keywords
   - SQL names are case insensitive; data is not
@@ -246,7 +247,7 @@ There are two sql panels on this page
 
 ---
 
-### The select Clause (Cont.)
+### The select statement (Cont.)
 
 - SQL allows duplicates in relations / query results.
   - A multiset
@@ -256,21 +257,21 @@ There are two sql panels on this page
 SELECT DISTINCT dept_name
        FROM Instructor
 ```
-- An asterisk in the select clause denotes 'all attributes' 
+- An asterisk in the select statement denotes 'all attributes' 
 ```sql
 SELECT * FROM Instructor
 ```
-- **select** clause can contain [arithmetic expressions]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.monthly.instructor.salary)
+- **select** statement can contain [arithmetic expressions]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.monthly.instructor.salary)
   - The operation, +, –, ∗, / and //
   - List the instructor names and their monthly salary:
 ```sql
 SELECT name, salary/12
-       FROM instructor
+       FROM Instructor
 ```
   - Rename to monthly_salary and do float division:
 ```sql
 SELECT name, salary/12.0 as monthly_salary
-      FROM instructor
+      FROM Instructor
 ```
 
 Note:
@@ -286,22 +287,22 @@ There are two examples here.
 
 - **where** clause uses predicate to limit the rows returned
 - To only show the instructors in the CS department
+```sql
+SELECT name
+       FROM Instructor
+       WHERE dept_name = 'Comp. Sci.'
 ```
-select name
-       from instructor
-       where dept_name = 'Comp. Sci.'
-```
-- SQL allows logical connectives **and**, **or**, and **not**
-- SQL uses comparison operators $\lt, \lt=, =$ and $\gt=$
+- SQL allows logical connectives **and**, **or**, &amp; **not**
+- SQL uses comparison operators $\lt, \lt=, =$ &amp; $\gt=$
 - List [computer science instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.instructors.salary.gt8000) with salary $\gt 80000$
-```
+```sql
 SELECT name
        FROM Instructor
        WHERE dept_name = 'Comp. Sci.' AND
              salary > 80000
 ```
 - After trying out that page, let's try a worksheet our [worksheet on select and where](http://lejuene.majikes.net/worksheets/worksheet-03-01-select-instructor#questions)
-  - Be careful!
+  - Be careful of the [honeypot](https://usa.kaspersky.com/resource-center/threats/what-is-a-honeypot)!
 
 Note:
 
@@ -321,11 +322,11 @@ The no more than is a tough question
 ### The from Clause
 
 - The **FROM** clause lists the relations involved in the query
-   - Causes a Cartesian product matching all rows in both tables
+   - Cartesian product matching all rows in both tables
 - Find the [Cartesian product instructor $\times$ teaches]({{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.12.Cartesian.Product)
 ```sql
-select *
-       from instructor, teaches
+SELECT *
+       FROM Instructor, Teaches
 ```
 - Generates every possible instructor – teaches pair
   - Would it be useful to have each marine's name matched with every other marine's medical records?
@@ -349,15 +350,15 @@ Cartesian product is not helpful without the WHERE clause
 - List instructor names who have taught some course and the course_id
 ```sql
 SELECT name, course_id
-       FROM instructor, teaches
-       WHERE instructor.ID = teaches.ID
+       FROM Instructor, Teaches
+       WHERE Instructor.ID = Teaches.ID
 ```
 - List [computer science instructors who have taught some course and the course_id]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.comp.sci.instructor.course_id)
-```
+```sql
 SELECT name, course_id
-       FROM instructor, teaches
-       WHERE instructor.ID = teaches.ID and
-             instructor.dept_name = 'Comp. Sci.'
+       FROM Instructor, Teaches
+       WHERE Instructor.ID = Teaches.ID and
+             Instructor.dept_name = 'Comp. Sci.'
 ```
 - My rule of thumb
   - Join the primary key in each relation in the FROM clause with another relation's primary key
@@ -380,7 +381,7 @@ Maybe you want to display one thing from each table like the name and course_id 
 
 - SQL allows renaming relations / attributes using the **AS** clause
   - List [all instructor names who have a higher salary than some computer science instructor]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.instructor.salary.gt.comp.sci)
-```
+```sql
 SELECT DISTINCT I.name
   FROM Instructor as I, instructor as CS
  where I.salary > CS.salary and
@@ -407,7 +408,7 @@ Do an example with the department name
     - percent ( % ).  Matches any **substring**.
     - underscore ( _ ).  Matches any **character**.
 - List [instructor names whose name includes the substring “an”]({{HTTPS_FQDN}}//sql/interpreter/Chapter.03.string.wildcards).
-```
+```sql
 SELECT name
   FROM Instructor
  WHERE name LIKE '%an%'
@@ -448,9 +449,9 @@ There are lots of examples in the SQL page on string and concatenation link
 
 - List in alphabetic order the names of all instructors
 ```sql
-select distinct name
-            from instructor
-            order by name
+SELECT DISTINCT name
+            FROM Instructor
+            ORDER BY name
 ```
 - Specify **desc** / **asc** for descending /ascending order
    - Can be specified for each attribute
@@ -472,10 +473,10 @@ The sql panel shows examples of how to specify alphabetical ordering of salary d
   - **null** signifies unknown value or value does not exist.
 - The predicate <b>is null</b> can be used to check for null values.
   - Example: Find all instructors whose salary is null<i>.</i>
-```
-select name
-  from instructor
- where salary is null
+```sql
+SELECT name
+       FROM Instructor
+       WHERE salary IS null
 ```
 - The predicate **is not null** returns
   - True if the value is **not null**
@@ -513,7 +514,7 @@ Note:
 It's important to know what the result of any null logical comparison is!
 
 Use the below with things like 
-``` 
+```sql
 select "5<null" as '';
 SELECT null and 1;
 ```
@@ -540,19 +541,19 @@ Trick here is what is a multiset
 ### Aggregate Functions Examples
 
 - Find the average instructor salary of instructors in the Computer Science department 
-```
-select avg(salary) from instructor where dept_name = 'Comp. Sci'
+```sql
+SELECT AVG(salary) FROM Instructor WHERE dept_name = 'Comp. Sci'
 ```
 - Find the total number of instructors who teach a course in the Spring 2018 semester
-```
-select count(distinct ID)
-  from teaches
- where semester = 'Spring' and
-       year = 2018
+```sql
+SELECT COUNT(distinct ID)
+       FROM Teaches
+       WHERE semester = 'Spring' AND
+             year = 2018
 ```
 - Find [the number of tuples in the <i>course </i>relation]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.aggregates)
-```
-select count(*) from course
+```sql
+SELECT COUNT(*) FROM Course
 ```
 - Let's [try aggregate worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-03-02-aggregates)
 - **Do you want to learn how to modify the database?**
@@ -580,19 +581,19 @@ https://lejeune.majikes.net/worksheets/worksheet-03-02-aggregates?onyen=student1
 ### Deletion
 
 - Delete [all instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.delete)
-```
-delete from instructor
+```SQL
+DELETE FROM Instructor
 ```
 - Delete all instructors from the Finance department
-```
-delete from instructor where dept_name = 'Finance'
+```sql
+DELETE FROM Instructor WHERE dept_name = 'Finance'
 ```
 - Delete all instructors associated with departments in the Watson building
-```
-delete from instructor
- where dept_name in (select dept_name
-                       from department
-                      where building = 'Watson')
+```sql
+DELETE FROM Instructor
+         WHERE dept_name IN (SELECT dept_name
+                               FROM Department
+                              WHERE building = 'Watson')
 ```
 
 
@@ -609,10 +610,10 @@ delete from instructor
      1. First, compute **avg**(salary)
      2. Find all tuples to delete in subquery
      2. Delete all tuples above static average
-```
-delete from instructor
- where salary < (select avg(salary) 
-                          from instructor
+```sql
+DELETE FROM Instructor
+       WHERE salary < (SELECT AVG(salary) 
+                         FROM Instructor
                         )
 ```
 
@@ -621,19 +622,19 @@ delete from instructor
 ### Insertion
 
 - Add [a new tuple to _course_]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.insert.simple)
-```
-insert into course
-             values('CS-421', 'Database Systems', 'Comp. Sci.', 3)
+```sql
+INSERT INTO Course
+             VALUES('CS-421', 'Database Systems', 'Comp. Sci.', 3)
 ```
 - or safer by explicitly stating fields
-```
-insert into course (course_id, title, dept_name, credits)
-             values('CS-421', 'Database Systems', 'Comp. Sci.', 3)
+```sql
+INSERT INTO Course (course_id, title, dept_name, credits)
+             VALUES('CS-421', 'Database Systems', 'Comp. Sci.', 3)
 ```
 - Add a new tuple to _student_ with <i>tot_creds</i> set to null
-```
-insert into student
-             values('3003', 'Green', 'Finance', null)
+```sql
+INSERT INTO Student
+             VALUES('3003', 'Green', 'Finance', null)
 ```
 
 <!--v-->
@@ -641,15 +642,15 @@ insert into student
 ### Updates
 
 - [Give a 5% salary raise to all instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.update.percentage)
-```
-update instructor
-   set salary = salary * 1.05
+```sql
+UPDATE Instructor
+       SET salary = salary * 1.05
 ```
 - Give a 5% salary raise to those instructors who earn less than 70000
-```
-update instructor
-   set salary = salary * 1.05
- where salary < 70000
+```sql
+UPDATE Instructor
+       SET salary = salary * 1.05
+       WHERE salary < 70000
 ```
 
 
@@ -661,7 +662,7 @@ update instructor
 
 - Increase salaries of instructors whose salary is over $90,000 by 3%, and all others by a 5% 
   - Write two **update** statements:
-```
+```sql
 update instructor
    set salary = salary * 1.03
  where salary > 90000;
@@ -684,7 +685,7 @@ Ask students why the order is important.
 ### Case Statement for Conditional Updates
 
 - Same query as before but with [case statement]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.case)
-```
+```sql
 update instructor
    set salary = case
                    when salary <= 90000 then salary * 1.05
@@ -699,7 +700,7 @@ update instructor
 ### Updates with Scalar Subqueries
 
 - [Recompute and update tot_creds value]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.update.scalar) for all students
-```
+```sql
 update student S
     set tot_cred = (select sum(credits)
                       from takes, course
@@ -719,7 +720,7 @@ update student S
 - Instead of **sum**(_credits_) only when not Null
 - Set to zero otherwise
 - Use:
-```
+```sql
 update student
     set tot_cred = (select
                      case
