@@ -16,14 +16,18 @@ INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (83821, 'Brandt',   
 INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (98345, 'Kim',        'Elec. Eng.', 80000);
 INSERT INTO Instructor (ID, name, dept_name, salary) VALUES (15015, 'Majikes',    'Comp. Sci.', 90000);
 
+-- Divide by integer 12 gets integer results
 SELECT 'Instructor name and monthly salary truncated' as '';
 SELECT name, salary/12
   FROM Instructor;
 
+-- Divide by float 12.0 gets float answer
 SELECT 'Instructor name and monthly salary' as '';
 SELECT name, salary/12.0 AS monthly_salary
   FROM Instructor;
 
+-- This examples shows that you can format the data:
+-- Useful for things likes money in dollars and cents
 SELECT 'Instructor name and monthly salary to two decimal places' as '';
 SELECT name,  printf("%.2f", salary/12.0) as montly_salaray_dollars_cents
   FROM Instructor;
