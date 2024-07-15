@@ -17,6 +17,9 @@ revealOptions:
   - Data models used in DBMS
   - The database language
 
+Note:
+
+Again: This is what we'll cover
 
 ---
 
@@ -34,13 +37,13 @@ revealOptions:
 
 Note:
 
-1. Draw the difference between the database or data and the DBMS or system
-2. At high level, why are databases used
-  - Value or size of the data
-  - Value is not always money: medical trials, corporate secrets
-  - Size is not megabytes: coverage
-3. DBMS is a large, complex system of software
-3. DBMS touch all parts of our life
+So there is a difference between a database and a DBMS.  
+A database is just data.   
+The DBMS is all the software along with the database
+
+You only use a DB for valuable, large data used by many users
+
+Databases are used everywhere
 
 - Ask students what they did before coming to class.. 
  - Databases were used for that
@@ -81,6 +84,7 @@ Even this class is a database system
 
 <b>Ask students if they want to see how this class works</b>
 
+ loginpost() in appbase.py
 ---
 
 
@@ -126,8 +130,6 @@ Database systems offer solutions to all the problems below !!!
 - Difficulty in accessing data 
   - Data or users on different systems
   - Program written for each request
-- Data isolation 
-  - Multiple files and formats
 - Integrity problems
   - Can a bank balance be less than zero?
   - Where is the overdraft fee code? 
@@ -136,12 +138,14 @@ Database systems offer solutions to all the problems below !!!
 
 Note:
 
-**Section 1.2** Purpose of Database Systems
+Databases ensure that all the data is the same.  
+ - Everyone thinks they know how to store things  
+ - Database keeps everything in its place  
 
-1. What if your name and address appeared in multiple places in different formats?
-2. What if everyone had to log onto Amazon to buy something
-3. What if some data is in Excel spread sheets, some in Google sheets
-4. Keeping things <q>in line</q> with the rules
+Database makes sure everyone can access whatever they have permission to access
+
+Integrity constraints
+ - Everything follows the rules
 
 ---
 
@@ -161,7 +165,17 @@ Note:
 
 Note:
 
-Security can be granted at a fine data field level!
+Atomicity is key to making sure the data is always "up to date"
+
+Each user sees the system as their own personal system
+
+Security can be granted at a fine data field level!  
+- Anyone read about the sailor caught looking at the President's medical records?
+
+
+I could show you how I can tell if you copied from another marine.
+
+SELECT * FROM ZWSP;
 
 ---
 
@@ -174,15 +188,11 @@ Security can be granted at a fine data field level!
   - Classes
 - Application program examples:
   - Add new students, instructors, and courses
-  - Register students for courses, and generate class rosters
-  - Assign grades to students
-    - Compute grade point averages (GPA)
-    - Generate transcripts
-- We'll only use a small part of this database
+- Today we'll only use a small part of this database
 
 Note:
 
-For this entire semester we'll use the university databases.
+For this class we'll use a university databases.  I don't know enough about the US Marine Corps.  
 
 Has instructors, students classes, class rooms, etc
 
@@ -195,7 +205,7 @@ Has applications that add students, instructors, etc
 
 - All the data is stored in various tables called relations
 - Think of each relation as a single spreadsheet
-- Example of tabular data in the relational model
+- Example of tabular data in the instructor relation
 - <figure>
    <img src="{{HTTPS_FQDN}}/static/images/Chapter.01.Figure.1.1.a.TheInstructorTable.png" style="width: 50%">
    <figcaption>Figure 1.1 a The instructor table</figcap>
@@ -230,6 +240,8 @@ Note how you create the tables and query them.
 
 You can try things, if they break, just refresh the screen.
 
+<b>Try things by changing case sensitive, simple things</b>
+
 The next slide is going to show how to create tables
 
 ---
@@ -239,10 +251,10 @@ The next slide is going to show how to create tables
 - Specification notation for defining the database schema
 ```sql 
 create table instructor (
-  ID char(5),
-  name varchar(20),
-  dept_name varchar(20),
-  salary numeric(8,2))
+            ID char(5),
+            name varchar(20),
+            dept_name varchar(20),
+            salary numeric(8,2))
 ```
 - Database compiler generates tables
 - Data dictionary contains metadata (i.e., data about data)
@@ -257,7 +269,8 @@ create table instructor (
 
 Note:
 
-This create table is done from the last slide.
+This create table is done from the last slide.  
+Go through the slide and then see if they'd like to see how my website does it.  
 
 But we could show them <b>db.py</b> and show them the roll table or the fetch table.
 
@@ -273,8 +286,8 @@ select onyen from roll except select onyen from fetched where url like '%sql%Cha
   - <a href="{{HTTPS_FQDN}}/sql/interpreter/Chapter.01.FindAllInstructorsInCSDepartment" target="_blank">Example</a>: <q>Find all instructors in the computer science department</q>
 ```sql
 SELECT name
-  FROM instructor
- WHERE dept_name = 'Comp. Sci.'
+            FROM instructor
+            WHERE dept_name = 'Comp. Sci.'
 ```
 - SQL always returns a table (relation)
   - It <i>may</i> have duplicates
@@ -298,12 +311,7 @@ select onyen from fetched where url like '%sql%Chapter.01.FindAllInstructors%' o
   - Network communications
 - Use high-level language with embedded SQL queries
   - **Application programs** use SQL to interact with the database
-  - Let's look at the login program which uses Python
-```sql
-SELECT password
-  FROM Roll
- WHERE username = 'jmajikes'
-```
+  - We can look at the login program which uses Python
 
 Note:
 
@@ -347,7 +355,7 @@ You need a good collection of tables.
   - The storage manager
   - The query processor component
   - The transaction management component
-  - We can go into more detail if you'd like
+  - **We can go into more detail if you'd like**
 
 
 <!--v-->
@@ -365,11 +373,11 @@ You need a good collection of tables.
 
 Note:
 
-In chapter 12, 13 and 14 we'll cover these parts of the storage manager
-
 SM maintains data files (4K or 8K?) 
 - The meta data  
 - Indices  
+
+Should you have an index on name?  on rank? etc
 
 <!--v-->
 
@@ -378,7 +386,7 @@ SM maintains data files (4K or 8K?)
 - The query processor components include:
     - Records the definitions in the data dictionary.
     - Provides an evaluation plan to process query
-    - Performs query optimization
+    - **Performs query optimization**
   - Query evaluation engine
     - Executes low-level query plan
 
@@ -387,16 +395,10 @@ Note:
 Query processor module processes queries, duh!  
 - Processes both DML and DDL
 
-The DDL output gets stored in the data dictionary
-
-The DML compiles the query:  
 - Looks at several plans
 - Sends low cost plan to engine
 
 Query evaluation executes the plan
-
-**NEXT**  
-Let's look at a visual of the query processor
 
 
 <!--v-->
@@ -438,15 +440,12 @@ In this class we will spend a large part of the semester on query evaluation!
 
 Note:
 
-Third manager of the DBMS
+A bunch of transactions that logically go together are transactions.  
 
-Transaction manager covered in chapter 17.  May not get to.
+Makes sure that debits and credits always match  
 
-A transaction is a group of operations that go together
+What if you and your wife both deduct $50 at the same time?
 
-Transaction manager makes sure the group completes or backs out incomplete group
-
-Concurrency manager makes users think they have their own machine
 
 ---
 
@@ -472,13 +471,12 @@ Concurrency manager makes users think they have their own machine
 
 Note:
 
-**SECTION 1.7**
+These are a few types of databases.  
+To the end user, they all look the same
 
-Databases can be set up many different ways.
+Talk about the phone database
 
-We'll only be looking a centralized database
-
-See next page
+Or how a Marine database triggers a national security database
 
 ---
 
@@ -539,9 +537,11 @@ A three-tier example is like the class website
   - Ensuring that enough free disk space is available for normal operations, and upgrading disk space as required
   - Monitoring jobs running on the database 
 - Lots of money.  Lots of pressure.
-- Do you want to know the history of databases?
+- **Do you want to know the history of databases?**
 
 Note:
+
+DBA's make a lot of money because they have a lot of responsibility.
 
 These next three slides give a quick time line for databases
 
@@ -592,6 +592,11 @@ Note:
     - [Real time cyber defense](https://www.militaryaerospace.com/trusted-computing/article/16720022/army-to-brief-industry-jan-18-about-cloud-computing-needs-for-information-warfare)
   - Massively parallel database systems
     - [Aircraft and spacecraft aerodynamic analysis](https://apps.dtic.mil/sti/citations/ADA218282)
+
+Note:
+
+I believe these databases have maps of cities that are used in cruise missile
+
 
 ---
 

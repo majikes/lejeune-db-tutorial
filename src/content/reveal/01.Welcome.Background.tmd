@@ -17,7 +17,7 @@ revealOptions:
 - Instructor John Majikes 
   - [jmajikes@cs.unc.edu](mailto:jmajikes@cs.unc.edu)
   - https://tarheels.live/johnmajikes/
-- Today's slides taken from COMP 421 at UNC Chapel Hill
+- Slides taken from database class at UNC Chapel Hill
   - Silbershatz's book: [Database System Concepts](https://db-book.com/)
 - **Group activity:** First worksheet on the [home page]({{HTTPS_FQDN}})
   - <a href="{{HTTPS_FQDN}}/worksheets/worksheet-00-demo" target="_blank">Demo worksheet</a>  
@@ -41,15 +41,19 @@ Note:
 
 Note:
 
-Aristotle said "Tell me what you will tell me, tell me, and tell me what you told me". 
+Aristotle said "Tell me what you will tell me, tell me, and then tell me what you told me". 
 
 I use this boilerplate on all my slides
+
+For this set of slides we're just going to cover things about me, the class, and what I plan to cover.  
+
+Please let me know if there is something you'd like to know about computers!  
 
 ---
 
 ### Why me
 
-- My father is a 93 year old United States Marine
+- My father **is** a 93 year old United States Marine
   - Corporal served two tours in 1950s Korea
   - Battle of [Chosin Reservoir fighting back to coast](https://www.britannica.com/event/Battle-of-the-Chosin-Reservoir/Fighting-back-to-the-coast)
   - Served under then Colonel [Chesty Puller](https://en.wikipedia.org/wiki/Chesty_Puller)
@@ -68,7 +72,13 @@ I use this boilerplate on all my slides
 Note:
 
 <b>I respect each and every U.S. Marine.</b>  
-If I make a mistake in terminology, it's out of ignorance not arrogance.
+As a kid, I heard a few stories about "Chesty" who I thought was in my father's foxhole.  
+If I make a mistake in terminology, it's out of ignorance not arrogance.  
+
+I taught databases at UNC Chapel Hill.  
+I'm now retired.
+
+I have over 35 years of SW experience in communications, databases, an security.  
 
 ---
 
@@ -90,24 +100,28 @@ If I make a mistake in terminology, it's out of ignorance not arrogance.
 - Anything you'd like to know about me?
 
 Note:
- 
-Talk about how SQL and DBMS have been around for 50+ years!  
-I've been using databases since 1981 and am still learning.  
 
-Spent a lot of time in industry
+I am a two time cancer survivor.   
+I go in for immunotherapy infusion tomorrow.
 
-PhD in dogs and AP
+This fall I will be working at UVA.  
+Artificial Pancreas  
 
-Like to ride bikes long distances
+Databases are key to all technology  
 
- Give student the opportunity to ask questions about you
+PhD in ML for dogs.  
+Worked on the AP
+
+I ride bikes long distances.  
+
+Give student the opportunity to ask questions about you
 
 
 ---
 
 ### Class Material
 
-- The website used for the class is my own
+- The website / database used for the class is my own
   - Used to teach large (&gt;200) classes at UNC
 - Don't have to install any software
   - All material on this website
@@ -117,6 +131,12 @@ Like to ride bikes long distances
   - Any questions on worksheet demo?
 
 Note:
+
+Everything in this class is my own software creation.   
+Please excuse the bugs.  
+I just put this together this month.  
+
+I believe in hands on practice.  
 
 Give students group time to go over worksheet demo
 
@@ -134,6 +154,17 @@ Give students group time to go over worksheet demo
   - Why security is important
   - Why you are important to security!
 - Any questions?
+
+Note:
+
+We'll just cover databases at a high level.  
+We won't require any math or software
+
+We'll discuss where databases are used
+
+I have a few diversions about security
+
+Are there any areas folks would want to cover? 
 
 ---
 

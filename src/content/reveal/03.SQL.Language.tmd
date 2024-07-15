@@ -19,9 +19,9 @@ revealOptions:
     - **Please** ask questions!!!
     - If no questions, lecture will go too fast
   - Additional Basic Operations
-  - Null Values
+  - Null Values (Optional)
   - Aggregate Functions
-  - Modification of the Database
+  - Modification of the Database (Optional)
 
 
 Note:
@@ -35,7 +35,7 @@ https://www.db-book.com/slides-dir/PDF-dir/ch3.pdf
 - Everyday SQL commands to manipulated the data
   - Create a table
     - DBMA normally does
-    - Helpful to understand visualize the table
+    - Helpful to understand &amp; visualize the table
   - Query information from the database
   - Insert tuples into the database
   - Modify tuples in the database
@@ -108,20 +108,22 @@ Note:
 
 This table is does not include the primary key and the foreign key reference
 
+<b>Try changing the minimum wage to $50,000</b>
+
 ---
 
 ### And a Few More Relation Definitions
 
 - Don't allow a Student table's row to have a dept_name value that is **NOT** in the department table's primary key.
   - [Try this]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.foreign.key)
-```
+```sql
 CREATE TABLE IF NOT EXISTS Student (
-    ID char(5),
-    name varchar(20),
-    dept_name varchar(20),
-    tot_cred numeric(3,0),
-    primary key (ID),
-    foreign key (dept_name) references department)
+              ID char(5),
+              name varchar(20),
+              dept_name varchar(20),
+              tot_cred numeric(3,0),
+              primary key (ID),
+              foreign key (dept_name) references department)
 ```
 
 
@@ -129,6 +131,9 @@ Note:
 
 Note that student references depart_name from department relation
 
+<b> What if you changed History to history?</b>
+
+<b> What if you changed the history building to H1</b>
 
 ---
 
@@ -165,6 +170,11 @@ drop table r
 ```
 - Try the links above to test out insert and delete
 
+Note:
+
+You can play with these commands to see how they work.
+
+Make yourself an instructor in a class.
 
 ---
 
@@ -187,7 +197,9 @@ alter table r drop A
 
 
 ---
+
 ### Getting data out of the database
+#### SELECT is the most used SQL command
 
 - The basic SQL query structure has the form:
 ```
@@ -198,6 +210,7 @@ SELECT A1, A2, ..., An
   - $A_i$ represents an attribute
   - $R_i$ represents a relation
   - $P$ is a predicate.
+    - Can be compound with **and** and **or**
 - The result of an SQL query is a relation multiset.
   - Each row in a database table (relation) is unique
   - But each row in a query result may not be unique
@@ -223,8 +236,13 @@ SELECT name
     - Lower case attributes
     - Table names capitalized first letter
     - Upper case keywords
-  - How would you do a [case insensitive test?]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.case.insensitive)
+  - SQL names are case insensitive; data is not
+    - How would you do a [case insensitive data test?]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.case.insensitive)
     - You'd use an function called upper or lower!
+
+Note:
+
+There are two sql panels on this page
 
 ---
 
@@ -234,71 +252,80 @@ SELECT name
   - A multiset
   - Force the elimination of duplicates, use keyword **distinct**
 - Find the [distinct department names of all instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.distinct)
-```
+```sql
 SELECT DISTINCT dept_name
-  FROM Instructor
+       FROM Instructor
 ```
 - An asterisk in the select clause denotes 'all attributes' 
-```
+```sql
 SELECT * FROM Instructor
 ```
 - **select** clause can contain [arithmetic expressions]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.monthly.instructor.salary)
   - The operation, +, –, ∗, / and //
   - List the instructor names and their monthly salary:
-```
-select name, salary/12
-  from instructor
+```sql
+SELECT name, salary/12
+       FROM instructor
 ```
   - Rename to monthly_salary and do float division:
-```
-select name, salary/12.0 as monthly_salary
-  from instructor
+```sql
+SELECT name, salary/12.0 as monthly_salary
+      FROM instructor
 ```
 
 Note:
 
-Use {{HTTPS_FQDN}}/sql/interpreter/Chapter.03.monthly.instructor.salary to show formatting
+There are two examples here.
+
+1. shows the use of the distinct operand
+2. shows integer / float division.  Also formatting
 
 ---
 
 ### The where Clause
 
-- **where** clause limits the rows returned
+- **where** clause uses predicate to limit the rows returned
 - To only show the instructors in the CS department
 ```
 select name
-  from instructor
- where dept_name = 'Comp. Sci.'
+       from instructor
+       where dept_name = 'Comp. Sci.'
 ```
 - SQL allows logical connectives **and**, **or**, and **not**
 - SQL uses comparison operators $\lt, \lt=, =$ and $\gt=$
 - List [computer science instructors]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.instructors.salary.gt8000) with salary $\gt 80000$
 ```
 SELECT name
-  FROM Instructor
- WHERE dept_name = 'Comp. Sci.' AND
-       salary > 80000
+       FROM Instructor
+       WHERE dept_name = 'Comp. Sci.' AND
+             salary > 80000
 ```
 - After trying out that page, let's try a worksheet our [worksheet on select and where](http://lejuene.majikes.net/worksheets/worksheet-03-01-select-instructor#questions)
   - Be careful!
 
 Note:
 
-I spelled lejeune wrong!
 
-See if any marines copied from each other!  
+The where clause limits what gets displayed.  
+First show only CS professors  
+Second show only CS professors who make more than $80,000  
+
+<b>In the worksheet I spelled lejeune wrong!</b>  
+Discuss http versus https  
+
+See if any marines copied from each other!   
 The no more than is a tough question  
 
 ---
 
 ### The from Clause
 
-- The **from** clause lists the relations involved in the query
-   - Corresponds to relational algebra Cartesian product
+- The **FROM** clause lists the relations involved in the query
+   - Causes a Cartesian product matching all rows in both tables
 - Find the [Cartesian product instructor $\times$ teaches]({{HTTPS_FQDN}}/sql/interpreter/Chapter.02.Figure.2.12.Cartesian.Product)
-```
+```sql
 select *
-  from instructor, teaches
+       from instructor, teaches
 ```
 - Generates every possible instructor – teaches pair
   - Would it be useful to have each marine's name matched with every other marine's medical records?
@@ -310,36 +337,39 @@ Note:
 
 Cartesian product example show how big and non-useful Cartesian product alone is
 
+Would you want the data of the name of every marine with the medical records of every marine?
+
+Cartesian product is not helpful without the WHERE clause  
+
 ---
 
-### Examples
+### Cartesian product with WHERE  
+#### WHERE clause limits the rows returned!
 
 - List instructor names who have taught some course and the course_id
-```
-select name, course_id
-  from instructor, teaches
- where instructor.ID = teaches.ID
+```sql
+SELECT name, course_id
+       FROM instructor, teaches
+       WHERE instructor.ID = teaches.ID
 ```
 - List [computer science instructors who have taught some course and the course_id]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.comp.sci.instructor.course_id)
 ```
-select name, course_id
-  from instructor, teaches
- where instructor.ID = teaches.ID and
-       instructor.dept_name = 'Comp. Sci.'
+SELECT name, course_id
+       FROM instructor, teaches
+       WHERE instructor.ID = teaches.ID and
+             instructor.dept_name = 'Comp. Sci.'
 ```
 - My rule of thumb
   - Join the primary key in each relation in the FROM clause with another relation's primary key
   - Prevents irrelevant output like the Cartesian product
-  - Above the instructor and teaches IDs are joined to only give valid teachers teaching classes
 
 Note:
 
 This is a good time to explain why you iteratively develop.  
 
-Section 3.3.2 has lots on this covering four pages!
+The instructor.ID matching the teaches.ID limits the output.
 
-Cartesian Product loop
-
+Maybe you want to display one thing from each table like the name and course_id they teach.  
 
 
 ---
@@ -406,15 +436,21 @@ Be careful.  Try without the LIKE and use =
    - finding string length, extracting substrings, etc.
        - **length()**, **substring()**
 
+Note:
+
+Decide if students want to go into all this detail.
+
+There are lots of examples in the SQL page on string and concatenation link
+
 ---
 
 ### Ordering the Display of Tuples
 
 - List in alphabetic order the names of all instructors
-```
+```sql
 select distinct name
-  from instructor
- order by name
+            from instructor
+            order by name
 ```
 - Specify **desc** / **asc** for descending /ascending order
    - Can be specified for each attribute
@@ -422,62 +458,13 @@ select distinct name
    - Example: `order by name desc`
 - [Can sort on multiple attributes]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.order) (comma separated)
   - Example: `order by dept_name, name`
-
----
-
-{{HIDDEN}}
-
-### Where Clause Predicates
-
-- SQL includes a **between** comparison operator
-  - Example:  List instructor names w/ salary between \$90,000 <b></b>and \$100,000
-  - That is salary $\ge$ <b></b> \$90,000 <b></b>and salary $\le$ <b></b> \$100,000
-```
-select name
-  from instructor 
- where salary between 90000 and 100000
-```
-- Can also do tuple comparison
-```
-select name, course_id
-  from instructor I, teaches T
- where (I.ID, dept_name) = (T.ID, 'Biology')
-```
+- **Do you want to know about missing data? Null values?**
 
 Note:
 
-Had to do funky html to break up KaTex parsing
+The sql panel shows examples of how to specify alphabetical ordering of salary decreasing and name ascending
 
----
-
-{{HIDDEN}}
-
-### Set Operations
-
-- List course ids from Fall 2017 or in Spring 2018
-```
-select course_id from section where sem = 'Fall' and year = 2017
-union
-select course_id from section where sem = 'Spring' and year = 2018
-```
-- List course ids from Fall 2017 and in Spring 2018
-```
-select course_id from section where sem = 'Fall' and year = 2017
-intersect
-select course_id from section where sem = 'Spring' and year = 2018
-```
-- List [course ids that ran in Fall 2017 but not in Spring 2018]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.set.union.intersect.except)
-```
-select course_id from section where sem = 'Fall' and year = 2017
-except
-select course_id from section where sem = 'Spring' and year = 2018
-```
-
-- **union**, **intersect**, **except** automatically eliminate duplicates
-- **union all**, **intersect all**, **except all** retain duplicates
-
-
----
+<!--v-->
 
 ### Null Values
 
@@ -568,6 +555,7 @@ select count(distinct ID)
 select count(*) from course
 ```
 - Let's [try aggregate worksheet]({{HTTPS_FQDN}}/worksheets/worksheet-03-02-aggregates)
+- **Do you want to learn how to modify the database?**
 
 Note:
 
@@ -577,382 +565,7 @@ BEFORE going onto group by check for questions
 https://lejeune.majikes.net/worksheets/worksheet-03-02-aggregates?onyen=student1
 
 
----
-
-{{HIDDEN}}
-
-### Aggregate Functions Group By
-
-- Find the [average instructor salary for each department]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.Figure.3.14.group.by)
-```
-select dept_name, avg(salary) as avg_salary
-  from instructor
- group by dept_name
-  ```
-<div class="row">
- <div class="twocolumns">
-  <figure style="border: 0">
-   <img src="{{HTTPS_FQDN}}/static/images/Chapter.03.Figure.3.13.Instructors.Grouped.png" style="width:100%"/>
-   <figcaption>Figure 3.13</figcaption> 
-  </figure>
- </div>
- <div class="twocolumns">
-  <figure style="border: 0">
-   <img src="{{HTTPS_FQDN}}/static/images/Chapter.03.Figure.3.14.Group.By.png" style="width:100%"/>
-   <figcaption>Figure 3.14</figcaption> 
-  </figure>
- </div>
-</div>
-
-Note:
-
-Group by makes the aggregates more powerful
-
-Average salary in all departments
-
-CS (75,000 + 65,000 + 92,000) = 77,333
-
-
-{{HTTPS_FQDN}}/sql/interpreter/Chapter.03.Figure.3.14.group.by
-
----
-
-{{HIDDEN}}
-
-### Aggregation (Cont.)
-
-- Attributes in **select** clause outside of aggregate functions must appear in **group by** list
-  - [Note that SQLite executes erroneous query with no error message]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.aggregates.erroneous.SQLite)
-```
-select dept_name, ID, avg(salary)
- from instructor
-group by dept_name
-```
-
-Note:
-
-{{HTTPS_FQDN}}/sql/interpreter/Chapter.03.aggregates.erroneous.SQLite
-
-This command window shows the problems with SQLite and group by  
-Also covered on next slide  
-
----
-
-{{HIDDEN}}
-
-### Aggregate Functions - Having Clause
-
-- Find [the names and average salaries of all departments whose average salary is $\gt$ $42,000]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.group.by.having)
-- Where and having clauses are similar except
-  - **Having** clause applied _after_ the formation of groups
-  - **Where** clause applied _before_ the formation of groups
-```
-select dept_name, avg(salary) as avg_salary
-  from instructor
- group by dept_name
-having avg(salary) > 42000
-```
-
-- Any questions on aggregates, group by, or having?
-
-Note:
-
-So we started with simple aggregates, added group by and then added having
-
-
----
-
-{{HIDDEN}}
-
-### Nested Subqueries
-
-- SQL provides a mechanism for the nesting of subqueries.
-  - A **subquery** is a **select-from-where** expression nested within another query.
-  - The nesting can be done in the following SQL query
-```
-select A1, A2, ..., An
-  from R1, R2, ..., Rn
- where P
-```
-  - **From clause**: $R1$ can be replaced by any valid subquery
-  - **Where clause**: $P$ can be replaced with an expression of the form: `B operation subquery`
-  - **Select clause**: $A1$ can be replaced by a subquery that generates a single value
-
-Note:
-
-It's important to realize where you can put subqueries.
-
-Put them after the from clause  
-Put them in the where it's part of an operation's operand  
-Put them in select clause if it produces a single value
-
----
-
-{{HIDDEN}}
-
-### Set Membership
-
-- Find [courses offered in Fall 2017 and in Spring 2018]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.subquery.in.where)
-```
-select course_id
-  from section
- where semester = 'Fall' and year = 2017 and
-       course_id in (select course_id
-                       from section
-                      where semester='Spring' and year=2018) 
-```
-- Find courses offered in Fall 2017 but not in Spring 2018
-```
-select course_id
-  from section
- where semester = 'Fall' and year = 2017 and
-       course_id not in (select course_id
-                           from section
-                          where semester='Spring' and year=2018) 
-```
-
-Note:
-
-I commend you to indent and use iterative development
-
----
-
-{{HIDDEN}}
-
-### Set Membership (Cont.)
-
-- [Instructor names that are neither “Mozart” nor Einstein”]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.subquery.membership.subquery)
-```
-select distinct name
-  from instructor
- where name not in ('Mozart', 'Einstein')
-```
-- Find the total number of students who have taken course sections taught by the instructor with ID 10101
-   - The query can be written in a much simpler manner.
-   - The formulation above is simply to illustrate SQL features
-```
-select count(distinct ID) 
-  from takes
- where (course_id, sec_id, semester, year) in
-       (select course_id, sec_id, semester, year
-          from teaches
-         where teaches.ID = 10101)
-```
-
-
----
-
-{{HIDDEN}}
-
-### Set Comparisons not in SQLite
-
-
-- **some** clause not supported in older versions SQLite!
-   - $=$ **some** $\equiv$ **in**
-   - $\ne$ **some** $\equiv$ **not in**
-
-- **all** not supported in  older versions SQLite!
-   - $\ne$ **all** $\equiv$ **not in**
-
----
-
-{{HIDDEN}}
-
-### Test for Empty Relations
-- The **exists** construct returns **true** if subquery is nonempty.
-  - $\text{exists} \Leftrightarrow r \ne \emptyset$
-  - $\text{not exists} \Leftrightarrow r = \emptyset$
-
-- Find [all courses taught in both the Fall 2017 semester and in the Spring 2018 semester]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.exists)
-```
-select course_id
-  from section as S
- where S.semester = 'Fall' and 
-       S.year = 2017 and
-       exists (select * 
-                 from selection as T
-                where T.semester = 'Spring' and
-                      T.year = 2018 and
-                      T.course_id = S.course_id)
-```
-
-Note:
-
-p 101
-
----
-
-{{HIDDEN}}
-
-### Next
-
-- Any questions on 
-  - aggregates
-  - null
-  - select, from, where, having
-- We will pick up on not exists 
-
----
-
-{{HIDDEN}}
-
-### Use of _not exists_ clause
-
-- All [students who have taken all the computer science courses]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.sql.relational.division)
-```
-select distinct S.ID, S.name
-  from student as S
- where not exists (select course_id
-                      from course
-                     where dept_name = 'Comp. Sci'
-                   except
-                   select T.course_id
-                     from takes as T
-                     where S.id = T.id)
-```                     
-  - $X – Y = \emptyset \iff X \subset Y $
-  - Cannot write this query using = all and its variants
-  - SQL Relational Division
-    - First nested query lists all courses offered in Biology
-    - Second lists all courses a particular student took
-
-Note:
-
-SQL division is when you want to know X who did ALL of Y
-
-SQL division has three parts.
-- The select part returned
-- The all selection
-- The number this one did
-
-Hopefully https://lejeune.majikes.net/sql/interpreter/Chapter.03.sql.relational.division will help
-
-
----
-
-{{HIDDEN}}
-
-### Test for Absence of Duplicate Tuples
-
-- **unique** construct tests subquery for duplicate result.
-- **unique** construct evaluates to “true” if subquery contains no duplicates.
-- Find all courses that were offered only most once in 2017
-  - [Done in SQLite by test count = 1]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.sql.unique.construct)
-```
-select T.course_id
-  from course as T
- where unique (select count(R.course_id)
-                from section as R
-                where T.course_id = R.course_id and R.year = 2017)
- ;-- equivalent for SQLite
-select T.course_id 
-  from course as T
- where 1 >= (select count(R.course_id)
-               from section as R
-              where T.course_id = R.course_id and R.year = 2017)
-```
-
-
----
-
-{{HIDDEN}}
-
-### Subqueries in the From Clause
-
-- [A subquery expression to be used in the **from** clause]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.with.clause.max_budge)
-  - List department and their average salary for the departments with an average salary is greater than $42,000
-```
-select dept_name, avg_salary
-  from (select dept_name, avg(salary) as avg_salary
-          from instructor
-         group by dept_name)
- where avg_salary > 42000
-```
-- Do not need to use the **having** clause
-  - Another way to write above query
-```
-select dept_name, avg_salary
-  from (select dept_name, avg(salary) as avg_salary
-          from instructor
-         group by dept_name) 
- where avg_salary > 42000
-```
-
-
----
-
-{{HIDDEN}}
-
-### With Clause
-
-- The **with** clause provides a way of defining a temporary relation
-  - Available only in query that use the **with** clause
-- Find [all departments with the maximum budget]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.from.clause.subquery)
-
-```
-with max_budget(value) as (select max(budget)
-                             from department)
---                             
-select D.dept_name
-  from department as D, max_budget as M
- where D.budget = M.value
-```
-
-Note:
-
-Explain how if there was only one department with the max budget you don't need the temp
-
-
-
----
-
-{{HIDDEN}}
-
-### Complex Queries using With Clause
-
-- Find [all departments where the total salary is greater than the average of the total salary at all departments]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.from.multiple.subquery)
-
-``` 
-with dept_total(dept_name, value) as (select dept_name, sum(salary)
-                                        from instructor
-                                       group by dept_name),
---
-   dept_total_avg(value) as (select avg(value)
-                               from dept_total)
---
-select dept_name
-  from dept_total, dept_total_avg
- where dept_total.value > dept_total_avg.value
-```
-
-Note:
-
-Point out the SQL comments above
-
-Point out the comma separating the temporary files
-
----
-
-{{HIDDEN}}
-
-### Scalar Subquery
-
-- Scalar query returns a single value
-  - Scalar subquery can be used in the select clause
-- List [all departments along with the number of instructors in each department]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.scalar.subquery)
-```
-select dept_name, (select count(*)
-                     from instructor I
-                     where D.dept_name = I.dept_name) as num_instructors
-  from department D
-```
-  - Runtime error if subquery result more than one tuple
-
-Note:
-
-This is dangerous unless you know for sure that only one value will be returned!
-
----
+<!--v-->
 
 ### Modification of the Database
 
@@ -962,7 +575,7 @@ This is dangerous unless you know for sure that only one value will be returned!
   - Updating of values in some rows in a given table
 
 
----
+<!--v-->
 
 ### Deletion
 
@@ -974,7 +587,7 @@ delete from instructor
 ```
 delete from instructor where dept_name = 'Finance'
 ```
-- Delete all instructors associated with departments in the Watson buillding
+- Delete all instructors associated with departments in the Watson building
 ```
 delete from instructor
  where dept_name in (select dept_name
@@ -983,7 +596,7 @@ delete from instructor
 ```
 
 
----
+<!--v-->
 
 ### Deletion (Cont.)
 
@@ -1003,8 +616,7 @@ delete from instructor
                         )
 ```
 
-
----
+<!--v-->
 
 ### Insertion
 
@@ -1024,38 +636,7 @@ insert into student
              values('3003', 'Green', 'Finance', null)
 ```
 
-
----
-
-{{HIDDEN}}
-
-### Insertion (Cont.)
-
-- [Make each student in the Finance department who has earned more than 100 credit hours an instructor in the Finance department with a salary of $18,000.]({{HTTPS_FQDN}}/sql/interpreter/Chapter.03.insert.subquery)
-```
-insert into instructor
-   select ID, name, dept_name, 18000
-     from student
-    where dept_name = 'Finance' and
-          tot_cred > 100
-```
-  - The **select from where** statement is evaluated fully before any of its results are inserted into the relation.
-  - Otherwise queries like the following would cause problems
-```
-insert into table1 select * from table1
-```
-
-Note:
-
-Subqueries are evaluated in the following order  
-1. The from clause  
-2. The where clause  
-3. The group by clause  
-4. The having clause  
-5. The select clause   
-6. The order by clause  
-
----
+<!--v-->
 
 ### Updates
 
