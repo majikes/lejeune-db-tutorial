@@ -284,6 +284,7 @@ def loginpost(cursor):
         # Please enter all fields
         log(f"POST login appbase Please enter all fields: name='{name}', username='{username}', passwd='{passwd}'.")
         raise HTTPError(401, "Please enter all fields")
+    username = username.lower()
     if username == 'majikesj':
         # John, please use the correct login username
         raise HTTPError(401, "Invalid username majikesj")
@@ -300,7 +301,7 @@ def loginpost(cursor):
                INSERT INTO Roll (onyen, name, password, section)
                            VALUES (%(username)s, %(name)s, %(passwd)s, '001') 
                RETURNING rid  """,
-                       dict(username=username.lower(),
+                       dict(username=username,
                             name=name,
                             passwd=passwd))
         row = cursor.fetchone()
