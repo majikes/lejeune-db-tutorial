@@ -2,6 +2,7 @@
 
 # pylint: disable=unsupported-membership-test, too-many-statements, bad-indentation
 import contextlib
+from datetime import datetime
 import getpass
 import html
 import json
@@ -323,6 +324,10 @@ def loginpost(cursor):
     log(f"POST login SECURITY THREAT username='{username}' password='{passwd}'")
     set_onyen(username)
     root_url = app.get_url("root")
+    cursor.execute("""
+      INSERT INTO Fetched (time, onyen, key, ip, url)
+                   VALUES (%(time)s, %(onyen)s, %(key)s, %(ip)s, %(url)s)  """,
+                   dict(time=datetime.now(), onyen=username, key=path, ip=request.remote_addr, url=request.url))
     if path:
         bottle.redirect(root_url + path)
         return
