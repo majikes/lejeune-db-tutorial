@@ -14,59 +14,33 @@ dbs = ['wkst.university1.sqlite', 'wkst.university2.sqlite']
 ## {{!linkable_header('Green lights for equation evaluation')}}
 
 
-Try your luck at the Pythagorean Theorem using my website.
-Remember, ancient Greek philosopher Pythagoras
-theorized that for any right triangle (a triangle with 
-one 90 degree angle), that sum of the squares of the two 
-shorter angles equals the square of the hypotenuse (longest side).  
-Remember, the evaluation of each answer will be done by a computer program.
-Therefore the _normal_ computer operators will be used.
-<div class="row">
- <div class="twocolumns">
-<table>
- <thead>
-  <tr>
-  <th>Operation</th> <th>Operator<br/>Symbol</th>
- </thead
- <tbody>
-  <tr> <td>Addition      </td> <td>+</td> </tr>
-  <tr> <td>Multiplication</td> <td>*</td> </tr>
-  <tr> <td>Division      </td> <td>/</td> </tr>
-  <tr> <td>Exponent, for a^2 or $a^2$  </td> <td>&#x2a;&#x2a;</td> </tr>
-  <tr> <td>Square root, for a^0.5 or $\sqrt{a}$  </td> <td>&#x2a;&#x2a;0.5 or sqrt()</td> </tr>
- </tbody>
-</table>
- </div>
-</div>
+**Marine.Knowledge:** For each question on the right,
+select the letter on the left that corresponds to the correct answer.  
+If you get **all the questions** correct, the answers will turn green.  
 
-
-Variable names are **case sensitive**.
-Therefore, use lower-case $a$, $b$, and $c$, for the following equations.
-Using an upper-case version of the variables will result in an <font color="red">unknown: No globals A</font> message.
 
 <div class="row">
- <div class="threefourthcolumns">
-<b>Pythagorean.Theorem.1</b>: Given a right triangle with sides 
-$a$ of length 3 and $b$ of length 4, what is the length of 
-hypotenuse $c$?  
-% answer = 'sqrt(a*a + b*b)'
-{{!expression(answer, dict(a=3, b=4), points=10, name='Pythagorean.Theorem.1')}}<br/>
-% include('viewAnswer')
-
-<p/>
-Note that an acceptable answer can use 
-numerical equations like $3**2 + 4**2$.
-Or the answer can be use
-symbolical values in equations like $a**2+b**2$.
-Or the answer can use number integer values like 5.
-
-<p/>
-Each correct solution will be highlighted in <font color='green'>green</font> whenever 
-the answer is finished.
-The system assumes input is finished when you click outside the input box.
+ <div class="threecolumns">
+  <br/>A. Semper Fidelis
+  <br/>B. General Eric M. Smith
+  <br/>C. The Charlie Shirt
+  <br/>D. The left pocket
+  <br/>E. The right pocket
+  <br/>F. Oorah
+  <br/>G. Go Navy
+  <br/>H. I have no idea
  </div>
- <div class="fourcolumns">
-  <img src="{{static('images/triangle.png')}}" style="width:80%; float:right" />
+ <div class="twothirdcolumns">
+ % answer = ['F', 'C', 'B', 'D', 'A']
+{{!table(inputs=1, headings='Answers,Questions', table=f'''
+What is the battle cry of the United States Marine Corps?,{answer[0]}
+What is the nickname of the khaki shirt of the United States Marine Corps' Service C uniform?,{answer[1]}
+Who is the Commandant of the United States Marine Corps?,{answer[2]}
+Where are ribbons placed on the Charlie Shirt?,{answer[3]}
+What is the United States Marine Corps Motto?,{answer[4]}
+''', points=20, symbols=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], name='Marine.Knowledge')}}
+  <br/>
+  %include('viewAnswer')
  </div>
 </div>
 
@@ -89,7 +63,7 @@ SELECT name
 ```sql
 {{answer}}
 ```
-{{!sql(answer, dbs=dbs, sort=True, points=15, name='Instructor.Names')}}
+{{!sql(answer, dbs=dbs, sort=True, points=20, name='Instructor.Names')}}
 % include('viewAnswer')
 
 ---
@@ -118,7 +92,7 @@ SELECT *
   FROM Instructor
   WHERE name = 'Majikes'
 '''
-{{!sql(answer, dbs=dbs, sort=True, points=15, name='Instructor.Majikes')}}
+{{!sql(answer, dbs=dbs, sort=True, points=20, name='Instructor.Majikes')}}
 % include('viewAnswer')
 
 ---
@@ -132,13 +106,13 @@ because you could simply try each answer to see which gives the <font color='gre
 **Most.Decorated.Marine**: Who is the most decorated Marine in American history?
 
 % answer = 'Chesty Puller'
-{{!select(answer, choices=[ answer ], points=10, name='Most.Decorated.Marine')}}
+{{!select(answer, choices=[ answer ], points=20, name='Most.Decorated.Marine')}}
 % include('viewAnswer')
 
 **United.States.Marine.Corp.Birthday**: What is the birthday of the United States Marine Corp?  
 % answer = 'November 10, 1775'
 % choices = ['Every day it\'s good to be a marine', 'November 11, 1918'] + [answer]
-{{!select(answer, choices=choices, points=10, name='United.States.Marine.Corp.Birthday')}}
+{{!select(answer, choices=choices, points=20, name='United.States.Marine.Corp.Birthday')}}
 % include('viewAnswer')
 
 
