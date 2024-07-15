@@ -130,11 +130,11 @@ Database systems offer solutions to all the problems below !!!
 - Difficulty in accessing data 
   - Data or users on different systems
   - Program written for each request
+  - Timely update of data
 - Integrity problems
   - Can a bank balance be less than zero?
   - Where is the overdraft fee code? 
-  - How to come up with new overdraft fees?
-   - Need to add new constraints or change existing ones.
+  - Ensure security breaches updated to subscribers
 
 Note:
 
@@ -156,10 +156,9 @@ Integrity constraints
   - <q>All or nothing</q>
 - Concurrent access by multiple users
   - Each user/application runs as if only user/app
-  - Concurrency problems
   - Two people read a balance (say 100); Withdraw money (say 50 each) at the same time; Final balance $50 or 0?
 - Security problems
-  - Hard to provide user access to some, but not all, data
+  - Provide user access to some, but not all, data
   - Should a marine see their own health records?
   - Should a [sailor see the President's health records](https://abcnews.go.com/US/sailor-attempted-access-president-bidens-restricted-medical-record/story?id=111780284#:~:text=The%20sailor%20was%20administratively%20punished%20following%20an%20investigation.&text=A%20junior%20sailor%20has%20been,the%20U.S.%20Navy%20revealed%20Tuesday.)?
 
@@ -250,7 +249,7 @@ The next slide is going to show how to create tables
 
 - Specification notation for defining the database schema
 ```sql 
-create table instructor (
+CREATE TABLE Instructor (
             ID char(5),
             name varchar(20),
             dept_name varchar(20),
