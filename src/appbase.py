@@ -281,7 +281,7 @@ def loginpost(cursor):
     username = forms.username
     passwd = forms.passwd
     path = forms.path
-    if not name or not username or not passwd:
+    if not username or not passwd:
         # Please enter all fields
         log(f"POST login appbase Please enter all fields: name='{name}', username='{username}', passwd='{passwd}'.")
         raise HTTPError(401, "Please enter all fields")
@@ -296,6 +296,10 @@ def loginpost(cursor):
                    dict(username=username))
     row = cursor.fetchone()
     if row is None:
+        if not name:
+            # Please enter all fields
+            log(f"POST login appbase Please enter all fields: name='{name}', username='{username}', passwd='{passwd}'.")
+            raise HTTPError(401, "Please enter all fields")
         # User not in the database. First time user logging in, set password
         log(f"POST login appbase Inserting username='{username}' name='{name}'")
         cursor.execute("""
