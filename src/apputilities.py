@@ -8,6 +8,8 @@ import random
 import re
 import smtplib
 import sys
+from ZWSP import ZWSP
+zwsp_object = ZWSP()
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from typing import NoReturn
